@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Blog — Pebble</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+         color: #1a2332; background: #f7f7f5; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 2rem; }
+  header { background: #ffffff; padding: 1.1rem 0; border-bottom: 1px solid #eaeae5; }
+  header .container { display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; color: #1a2332; text-decoration: none; }
+  .logo .dot { color: #ff6b35; }
+  nav { display: flex; gap: 2rem; }
+  nav a { color: #555; text-decoration: none; font-size: 0.95rem; }
+  nav a.active { color: #1a2332; font-weight: 600; }
+
+  .page-head { padding: 4rem 0 1rem; }
+  .page-head .kicker { color: #ff6b35; font-weight: 700; text-transform: uppercase;
+                       letter-spacing: 0.15em; font-size: 0.8rem; margin-bottom: 0.75rem; }
+  .page-head h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .page-head p { color: #666; font-size: 1.05rem; max-width: 540px; }
+
+  .articles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; padding: 2.25rem 0 4rem; }
+  .article { background: white; border: 1px solid #eaeae5; border-radius: 10px; overflow: hidden; }
+  .thumb { height: 160px; display: flex; align-items: center; justify-content: center;
+           font-size: 2.5rem; color: white; font-weight: 800; }
+  .thumb.a { background: linear-gradient(135deg, #ff6b35, #f04923); }
+  .thumb.b { background: linear-gradient(135deg, #1a2332, #2e4063); }
+  .thumb.c { background: linear-gradient(135deg, #c0392b, #6e2a1f); }
+  .body { padding: 1.4rem 1.5rem 1.5rem; }
+  .meta { color: #999; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em;
+          margin-bottom: 0.5rem; }
+  .article h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+  .article p { color: #555; font-size: 0.95rem; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a class="logo" href="#">Pebble<span class="dot">.</span></a>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Pricing</a>
+        <a href="#" class="active">Blog</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-head container">
+    <div class="kicker">From the blog</div>
+    <h1>Notes from the studio</h1>
+    <p>Things we've learned, opinions we hold loosely, and occasional rants.</p>
+  </section>
+
+  <section class="articles container">
+    <article class="article">
+      <div class="thumb a">CSS</div>
+      <div class="body">
+        <div class="meta">May 12 · 6 min read</div>
+        <h3>Stop reaching for the framework</h3>
+        <p>The case for hand-rolled CSS in 2026, and why your future self will thank you.</p>
+      </div>
+    </article>
+    <article class="article">
+      <div class="thumb b">A11Y</div>
+      <div class="body">
+        <div class="meta">Apr 28 · 9 min read</div>
+        <h3>Accessibility is a design constraint</h3>
+        <p>Treating accessibility as a feature you add at the end is how you end up with bad sites.</p>
+      </div>
+    </article>
+    <article class="article">
+      <div class="thumb c">PERF</div>
+      <div class="body">
+        <div class="meta">Apr 14 · 4 min read</div>
+        <h3>Why your hero image is too big</h3>
+        <p>A short tour through image formats, and one trick to cut load time in half.</p>
+      </div>
+    </article>
+  </section>
+</body>
+</html>

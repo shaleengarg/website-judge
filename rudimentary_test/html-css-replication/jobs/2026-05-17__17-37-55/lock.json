@@ -1,0 +1,63 @@
+{
+    "schema_version": 1,
+    "created_at": "2026-05-17T12:07:55.464295Z",
+    "harbor": {
+        "version": "0.7.0",
+        "is_editable": false
+    },
+    "invocation": [
+        "/Users/shaleen/.local/bin/harbor",
+        "run",
+        "-p",
+        ".",
+        "-a",
+        "claude-code",
+        "-m",
+        "anthropic/claude-opus-4-7",
+        "--env",
+        "modal"
+    ],
+    "n_concurrent_trials": 4,
+    "retry": {
+        "max_retries": 0,
+        "exclude_exceptions": [
+            "VerifierOutputParseError",
+            "RewardFileEmptyError",
+            "AgentTimeoutError",
+            "VerifierTimeoutError",
+            "RewardFileNotFoundError"
+        ],
+        "wait_multiplier": 1.0,
+        "min_wait_sec": 1.0,
+        "max_wait_sec": 60.0
+    },
+    "trials": [
+        {
+            "task": {
+                "name": "html-css-replication",
+                "type": "local",
+                "digest": "sha256:803bb8932b094437fb8af8f691ed0ff11f6c2d40215134771def5e2b6183a054",
+                "path": "."
+            },
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "claude-code",
+                "model_name": "anthropic/claude-opus-4-7",
+                "kwargs": {},
+                "env": {}
+            },
+            "environment": {
+                "type": "modal",
+                "force_build": false,
+                "delete": true,
+                "suppress_override_warnings": false,
+                "env": {},
+                "kwargs": {}
+            },
+            "verifier": {
+                "env": {},
+                "disable": false
+            }
+        }
+    ]
+}

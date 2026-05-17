@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "you/site-replication"
+description = "Recreate a 5-page website from screenshots — visual fidelity only, no functionality required"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication"]
+
+[metadata]
+difficulty_explanation = "Agent gets 5 page screenshots that share a visual identity (logo, nav, palette, typography). Must reproduce each page's appearance in static HTML/CSS. Scored by perceptual similarity (SSIM + color histogram) of viewport renders."
+category = "frontend"
+
+[verifier]
+# Verifier launches Chromium and renders 10 pages (5 reference + 5 agent), then builds comparison images.
+timeout_sec = 420.0
+
+[agent]
+# 30 minutes — agent reads 5 screenshots, generates 5 pages, possibly iterates.
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

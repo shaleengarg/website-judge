@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Contact — Pebble</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+         color: #1a2332; background: #f7f7f5; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 2rem; }
+  header { background: #ffffff; padding: 1.1rem 0; border-bottom: 1px solid #eaeae5; }
+  header .container { display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; color: #1a2332; text-decoration: none; }
+  .logo .dot { color: #ff6b35; }
+  nav { display: flex; gap: 2rem; }
+  nav a { color: #555; text-decoration: none; font-size: 0.95rem; }
+  nav a.active { color: #1a2332; font-weight: 600; }
+
+  .page-head { padding: 4rem 0 1rem; }
+  .page-head h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .page-head p { color: #666; font-size: 1.05rem; max-width: 540px; }
+
+  .grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 3rem; padding: 2rem 0 4rem; align-items: start; }
+
+  .form { background: white; border: 1px solid #eaeae5; border-radius: 12px; padding: 2rem; }
+  .row { margin-bottom: 1.1rem; }
+  .row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  label { display: block; font-size: 0.85rem; font-weight: 600; color: #444; margin-bottom: 0.4rem; }
+  input, textarea { width: 100%; padding: 0.7rem 0.85rem; border: 1px solid #d8d8d2;
+                    border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: #1a2332;
+                    background: #fbfbf8; }
+  textarea { min-height: 120px; resize: vertical; }
+  .send { background: #ff6b35; color: white; border: none; padding: 0.85rem 1.5rem;
+          border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; }
+
+  .info h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+  .info-item { padding: 0.6rem 0; border-bottom: 1px dashed #d8d8d2; }
+  .info-item:last-child { border-bottom: none; }
+  .info-item .label { font-size: 0.75rem; color: #999; text-transform: uppercase;
+                      letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+  .info-item .value { font-size: 0.95rem; color: #1a2332; }
+  .info-item .value.accent { color: #ff6b35; font-weight: 600; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a class="logo" href="#">Pebble<span class="dot">.</span></a>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Pricing</a>
+        <a href="#">Blog</a>
+        <a href="#" class="active">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-head container">
+    <h1>Say hello.</h1>
+    <p>Have a project in mind? Drop us a line and we'll get back to you within two business days.</p>
+  </section>
+
+  <section class="grid container">
+    <div class="form">
+      <div class="row two">
+        <div>
+          <label>Your name</label>
+          <input type="text" placeholder="Ada Lovelace">
+        </div>
+        <div>
+          <label>Email</label>
+          <input type="email" placeholder="ada@example.com">
+        </div>
+      </div>
+      <div class="row">
+        <label>Project type</label>
+        <input type="text" placeholder="Marketing site, portfolio, …">
+      </div>
+      <div class="row">
+        <label>Tell us about it</label>
+        <textarea placeholder="What are you trying to build? Any timing or budget constraints?"></textarea>
+      </div>
+      <button class="send">Send message</button>
+    </div>
+
+    <aside class="info">
+      <h3>Other ways to reach us</h3>
+      <div class="info-item">
+        <div class="label">Email</div>
+        <div class="value accent">hello@pebble.studio</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Studio</div>
+        <div class="value">Lisbon, Portugal</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Hours</div>
+        <div class="value">Mon–Thu, 10:00–18:00 WET</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Social</div>
+        <div class="value">@pebblestudio</div>
+      </div>
+    </aside>
+  </section>
+</body>
+</html>

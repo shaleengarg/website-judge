@@ -1,0 +1,9 @@
+{
+  "id": "1",
+  "subject": "Render screenshots and compare to references",
+  "description": "Use playwright to render each /app/output/{page}/index.html at 1280x800 and compare against the reference PNG",
+  "activeForm": "Rendering and comparing screenshots",
+  "status": "completed",
+  "blocks": [],
+  "blockedBy": []
+}
