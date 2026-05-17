@@ -1,0 +1,74 @@
+{
+  "tasks": [
+    {
+      "id": "001-minimal-portfolio",
+      "tier": 1,
+      "genre": "portfolio",
+      "description": "A minimalist designer's portfolio. Single column, lots of negative space, very restrained.",
+      "n_pages": 5
+    },
+    {
+      "id": "002-restaurant-simple",
+      "tier": 1,
+      "genre": "restaurant",
+      "description": "A small neighborhood Italian restaurant. Traditional, warm, no flashy graphics.",
+      "n_pages": 5
+    },
+    {
+      "id": "003-personal-blog",
+      "tier": 1,
+      "genre": "personal-blog",
+      "description": "A personal blog by a single writer. Posts-first, no marketing fluff.",
+      "n_pages": 5
+    },
+    {
+      "id": "004-saas-marketing",
+      "tier": 2,
+      "genre": "saas-marketing",
+      "description": "A typical SaaS startup marketing site for a productivity tool called Tempo.",
+      "n_pages": 5
+    },
+    {
+      "id": "005-conference-event",
+      "tier": 2,
+      "genre": "conference",
+      "description": "A two-day design conference called LAYOUT 2026.",
+      "n_pages": 5
+    },
+    {
+      "id": "006-app-landing",
+      "tier": 2,
+      "genre": "mobile-app",
+      "description": "Landing site for a habit-tracking mobile app called Loop.",
+      "n_pages": 5
+    },
+    {
+      "id": "007-news-magazine",
+      "tier": 2,
+      "genre": "editorial",
+      "description": "An online newspaper called The Western Tribune.",
+      "n_pages": 5
+    },
+    {
+      "id": "008-docs-site",
+      "tier": 3,
+      "genre": "documentation",
+      "description": "Technical documentation site for a fake CLI tool called 'orbit'.",
+      "n_pages": 5
+    },
+    {
+      "id": "009-ecommerce-product",
+      "tier": 3,
+      "genre": "ecommerce",
+      "description": "An online store selling minimalist home goods.",
+      "n_pages": 5
+    },
+    {
+      "id": "010-dashboard-admin",
+      "tier": 3,
+      "genre": "dashboard",
+      "description": "An admin dashboard for a fake B2B SaaS analytics tool.",
+      "n_pages": 5
+    }
+  ]
+}
