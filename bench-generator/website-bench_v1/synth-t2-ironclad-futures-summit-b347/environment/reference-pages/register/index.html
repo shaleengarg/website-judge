@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register — IRONCLAD 2025</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f4f1ec;
+    color: #1a1a18;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .container {
+    width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  /* Nav */
+  header.nav {
+    border-bottom: 1px solid #c8c2b8;
+    background: #f4f1ec;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    color: #1a1a18;
+    letter-spacing: 0.5px;
+  }
+  .logo span { color: #0e6b6b; }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+  }
+  nav a {
+    text-decoration: none;
+    color: #1a1a18;
+    font-size: 12px;
+    font-variant: small-caps;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  nav a.active { color: #0e6b6b; border-bottom: 2px solid #d97c0e; padding-bottom: 4px; }
+
+  /* Page heading */
+  .page-head {
+    padding: 48px 0 28px;
+    border-bottom: 1px solid #e2dcd2;
+    margin-bottom: 40px;
+  }
+  .page-head h1 {
+    font-family: Georgia, serif;
+    font-size: 42px;
+    font-weight: bold;
+    color: #1a1a18;
+    margin-bottom: 8px;
+  }
+  .page-head p { color: #555; max-width: 720px; }
+  .badge {
+    display: inline-block;
+    background: #d97c0e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  /* Two column layout */
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 60px;
+  }
+
+  /* Form */
+  .form-card {
+    background: #fff;
+    border: 1px solid #c8c2b8;
+    border-radius: 8px;
+    padding: 32px;
+  }
+  .form-card h2 {
+    font-family: Georgia, serif;
+    color: #0e6b6b;
+    font-size: 22px;
+    margin-bottom: 22px;
+  }
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #1a1a18;
+    margin-bottom: 6px;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #c8c2b8;
+    border-radius: 6px;
+    background: #f4f1ec;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #1a1a18;
+  }
+  .btn {
+    display: inline-block;
+    background: #0e6b6b;
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .form-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 14px;
+  }
+
+  /* Tickets */
+  .tickets h2 {
+    font-family: Georgia, serif;
+    color: #0e6b6b;
+    font-size: 22px;
+    margin-bottom: 22px;
+  }
+  .ticket {
+    border: 1px solid #c8c2b8;
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    background: #fff;
+    position: relative;
+  }
+  .ticket.recommended {
+    border: 2px solid #0e6b6b;
+  }
+  .reco-badge {
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    background: #d97c0e;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .ticket-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .ticket-name {
+    font-family: Georgia, serif;
+    font-size: 19px;
+    font-weight: bold;
+    color: #1a1a18;
+  }
+  .ticket-price {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0e6b6b;
+  }
+  .ticket ul {
+    list-style: none;
+    font-size: 13px;
+    color: #333;
+  }
+  .ticket li {
+    padding: 3px 0 3px 16px;
+    position: relative;
+  }
+  .ticket li::before {
+    content: "•";
+    color: #d97c0e;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+
+  /* Footer */
+  footer {
+    background: #1a1a18;
+    color: #d8d4cc;
+    padding: 36px 0;
+    margin-top: 20px;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .foot-left .name {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .foot-left .name span { color: #d97c0e; }
+  .foot-left .tag { font-size: 13px; color: #a8a49c; }
+  .foot-right {
+    text-align: right;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .foot-right strong { color: #fff; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="logo">IRONCLAD<span>/25</span></div>
+    <nav>
+      <ul>
+        <li><a href="../home/index.html">Home</a></li>
+        <li><a href="../agenda/index.html">Agenda</a></li>
+        <li><a href="../speakers/index.html">Speakers</a></li>
+        <li><a href="../workshops/index.html">Workshops</a></li>
+        <li><a href="#" class="active">Register</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="page-head">
+    <span class="badge">Limited Seats · Early Bird Open</span>
+    <h1>Register for IRONCLAD 2025</h1>
+    <p>Secure your place at the industrial futures summit of the year. Three days, four tracks, and the people forging what comes next — October 14–16 in Pittsburgh.</p>
+  </div>
+
+  <div class="columns">
+    <!-- Form column -->
+    <div class="form-card">
+      <h2>Attendee Information</h2>
+      <form>
+        <div class="field">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Jane Doe">
+        </div>
+        <div class="field">
+          <label for="org">Organization</label>
+          <input type="text" id="org" placeholder="Acme Manufacturing Co.">
+        </div>
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="jane.doe@company.com">
+        </div>
+        <div class="field">
+          <label for="title">Job Title</label>
+          <input type="text" id="title" placeholder="Director of Operations">
+        </div>
+        <div class="field">
+          <label for="ticket">Ticket Type</label>
+          <select id="ticket">
+            <option>Professional — $895</option>
+            <option>Academic — $445</option>
+            <option>Student — $195</option>
+          </select>
+        </div>
+        <button type="submit" class="btn">Submit Registration</button>
+        <div class="form-note">By registering, you agree to the IRONCLAD 2025 attendee code of conduct. A confirmation will be sent to your email.</div>
+      </form>
+    </div>
+
+    <!-- Tickets column -->
+    <div class="tickets">
+      <h2>Ticket Tiers</h2>
+
+      <div class="ticket recommended">
+        <div class="reco-badge">Recommended</div>
+        <div class="ticket-head">
+          <div class="ticket-name">Professional</div>
+          <div class="ticket-price">$895</div>
+        </div>
+        <ul>
+          <li>Full 3-day conference access</li>
+          <li>All keynotes, panels, and tracks</li>
+          <li>Welcome reception &amp; closing gala</li>
+          <li>On-site lunches and coffee service</li>
+          <li>Industry networking app access</li>
+          <li>Printed proceedings &amp; swag bag</li>
+        </ul>
+      </div>
+
+      <div class="ticket">
+        <div class="ticket-head">
+          <div class="ticket-name">Academic</div>
+          <div class="ticket-price">$445</div>
+        </div>
+        <ul>
+          <li>Full 3-day conference access</li>
+          <li>All keynotes and research panels</li>
+          <li>On-site lunches and coffee service</li>
+          <li>Requires .edu email verification</li>
+        </ul>
+      </div>
+
+      <div class="ticket">
+        <div class="ticket-head">
+          <div class="ticket-name">Student</div>
+          <div class="ticket-price">$195</div>
+        </div>
+        <ul>
+          <li>Full 3-day conference access</li>
+          <li>Student career fair entry</li>
+          <li>Mentor matchmaking session</li>
+          <li>Valid student ID required at check-in</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="foot-left">
+      <div class="name">IRONCLAD<span>/25</span></div>
+      <div class="tag">Forging the Future of Industrial Technology</div>
+    </div>
+    <div class="foot-right">
+      <strong>October 14–16, 2025</strong><br>
+      David L. Lawrence Convention Center · Pittsburgh, PA<br>
+      hello@ironclad2025.org
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

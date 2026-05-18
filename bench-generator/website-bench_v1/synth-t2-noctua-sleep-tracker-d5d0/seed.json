@@ -1,0 +1,29 @@
+{
+  "id": "synth-t2-noctua-sleep-tracker-d5d0",
+  "tier": 2,
+  "genre": "mobile-app",
+  "pages": [
+    "home",
+    "features",
+    "how-it-works",
+    "pricing",
+    "download"
+  ],
+  "palette_hint": "deep indigo background (#1a1a2e), soft white text (#eef0f7), vivid violet accent (#7c3aed) and warm amber highlight (#f59e0b)",
+  "type_style": "system sans-serif (Arial, Helvetica) throughout; extra-bold headings at large sizes, regular weight for body copy, slightly rounded feel",
+  "description": "Marketing site for Noctua, a sleep-tracking mobile app that analyzes rest cycles and gives personalized bedtime coaching.",
+  "constraints": [
+    "centered container max-width 1080px with 24px side padding on all pages",
+    "fixed top nav: Noctua logo (owl emoji + wordmark) on the left, page links on the right, amber 'Get the App' button at far right",
+    "consistent footer with three flex columns: brand blurb, quick links, social handles (text only), and a copyright line below",
+    "all buttons use 10px border-radius, no gradients \u2014 solid violet or amber fills only",
+    "section backgrounds alternate between deep indigo (#1a1a2e) and a slightly lighter navy (#16213e) to create visual separation without extra borders"
+  ],
+  "page_specs": {
+    "home": "Full-width hero with a large headline 'Sleep Smarter, Wake Better', a two-line subheading about AI-driven sleep analysis, and two CTA buttons (Download Free, See Features). Below the hero, a three-column grid highlights the three core promises: Cycle Tracking, Smart Alarms, and Weekly Reports \u2014 each with an emoji icon, bold title, and a two-sentence blurb.",
+    "features": "Intro heading 'Everything your sleep deserves' followed by six feature blocks arranged in a 2-column CSS grid. Each block has an emoji icon, a bold feature name (e.g., 'REM Phase Detection', 'Noise Environment Scoring', 'Heart Rate Sync', 'Bedtime Reminders', 'Sleep Debt Tracker', 'Partner Mode'), and three bullet points of specific detail.",
+    "how-it-works": "A numbered three-step process displayed as a horizontal flex row: Step 1 \u2014 Place your phone on the nightstand; Step 2 \u2014 Noctua listens and measures; Step 3 \u2014 Wake to your full sleep report. Each step has a large step number in amber, a short title, and a two-sentence explanation. Below the steps, a single wide callout box explains the underlying sonar-based motion detection technology in two paragraphs.",
+    "pricing": "Three plan cards in a CSS grid row: Noctua Free (basic tracking, 7-day history), Noctua Plus at $4.99/mo (full cycle analysis, smart alarm, 90-day history), and Noctua Family at $9.99/mo (up to 5 profiles, partner mode, priority support). The Plus card has a violet border and an 'Most Popular' badge. Each card lists five included features as a bulleted list and ends with a solid-fill CTA button.",
+    "download": "Centered single-column layout with a headline 'Download Noctua Tonight', a short paragraph about availability, and two large platform buttons side by side: 'Download on the App Store' and 'Get it on Google Play' \u2014 both styled as amber-filled rounded rectangles with black text. Below, a flex row of three trust signals: '4.8 \u2605 App Store Rating', '2 Million+ Sleepers', and 'HIPAA-Compliant Data'. Page ends with a minimal FAQ section listing four questions and short answers in a bordered list."
+  }
+}

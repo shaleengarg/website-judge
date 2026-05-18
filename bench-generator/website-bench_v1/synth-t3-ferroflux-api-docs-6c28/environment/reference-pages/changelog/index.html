@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Changelog — FerroFlux API</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f8f9fb;
+    color: #1a1a2e;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  code, pre, .mono { font-family: ui-monospace, Consolas, "Courier New", monospace; }
+
+  /* Top bar */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 48px;
+    background: #fff; border-bottom: 1px solid #e2e8f0;
+    display: flex; align-items: center; padding: 0 20px;
+    z-index: 100;
+  }
+  .logo {
+    font-weight: 700; font-size: 15px; color: #1a1a2e;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-mark {
+    width: 22px; height: 22px; border-radius: 5px;
+    background: linear-gradient(135deg, #0d9488, #0f172a);
+  }
+  .topbar-center {
+    flex: 1; display: flex; justify-content: center;
+  }
+  .version-badge {
+    background: #ecfdf5; color: #0d9488; border: 1px solid #99f6e4;
+    padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  .topbar-right { display: flex; gap: 20px; }
+  .topbar-right a {
+    color: #1a1a2e; text-decoration: none; font-size: 13px; font-weight: 600;
+  }
+  .topbar-right a:hover { color: #0d9488; }
+  .status-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: #0d9488; margin-right: 6px; vertical-align: middle;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; top: 48px; left: 0; bottom: 0;
+    width: 260px; background: #0f172a; color: #fff;
+    padding: 24px 0; overflow-y: auto;
+  }
+  .nav-group { margin-bottom: 22px; }
+  .nav-group-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: #64748b; font-weight: 700;
+    padding: 0 24px; margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-group-label::after {
+    content: "▾"; font-size: 10px; opacity: 0.7;
+  }
+  .nav-group ul { list-style: none; }
+  .nav-group li a {
+    display: block; padding: 7px 24px; color: #cbd5e1;
+    text-decoration: none; font-size: 13px; border-left: 2px solid transparent;
+  }
+  .nav-group li a:hover { color: #fff; background: rgba(255,255,255,0.04); }
+  .nav-group li a.active {
+    color: #fff; background: rgba(13,148,136,0.15);
+    border-left-color: #0d9488; font-weight: 600;
+  }
+
+  /* Main */
+  .main-wrap {
+    margin-left: 260px; margin-top: 48px;
+    padding: 48px;
+    display: flex; justify-content: center;
+  }
+  .main {
+    max-width: 860px; width: 100%;
+    padding: 0 0px;
+  }
+  .page-header { margin-bottom: 32px; }
+  .page-eyebrow {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: #0d9488; font-weight: 700; margin-bottom: 8px;
+  }
+  .page-title { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+  .page-subtitle { color: #475569; font-size: 14px; max-width: 640px; }
+
+  /* Version cards */
+  .version-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+  .version-head {
+    display: flex; align-items: baseline; gap: 14px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 14px; margin-bottom: 16px;
+  }
+  .version-head h2 {
+    font-size: 22px; font-weight: 700;
+    font-family: ui-monospace, Consolas, monospace;
+    color: #0f172a;
+  }
+  .version-date { color: #94a3b8; font-size: 12px; }
+  .version-tag {
+    margin-left: auto;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 4px;
+    background: #f1f5f9; color: #475569;
+  }
+  .version-tag.latest { background: #ccfbf1; color: #0d9488; }
+
+  .change-list { list-style: none; }
+  .change-list li {
+    padding: 6px 0; display: flex; gap: 10px;
+    font-size: 13.5px; line-height: 1.55;
+    color: #1a1a2e;
+  }
+  .badge {
+    display: inline-block; flex-shrink: 0;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 2px 7px; border-radius: 3px;
+    margin-top: 2px;
+    min-width: 58px; text-align: center;
+  }
+  .b-added   { background: #ccfbf1; color: #0d9488; }
+  .b-changed { background: #e2e8f0; color: #475569; }
+  .b-fixed   { background: #fef3c7; color: #b45309; }
+
+  .change-list code {
+    background: #f1f5f9; color: #0f172a;
+    padding: 1px 5px; border-radius: 3px; font-size: 12.5px;
+  }
+
+  .section-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: #64748b; font-weight: 700;
+    margin: 14px 0 4px;
+  }
+
+  .footer-note {
+    margin-top: 40px; padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b; font-size: 12px;
+    display: flex; justify-content: space-between;
+  }
+  .footer-note a { color: #0d9488; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo"><span class="logo-mark"></span>FerroFlux</div>
+  <div class="topbar-center"><span class="version-badge">API v2.4.0</span></div>
+  <div class="topbar-right">
+    <a href="#"><span class="status-dot"></span>API Status</a>
+    <a href="#">GitHub</a>
+  </div>
+</div>
+
+<aside class="sidebar">
+  <div class="nav-group">
+    <div class="nav-group-label">Getting Started</div>
+    <ul>
+      <li><a href="../overview/index.html">Overview</a></li>
+      <li><a href="../quickstart/index.html">Quickstart</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">API Reference</div>
+    <ul>
+      <li><a href="../endpoints/index.html">Endpoints</a></li>
+      <li><a href="../sdk-reference/index.html">SDK Reference</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Releases</div>
+    <ul>
+      <li><a href="#" class="active">Changelog</a></li>
+    </ul>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Resources</div>
+    <ul>
+      <li><a href="#">Support</a></li>
+      <li><a href="#">Status Page</a></li>
+      <li><a href="#">Community</a></li>
+    </ul>
+  </div>
+</aside>
+
+<div class="main-wrap">
+  <main class="main">
+
+    <div class="page-header">
+      <div class="page-eyebrow">Release Notes</div>
+      <h1 class="page-title">Changelog</h1>
+      <p class="page-subtitle">A chronological record of changes, additions, and fixes across FerroFlux platform releases. Subscribe to the RSS feed or watch the GitHub repo to get notified of new releases.</p>
+    </div>
+
+    <!-- v2.4 -->
+    <section class="version-card">
+      <div class="version-head">
+        <h2>v2.4.0</h2>
+        <span class="version-date">Released March 14, 2025</span>
+        <span class="version-tag latest">Latest</span>
+      </div>
+      <ul class="change-list">
+        <li><span class="badge b-added">Added</span>New <code>/streams/{id}/aggregates</code> endpoint for rolling window statistics (min, max, mean, p95).</li>
+        <li><span class="badge b-added">Added</span>WebSocket subscription filters via <code>where</code> query expressions on tag values.</li>
+        <li><span class="badge b-added">Added</span>Official Rust SDK <code>ferroflux-rs</code> v0.1 — early access via crates.io.</li>
+        <li><span class="badge b-changed">Changed</span>Default pagination limit raised from 100 to 250 items per page on list endpoints.</li>
+        <li><span class="badge b-fixed">Fixed</span>Race condition in batched ingest causing dropped samples under sustained &gt;50k msg/s loads.</li>
+      </ul>
+    </section>
+
+    <!-- v2.3 -->
+    <section class="version-card">
+      <div class="version-head">
+        <h2>v2.3.0</h2>
+        <span class="version-date">Released January 22, 2025</span>
+      </div>
+      <ul class="change-list">
+        <li><span class="badge b-added">Added</span>Region-aware ingest endpoints (<code>eu-west</code>, <code>ap-south</code>) with automatic failover.</li>
+        <li><span class="badge b-added">Added</span>API key scoping: read-only, write-only, and per-stream permissions in the dashboard.</li>
+        <li><span class="badge b-changed">Changed</span>Increased maximum payload size from 1 MB to 4 MB on <code>POST /streams/{id}/data</code>.</li>
+        <li><span class="badge b-changed">Changed</span>Deprecated the <code>?expand=metadata</code> query parameter — fields are now returned by default.</li>
+        <li><span class="badge b-fixed">Fixed</span>Timestamp parsing accepts RFC 3339 fractional seconds beyond microsecond precision.</li>
+        <li><span class="badge b-fixed">Fixed</span>Node.js SDK no longer leaks sockets when reconnecting after long idle periods.</li>
+      </ul>
+    </section>
+
+    <!-- v2.2 -->
+    <section class="version-card">
+      <div class="version-head">
+        <h2>v2.2.0</h2>
+        <span class="version-date">Released November 5, 2024</span>
+      </div>
+      <ul class="change-list">
+        <li><span class="badge b-added">Added</span>Server-Sent Events (SSE) transport as an alternative to WebSockets for HTTP/1.1 clients.</li>
+        <li><span class="badge b-added">Added</span>OpenAPI 3.1 spec published at <code>/openapi.json</code> with full schema definitions.</li>
+        <li><span class="badge b-changed">Changed</span>Rate-limit headers renamed to standard <code>RateLimit-*</code> per IETF draft 08.</li>
+        <li><span class="badge b-fixed">Fixed</span>Schema validation incorrectly rejected nested arrays with mixed numeric types.</li>
+        <li><span class="badge b-fixed">Fixed</span>Dashboard timezone selector reset on every page navigation.</li>
+      </ul>
+    </section>
+
+    <!-- v2.1 -->
+    <section class="version-card">
+      <div class="version-head">
+        <h2>v2.1.0</h2>
+        <span class="version-date">Released August 19, 2024</span>
+      </div>
+      <ul class="change-list">
+        <li><span class="badge b-added">Added</span>Python SDK 2.1 with native asyncio support and typed response models.</li>
+        <li><span class="badge b-added">Added</span>Stream tagging API — attach up to 32 key/value tags per stream for filtering.</li>
+        <li><span class="badge b-changed">Changed</span>Authentication tokens now use a <code>fflx_</code> prefix for easier secret-scanning.</li>
+        <li><span class="badge b-fixed">Fixed</span>CORS preflight responses missing <code>Access-Control-Allow-Headers</code> on signed requests.</li>
+      </ul>
+    </section>
+
+    <!-- v2.0 -->
+    <section class="version-card">
+      <div class="version-head">
+        <h2>v2.0.0</h2>
+        <span class="version-date">Released May 6, 2024</span>
+        <span class="version-tag">Major</span>
+      </div>
+      <ul class="change-list">
+        <li><span class="badge b-added">Added</span>Brand new v2 REST API surface with cursor-based pagination and consistent error envelope.</li>
+        <li><span class="badge b-added">Added</span>Real-time WebSocket gateway at <code>wss://api.ferroflux.io/v2/live</code> with sub-50ms latency.</li>
+        <li><span class="badge b-added">Added</span>Multi-tenant workspaces and team member invitations.</li>
+        <li><span class="badge b-changed">Changed</span><strong>Breaking:</strong> v1 endpoints under <code>/api/</code> moved to <code>/v1/</code> and scheduled for sunset on 2025-05-06.</li>
+        <li><span class="badge b-changed">Changed</span><strong>Breaking:</strong> response envelope now always wraps payload in a <code>data</code> field.</li>
+        <li><span class="badge b-fixed">Fixed</span>Clock-skew tolerance on signed requests extended to ±300 seconds.</li>
+      </ul>
+    </section>
+
+    <!-- v1.9 -->
+    <section class="version-card">
+      <div class="version-head">
+        <h2>v1.9.0</h2>
+        <span class="version-date">Released February 11, 2024</span>
+        <span class="version-tag">Legacy</span>
+      </div>
+      <ul class="change-list">
+        <li><span class="badge b-added">Added</span>Bulk delete operations on streams matching tag selectors.</li>
+        <li><span class="badge b-added">Added</span>Audit log endpoint for security and compliance review.</li>
+        <li><span class="badge b-changed">Changed</span>Default data retention raised from 14 to 30 days on the Pro tier.</li>
+        <li><span class="badge b-fixed">Fixed</span>Memory leak in the Go SDK long-polling client under high reconnect rates.</li>
+        <li><span class="badge b-fixed">Fixed</span>Inconsistent ordering of samples returned with <code>?sort=desc</code> when timestamps tied.</li>
+      </ul>
+    </section>
+
+    <div class="footer-note">
+      <span>© 2025 FerroFlux, Inc. — Built for telemetry at scale.</span>
+      <span><a href="#">RSS feed</a> · <a href="#">Release archive</a></span>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

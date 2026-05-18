@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Features — Inkwell</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f7f5f0;
+    color: #2c3240;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", Times, serif; color: #2c3240; }
+
+  /* Nav */
+  .nav {
+    border-bottom: 1px solid #e6e2d8;
+    background: #f7f5f0;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 24px;
+    color: #2c3240;
+    letter-spacing: -0.5px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+  }
+  .nav-links a {
+    font-size: 12px;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    letter-spacing: 1.2px;
+    color: #2c3240;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .nav-links a.active { color: #e8a020; }
+  .nav-links a:hover { color: #e8a020; }
+  .btn-amber {
+    background: #e8a020;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-teal-outline {
+    background: transparent;
+    color: #2a7d6f;
+    border: 2px solid #2a7d6f;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  /* Page intro */
+  .page-intro {
+    text-align: center;
+    padding: 72px 24px 48px;
+  }
+  .page-intro h1 {
+    font-size: 46px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    line-height: 1.15;
+  }
+  .page-intro p {
+    max-width: 680px;
+    margin: 0 auto;
+    color: #4a5160;
+    font-size: 17px;
+  }
+
+  /* Feature rows */
+  .features-list {
+    padding: 24px 0 72px;
+  }
+  .feature-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+    margin-bottom: 64px;
+  }
+  .feature-row:last-child { margin-bottom: 0; }
+  .feature-row.reverse .feature-image { order: 2; }
+  .feature-row.reverse .feature-text { order: 1; }
+
+  .feature-image {
+    height: 280px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  }
+  .img-1 { background: linear-gradient(135deg, #e8a020 0%, #d18a10 100%); }
+  .img-2 { background: linear-gradient(135deg, #2a7d6f 0%, #1f5e54 100%); }
+  .img-3 { background: linear-gradient(135deg, #3a4458 0%, #2c3240 100%); }
+  .img-4 { background: linear-gradient(135deg, #e8a020 0%, #2a7d6f 100%); }
+
+  .feature-image::before {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    border: 1px dashed rgba(255,255,255,0.35);
+    border-radius: 6px;
+  }
+  .feature-image span { position: relative; z-index: 1; }
+
+  .feature-text .eyebrow {
+    color: #2a7d6f;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .feature-text h2 {
+    font-size: 36px;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .feature-text p {
+    color: #4a5160;
+    font-size: 16px;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 2px solid #2a7d6f;
+    padding: 48px 0 32px;
+    margin-top: 24px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+  }
+  .footer-grid h4 {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  .footer-brand .wordmark { display: block; margin-bottom: 10px; }
+  .footer-brand p { font-size: 14px; color: #4a5160; max-width: 320px; }
+  .footer-grid ul { list-style: none; }
+  .footer-grid ul li { margin-bottom: 8px; font-size: 14px; }
+  .footer-grid ul li a { color: #2c3240; text-decoration: none; }
+  .footer-grid ul li a:hover { color: #e8a020; }
+  .footer-contact p { font-size: 14px; color: #4a5160; margin-bottom: 6px; }
+  .footer-bottom {
+    text-align: center;
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid #e6e2d8;
+    font-size: 13px;
+    color: #6b7384;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="wordmark">Inkwell</div>
+    <div class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="#" class="active">Features</a>
+      <a href="../pricing/index.html">Pricing</a>
+      <a href="../integrations/index.html">Integrations</a>
+      <a href="../contact/index.html">Contact</a>
+    </div>
+    <a href="#" class="btn-amber">Start Free Trial</a>
+  </div>
+</nav>
+
+<div class="container">
+  <section class="page-intro">
+    <h1>Everything Your Team Needs</h1>
+    <p>Inkwell pairs intelligent automation with thoughtful editorial tools so your documentation stays organized, current, and trusted. Each feature is designed to remove friction from the way engineering teams actually write and find knowledge.</p>
+  </section>
+
+  <section class="features-list">
+
+    <div class="feature-row">
+      <div class="feature-image img-1"><span>AI Tag Suggestions</span></div>
+      <div class="feature-text">
+        <div class="eyebrow">Feature 01</div>
+        <h2>AI Tag Suggestions</h2>
+        <p>Inkwell reads every new page as it's written and proposes a handful of concise, consistent tags based on your team's existing taxonomy. You can accept, edit, or ignore each suggestion in one click, so tagging never breaks your flow. Over time, the model adapts to your conventions and helps surface related documents your readers would have otherwise missed.</p>
+      </div>
+    </div>
+
+    <div class="feature-row reverse">
+      <div class="feature-image img-2"><span>Version History</span></div>
+      <div class="feature-text">
+        <div class="eyebrow">Feature 02</div>
+        <h2>Version History</h2>
+        <p>Every edit is captured automatically with author, timestamp, and a clean diff view that highlights exactly what changed. Rolling back to any previous revision takes a single click, with no risk of overwriting a teammate's work in progress. Annotated checkpoints let leads mark "approved" or "stable" versions so readers always know which copy is canonical.</p>
+      </div>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature-image img-3"><span>Slack Import</span></div>
+      <div class="feature-text">
+        <div class="eyebrow">Feature 03</div>
+        <h2>Slack Import</h2>
+        <p>Promote a Slack thread into a structured document with one shortcut, preserving participants, code snippets, and links. Inkwell automatically de-duplicates messages, groups follow-ups, and proposes a title and category based on the conversation topic. Tribal knowledge that used to vanish into channel scrollback becomes a permanent, searchable part of your hub.</p>
+      </div>
+    </div>
+
+    <div class="feature-row reverse">
+      <div class="feature-image img-4"><span>Role-Based Access</span></div>
+      <div class="feature-text">
+        <div class="eyebrow">Feature 04</div>
+        <h2>Role-Based Access</h2>
+        <p>Define granular roles like Reader, Editor, Reviewer, and Admin, then apply them at the workspace, space, or individual page level. Permissions inherit cleanly through your folder structure, so onboarding a new squad takes minutes instead of an afternoon of audit work. SSO and SCIM provisioning keep access in sync with your identity provider as people move between teams.</p>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="wordmark">Inkwell</span>
+        <p>Inkwell turns messy internal knowledge bases into clean, searchable, auto-organized documentation hubs built for mid-size engineering teams.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="../home/index.html">Home</a></li>
+          <li><a href="#">Features</a></li>
+          <li><a href="../pricing/index.html">Pricing</a></li>
+          <li><a href="../integrations/index.html">Integrations</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p>hello@inkwell.app</p>
+        <p>(503) 555-0142</p>
+        <p>Portland, OR</p>
+        <p>Mon–Fri, 9am–6pm PT</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Inkwell Documentation, Inc. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>

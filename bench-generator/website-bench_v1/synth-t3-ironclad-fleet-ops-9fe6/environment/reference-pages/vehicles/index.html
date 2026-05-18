@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vehicles — Ironclad Logistics</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #0f1623;
+    color: #e8eaf0;
+    font-size: 13px;
+    line-height: 1.4;
+    display: flex;
+    overflow: hidden;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  /* ===== Sidebar ===== */
+  .sidebar {
+    width: 220px;
+    background: #1e2a3b;
+    border-right: 1px solid #0a0f18;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .logo {
+    padding: 20px 18px;
+    border-bottom: 1px solid #0a0f18;
+  }
+  .logo .mark {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .logo .mark .accent { color: #00c9a7; }
+  .logo .tag {
+    font-size: 10px;
+    color: #6c7a90;
+    letter-spacing: 2px;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  .nav { padding: 14px 0; flex: 1; }
+  .nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    color: #b6bccb;
+    text-decoration: none;
+    font-size: 13px;
+    border-left: 2px solid transparent;
+  }
+  .nav a:hover { background: #182234; color: #e8eaf0; }
+  .nav a.active {
+    background: #162030;
+    color: #e8eaf0;
+    border-left-color: #00c9a7;
+  }
+  .nav a .ico {
+    width: 16px;
+    text-align: center;
+    color: #6c7a90;
+    font-size: 12px;
+  }
+  .nav a.active .ico { color: #00c9a7; }
+
+  .sb-footer {
+    padding: 14px 18px;
+    border-top: 1px solid #0a0f18;
+    font-size: 11px;
+    color: #6c7a90;
+  }
+  .sb-footer .who { color: #e8eaf0; font-weight: 500; font-size: 12px; }
+
+  /* ===== Main ===== */
+  .main {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: #0f1623;
+    border-bottom: 1px solid #1e2a3b;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 5;
+  }
+  .topbar h1 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .topbar h1 .sub { color: #6c7a90; font-weight: 400; margin-left: 8px; font-size: 12px; }
+  .top-right { display: flex; align-items: center; gap: 18px; }
+  .clock {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    color: #b6bccb;
+    background: #1e2a3b;
+    padding: 6px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+  .clock .dot { color: #00c9a7; }
+  .bell {
+    position: relative;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .bell .badge {
+    position: absolute;
+    top: -4px; right: -6px;
+    background: #e53a3a;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 8px;
+    font-family: ui-monospace, monospace;
+  }
+
+  /* ===== Content layout ===== */
+  .content {
+    display: grid;
+    grid-template-columns: 200px 1fr 280px;
+    gap: 16px;
+    padding: 16px 24px 24px;
+    flex: 1;
+  }
+
+  .panel {
+    background: #1e2a3b;
+    border: 1px solid #0a0f18;
+    border-radius: 4px;
+  }
+  .panel-h {
+    padding: 12px 14px;
+    border-bottom: 1px solid #162030;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #b6bccb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .panel-h .count {
+    background: #0f1623;
+    color: #00c9a7;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+
+  /* ===== Filter sidebar ===== */
+  .filters .group {
+    padding: 12px 14px;
+    border-bottom: 1px solid #162030;
+  }
+  .filters .group:last-child { border-bottom: none; }
+  .filters .lbl {
+    font-size: 10px;
+    color: #6c7a90;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .filters label.row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+    color: #e8eaf0;
+    cursor: pointer;
+  }
+  .filters input[type=checkbox] {
+    appearance: none;
+    width: 13px; height: 13px;
+    border: 1px solid #3a4a63;
+    background: #0f1623;
+    border-radius: 2px;
+    position: relative;
+  }
+  .filters input[type=checkbox]:checked {
+    background: #00c9a7;
+    border-color: #00c9a7;
+  }
+  .filters input[type=checkbox]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: #0f1623;
+    font-size: 10px;
+    font-weight: 700;
+    top: -2px; left: 1px;
+  }
+  .filters .row .ct {
+    margin-left: auto;
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    color: #6c7a90;
+  }
+  .filters input[type=text] {
+    width: 100%;
+    background: #0f1623;
+    border: 1px solid #2a3850;
+    color: #e8eaf0;
+    padding: 7px 9px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: inherit;
+  }
+  .filters .clear {
+    display: block;
+    margin-top: 10px;
+    color: #00c9a7;
+    font-size: 11px;
+    text-decoration: none;
+  }
+
+  /* ===== Table ===== */
+  .center-col .toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #162030;
+    align-items: center;
+    background: #1a2435;
+  }
+  .toolbar .pill {
+    background: #0f1623;
+    color: #b6bccb;
+    padding: 5px 10px;
+    font-size: 11px;
+    border-radius: 3px;
+    border: 1px solid #2a3850;
+  }
+  .toolbar .pill.active {
+    background: #00c9a7;
+    color: #0f1623;
+    border-color: #00c9a7;
+    font-weight: 600;
+  }
+  .toolbar .spacer { flex: 1; }
+  .toolbar .meta {
+    font-size: 11px;
+    color: #6c7a90;
+    font-family: ui-monospace, monospace;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    background: #162030;
+    color: #6c7a90;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 9px 10px;
+    border-bottom: 1px solid #0a0f18;
+  }
+  tbody td {
+    padding: 8px 10px;
+    font-size: 12px;
+    border-bottom: 1px solid #0f1623;
+  }
+  tbody tr:nth-child(odd) { background: #1e2a3b; }
+  tbody tr:nth-child(even) { background: #162030; }
+  tbody tr.selected {
+    border-left: 3px solid #00c9a7;
+    background: #1a3445;
+  }
+  tbody tr.selected td:first-child { padding-left: 7px; }
+  td.num { font-family: ui-monospace, Menlo, Consolas, monospace; color: #e8eaf0; }
+  td.id { font-family: ui-monospace, monospace; color: #00c9a7; font-weight: 600; }
+  td.driver { color: #b6bccb; }
+
+  .chip {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    color: #0f1623;
+    font-family: ui-monospace, monospace;
+    text-transform: uppercase;
+  }
+  .chip.active { background: #00c9a7; }
+  .chip.idle { background: #e5a23a; }
+  .chip.maint { background: #e53a3a; color: #fff; }
+  .chip.offline { background: #4a5973; color: #e8eaf0; }
+
+  /* ===== Detail panel ===== */
+  .detail .body { padding: 14px; }
+  .detail .vid {
+    font-family: ui-monospace, monospace;
+    font-size: 18px;
+    color: #00c9a7;
+    font-weight: 700;
+  }
+  .detail .vname {
+    font-size: 13px;
+    margin-top: 2px;
+    color: #e8eaf0;
+  }
+  .detail .vsub {
+    font-size: 11px;
+    color: #6c7a90;
+    margin-top: 2px;
+  }
+  .detail .photo {
+    margin: 12px 0;
+    height: 90px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #1a3445 0%, #0f1623 60%, #162030 100%);
+    border: 1px solid #2a3850;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3a4a63;
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+  .kv { font-size: 12px; }
+  .kv .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed #2a3850;
+  }
+  .kv .row:last-child { border-bottom: none; }
+  .kv .k { color: #6c7a90; font-size: 11px; }
+  .kv .v { font-family: ui-monospace, monospace; color: #e8eaf0; font-size: 11px; }
+
+  .section-h {
+    margin: 14px 0 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #b6bccb;
+  }
+  .mh {
+    list-style: none;
+    font-size: 11px;
+  }
+  .mh li {
+    padding: 7px 0;
+    border-bottom: 1px solid #162030;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .mh li:last-child { border-bottom: none; }
+  .mh .date {
+    font-family: ui-monospace, monospace;
+    color: #6c7a90;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+  .mh .desc { color: #e8eaf0; }
+  .mh .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #00c9a7;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  /* pager */
+  .pager {
+    padding: 10px 14px;
+    border-top: 1px solid #162030;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #6c7a90;
+    background: #1a2435;
+  }
+  .pager .pages { display: flex; gap: 4px; }
+  .pager .pages a {
+    padding: 3px 8px;
+    background: #0f1623;
+    color: #b6bccb;
+    text-decoration: none;
+    border-radius: 2px;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    border: 1px solid #2a3850;
+  }
+  .pager .pages a.cur { background: #00c9a7; color: #0f1623; border-color: #00c9a7; font-weight: 700; }
+
+  .btn-small {
+    background: transparent;
+    border: 1px solid #00c9a7;
+    color: #00c9a7;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="mark">IRONCLAD<span class="accent">.</span></div>
+      <div class="tag">Fleet Ops v3.2</div>
+    </div>
+    <nav class="nav">
+      <a href="../overview/index.html"><span class="ico">▤</span> Overview</a>
+      <a href="#" class="active"><span class="ico">▥</span> Vehicles</a>
+      <a href="../alerts/index.html"><span class="ico">!</span> Alerts</a>
+      <a href="../reports/index.html"><span class="ico">⎍</span> Reports</a>
+      <a href="../settings/index.html"><span class="ico">⚙</span> Settings</a>
+    </nav>
+    <div class="sb-footer">
+      <div class="who">M. Reyes</div>
+      Dispatch Supervisor
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1>Vehicles <span class="sub">/ Fleet Roster</span></h1>
+      <div class="top-right">
+        <div class="clock"><span class="dot">●</span> 14:32:07 CST · Mon 04 Nov</div>
+        <div class="bell">🔔<span class="badge">7</span></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- LEFT FILTER -->
+      <aside class="panel filters">
+        <div class="panel-h">Filters</div>
+        <div class="group">
+          <div class="lbl">Search</div>
+          <input type="text" placeholder="Unit ID, driver…">
+        </div>
+        <div class="group">
+          <div class="lbl">Status</div>
+          <label class="row"><input type="checkbox" checked> Active <span class="ct">98</span></label>
+          <label class="row"><input type="checkbox" checked> Idle <span class="ct">22</span></label>
+          <label class="row"><input type="checkbox"> Maintenance <span class="ct">14</span></label>
+          <label class="row"><input type="checkbox"> Offline <span class="ct">8</span></label>
+        </div>
+        <div class="group">
+          <div class="lbl">Region</div>
+          <label class="row"><input type="checkbox" checked> North <span class="ct">31</span></label>
+          <label class="row"><input type="checkbox" checked> South <span class="ct">28</span></label>
+          <label class="row"><input type="checkbox" checked> East <span class="ct">26</span></label>
+          <label class="row"><input type="checkbox"> West <span class="ct">35</span></label>
+          <label class="row"><input type="checkbox"> Central <span class="ct">22</span></label>
+          <a href="#" class="clear">Clear all filters</a>
+        </div>
+      </aside>
+
+      <!-- CENTER TABLE -->
+      <section class="panel center-col">
+        <div class="toolbar">
+          <span class="pill active">All</span>
+          <span class="pill">Flagged</span>
+          <span class="pill">Recently Serviced</span>
+          <span class="spacer"></span>
+          <span class="meta">Showing 15 of 142</span>
+          <button class="btn-small">+ Add Vehicle</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Unit ID</th>
+              <th>Make / Model</th>
+              <th>Year</th>
+              <th>Mileage</th>
+              <th>Driver</th>
+              <th>Status</th>
+              <th>Last Service</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="id">ILC-012</td><td>Freightliner Cascadia</td><td class="num">2021</td><td class="num">284,902</td><td class="driver">A. Morgan</td><td><span class="chip active">Active</span></td><td class="num">2024-09-12</td></tr>
+            <tr><td class="id">ILC-019</td><td>Kenworth T680</td><td class="num">2020</td><td class="num">412,118</td><td class="driver">J. Holloway</td><td><span class="chip active">Active</span></td><td class="num">2024-10-04</td></tr>
+            <tr><td class="id">ILC-024</td><td>Peterbilt 579</td><td class="num">2022</td><td class="num">156,733</td><td class="driver">R. Castellanos</td><td><span class="chip idle">Idle</span></td><td class="num">2024-08-29</td></tr>
+            <tr><td class="id">ILC-031</td><td>Volvo VNL 760</td><td class="num">2019</td><td class="num">521,447</td><td class="driver">D. Kim</td><td><span class="chip maint">Maint.</span></td><td class="num">2024-11-01</td></tr>
+            <tr><td class="id">ILC-038</td><td>Freightliner Cascadia</td><td class="num">2023</td><td class="num">68,219</td><td class="driver">S. Patel</td><td><span class="chip active">Active</span></td><td class="num">2024-10-22</td></tr>
+            <tr><td class="id">ILC-044</td><td>Mack Anthem</td><td class="num">2021</td><td class="num">298,002</td><td class="driver">L. Vázquez</td><td><span class="chip active">Active</span></td><td class="num">2024-09-30</td></tr>
+            <tr class="selected"><td class="id">ILC-047</td><td>Kenworth T680</td><td class="num">2022</td><td class="num">189,440</td><td class="driver">T. Brennan</td><td><span class="chip idle">Idle</span></td><td class="num">2024-10-17</td></tr>
+            <tr><td class="id">ILC-052</td><td>Peterbilt 389</td><td class="num">2018</td><td class="num">612,889</td><td class="driver">M. Okafor</td><td><span class="chip offline">Offline</span></td><td class="num">2024-07-18</td></tr>
+            <tr><td class="id">ILC-058</td><td>Volvo VNL 860</td><td class="num">2022</td><td class="num">142,610</td><td class="driver">E. Ramos</td><td><span class="chip active">Active</span></td><td class="num">2024-10-09</td></tr>
+            <tr><td class="id">ILC-063</td><td>Freightliner Cascadia</td><td class="num">2020</td><td class="num">355,127</td><td class="driver">H. Nguyen</td><td><span class="chip active">Active</span></td><td class="num">2024-09-25</td></tr>
+            <tr><td class="id">ILC-071</td><td>Kenworth W990</td><td class="num">2023</td><td class="num">42,008</td><td class="driver">B. O'Connell</td><td><span class="chip active">Active</span></td><td class="num">2024-10-30</td></tr>
+            <tr><td class="id">ILC-078</td><td>Mack Anthem</td><td class="num">2019</td><td class="num">478,560</td><td class="driver">C. Whitaker</td><td><span class="chip maint">Maint.</span></td><td class="num">2024-10-28</td></tr>
+            <tr><td class="id">ILC-084</td><td>Peterbilt 579</td><td class="num">2021</td><td class="num">221,309</td><td class="driver">G. Andersen</td><td><span class="chip idle">Idle</span></td><td class="num">2024-09-14</td></tr>
+            <tr><td class="id">ILC-091</td><td>Volvo VNL 760</td><td class="num">2022</td><td class="num">134,772</td><td class="driver">P. Sullivan</td><td><span class="chip active">Active</span></td><td class="num">2024-10-11</td></tr>
+            <tr><td class="id">ILC-096</td><td>Freightliner Cascadia</td><td class="num">2020</td><td class="num">389,255</td><td class="driver">Y. Tanaka</td><td><span class="chip offline">Offline</span></td><td class="num">2024-08-06</td></tr>
+          </tbody>
+        </table>
+        <div class="pager">
+          <span>Page 1 of 10 · 142 vehicles total</span>
+          <div class="pages">
+            <a href="#" class="cur">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">…</a>
+            <a href="#">10</a>
+            <a href="#">›</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT DETAIL -->
+      <aside class="panel detail">
+        <div class="panel-h">Vehicle Detail <span class="count">SELECTED</span></div>
+        <div class="body">
+          <div class="vid">ILC-047</div>
+          <div class="vname">Kenworth T680</div>
+          <div class="vsub">Year 2022 · VIN ending 8842</div>
+
+          <div class="photo">TRUCK · IMG</div>
+
+          <div class="kv">
+            <div class="row"><span class="k">Driver Assigned</span><span class="v">T. Brennan</span></div>
+            <div class="row"><span class="k">Status</span><span class="v" style="color:#e5a23a">IDLE</span></div>
+            <div class="row"><span class="k">Region</span><span class="v">North</span></div>
+            <div class="row"><span class="k">Current Location</span><span class="v">Toledo, OH</span></div>
+            <div class="row"><span class="k">Mileage</span><span class="v">189,440</span></div>
+            <div class="row"><span class="k">Fuel Level</span><span class="v">68%</span></div>
+            <div class="row"><span class="k">Engine Hours</span><span class="v">4,812</span></div>
+            <div class="row"><span class="k">Next Service</span><span class="v">2024-12-04</span></div>
+          </div>
+
+          <div class="section-h">Maintenance History</div>
+          <ul class="mh">
+            <li><span class="dot"></span><span class="desc">Tire rotation &amp; alignment check</span><span class="date">10-17</span></li>
+            <li><span class="dot"></span><span class="desc">Oil change, full synthetic 15W-40</span><span class="date">08-22</span></li>
+            <li><span class="dot"></span><span class="desc">Brake pad replacement (rear axle)</span><span class="date">06-09</span></li>
+            <li><span class="dot"></span><span class="desc">DEF system inspection</span><span class="date">04-15</span></li>
+            <li><span class="dot"></span><span class="desc">Annual DOT inspection — passed</span><span class="date">02-28</span></li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+</body>
+</html>

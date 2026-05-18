@@ -1,0 +1,29 @@
+{
+  "id": "synth-t3-ferroflux-api-docs-6c28",
+  "tier": 3,
+  "genre": "documentation",
+  "pages": [
+    "overview",
+    "quickstart",
+    "endpoints",
+    "sdk-reference",
+    "changelog"
+  ],
+  "palette_hint": "Deep navy background for sidebar (#0f172a), off-white main area (#f8f9fb), near-black body text (#1a1a2e), teal accent (#0d9488) for links and highlights, amber (#f59e0b) for warnings",
+  "type_style": "System sans-serif (ui-sans-serif, sans-serif) for headings and body at weights 400/600/700; monospace (ui-monospace, Consolas) for all code; compact line-height for density",
+  "description": "API documentation site for a fictional real-time sensor data platform called FerroFlux, covering REST endpoints, SDKs, and integration guides.",
+  "constraints": [
+    "Fixed left sidebar exactly 260px wide with navy background, white nav links grouped under collapsible section labels, full viewport height",
+    "Main content area has a max-width of 860px centered in the remaining space with 48px horizontal padding",
+    "Sticky right-side TOC exactly 200px wide on pages with long content, listing anchor links to h2/h3 headings in small gray text",
+    "Code blocks use dark background (#1e293b), teal-colored syntax highlights on keywords, monospace font, and a small gray language label in the top-right corner",
+    "Top bar (48px tall, white, border-bottom 1px #e2e8f0) spans full width above sidebar and main, containing product logo left, version badge center, and 'API Status' + 'GitHub' text links right"
+  ],
+  "page_specs": {
+    "overview": "Three-column layout: left sidebar nav, main content with a product intro paragraph followed by a 3-column feature card grid (cards have teal left-border, icon emoji, title, and 2-line description), right TOC. Includes an architecture diagram placeholder as a bordered box with centered caption text.",
+    "quickstart": "Left sidebar + main content only (no right TOC). Main shows a 5-step numbered setup guide \u2014 each step has a bold heading, 1-2 sentences of prose, and a dark code block showing shell or JSON commands. A yellow amber callout box warns about API key security after step 2.",
+    "endpoints": "Three-column layout with sticky right TOC. Main content has four endpoint sections (GET /streams, POST /streams, GET /streams/{id}/data, DELETE /streams/{id}), each with an HTTP method badge (colored pill: green GET, blue POST, red DELETE), route, parameter table (3 columns: name, type, description), and a request/response code block pair.",
+    "sdk-reference": "Three-column layout. Left sidebar + main + right TOC. Main is split into two horizontal sub-sections side by side (Python SDK left, Node.js SDK right) each with a mini heading, install command code block, and a usage snippet code block. Below the split, a full-width compatibility table lists SDK versions against platform support using checkmark and cross symbols.",
+    "changelog": "Left sidebar + main (no right TOC). Main lists six version entries (v2.4, v2.3, v2.2, v2.1, v2.0, v1.9) each in its own card-like section with a version number as h2, release date in small muted text, and three categorized bullet lists labeled Added, Changed, and Fixed using colored badge prefixes (teal, gray, amber respectively)."
+  }
+}

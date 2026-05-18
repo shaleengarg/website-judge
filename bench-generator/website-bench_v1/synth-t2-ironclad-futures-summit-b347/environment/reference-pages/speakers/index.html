@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Featured Speakers — IRONCLAD 2025</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f4f1ec;
+    color: #1a1a18;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+  }
+  .container {
+    width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  /* Nav */
+  header.nav {
+    background: #f4f1ec;
+    border-bottom: 1px solid #c8c2b8;
+    padding: 20px 0;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    color: #1a1a18;
+    letter-spacing: 0.5px;
+  }
+  .logo span { color: #0e6b6b; }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+  }
+  nav a {
+    text-decoration: none;
+    color: #1a1a18;
+    font-size: 12px;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  nav a.active { color: #0e6b6b; border-bottom: 2px solid #d97c0e; padding-bottom: 4px; }
+
+  /* Page heading */
+  .page-head {
+    padding: 56px 0 32px;
+  }
+  .page-head h1 {
+    font-family: Georgia, serif;
+    font-size: 44px;
+    font-weight: bold;
+    color: #1a1a18;
+    margin-bottom: 10px;
+  }
+  .page-head .lede {
+    color: #4a4a45;
+    font-size: 15px;
+    max-width: 680px;
+  }
+  .badge {
+    display: inline-block;
+    background: #d97c0e;
+    color: #fff;
+    font-size: 11px;
+    font-variant: small-caps;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  /* Speakers grid */
+  .speakers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    padding-bottom: 64px;
+  }
+  .speaker-card {
+    background: #fff;
+    border: 1px solid #c8c2b8;
+    border-radius: 8px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+  }
+  .photo {
+    width: 100%;
+    height: 160px;
+    background: linear-gradient(135deg, #0e6b6b 0%, #0a5454 100%);
+    border-radius: 6px;
+    margin-bottom: 14px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 12px;
+  }
+  .photo .initials {
+    color: rgba(255,255,255,0.85);
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .photo.amber-corner::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 10px;
+    height: 10px;
+    background: #d97c0e;
+    border-radius: 50%;
+  }
+  .name {
+    font-size: 17px;
+    font-weight: bold;
+    color: #1a1a18;
+    margin-bottom: 4px;
+  }
+  .role {
+    font-size: 12.5px;
+    color: #0e6b6b;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .topic {
+    font-size: 13px;
+    color: #3a3a36;
+    border-top: 1px solid #e6e2da;
+    padding-top: 10px;
+    margin-top: auto;
+  }
+  .topic .label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #d97c0e;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1a1a18;
+    color: #f4f1ec;
+    padding: 36px 0;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .foot-left .fname {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .foot-left .fname span { color: #d97c0e; }
+  .foot-left .tag {
+    font-size: 13px;
+    color: #b8b3a8;
+  }
+  .foot-right {
+    text-align: right;
+    font-size: 13px;
+    color: #d8d3c8;
+    line-height: 1.7;
+  }
+  .foot-right .em { color: #d97c0e; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="logo">IRONCLAD<span>/25</span></div>
+    <nav>
+      <ul>
+        <li><a href="../home/index.html">Home</a></li>
+        <li><a href="../agenda/index.html">Agenda</a></li>
+        <li><a href="#" class="active">Speakers</a></li>
+        <li><a href="../workshops/index.html">Workshops</a></li>
+        <li><a href="../register/index.html">Register</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="container page-head">
+  <span class="badge">Three Days · 40+ Voices</span>
+  <h1>Featured Speakers</h1>
+  <p class="lede">Engineers, factory leaders, materials scientists, and policy architects shaping the next decade of heavy industry. Meet eight of the voices anchoring our 2025 program.</p>
+</section>
+
+<section class="container">
+  <div class="speakers-grid">
+
+    <div class="speaker-card">
+      <div class="photo amber-corner"><span class="initials">EM</span></div>
+      <div class="name">Dr. Elena Marchetti</div>
+      <div class="role">Chief Materials Officer · Forge Dynamics</div>
+      <div class="topic"><span class="label">Keynote</span>The metallurgy revolution: printable high-strength alloys for grid-scale infrastructure.</div>
+    </div>
+
+    <div class="speaker-card">
+      <div class="photo"><span class="initials">RO</span></div>
+      <div class="name">Rashid Okonkwo</div>
+      <div class="role">VP Operations · MidCon Steelworks</div>
+      <div class="topic"><span class="label">Talk</span>How a 70-year-old mill became a closed-loop digital factory in 18 months.</div>
+    </div>
+
+    <div class="speaker-card">
+      <div class="photo amber-corner"><span class="initials">SK</span></div>
+      <div class="name">Dr. Sana Kapoor</div>
+      <div class="role">Director · Carnegie Robotics Lab</div>
+      <div class="topic"><span class="label">Keynote</span>Cobots on the line: trust calibration between humans and autonomous machinery.</div>
+    </div>
+
+    <div class="speaker-card">
+      <div class="photo"><span class="initials">JH</span></div>
+      <div class="name">James Hollander</div>
+      <div class="role">Principal Engineer · Westinghouse Nuclear</div>
+      <div class="topic"><span class="label">Talk</span>Small modular reactors as the new baseload partner for energy-hungry plants.</div>
+    </div>
+
+    <div class="speaker-card">
+      <div class="photo"><span class="initials">YT</span></div>
+      <div class="name">Yuki Tanaka</div>
+      <div class="role">Founder & CEO · Lattice Manufacturing</div>
+      <div class="topic"><span class="label">Panel</span>Generative design at production scale: lessons from 400 deployed parts.</div>
+    </div>
+
+    <div class="speaker-card">
+      <div class="photo amber-corner"><span class="initials">MR</span></div>
+      <div class="name">Dr. Marcus Reinhardt</div>
+      <div class="role">Senior Fellow · DOE Office of Industrial Efficiency</div>
+      <div class="topic"><span class="label">Keynote</span>Decarbonizing the heaviest sectors: a federal roadmap to 2035.</div>
+    </div>
+
+    <div class="speaker-card">
+      <div class="photo"><span class="initials">AV</span></div>
+      <div class="name">Aisha Vásquez</div>
+      <div class="role">Head of Digital Twin · Bechtel</div>
+      <div class="topic"><span class="label">Talk</span>Simulating an entire refinery before a single weld: ROI of pre-build twins.</div>
+    </div>
+
+    <div class="speaker-card">
+      <div class="photo"><span class="initials">PG</span></div>
+      <div class="name">Peter Galloway</div>
+      <div class="role">CTO · Allegheny Additive</div>
+      <div class="topic"><span class="label">Panel</span>Why Pittsburgh became the unlikely capital of metal 3D printing.</div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="foot-left">
+      <div class="fname">IRONCLAD<span>/25</span></div>
+      <div class="tag">Forging the Future of Industrial Technology.</div>
+    </div>
+    <div class="foot-right">
+      <div><span class="em">October 14–16, 2025</span></div>
+      <div>David L. Lawrence Convention Center · Pittsburgh, PA</div>
+      <div>hello@ironclad2025.org</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

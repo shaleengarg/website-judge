@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-ember-and-rye-smokehouse-6bc9",
+  "tier": 1,
+  "genre": "restaurant",
+  "pages": [
+    "menu",
+    "pitmaster",
+    "find-us",
+    "hours",
+    "catering"
+  ],
+  "palette_hint": "dark charcoal background (#1e1a18), warm off-white text (#f0ebe3), burnt orange accent (#c95f2a) and a secondary muted tan (#a68b6e)",
+  "type_style": "system sans-serif headings (bold, all-caps, wide letter-spacing), system serif body text, rugged and direct feel",
+  "description": "A no-frills Texas-style BBQ smokehouse website \u2014 dark, bold, text-driven, celebrating slow-smoked meats and honest cooking.",
+  "constraints": [
+    "centered single-column layout with max-width of 660px",
+    "all section headings in all-caps with 0.12em letter-spacing and burnt orange color (#c95f2a)",
+    "thin 1px horizontal rules in muted tan (#a68b6e) separating every section",
+    "navigation bar as plain all-caps text links on a slightly lighter charcoal strip (#2a2420), active page underlined in burnt orange",
+    "no images, no icons, no decorative borders \u2014 raw typography only"
+  ],
+  "page_specs": {
+    "menu": "Divided into four sections \u2014 Smoked Meats, Sides, Sandwiches, and Drinks \u2014 each listing 4\u20135 items with the item name in bold, a one-line plain-English description in body serif, and the price flush right. A note at the bottom reads 'Sold by the pound. Market price on brisket. Plates served with two sides.'",
+    "pitmaster": "Three paragraphs about head pitmaster Darnell 'Smoke' Okafor: his roots in Lockhart, Texas, his 18-hour oak-wood smoking method, and his philosophy that BBQ needs no sauce to speak for itself. His name and title appear below in burnt orange as a byline.",
+    "find-us": "Full street address of the restaurant (4812 Cinder Road, Amarillo, TX 79101) in large bold type, followed by a short paragraph with parking and landmark directions. Below that, a plain-text note about the nearest cross street and bus stop.",
+    "hours": "A plain vertical list of operating days and hours: Tuesday through Thursday 11am\u20138pm, Friday and Saturday 11am\u20139pm, Sunday 11am\u20136pm, closed Monday. A brief note underneath warns that the kitchen closes when the meat sells out, usually by early evening on weekends.",
+    "catering": "A short introductory paragraph explaining that Ember & Rye handles off-site events for 20 to 300 guests with full pit setup. Below that, a bulleted plain-text list of five package tiers with names and per-head price ranges. Ends with a phone number in large bold type and an email address for inquiries."
+  }
+}

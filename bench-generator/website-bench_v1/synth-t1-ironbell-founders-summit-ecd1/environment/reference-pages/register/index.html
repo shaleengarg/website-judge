@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register — Ironbell Founders Summit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1c1c1e;
+    color: #f5f5f5;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+  nav {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    padding-bottom: 24px;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+  nav a {
+    color: #f5f5f5;
+    text-decoration: none;
+    text-transform: lowercase;
+  }
+  nav a.active {
+    color: #f5f5f5;
+    border-bottom: 2px solid #e8a020;
+    padding-bottom: 2px;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #e8a020;
+    margin: 28px 0;
+  }
+  .brand {
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: #f5f5f5;
+  }
+  .brand span { color: #e8a020; }
+  h1 {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+  h2 {
+    color: #e8a020;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  p { margin-bottom: 16px; }
+  .meta {
+    color: #e8a020;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  form { margin-top: 4px; }
+  .field { margin-bottom: 22px; }
+  label {
+    display: block;
+    color: #e8a020;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  input[type="text"], input[type="email"] {
+    width: 100%;
+    background: #1c1c1e;
+    border: 1px solid #f5f5f5;
+    color: #f5f5f5;
+    padding: 12px 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    outline: none;
+  }
+  .submit {
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    margin: 28px auto 0;
+    background: #e8a020;
+    color: #1c1c1e;
+    border: none;
+    padding: 16px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: center;
+  }
+  .note {
+    font-size: 13px;
+    color: #a8a8aa;
+    margin-top: 18px;
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+  footer {
+    margin-top: 36px;
+    font-size: 12px;
+    color: #8a8a8c;
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  footer .amber { color: #e8a020; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">IRONBELL <span>/</span> FOUNDERS SUMMIT</div>
+    <hr>
+    <nav>
+      <a href="../announcement/index.html">announcement</a>
+      <a href="../schedule/index.html">schedule</a>
+      <a href="../speakers/index.html">speakers</a>
+      <a href="../venue/index.html">venue</a>
+      <a href="#" class="active">register</a>
+    </nav>
+    <hr>
+
+    <div class="meta">October 11, 2025 — Detroit, MI</div>
+    <h1>Claim a seat.</h1>
+
+    <hr>
+
+    <h2>Before you sign up</h2>
+    <p>Attendance is free, but the floor is capped at <strong>200 seats</strong>. We review every request by hand to keep the room small and serious. Expect a confirmation email within 48 hours — no waitlist theater, no marketing follow-ups.</p>
+
+    <hr>
+
+    <h2>Your details</h2>
+    <form action="#" method="post" novalidate>
+      <div class="field">
+        <label for="name">Attendee name</label>
+        <input type="text" id="name" name="name" placeholder="Jordan Reyes">
+      </div>
+      <div class="field">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="jordan@company.com">
+      </div>
+      <div class="field">
+        <label for="company">Company</label>
+        <input type="text" id="company" name="company" placeholder="What you are building">
+      </div>
+
+      <button type="submit" class="submit">Claim Your Seat</button>
+      <p class="note">One submission per founder. We'll write back within 48 hours.</p>
+    </form>
+
+    <hr>
+
+    <footer>
+      <span>Ironbell <span class="amber">//</span> 2025</span>
+      <span>Detroit, MI</span>
+    </footer>
+  </div>
+</body>
+</html>

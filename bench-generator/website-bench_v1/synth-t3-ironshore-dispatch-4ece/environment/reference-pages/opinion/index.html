@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Opinion — Ironshore Dispatch</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f5f2ec;
+    color: #1a1a1a;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  a { color: #2a4a6b; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Masthead */
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #f5f2ec;
+    border-bottom: 2px solid #1a1a1a;
+  }
+  .masthead-top {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    border-bottom: 1px solid #d8d2c4;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .brand .accent { color: #b5001f; }
+  .masthead-meta {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #555;
+  }
+  nav.primary {
+    display: flex;
+    gap: 28px;
+    padding: 10px 32px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  nav.primary a {
+    color: #1a1a1a;
+    padding: 4px 0;
+  }
+  nav.primary a.active {
+    color: #b5001f;
+    border-bottom: 2px solid #b5001f;
+  }
+
+  /* Page header */
+  .page-header {
+    padding: 24px 32px 12px;
+    border-bottom: 1px solid #d8d2c4;
+  }
+  .kicker {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b5001f;
+    margin-bottom: 6px;
+  }
+  .page-title {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .page-sub {
+    font-style: italic;
+    color: #555;
+    margin-top: 4px;
+    font-size: 15px;
+  }
+
+  /* Layout */
+  .container {
+    display: grid;
+    grid-template-columns: 200px 1fr 260px;
+    gap: 32px;
+    padding: 28px 32px 40px;
+    max-width: 1280px;
+  }
+
+  /* Columnists (left) */
+  .columnists h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b5001f;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #1a1a1a;
+    margin-bottom: 14px;
+  }
+  .columnist {
+    display: flex;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2dcce;
+  }
+  .columnist .avatar {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #2a4a6b, #4a6a8b);
+    color: #f5f2ec;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .columnist:nth-child(3) .avatar { background: linear-gradient(135deg, #b5001f, #d43048); }
+  .columnist:nth-child(5) .avatar { background: linear-gradient(135deg, #3a3a3a, #5a5a5a); }
+  .columnist:nth-child(6) .avatar { background: linear-gradient(135deg, #6b5b2a, #8b7a4a); }
+  .columnist .name {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+  .columnist .bio {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.35;
+    font-style: italic;
+  }
+
+  /* Center main column */
+  .main-col article {
+    padding-bottom: 28px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #c8c0ac;
+  }
+  .main-col article:last-child { border-bottom: none; }
+  .section-tag {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b5001f;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .main-col h2 {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+    margin-bottom: 10px;
+  }
+  .byline {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    margin-bottom: 16px;
+    color: #444;
+  }
+  .byline .author {
+    color: #1a1a1a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .byline .date { color: #777; }
+  .byline .sep { margin: 0 8px; color: #bbb; }
+  .main-col p {
+    margin-bottom: 12px;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .main-col p:first-of-type::first-letter {
+    font-size: 46px;
+    float: left;
+    line-height: 0.9;
+    padding: 4px 8px 0 0;
+    font-weight: 700;
+    color: #b5001f;
+  }
+
+  /* Right sidebar */
+  .sidebar h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b5001f;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #1a1a1a;
+    margin-bottom: 14px;
+  }
+  .most-read { list-style: none; margin-bottom: 28px; }
+  .most-read li {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2dcce;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  .most-read .num {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #b5001f;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 24px;
+  }
+  .newsletter {
+    background: #ebe5d6;
+    padding: 16px;
+    border-top: 3px solid #2a4a6b;
+  }
+  .newsletter h4 {
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .newsletter p {
+    font-size: 12px;
+    color: #444;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .newsletter input {
+    width: 100%;
+    padding: 8px 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    border: 1px solid #c8c0ac;
+    background: #f5f2ec;
+    margin-bottom: 8px;
+  }
+  .newsletter button {
+    width: 100%;
+    padding: 9px;
+    background: #2a4a6b;
+    color: #f5f2ec;
+    border: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Pull quote */
+  .pullquote {
+    border-left: 4px solid #b5001f;
+    padding: 8px 0 8px 16px;
+    margin: 16px 8px 16px 0;
+    font-style: italic;
+    font-size: 18px;
+    color: #2a4a6b;
+    line-height: 1.4;
+  }
+
+  /* Footer */
+  footer {
+    background: #1a1a1a;
+    color: #c8c0ac;
+    padding: 28px 32px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+  }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h5 {
+    color: #f5f2ec;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+  footer a { color: #c8c0ac; display: block; padding: 3px 0; }
+  .foot-brand {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    color: #f5f2ec;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .foot-brand .accent { color: #b5001f; }
+  .copyright {
+    margin-top: 24px;
+    padding-top: 14px;
+    border-top: 1px solid #333;
+    color: #888;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="brand">Ironshore <span class="accent">Dispatch</span></div>
+    <div class="masthead-meta">Thursday, October 17 &nbsp;·&nbsp; Vol. XXIV &nbsp;·&nbsp; No. 287</div>
+  </div>
+  <nav class="primary">
+    <a href="../front-page/index.html">Front Page</a>
+    <a href="../world/index.html">World</a>
+    <a href="../data-desk/index.html">Data Desk</a>
+    <a href="#" class="active">Opinion</a>
+    <a href="../archive/index.html">Archive</a>
+  </nav>
+</header>
+
+<section class="page-header">
+  <div class="kicker">Section</div>
+  <h1 class="page-title">Opinion &amp; Commentary</h1>
+  <div class="page-sub">Argument, dissent, and reasoned alarm from our regular contributors.</div>
+</section>
+
+<main class="container">
+
+  <!-- LEFT: Columnists -->
+  <aside class="columnists">
+    <h3>Columnists</h3>
+    <div class="columnist">
+      <div class="avatar">EM</div>
+      <div>
+        <div class="name">Eleanor Marsh</div>
+        <div class="bio">Foreign affairs, two decades from Brussels.</div>
+      </div>
+    </div>
+    <div class="columnist">
+      <div class="avatar">DK</div>
+      <div>
+        <div class="name">Daniel Okafor</div>
+        <div class="bio">Economics and the politics of scarcity.</div>
+      </div>
+    </div>
+    <div class="columnist">
+      <div class="avatar">PR</div>
+      <div>
+        <div class="name">Priya Rangan</div>
+        <div class="bio">Technology, surveillance, and civic life.</div>
+      </div>
+    </div>
+    <div class="columnist">
+      <div class="avatar">JT</div>
+      <div>
+        <div class="name">James Tollman</div>
+        <div class="bio">Energy markets, climate policy, the long horizon.</div>
+      </div>
+    </div>
+    <div class="columnist">
+      <div class="avatar">SC</div>
+      <div>
+        <div class="name">Sofia Cassano</div>
+        <div class="bio">Culture, language, and the migrating word.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CENTER: Two essays -->
+  <section class="main-col">
+
+    <article>
+      <span class="section-tag">Opinion · Foreign Policy</span>
+      <h2>The Quiet Unraveling of the Postwar Compact</h2>
+      <div class="byline">
+        <span class="author">By Eleanor Marsh</span>
+        <span class="sep">·</span>
+        <span class="date">October 16, 2024</span>
+      </div>
+      <p>For seventy years, the architecture of the postwar order rested on a comfortable fiction: that the powers who built it would also be the powers who maintained it. The fiction was useful, because it allowed smaller states to plan, to trade, and to imagine themselves participants in a system whose rules were broadly legible. That legibility is now gone, replaced by a thicket of bilateral deals, security exceptions, and ad hoc coalitions that no one bothers to name.</p>
+      <p>The shift did not arrive as a single rupture. It came piecemeal — a tariff here, a sanctions package there, a security guarantee withdrawn without announcement. Diplomats in Berlin and Seoul tell me, off the record, that the cumulative effect has been to make every meeting smaller, every deliverable narrower, and every promise contingent on the next election cycle in a capital several time zones away.</p>
+      <div class="pullquote">"The rules-based order did not die. It was quietly downgraded to a rules-influenced order, and then to a rules-considered one."</div>
+      <p>What replaces the old compact is not chaos, exactly, but a kind of permanent improvisation. States that once relied on multilateral forums now hedge: they keep a seat at the table while building parallel arrangements with whichever partner seems most reliable that quarter. The energy this consumes is enormous, and the bandwidth lost to hedging is bandwidth that used to go to actual problem-solving.</p>
+      <p>The question facing the next generation of foreign ministers is not whether to defend the old order — that battle, on the available evidence, is over — but whether anything coherent can be assembled in its place before the improvisation hardens into something less benign. The answer will depend on whether the middle powers can find common cause faster than the great powers can divide them. The early signs are not encouraging.</p>
+    </article>
+
+    <article>
+      <span class="section-tag">Opinion · Technology</span>
+      <h2>We Are Outsourcing Judgment, and We Have Not Noticed</h2>
+      <div class="byline">
+        <span class="author">By Priya Rangan</span>
+        <span class="sep">·</span>
+        <span class="date">October 15, 2024</span>
+      </div>
+      <p>The most consequential technology story of the year is not a product launch. It is the steady, almost invisible migration of decisions — about credit, hiring, housing, sentencing, and now medical triage — from human deliberation into systems that nobody in the room fully understands. The migration is rarely announced. It is implemented as an efficiency, and audited, if at all, by the same vendor that sold it.</p>
+      <p>I have spent the last eight months sitting in procurement meetings at municipal agencies across three countries. The pattern is consistent: the technical staff describe the model in cautious, hedged language; the executives hear "decision support"; the line workers hear "do what the screen says." By the time a citizen is on the receiving end, the chain of accountability has gone through four contractors and a confidentiality clause.</p>
+      <p>Defenders of these systems argue, fairly, that human judgment is also flawed, biased, and inconsistent. This is true. But human judgment can be questioned in a hallway, appealed in a hearing, and overruled by a supervisor who has read the file. Algorithmic judgment, deployed at scale, tends to harden into infrastructure. Once a model is woven into a workflow, the cost of removing it becomes the argument for keeping it.</p>
+      <p>The remedy is not to ban the tools — that ship sailed during the last budget cycle — but to insist, in law and in contract, that any system that makes consequential decisions about a person be legible to that person, contestable in a forum that actually meets, and replaceable on a timeline shorter than a generation. We are not there. We are not close. And we are running out of decisions we still get to make by hand.</p>
+    </article>
+
+  </section>
+
+  <!-- RIGHT: Sidebar -->
+  <aside class="sidebar">
+    <h3>Most Read</h3>
+    <ol class="most-read">
+      <li><span class="num">1</span><span>Inside the negotiations that almost saved the grain corridor</span></li>
+      <li><span class="num">2</span><span>Why the central bank blinked — and what it costs</span></li>
+      <li><span class="num">3</span><span>The quiet boom in private weather forecasting</span></li>
+      <li><span class="num">4</span><span>Mapping the new migration routes across the Sahel</span></li>
+      <li><span class="num">5</span><span>A field guide to the next election's disinformation</span></li>
+      <li><span class="num">6</span><span>The court ruling that could reshape platform liability</span></li>
+      <li><span class="num">7</span><span>Ten charts: a decade of declining trust, by country</span></li>
+    </ol>
+
+    <div class="newsletter">
+      <h4>The Weekly Dispatch</h4>
+      <p>Our editors' picks of the week's reporting and opinion, delivered Saturday mornings.</p>
+      <input type="email" placeholder="your@email.com">
+      <button>Subscribe</button>
+    </div>
+  </aside>
+
+</main>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-brand">Ironshore <span class="accent">Dispatch</span></div>
+      <p>Independent reporting on global affairs, data, and ideas. Published continuously since 2001.</p>
+    </div>
+    <div>
+      <h5>Sections</h5>
+      <a href="../front-page/index.html">Front Page</a>
+      <a href="../world/index.html">World</a>
+      <a href="../data-desk/index.html">Data Desk</a>
+      <a href="#">Opinion</a>
+      <a href="../archive/index.html">Archive</a>
+    </div>
+    <div>
+      <h5>About</h5>
+      <a href="#">Masthead</a>
+      <a href="#">Ethics policy</a>
+      <a href="#">Corrections</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>
+      <h5>Subscribe</h5>
+      <a href="#">Print &amp; digital</a>
+      <a href="#">Newsletters</a>
+      <a href="#">Gift a subscription</a>
+      <a href="#">Institutional</a>
+    </div>
+  </div>
+  <div class="copyright">© 2024 Ironshore Dispatch Media Ltd. All rights reserved. Reproduction without permission prohibited.</div>
+</footer>
+
+</body>
+</html>

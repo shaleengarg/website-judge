@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-ironbell-founders-summit-ecd1",
+  "tier": 1,
+  "genre": "event-announcement",
+  "pages": [
+    "announcement",
+    "schedule",
+    "speakers",
+    "venue",
+    "register"
+  ],
+  "palette_hint": "deep charcoal background (#1c1c1e), bright white text (#f5f5f5), amber accent (#e8a020)",
+  "type_style": "system sans-serif throughout (Arial/Helvetica), bold heavy headings, regular weight body, terse industrial feel",
+  "description": "Ironbell Founders Summit is a one-day independent startup conference held in Detroit, announced via a stark, text-forward static site with no images.",
+  "constraints": [
+    "single centered column with max-width of 660px on a dark charcoal background",
+    "all section headings in amber (#e8a020), uppercase, letter-spacing 0.1em",
+    "thin 1px horizontal rules in amber between every section",
+    "navigation bar is plain text links in white, active page underlined in amber",
+    "buttons are solid amber background with charcoal text, no rounded corners, full-width on mobile feel (max-width 280px, centered)"
+  ],
+  "page_specs": {
+    "announcement": "Large bold headline reading 'IRONBELL FOUNDERS SUMMIT' followed by the date (October 11, 2025) and city (Detroit, MI) in amber. A three-sentence pitch explains this is an invite-open, no-sponsors, no-fluff single-day conference for founders under five years in business. A prominent Register button links to the register page.",
+    "schedule": "A vertical list of eight time-blocked sessions from 8:00 AM to 6:30 PM, each showing the time in amber, a bold session title, and a one-line description. Lunch and two coffee breaks are listed plainly. The day closes with an open networking hour labeled 'The Floor Is Yours'.",
+    "speakers": "Six speakers listed vertically, each with their full name in bold, their company and title in regular weight, and a two-sentence bio. Speakers include a Detroit auto-tech founder, a logistics startup CEO, a fintech operator, a hardware entrepreneur, a solo SaaS builder, and a venture-backed food-tech founder \u2014 all fictional but named specifically.",
+    "venue": "Name and full street address of the fictional venue 'Corktown Engine Works, 418 Meldrum Street, Detroit MI 48201' displayed in large type. Three short paragraphs cover parking, public transit options (bus line 16 and QLine stop), and accessibility features. A note at the bottom states doors open at 7:30 AM.",
+    "register": "A short paragraph stating that attendance is free but capped at 200 seats, and that a confirmation email will be sent within 48 hours. Attendee name, email, and company fields are shown as styled text labels with plain bordered inputs. A full-width amber submit button labeled 'CLAIM YOUR SEAT' closes the form."
+  }
+}

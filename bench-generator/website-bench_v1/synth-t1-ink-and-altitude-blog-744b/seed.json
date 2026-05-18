@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-ink-and-altitude-blog-744b",
+  "tier": 1,
+  "genre": "personal-blog",
+  "pages": [
+    "journal",
+    "essays",
+    "field-notes",
+    "reading-list",
+    "about"
+  ],
+  "palette_hint": "pale slate background (#e8eaed), dark charcoal text (#1e1e24), rust-orange accent (#b5451b) for links and headings",
+  "type_style": "system serif (Georgia) for headings and pull quotes, system sans-serif for body text, normal weight, comfortable 1.7 line-height",
+  "description": "A personal blog by a mountaineer and essayist named Petra Voss, documenting climbs, slow travel, and ideas encountered along the way.",
+  "constraints": [
+    "single centered column with max-width of 660px, generous top and bottom padding",
+    "navigation is a plain horizontal list of text links at the top, active page shown in rust-orange with no underline",
+    "thin 1px solid #c0c4cc horizontal rules separate every major section",
+    "no images, no cards, no boxes \u2014 typography only on the flat slate background",
+    "post titles are rust-orange serif, dates are small gray sans-serif above each title"
+  ],
+  "page_specs": {
+    "journal": "The main feed page listing Petra's 6 most recent journal entries, each showing a small gray date, a rust-orange serif title, and a two-sentence excerpt followed by a plain 'Read more' text link. A short italicized site tagline \u2014 'Writing from elevation and elsewhere' \u2014 sits just below the site name at the top.",
+    "essays": "A vertical list of 7 long-form essay titles with their publication date and a single-line subject tag (e.g., 'solitude', 'cartography', 'weather') in gray italic. No excerpts \u2014 just the title as a rust-orange link, date, and tag.",
+    "field-notes": "Brief dispatches from the trail: 8 entries listed chronologically, each with a date, a bold location name (e.g., 'Chamonix Valley, France'), and two to three lines of raw, unpolished observation text. No titles, no links \u2014 just the notes themselves separated by horizontal rules.",
+    "reading-list": "A curated list of 10 books that shaped Petra's thinking, organized under three plain-text headings: 'Mountains', 'Philosophy', and 'Fiction'. Each entry shows the book title in bold, author name in normal weight, and one sentence explaining why it matters to her.",
+    "about": "Three paragraphs introducing Petra Voss: her background as a geologist turned writer, the peaks she has summited, and what she hopes readers take from this blog. Ends with a plain-text email address and a note that she replies slowly but genuinely."
+  }
+}

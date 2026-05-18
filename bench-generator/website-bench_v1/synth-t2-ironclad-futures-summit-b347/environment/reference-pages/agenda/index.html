@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agenda — IRONCLAD 2025</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f4f1ec;
+    color: #1a1a18;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .container {
+    width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  /* Nav */
+  .nav {
+    border-bottom: 1px solid #c8c2b8;
+    background: #f4f1ec;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 32px;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    color: #1a1a18;
+    letter-spacing: 0.5px;
+  }
+  .logo .amber { color: #d97c0e; }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: #1a1a18;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .nav-links a.active { color: #0e6b6b; }
+
+  /* Page header */
+  .page-header {
+    padding: 56px 0 32px;
+  }
+  .page-header h1 {
+    font-family: Georgia, serif;
+    font-size: 44px;
+    font-weight: bold;
+    color: #1a1a18;
+    margin-bottom: 10px;
+  }
+  .page-header p {
+    color: #4a4a45;
+    max-width: 720px;
+    font-size: 15px;
+  }
+  .badge {
+    display: inline-block;
+    background: #d97c0e;
+    color: #fff;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  /* Day sections */
+  .day {
+    margin-bottom: 36px;
+    border: 1px solid #c8c2b8;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fbf9f5;
+  }
+  .day-header {
+    background: #0e6b6b;
+    color: #fff;
+    padding: 18px 24px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .day-header h2 {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .day-header .date {
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+
+  .schedule-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 240px;
+    padding: 16px 24px;
+    border-top: 1px solid #e3ddd2;
+    align-items: center;
+    border-left: 4px solid transparent;
+  }
+  .schedule-row.head {
+    background: #efeae0;
+    border-top: none;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #6a665e;
+    font-weight: 600;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .schedule-row.keynote {
+    border-left: 4px solid #d97c0e;
+    background: #fbf6ec;
+  }
+  .schedule-row .time {
+    font-weight: 600;
+    color: #1a1a18;
+    font-size: 14px;
+  }
+  .schedule-row .title {
+    font-size: 15px;
+    color: #1a1a18;
+  }
+  .schedule-row .title strong {
+    display: block;
+    margin-bottom: 2px;
+  }
+  .schedule-row .title .type {
+    font-size: 11px;
+    color: #0e6b6b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .schedule-row.keynote .title .type { color: #d97c0e; }
+  .schedule-row .meta {
+    font-size: 13px;
+    color: #4a4a45;
+    text-align: right;
+  }
+  .schedule-row .meta .room {
+    display: block;
+    font-size: 11px;
+    color: #6a665e;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1a1a18;
+    color: #f4f1ec;
+    margin-top: 60px;
+    padding: 36px 0;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .footer-left .fname {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .footer-left .fname .amber { color: #d97c0e; }
+  .footer-left p {
+    font-size: 13px;
+    color: #b9b5ac;
+  }
+  .footer-right {
+    text-align: right;
+    font-size: 13px;
+    color: #b9b5ac;
+    line-height: 1.7;
+  }
+  .footer-right strong { color: #f4f1ec; }
+</style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="logo">IRONCLAD<span class="amber">.</span>2025</div>
+      <nav class="nav-links">
+        <a href="../home/index.html">Home</a>
+        <a href="#" class="active">Agenda</a>
+        <a href="../speakers/index.html">Speakers</a>
+        <a href="../workshops/index.html">Workshops</a>
+        <a href="../register/index.html">Register</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="page-header">
+      <span class="badge">Three Days · 18 Sessions</span>
+      <h1>Conference Agenda</h1>
+      <p>Three days of keynotes, panels, and deep-dive sessions on the technologies reshaping industrial manufacturing. Sessions marked with an amber border are headline keynotes open to all attendees.</p>
+    </section>
+
+    <!-- Day 1 -->
+    <section class="day">
+      <div class="day-header">
+        <h2>Day 1 — Foundations</h2>
+        <span class="date">Tuesday, October 14</span>
+      </div>
+      <div class="schedule-row head">
+        <div>Time</div><div>Session</div><div>Speaker / Room</div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">08:00 — 09:00</div>
+        <div class="title"><span class="type">Registration</span><strong>Check-in & Continental Breakfast</strong></div>
+        <div class="meta">Hospitality Team<span class="room">Main Concourse</span></div>
+      </div>
+      <div class="schedule-row keynote">
+        <div class="time">09:00 — 10:15</div>
+        <div class="title"><span class="type">Opening Keynote</span><strong>Forging the Future: A New Industrial Era</strong></div>
+        <div class="meta">Dr. Helena Marsh<span class="room">Grand Hall A</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">10:30 — 11:45</div>
+        <div class="title"><span class="type">Panel</span><strong>Reshoring American Manufacturing</strong></div>
+        <div class="meta">Industry Leaders Panel<span class="room">Steel Room 2</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">12:00 — 13:30</div>
+        <div class="title"><span class="type">Break</span><strong>Networking Lunch</strong></div>
+        <div class="meta">Catered<span class="room">Riverside Atrium</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">13:45 — 15:00</div>
+        <div class="title"><span class="type">Session</span><strong>Advanced Composites in Heavy Industry</strong></div>
+        <div class="meta">Marcus Tan, MIT<span class="room">Foundry Room 1</span></div>
+      </div>
+      <div class="schedule-row keynote">
+        <div class="time">15:30 — 17:00</div>
+        <div class="title"><span class="type">Closing Keynote</span><strong>From Pittsburgh's Past to Industry 5.0</strong></div>
+        <div class="meta">Sec. Robert Lin<span class="room">Grand Hall A</span></div>
+      </div>
+    </section>
+
+    <!-- Day 2 -->
+    <section class="day">
+      <div class="day-header">
+        <h2>Day 2 — Smart Systems</h2>
+        <span class="date">Wednesday, October 15</span>
+      </div>
+      <div class="schedule-row head">
+        <div>Time</div><div>Session</div><div>Speaker / Room</div>
+      </div>
+      <div class="schedule-row keynote">
+        <div class="time">09:00 — 10:15</div>
+        <div class="title"><span class="type">Morning Keynote</span><strong>AI on the Factory Floor</strong></div>
+        <div class="meta">Priya Venkataraman<span class="room">Grand Hall A</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">10:30 — 11:45</div>
+        <div class="title"><span class="type">Workshop Track</span><strong>Digital Twins in Practice</strong></div>
+        <div class="meta">Siemens Engineering<span class="room">Foundry Room 1</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">11:45 — 13:00</div>
+        <div class="title"><span class="type">Break</span><strong>Lunch & Vendor Expo</strong></div>
+        <div class="meta">Exhibitors<span class="room">Riverside Atrium</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">13:15 — 14:30</div>
+        <div class="title"><span class="type">Panel</span><strong>Cybersecurity for Operational Technology</strong></div>
+        <div class="meta">CISA & Industry Panel<span class="room">Steel Room 2</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">14:45 — 16:00</div>
+        <div class="title"><span class="type">Session</span><strong>Edge Compute and Predictive Maintenance</strong></div>
+        <div class="meta">Dr. James Okafor<span class="room">Foundry Room 1</span></div>
+      </div>
+      <div class="schedule-row keynote">
+        <div class="time">16:30 — 18:00</div>
+        <div class="title"><span class="type">Fireside Keynote</span><strong>Building the Autonomous Plant</strong></div>
+        <div class="meta">CEO Karen Liang, Rockwell<span class="room">Grand Hall A</span></div>
+      </div>
+    </section>
+
+    <!-- Day 3 -->
+    <section class="day">
+      <div class="day-header">
+        <h2>Day 3 — Sustainable Futures</h2>
+        <span class="date">Thursday, October 16</span>
+      </div>
+      <div class="schedule-row head">
+        <div>Time</div><div>Session</div><div>Speaker / Room</div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">08:30 — 09:30</div>
+        <div class="title"><span class="type">Roundtable</span><strong>Decarbonizing Steel: A Working Session</strong></div>
+        <div class="meta">Invited Roundtable<span class="room">Steel Room 2</span></div>
+      </div>
+      <div class="schedule-row keynote">
+        <div class="time">09:45 — 11:00</div>
+        <div class="title"><span class="type">Keynote</span><strong>Hydrogen, Heat, and Heavy Industry</strong></div>
+        <div class="meta">Dr. Sofia Reyes, DOE<span class="room">Grand Hall A</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">11:15 — 12:30</div>
+        <div class="title"><span class="type">Panel</span><strong>The Circular Supply Chain</strong></div>
+        <div class="meta">Sustainability Council<span class="room">Foundry Room 1</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">12:30 — 13:45</div>
+        <div class="title"><span class="type">Break</span><strong>Closing Luncheon</strong></div>
+        <div class="meta">Catered<span class="room">Riverside Atrium</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="time">14:00 — 15:15</div>
+        <div class="title"><span class="type">Session</span><strong>Grid-Scale Storage for Industrial Loads</strong></div>
+        <div class="meta">Anika Brandt, NREL<span class="room">Steel Room 2</span></div>
+      </div>
+      <div class="schedule-row keynote">
+        <div class="time">15:30 — 16:45</div>
+        <div class="title"><span class="type">Closing Keynote</span><strong>Ironclad 2030: The Decade Ahead</strong></div>
+        <div class="meta">Conference Co-Chairs<span class="room">Grand Hall A</span></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <div class="fname">IRONCLAD<span class="amber">.</span>2025</div>
+        <p>Forging the Future of Industrial Technology</p>
+      </div>
+      <div class="footer-right">
+        <strong>October 14–16, 2025</strong><br>
+        David L. Lawrence Convention Center · Pittsburgh, PA<br>
+        contact@ironclad2025.org
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

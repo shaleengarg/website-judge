@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hours — Ember & Rye Smokehouse</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1e1a18;
+    color: #f0ebe3;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  nav {
+    background: #2a2420;
+    width: 100%;
+    padding: 18px 0;
+    text-align: center;
+  }
+  nav ul {
+    list-style: none;
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  nav a {
+    color: #f0ebe3;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 13px;
+    padding-bottom: 3px;
+  }
+  nav a.active {
+    border-bottom: 2px solid #c95f2a;
+    color: #f0ebe3;
+  }
+  .container {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 60px 20px 40px;
+  }
+  .masthead {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .masthead h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 36px;
+    color: #f0ebe3;
+  }
+  .masthead .tag {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 11px;
+    color: #a68b6e;
+    margin-top: 10px;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #a68b6e;
+    margin: 36px 0;
+  }
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #c95f2a;
+    font-size: 20px;
+    margin-bottom: 24px;
+  }
+  .hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .hours-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px dotted #3a322e;
+    font-size: 18px;
+  }
+  .hours-list li:last-child { border-bottom: none; }
+  .day {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 14px;
+    color: #f0ebe3;
+  }
+  .time {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #f0ebe3;
+  }
+  .closed .time {
+    color: #a68b6e;
+    font-style: italic;
+  }
+  .note {
+    font-style: italic;
+    color: #a68b6e;
+    text-align: center;
+    font-size: 15px;
+    padding: 0 10px;
+  }
+  .note strong {
+    color: #f0ebe3;
+    font-style: normal;
+  }
+  footer {
+    max-width: 660px;
+    margin: 20px auto 0;
+    padding: 30px 20px 50px;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 11px;
+    color: #a68b6e;
+  }
+  footer .accent { color: #c95f2a; }
+</style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="../menu/index.html">Menu</a></li>
+      <li><a href="../pitmaster/index.html">Pitmaster</a></li>
+      <li><a href="../find-us/index.html">Find Us</a></li>
+      <li><a href="#" class="active">Hours</a></li>
+      <li><a href="../catering/index.html">Catering</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="masthead">
+      <h1>Ember &amp; Rye</h1>
+      <div class="tag">Texas Smokehouse · Est. Amarillo</div>
+    </div>
+
+    <hr>
+
+    <h2>When We're Open</h2>
+    <ul class="hours-list">
+      <li class="closed">
+        <span class="day">Monday</span>
+        <span class="time">Closed</span>
+      </li>
+      <li>
+        <span class="day">Tuesday</span>
+        <span class="time">11am – 8pm</span>
+      </li>
+      <li>
+        <span class="day">Wednesday</span>
+        <span class="time">11am – 8pm</span>
+      </li>
+      <li>
+        <span class="day">Thursday</span>
+        <span class="time">11am – 8pm</span>
+      </li>
+      <li>
+        <span class="day">Friday</span>
+        <span class="time">11am – 9pm</span>
+      </li>
+      <li>
+        <span class="day">Saturday</span>
+        <span class="time">11am – 9pm</span>
+      </li>
+      <li>
+        <span class="day">Sunday</span>
+        <span class="time">11am – 6pm</span>
+      </li>
+    </ul>
+
+    <hr>
+
+    <p class="note">
+      <strong>A word to the wise —</strong> the kitchen closes when the meat sells out. On weekends, that's usually by early evening. Come hungry, come early.
+    </p>
+
+    <hr>
+  </div>
+
+  <footer>
+    Ember &amp; Rye Smokehouse <span class="accent">·</span> 4812 Cinder Road, Amarillo TX
+  </footer>
+</body>
+</html>

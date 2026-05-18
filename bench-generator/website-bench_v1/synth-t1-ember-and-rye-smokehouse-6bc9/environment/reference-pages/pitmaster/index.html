@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pitmaster — Ember & Rye Smokehouse</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1e1a18;
+    color: #f0ebe3;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  .nav {
+    background: #2a2420;
+    width: 100%;
+  }
+  .nav-inner {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 18px 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .nav a {
+    color: #f0ebe3;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    padding-bottom: 3px;
+  }
+  .nav a.active {
+    border-bottom: 2px solid #c95f2a;
+    color: #f0ebe3;
+  }
+  .container {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 60px 0 40px;
+  }
+  .masthead {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .masthead .brand {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 22px;
+    color: #f0ebe3;
+  }
+  .masthead .tag {
+    font-style: italic;
+    color: #a68b6e;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  hr.rule {
+    border: 0;
+    border-top: 1px solid #a68b6e;
+    margin: 36px 0;
+  }
+  h1, h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #c95f2a;
+    font-weight: 800;
+  }
+  h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  p {
+    margin-bottom: 22px;
+  }
+  .lede {
+    font-size: 19px;
+    color: #f0ebe3;
+  }
+  .byline {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #c95f2a;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  .byline .role {
+    color: #a68b6e;
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  footer {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 30px 0 60px;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a68b6e;
+  }
+  footer .sep { color: #c95f2a; padding: 0 8px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../menu/index.html">Menu</a>
+    <a href="#" class="active">Pitmaster</a>
+    <a href="../find-us/index.html">Find Us</a>
+    <a href="../hours/index.html">Hours</a>
+    <a href="../catering/index.html">Catering</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="masthead">
+    <div class="brand">Ember &amp; Rye Smokehouse</div>
+    <div class="tag">Slow smoke. Honest cooking. Since the fire was lit.</div>
+  </div>
+
+  <hr class="rule">
+
+  <h2>Behind the Pit</h2>
+  <h1>The Pitmaster</h1>
+
+  <p class="lede">
+    Darnell Okafor grew up in Lockhart, Texas — a town where smoke hangs in the air like weather and barbecue is less a meal than a measure of a man. He learned to read a fire before he learned to drive, working summer shifts at his uncle's roadside pit on Highway 183. By the time he was nineteen, he could tell you the temperature of a coal bed by the color alone, and the doneness of a brisket by the way it sagged in his hand.
+  </p>
+
+  <p>
+    Every cut that leaves our kitchen has spent at least eighteen hours over post-oak — the same wood the old Hill Country joints have leaned on for a century. Darnell starts the pit before midnight, feeds it through the small hours, and stands by it through breakfast. No gas assist, no electric crutch, no shortcut. Just split oak, salt, coarse pepper, and the kind of patience that only makes sense if you've watched a brisket render down at 225 degrees and seen what time can do to a piece of meat.
+  </p>
+
+  <p>
+    His rule for the menu is simple, and he repeats it to anyone who'll listen: good barbecue needs nothing on top of it. There is no sauce bottle on our tables, and there won't be. If the bark is right and the smoke ring runs deep and the fat has melted into something you could spread with a knife, then a sauce is just an apology for work that wasn't done. Around here, the meat speaks for itself — and most days, that's plenty loud.
+  </p>
+
+  <div class="byline">
+    Darnell &ldquo;Smoke&rdquo; Okafor
+    <span class="role">Head Pitmaster</span>
+  </div>
+
+  <hr class="rule">
+
+</div>
+
+<footer>
+  Ember &amp; Rye Smokehouse <span class="sep">/</span> Amarillo, Texas <span class="sep">/</span> Open Tue–Sun
+</footer>
+
+</body>
+</html>

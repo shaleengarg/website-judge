@@ -1,0 +1,116 @@
+{
+  "tasks": [
+    {
+      "id": "synth-t1-burnt-sage-kitchen-9322",
+      "tier": 1,
+      "genre": "recipe-card",
+      "description": "A single hand-written-style recipe card site for a home cook sharing her definitive slow-braised lamb shoulder with preserved lemon \u2014 one dish presented across five focused pages.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t1-ember-and-rye-smokehouse-6bc9",
+      "tier": 1,
+      "genre": "restaurant",
+      "description": "A no-frills Texas-style BBQ smokehouse website \u2014 dark, bold, text-driven, celebrating slow-smoked meats and honest cooking.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t1-ink-and-altitude-blog-744b",
+      "tier": 1,
+      "genre": "personal-blog",
+      "description": "A personal blog by a mountaineer and essayist named Petra Voss, documenting climbs, slow travel, and ideas encountered along the way.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t1-inkwell-and-insomnia-blog-78b5",
+      "tier": 1,
+      "genre": "personal-blog",
+      "description": "A personal blog by a night-owl writer named Vera Osei, covering late-night reflections, long-form essays, and annotated reading lists.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t1-ironbell-founders-summit-ecd1",
+      "tier": 1,
+      "genre": "event-announcement",
+      "description": "Ironbell Founders Summit is a one-day independent startup conference held in Detroit, announced via a stark, text-forward static site with no images.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t1-mira-voss-printmaker-0262",
+      "tier": 1,
+      "genre": "portfolio",
+      "description": "A printmaker and relief artist's portfolio presenting woodcut and linocut work in a plain, press-sheet aesthetic with no imagery.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-inkwell-doc-platform-ba25",
+      "tier": 2,
+      "genre": "saas-marketing",
+      "description": "Marketing site for Inkwell, a SaaS platform that turns messy internal knowledge bases into clean, searchable, auto-organized documentation hubs for mid-size engineering teams.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-inkwell-quarterly-review-7ca2",
+      "tier": 2,
+      "genre": "editorial",
+      "description": "Inkwell Quarterly is a fictional literary and cultural review publishing long-form essays, author interviews, and critical notebook entries across five editorially styled pages.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-ironclad-futures-summit-b347",
+      "tier": 2,
+      "genre": "conference",
+      "description": "A three-day industrial technology and manufacturing futures conference called IRONCLAD 2025, held in Pittsburgh, Pennsylvania.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-ironwood-literacy-project-f866",
+      "tier": 2,
+      "genre": "nonprofit",
+      "description": "A community literacy nonprofit called the Ironwood Literacy Project that provides adult reading programs across rural Appalachia.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-noctua-sleep-tracker-d5d0",
+      "tier": 2,
+      "genre": "mobile-app",
+      "description": "Marketing site for Noctua, a sleep-tracking mobile app that analyzes rest cycles and gives personalized bedtime coaching.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t3-ferroflux-api-docs-6c28",
+      "tier": 3,
+      "genre": "documentation",
+      "description": "API documentation site for a fictional real-time sensor data platform called FerroFlux, covering REST endpoints, SDKs, and integration guides.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t3-inkwell-press-supplies-d2b2",
+      "tier": 3,
+      "genre": "ecommerce",
+      "description": "An online specialty shop selling letterpress printing supplies, inks, and custom type blocks under the brand Inkwell Press Co.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t3-ironclad-fleet-ops-9fe6",
+      "tier": 3,
+      "genre": "dashboard",
+      "description": "Fleet operations dashboard for a fictional long-haul trucking company called Ironclad Logistics, tracking vehicle status, driver alerts, and performance reports.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t3-ironshore-dispatch-4ece",
+      "tier": 3,
+      "genre": "news-magazine",
+      "description": "Ironshore Dispatch is a fictional independent news magazine covering global affairs, data journalism, and opinion, styled after a classic broadsheet-meets-digital publication.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t3-ironveil-creative-studio-4df4",
+      "tier": 3,
+      "genre": "agency",
+      "description": "Ironveil is a fictional boutique brand-strategy and visual identity agency specializing in challenger brands, presenting its work, capabilities, and team across five densely-laid-out pages.",
+      "n_pages": 5
+    }
+  ]
+}

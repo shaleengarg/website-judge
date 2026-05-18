@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Menu — Ember & Rye Smokehouse</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1e1a18;
+    color: #f0ebe3;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  nav {
+    background: #2a2420;
+    padding: 18px 0;
+    text-align: center;
+    letter-spacing: 0.12em;
+  }
+  nav a {
+    color: #f0ebe3;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin: 0 18px;
+    padding-bottom: 4px;
+  }
+  nav a.active {
+    color: #f0ebe3;
+    border-bottom: 2px solid #c95f2a;
+  }
+  .wrap {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  .masthead {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .masthead h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 38px;
+    color: #f0ebe3;
+    margin-bottom: 10px;
+  }
+  .masthead p {
+    color: #a68b6e;
+    font-style: italic;
+    font-size: 15px;
+  }
+  hr.rule {
+    border: 0;
+    border-top: 1px solid #a68b6e;
+    margin: 40px 0;
+  }
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #c95f2a;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 24px;
+  }
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .item:last-child { margin-bottom: 0; }
+  .item .info { flex: 1; }
+  .item .name {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    color: #f0ebe3;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    margin-bottom: 2px;
+  }
+  .item .desc {
+    color: #a68b6e;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .item .price {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    color: #f0ebe3;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .note {
+    text-align: center;
+    font-style: italic;
+    color: #a68b6e;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  footer {
+    border-top: 1px solid #a68b6e;
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 28px 24px 40px;
+    text-align: center;
+    color: #a68b6e;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+  <nav>
+    <a href="#" class="active">Menu</a>
+    <a href="../pitmaster/index.html">Pitmaster</a>
+    <a href="../find-us/index.html">Find Us</a>
+    <a href="../hours/index.html">Hours</a>
+    <a href="../catering/index.html">Catering</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="masthead">
+      <h1>Ember &amp; Rye</h1>
+      <p>Slow-smoked over oak. Served honest.</p>
+    </div>
+
+    <hr class="rule">
+
+    <section>
+      <h2>Smoked Meats</h2>
+      <div class="item">
+        <div class="info">
+          <div class="name">Beef Brisket</div>
+          <div class="desc">18 hours over Texas post oak. Bark, smoke ring, and patience.</div>
+        </div>
+        <div class="price">MKT</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Pork Spare Ribs</div>
+          <div class="desc">Heavy black pepper rub, pulled clean from the bone.</div>
+        </div>
+        <div class="price">$26 / lb</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Pulled Pork Shoulder</div>
+          <div class="desc">Hand-pulled, lightly seasoned, no sauce needed.</div>
+        </div>
+        <div class="price">$22 / lb</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Hot Link Sausage</div>
+          <div class="desc">House-ground beef and pork, snap casing, plenty of heat.</div>
+        </div>
+        <div class="price">$9 each</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Smoked Turkey Breast</div>
+          <div class="desc">Brined overnight, sliced thick, juicy through the middle.</div>
+        </div>
+        <div class="price">$20 / lb</div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section>
+      <h2>Sides</h2>
+      <div class="item">
+        <div class="info">
+          <div class="name">Pit Beans</div>
+          <div class="desc">Slow-cooked with brisket trimmings and brown sugar.</div>
+        </div>
+        <div class="price">$5</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Buttermilk Slaw</div>
+          <div class="desc">Cold, sharp, and crunchy. A counterpunch to the smoke.</div>
+        </div>
+        <div class="price">$4</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Skillet Cornbread</div>
+          <div class="desc">Cast-iron baked, crisp edges, honey butter on the side.</div>
+        </div>
+        <div class="price">$4</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Potato Salad</div>
+          <div class="desc">Mustard-forward, with pickle and red onion.</div>
+        </div>
+        <div class="price">$5</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Collard Greens</div>
+          <div class="desc">Stewed long with smoked ham hock and cider vinegar.</div>
+        </div>
+        <div class="price">$5</div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section>
+      <h2>Sandwiches</h2>
+      <div class="item">
+        <div class="info">
+          <div class="name">Brisket Sandwich</div>
+          <div class="desc">Quarter pound of chopped brisket on a soft white bun, pickles and onions.</div>
+        </div>
+        <div class="price">$14</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Pulled Pork Sandwich</div>
+          <div class="desc">Piled high with slaw on top if you want it that way.</div>
+        </div>
+        <div class="price">$12</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Hot Link on a Bun</div>
+          <div class="desc">One whole link, mustard, raw onion. That's it.</div>
+        </div>
+        <div class="price">$10</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">The Three-Meat</div>
+          <div class="desc">Brisket, pork, and sausage stacked under a single bun. Bring a friend.</div>
+        </div>
+        <div class="price">$18</div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section>
+      <h2>Drinks</h2>
+      <div class="item">
+        <div class="info">
+          <div class="name">Sweet Tea</div>
+          <div class="desc">Brewed daily, served by the mason jar with free refills.</div>
+        </div>
+        <div class="price">$3</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Mexican Coke</div>
+          <div class="desc">Cane sugar, glass bottle, opened in front of you.</div>
+        </div>
+        <div class="price">$4</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Lone Star Longneck</div>
+          <div class="desc">The national beer of Texas. Cold as we can get it.</div>
+        </div>
+        <div class="price">$5</div>
+      </div>
+      <div class="item">
+        <div class="info">
+          <div class="name">Rye Whiskey, Neat</div>
+          <div class="desc">Two fingers, no ice. Ask the bar what's pouring.</div>
+        </div>
+        <div class="price">$9</div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <p class="note">Sold by the pound. Market price on brisket. Plates served with two sides.</p>
+  </div>
+
+  <footer>
+    Ember &amp; Rye Smokehouse &nbsp;·&nbsp; Amarillo, Texas
+  </footer>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inkwell Quarterly — Volume XII</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f7f3ee;
+    color: #1c1208;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .container {
+    width: 960px;
+    margin: 0 auto;
+    padding: 0 56px;
+  }
+  /* Nav */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0 22px;
+    border-bottom: 1px solid #d4ccc4;
+  }
+  .masthead {
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    color: #1c1208;
+  }
+  .nav ul {
+    list-style: none;
+    display: flex;
+    gap: 26px;
+  }
+  .nav a {
+    text-decoration: none;
+    color: #1c1208;
+    font-size: 11px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    font-variant: small-caps;
+  }
+  .nav a.active { color: #c4736a; }
+  .nav a:hover { color: #c4736a; }
+
+  /* Masthead area */
+  .editorial-masthead {
+    padding: 60px 0 48px;
+    border-bottom: 1px solid #d4ccc4;
+    text-align: center;
+  }
+  .issue-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #7a9e87;
+    margin-bottom: 18px;
+  }
+  .issue-title {
+    font-size: 52px;
+    font-weight: bold;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 24px;
+  }
+  .issue-title em {
+    color: #c4736a;
+    font-style: italic;
+    font-weight: normal;
+  }
+  .editorial-note {
+    max-width: 620px;
+    margin: 0 auto;
+    font-style: italic;
+    color: #4a3a2c;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  /* Section heading */
+  .section-heading {
+    border-left: 4px solid #c4736a;
+    padding-left: 14px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 48px 0 24px;
+  }
+
+  /* Lead stories grid */
+  .lead-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 24px;
+  }
+  .card {
+    border: 1px solid #d4ccc4;
+    border-radius: 4px;
+    padding: 22px;
+    background: #fbf8f3;
+    display: flex;
+    flex-direction: column;
+  }
+  .card.feature { grid-row: span 2; }
+  .card-image {
+    border-radius: 3px;
+    margin-bottom: 18px;
+    color: #f7f3ee;
+    font-size: 11px;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+  }
+  .card.feature .card-image {
+    height: 280px;
+    background: linear-gradient(135deg, #c4736a 0%, #8a3f3a 100%);
+  }
+  .card.side1 .card-image {
+    height: 120px;
+    background: linear-gradient(135deg, #7a9e87 0%, #4f6d5b 100%);
+  }
+  .card.side2 .card-image {
+    height: 120px;
+    background: linear-gradient(135deg, #3b2a1f 0%, #6b4e3a 100%);
+  }
+  .card-kicker {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #7a9e87;
+    margin-bottom: 8px;
+  }
+  .card-headline {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .card.feature .card-headline { font-size: 30px; }
+  .card-excerpt {
+    font-size: 14px;
+    color: #3a2a1c;
+    margin-bottom: 12px;
+  }
+  .byline {
+    font-style: italic;
+    font-size: 13px;
+    color: #c4736a;
+    margin-top: auto;
+  }
+
+  /* Also in issue */
+  .also-strip {
+    display: flex;
+    gap: 18px;
+    margin-top: 32px;
+    padding: 22px 0;
+    border-top: 1px solid #d4ccc4;
+    border-bottom: 1px solid #d4ccc4;
+  }
+  .also-item {
+    flex: 1;
+    padding: 0 14px;
+    border-right: 1px solid #e3dcd2;
+  }
+  .also-item:first-child { padding-left: 0; }
+  .also-item:last-child { border-right: none; padding-right: 0; }
+  .also-num {
+    font-size: 11px;
+    color: #7a9e87;
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .also-title {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .also-author {
+    font-style: italic;
+    font-size: 12px;
+    color: #c4736a;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 56px;
+    padding: 28px 0 40px;
+    border-top: 1px solid #d4ccc4;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    font-size: 13px;
+    color: #4a3a2c;
+  }
+  footer h4 {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #1c1208;
+  }
+  footer .right { text-align: right; }
+  footer em { color: #c4736a; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <div class="masthead">INKWELL QUARTERLY</div>
+      <ul>
+        <li><a href="#" class="active">Front Page</a></li>
+        <li><a href="../essays/index.html">Essays</a></li>
+        <li><a href="../interviews/index.html">Interviews</a></li>
+        <li><a href="../notebook/index.html">Notebook</a></li>
+        <li><a href="../about/index.html">About</a></li>
+      </ul>
+    </nav>
+
+    <section class="editorial-masthead">
+      <div class="issue-label">The Current Issue · Autumn</div>
+      <h1 class="issue-title">Volume XII — <em>The Restless City</em></h1>
+      <p class="editorial-note">An issue assembled in transit, drafted between platforms and late kitchens, attending to the cities that refuse stillness. We gather essays, interviews, and small notes from writers tracing the architecture of unease.</p>
+    </section>
+
+    <h2 class="section-heading">Lead Stories</h2>
+
+    <div class="lead-grid">
+      <article class="card feature">
+        <div class="card-image">FEATURED · ESSAY</div>
+        <div class="card-kicker">Essay</div>
+        <h3 class="card-headline">The Cartography of Sleeplessness</h3>
+        <p class="card-excerpt">In a long walking essay through Lisbon's nocturnal districts, Halverson maps the small economies of insomnia — the bakeries, the all-night chapels, the trams that ferry the unsettled toward dawn and a quieter species of attention.</p>
+        <div class="byline">— by Eira Halverson</div>
+      </article>
+
+      <article class="card side1">
+        <div class="card-image">DISPATCH</div>
+        <div class="card-kicker">Dispatch</div>
+        <h3 class="card-headline">After the Last Tenant</h3>
+        <p class="card-excerpt">A rent-stabilized building in Queens empties one apartment at a time. Marsh listens at the seams between leases, recording the language landlords reach for when describing what is, after all, a slow erasure.</p>
+        <div class="byline">— by Coleman Marsh</div>
+      </article>
+
+      <article class="card side2">
+        <div class="card-image">CRITICISM</div>
+        <div class="card-kicker">Criticism</div>
+        <h3 class="card-headline">Against the Walkable City</h3>
+        <p class="card-excerpt">Liang interrogates the genteel vocabulary of urbanism — walkability, vibrancy, mixed-use — and finds inside it a quiet preference for the affluent stroller and the cleanly composed photograph of leisure.</p>
+        <div class="byline">— by Wen Liang</div>
+      </article>
+    </div>
+
+    <h2 class="section-heading">Also In This Issue</h2>
+
+    <div class="also-strip">
+      <div class="also-item">
+        <div class="also-num">№ 01</div>
+        <div class="also-title">Notes on a Disappearing Bookstore</div>
+        <div class="also-author">Tomás Reiner</div>
+      </div>
+      <div class="also-item">
+        <div class="also-num">№ 02</div>
+        <div class="also-title">A Conversation with Mara Voss</div>
+        <div class="also-author">interviewed by J. Okafor</div>
+      </div>
+      <div class="also-item">
+        <div class="also-num">№ 03</div>
+        <div class="also-title">The Long Shadow of Sebald</div>
+        <div class="also-author">Priya Anand</div>
+      </div>
+      <div class="also-item">
+        <div class="also-num">№ 04</div>
+        <div class="also-title">Letters from the Eastern Line</div>
+        <div class="also-author">H. Bertrand</div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="left">
+        <h4>Our Mission</h4>
+        <p>Inkwell Quarterly publishes patient criticism and slow reporting on books, language, and the cultural weather — a small magazine for readers who linger.</p>
+      </div>
+      <div class="right">
+        <h4>This Issue</h4>
+        <p>Volume XII · Autumn — <em>The Restless City</em><br>
+        Editorial inquiries &amp; correspondence:<br>
+        <em>editors@inkwellquarterly.press</em></p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
