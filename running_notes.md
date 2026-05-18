@@ -114,3 +114,7 @@ Seems like that the scalability part is not really coming through in website gen
 seeds in my generation process. I should probably have an LLM generate the number of seeds based on the count (of each tier type) and then let another llm generate the website for it.
 
 Another Problem with my scoring logic is that I have defined a single size screenshot (1280 x 800). I should do three sizes - desktop, tablet and mobile.
+
+------
+Ok so now there is an LLM to generate the seed; then another set of LLM calls to generate the HTML/CSS. earlier we were asking the LLM to generate the full set of 5 htmls in a single API call. This overflows the max token limits for any complex task. So, I changed that to a call per html page.
+Another problem I saw was that there was not guarantees of diversity in website generation in terms of genres for a single tier. So I fixed that by evenly sampling the genre set.
