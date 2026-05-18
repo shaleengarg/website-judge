@@ -906,6 +906,229 @@ change, the instruction template needs to either (a) not mention the rules
 or (b) be updated in lockstep.
 
 --------------------------
+Dataset generation v2 — fully synthetic, tiers 1-8, per-page codegen
+
+V1 was 10 hand-written seeds × Opus codegen producing all 5 pages in one
+JSON response. Doesn't scale (each seed is ~50 lines of design prose to
+author) and tier-3 sites with sidebars + tables truncated at the 16k output
+cap a meaningful fraction of the time. V2 drops both constraints.
+
+**Two-stage pipeline.** Stage 1 (`concept_gen.py`): Claude Sonnet 4.6 at
+T=0.95 takes a `(tier, genre)` pair and emits a `Seed` JSON (id, palette,
+typography, page list, per-page specs, constraints). The prompt reads
+`TIERS[tier].description` + `css_capabilities` verbatim, so the lever for
+"what does tier 4 look like" lives in `seeds.py`, not in the prompt
+template. Stage 2 (`generate_dataset.py:call_llm_one_page`): Opus 4.7
+generates **one HTML page per LLM call**, not 5-pages-in-one-JSON — each
+page gets its own 16k-token budget. Cross-page consistency comes from the
+seed constraints + a "other pages" context block in each per-page prompt;
+`sanity.py` catches gross drift after the fact.
+
+**Fully synthetic.** `SEEDS`, `get_seeds`, `validate_seeds` are gone from
+`seeds.py`. What remains is `TIERS`, `GENRES`, and the `Seed` TypedDict as
+schema documentation. CLI lost Mode A (`--include-id`, `--start-index`,
+`--synthesize` distinction); `--count N` is the only count flag.
+
+**Parallelism: 5 × --concurrency peak in-flight.** Three pools: synth
+(outer), codegen outer (one worker per seed), codegen inner (5 workers per
+seed, one per page). With `--concurrency 16` that's up to 80 concurrent
+Anthropic calls. All share one `anthropic.Anthropic` client (SDK is
+thread-safe via httpx pooling).
+
+**Tier expansion (4-8).** Static-CSS difficulty ladder beyond V1's 1-3:
+
+| Tier | Signature feature |
+|---|---|
+| 4 | Gradients, box-shadow elevation, decorative pseudo-elements |
+| 5 | Coherent type scale (≥4 sizes, ≥2 weights), drop caps, pull quotes |
+| 6 | Styled forms, custom checkboxes, dense data tables |
+| 7 | Inline `<svg>` illustrations, clip-path, transforms, masking |
+| 8 | Magazine-style assemblies of 3+ heterogeneous regions |
+
+Each new tier needed only: a `TierSpec` entry, 5 genres in `GENRES`, and a
+tier-conditional structural check in `sanity.py:_check_page_structure`
+testing for the signature feature (e.g. tier 7 requires ≥1 inline `<svg>`
+with drawable content). No hand-written seeds at any tier — concept_gen
+reads `css_capabilities` and constrains the LLM via prompt.
+
+**Tier 9 — forward compat, not generatable yet.** `TIERS[9]` is defined with
+`requires_motion=True`, `GENRES[9]` has 5 animation-oriented categories.
+`tier_range()` filters motion tiers out of the default `--tier-max`; the
+orchestrator's gate raises "motion harness not yet implemented" if anyone
+explicitly asks for `--tier-max 9`. Keeps the taxonomy stable so we don't
+renumber when animation lands. Full implementation plan in
+`bench-generator/docs/ARCHITECTURE.md §9.2`, derived from
+`small_checks/docs/BONUS_1.md`.
+
+**Even sampling.** Tier selection is round-robin (`tiers[i % len(tiers)]`).
+Genre selection within a tier is a shuffle-bag — original `random.choice`
+once produced 8 ecommerce / 3 dashboard / 2 documentation / 2 agency / 1
+news-magazine for 16 tier-3 picks (50% ecommerce). Replaced with a
+shuffled deck per tier: deal cards, reshuffle when empty. Now within any
+sliding window of `len(genres)` picks at a tier, every genre appears at
+least once. Both deterministic given `--synth-seed K`.
+
+**Quality-gate stack (cheap → expensive).**
+1. Seed schema (`concept_gen._validate_seed_shape`, free).
+2. HTML validity (`validate_html`, free — parser + body + no `<script>` +
+   no external URLs + length ≥200 bytes).
+3. Sanity (`sanity.py`, local Playwright + DOM probing, tier-conditional
+   structural checks + cross-page consistency).
+4. Relevance (`relevance.py`, Claude Sonnet vision judge, ~$0.05/task).
+
+Wrapped in `scripts/test_pipeline.sh` as a smoke gate.
+
+**Two bugs caught in the field, one structural lesson.** Tier-7 pages
+burned retries on a regex false-positive: `validate_html` was flagging
+`xmlns="http://www.w3.org/2000/svg"` as a forbidden external URL — XML
+namespace identifiers look like URLs but aren't fetched. Fixed by skipping
+URL check when attribute name is `xmlns` or `xmlns:*`. Separately, the V4
+scorer imports `anthropic` but the template Dockerfile didn't install it,
+so the deterministic pass succeeded and the judge crashed silently — every
+trial reported `reward=0.0` with 0 exceptions because `reward.txt` was
+left at its default. Cost the run $83 of Opus tokens producing zero
+signal. Fix was one line in the Dockerfile.
+
+The structural lesson from (b): generated tasks copy `templates/` verbatim
+at generation time, so any later change to `templates/environment/
+Dockerfile` is silently non-applied to existing tasks. No checksum or
+version pin ties a task back to its template revision. Candidate for v3
+of the generator: stamp a `template_version.txt` into each task and have
+the verifier refuse to run on stamp mismatch.
+
+**Open issues going into V4 calibration.**
+- One tier-7 page (species-map with heavy inline SVG) truncated 3× at ~31k
+  chars even per-page. Per-page split bought us a 16k budget per page but a
+  page with visual polish + dense SVG can still exceed it.
+- The "all CSS inline" rule in `prompts.py` is the underlying cost driver:
+  every page redundantly emits ~6kb of shared CSS.
+- Cross-page consistency: per-page codegen loses the model's all-5-pages
+  context. `sanity.py` catches gross drift; subtle padding/line-height
+  drift leaks through.
+
+All three would be fixed by adopting the `small_checks` shared-layout
+pattern (one upfront LLM call producing shared nav + footer + `styles.css`,
+per-page calls emit only page-unique content). Roughly halves per-page
+output and makes shared regions byte-identical across pages. Deferred
+until failure rate or drift justifies the refactor (~5% threshold).
+
+**Cost & wall-clock.** `--count 16 --concurrency 16` is ~$0.30-0.50 per
+task (Sonnet concept + 5 Opus per-page calls + occasional retry), ~8
+minutes end-to-end. Bounded by API latency, not local compute.
+
+**Scalability — plumbing yes, semantic uniqueness no (TODO).** The pipeline
+scales linearly to thousands of tasks: API cost and storage are bounded,
+the 5N-concurrency math doesn't change, UUID suffixes prevent filesystem
+collisions. But **concept-level uniqueness is not enforced.** Within a
+single 16-task run (`--synth-seed 13`) we already see Sonnet converge on
+a small lexical neighborhood — three "Summit" conferences at tier 2, two
+`Iron-` and two `Copper-` brand prefixes at tier 3. At `--count 1000+`
+this would compound into many near-duplicate brand names and palettes.
+Fix is to copy the `small_checks/pipeline/concepts.py` pattern: (a) include
+an "AVOID these existing brands/palettes" block in the concept-gen prompt
+listing the most-recent N concepts so Sonnet actively diverges; (b)
+post-hoc reject candidates whose brand-name `SequenceMatcher.ratio() > 0.7`
+or whose 3-color palette is within ΔE threshold of an accepted one, and
+over-sample by ~20% to absorb rejections. ~50 lines in `concept_gen.py`,
+no other layer affected. Until this lands, "synthesized N seeds" means
+"N tasks on disk", not "N distinct websites." Revisit before generating
+any large batch.
+
+--------------------------
+Scoring V4 — three viewports + full-page capture (planned)
+
+V3.3 grades a single 1280×800 fold of every reference and agent page. Two
+problems with that:
+
+1. **No responsive testing.** A page that looks fine on a 1440 laptop and
+   completely broken on a 390 phone scores the same as one that's correct
+   everywhere. The judge sees only the desktop fold; responsive failures are
+   invisible. The "Responsive blindness" item that had been on V2's
+   what-we-don't-cover list all the way through V3.3 was never actually
+   addressed — the plumbing was multi-viewport-ready (the judge call
+   accepts a list of labeled images) but the orchestration only ever fed
+   one viewport in.
+2. **Below-the-fold content is invisible.** Every `page.screenshot(...)`
+   call across the codebase uses `full_page=False`. Pages longer than 800px
+   get cut off at the fold; the agent could write garbage below the 800px
+   line and score perfectly. The DOM extractor's JavaScript reinforces this
+   by literally treating elements with `top >= 800` as invisible.
+
+V4 fixes both. Three viewports — desktop 1440×900, tablet 768×1024, phone
+390×844 (industry-standard responsive bracket) — captured with
+`full_page=True`. Every page produces six PNGs per trial (3 reference + 3
+agent). Both the deterministic V2.1 pipeline and the multimodal-LLM judge
+see all three.
+
+Design decisions locked before implementation:
+
+| Decision | Choice | Why |
+|---|---|---|
+| Viewport sizes | 1440×900 / 768×1024 / 390×844 | Industry-standard responsive bracket. Desktop default shifts from 1280 → 1440 (matches small_checks). |
+| V2.1 aspects across viewports | Run each viewport, average across | 3× deterministic compute, but the per-viewport averaging means responsive failures hit pixel/structural metrics too, not just the judge. |
+| Adversarial calibration style | Leave the 96px-headings + 2deg-rotation style untouched | "Visually broken everywhere" is the point. Scaling weirdly across viewports is still broken. |
+| Reference PNG layout | `/app/references/{viewport}/{page}.png` | Mirrors small_checks. Easy to glob by viewport. |
+
+What V4 changes at the template level (single source of truth):
+
+- `bench-generator/templates/tests/score.py`: replace `VIEWPORT` scalar with
+  `VIEWPORTS` list of three (label, dict) tuples; rendering loop iterates;
+  all `page.screenshot(...)` calls use `full_page=True`; DOM extractor JS
+  loses its `top >= 800` cull. The score_page function refactors to run
+  each aspect on all three viewports and average across.
+- `bench-generator/templates/environment/make.py`: same VIEWPORTS list;
+  pre-renders reference PNGs at all three viewports into the new
+  `/app/references/{viewport}/` directory layout.
+- `bench-generator/templates/instruction.md.tpl`: prose describes three
+  viewports; `{{INPUT_LIST}}` expansion (in `generate_dataset.py`) emits
+  per-viewport paths.
+- `bench-generator/prompts.py`: system prompt that the generator sends to
+  Claude when authoring NEW sites tells the model the site will be rendered
+  at three viewports — so future-generated sites are designed responsive
+  from the start instead of pixel-fitted to 1280×800.
+- `bench-generator/sanity.py`, `bench-generator/relevance.py`: pre-generation
+  gates stay single-viewport (at the new 1440×900 desktop default).
+  Responsive correctness is the grader's job, not the gate's.
+
+What V4 changes at the existing-task level:
+
+- 16 v1 task dirs each get the updated `tests/score.py` + `environment/make.py`
+  copied in, and their `instruction.md` re-expanded from the new template.
+- No re-generation of reference HTML — the existing 16 sites stay. Their
+  HTML may or may not be responsive (most likely partially); V4 calibration
+  on the existing 16 sites will reveal how well agents score when the
+  references themselves weren't designed responsive.
+
+Expected calibration deltas (predictions, to confirm by running):
+
+| Tier | V3.2 / V3.3 | V4 expected | Reason |
+|---|---|---|---|
+| near_perfect | 1.000 | ~1.000 | Verbatim copy renders identically at every viewport |
+| plain | 0.236 | similar | CSS-stripped garbage looks the same at any width |
+| mediocre | 0.350 | slightly lower (~0.30) | Wrong palette + fonts now penalized 3× across viewports |
+| bad | 0.097 | similar | Lorem + stripped semantics is broken at every viewport |
+| adversarial | 0.195 | varies | Comic Sans + 96px headings scales weirdly per viewport; might shift |
+
+If any tier exits its band by more than ~0.05, re-band rather than re-tune
+(consistent with V3.2's "re-band to match the data" precedent).
+
+Cost impact: ~3× more API token volume per calibration run because each
+judge call now sends 6 images instead of 2 (V3.2 was ~$7.50/run; V4 likely
+$15-25). Production harbor runs roughly 50% more expensive per trial due
+to larger judge payloads. Bounded.
+
+The biggest empirical question V4 will answer: how responsive are the
+existing 16 v1 sites? They were generated under prompts that asked for
+"1280×800 design" only. V4 will surface non-responsive layout failures at
+tablet and phone widths. Expected mean reward drops noticeably from the
+0.908 we saw under V3.3 with the fixed instruction.md — that drop isn't a
+regression, it's the grader finally measuring something it was always
+supposed to.
+
+[V4 results, calibration table, and harbor run delta will be filled in
+after implementation.]
+
+--------------------------
 What V3.2 still doesn't cover (future work)
 
 - **One calibration task.** Burnt-sage-kitchen-9322 is a tier-1 site with
@@ -934,3 +1157,4 @@ broken" (V1) to "produces a clean five-step continuous reward signal on
 five qualitatively distinct failure modes, with auditable per-criterion
 breakdown" (V3.2). The remaining work is scale (more tasks, more
 viewports) and depth (per-task criteria), not architecture.
+
