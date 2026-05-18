@@ -1217,3 +1217,133 @@ five qualitatively distinct failure modes, with auditable per-criterion
 breakdown" (V3.2). The remaining work is scale (more tasks, more
 viewports) and depth (per-task criteria), not architecture.
 
+--------------------------
+Validating the tier ladder itself: does T1→T8 actually mean "harder"?
+
+The tier ladder above (T1 static blocks → T8 mixed visual systems) is a
+*conceptual* taxonomy I wrote down before any tasks existed. It defines
+what each tier *should* look like, but nothing in the codebase enforces
+or measures whether a generated workload actually meets its tier's
+difficulty. After running the V4 grader against workloads_v4 we had
+fidelity scores, but no answer to: "if I claim T6 is harder than T4, is
+that empirically true on the websites we actually generated?"
+
+So I built `generator/difficulty_analysis/score_difficulty.py` — a
+reusable scorer that takes a workloads/ directory and emits per-task
+difficulty metrics + a composite + a tier-validation report. Three
+methodological commitments up front, all literature-grounded so we
+weren't inventing metrics:
+
+- **Structural metrics from Yellow Lab Tools** (GPL-2.0,
+  https://github.com/YellowLabTools/YellowLabTools), driven by
+  `phantomas` under headless Chromium. ~13 HTML+CSS metrics for free:
+  DOMelementsCount, DOMelementMaxDepth, cssRules, cssSelectors,
+  cssDeclarations, cssComplexSelectors, cssColors, etc.
+- **Custom add-ons (5 signals, ~80 LOC Python)** for what YLT doesn't
+  emit: `svg_path_count` (T7 driver, regex over <svg> blocks),
+  `gradient_count` (regex over inline styles), JPEG-filesize-per-kpixel
+  proxy (Forsythe 2011 visual-clutter proxy, r=0.74 with human ratings),
+  Canny edge density (Miniukovich CHI 2015 "contour congestion"), and
+  cross-page nav Jaccard (T2 multi-page identity signal).
+- **Composite via DesignBench (arXiv:2506.06251) formula**:
+  S = 0.25·z(I) + 0.25·z(U) + 0.25·z(C) + 0.25·z(L). I=HTML bytes,
+  U=DOMelementsCount, C=cssColors, L=cssDeclarations+depth+complex
+  selectors. The only published, validated multi-axis difficulty
+  composite for screenshot-to-code; DesignBench validated monotonic
+  MLLM degradation across its bins on real-world pages.
+
+The framing matters: each metric is a *tier-boundary detector*, not a
+T1→T8 monotonic signal. svg_path_count is supposed to jump at T6→T7,
+not rise across all tiers. Only the *composite* is held to monotonic
+correlation with tier.
+
+Run 1 — workloads_v4 (the 10 tasks generated under the original tier
+specs). Composite Spearman ρ vs. tier = +0.36 (CI [-0.39, +0.90]),
+Kendall τ = +0.28. Below the ρ ≥ 0.85 target, and the bootstrap CI
+includes zero. Two adjacent-tier inversions in the median composite:
+
+- **T4 → T5** (+0.56 → -0.87) — T5 (poetry-collection) came out
+  *simpler than T4* on every measured axis: DOM 131→107, cssRules
+  86→42, cssColors 27→10, gradients 10.3→0.8.
+- **T6 → T7** (+0.49 → +0.33) — T7 mean depressed by one of two T7
+  workloads (obsidian-fold-studio, brand-identity) having DOM/CSS
+  counts comparable to T3.
+
+The root cause was the tier specs themselves in `generator/seeds.py`.
+T1–T4 worked: T4 says "Layouts from tier 2 or 3, treated with
+intentional decoration" — explicit inheritance. T5–T8 didn't inherit.
+T5 was framed as "typography is the visual identity," which the LLM
+read as a substitute for layout/polish, not an addition on top. T6 said
+"forms *or* tables" (the LLM picked the easier side). T8 was the
+vaguest: "multiple distinct sections per page" with no count.
+
+Tightened T5/T6/T7/T8 in two ways:
+- **Explicit inheritance.** T5 inherits T3+T4. T6 inherits T4. T7
+  inherits T3+T4. T8 inherits T3+T4+T5+T6 plus selective T7.
+- **Concrete minimums replacing vague "multiple/many":** T5 = 6+
+  distinct font-sizes, 3+ font-weights, marginalia + drop caps + pull
+  quotes as required elements. T6 = 15+ inputs per page AND tables with
+  6+ columns × 20+ rows (not "or"). T7 = 30+ inline SVG primitives
+  across multiple distinct figures. T8 = 6+ distinct visual modules per
+  page with an enumerated module catalog (hero / longform body /
+  sidebar / gallery / data callout / timeline / figure / marginalia /
+  pull quote / footer).
+
+Each spec also got an anti-pattern callout in the same voice as the
+T5/T7 ones ("a simpler tier-4 page that merely uses one or two fancy
+fonts does NOT qualify as tier 5").
+
+Run 2 — workloads/T1–T4 copied verbatim from v4, T5–T8 regenerated
+under the new specs in workload_v5/. Composite Spearman ρ = +0.57 (CI
+[-0.20, +0.96], p=0.083). That's a real and meaningful improvement
+from +0.36, but still below the 0.85 target. Six per-metric
+correlations now significant at p<0.05 (vs 2 in v4) — html_bytes
++0.77, cssDeclarations +0.72, cssRules +0.70, cssSelectors +0.67,
+DOMelementsCount +0.65, svg_path_count +0.69.
+
+**Where the fix worked:**
+- T5 (gallery-exhibition replaced poetry-collection): DOM 107→196
+  (+83%), cssRules 42→89 (more than doubled), gradients 0.8→4.0.
+  Composite S = -0.87 → +0.11. Moved out of "easier than T2".
+- T6 (application-form replaced comparison-table): DOM 240→432 (now
+  the densest workload in the set), cssRules 81→100. Composite
+  S = +0.49 → +1.05. T6 is now the #1 workload by composite.
+
+**Where it didn't:**
+- T7 (vantablack-studio brand-identity, single workload): DOM 216,
+  cssRules 63 — *below* the v4 T7 average. SVG paths 69 (hit the new
+  30+ minimum) but the rest of the page didn't inherit T3 layout or T4
+  polish as the spec required. Composite S = +0.33 → -0.11. T7
+  regressed, not improved.
+- T8 (fracture-line-dispatch news-feature, the only T8 we've ever
+  generated): DOM 267, cssRules 104 (highest of any workload!), but
+  SVG paths only 19.4 — well below T7's 69, and DOM short of T6's 432.
+  Composite S = +0.49 — ranks #3 overall, behind T6 and a T3-docs
+  workload. The spec said "DOM density and CSS rule count should
+  exceed every other tier"; it didn't.
+
+Both remaining inversions (T4→T5 and T6→T7) are at the same boundaries
+as v4. The T4→T5 gap narrowed dramatically (1.43 → 0.21 in composite
+units), so T5 is close to fixed. The T6→T7 gap widened (0.16 → 1.16)
+because T6 rose while T7 fell. T7 brand-identity is now the single
+most mis-tiered workload in the set.
+
+Two plausible explanations for T7 / T8 not landing:
+1. **Genre choice fights the spec.** brand-identity sites are
+   stylistically minimalist (typography-heavy, big whitespace, sparse
+   ornament). The new spec text didn't override the genre's gravity.
+   Likewise news-feature is text-rich but visually conventional — not
+   the most layout-pluralistic genre in GENRES[8].
+2. **The spec wording isn't strong enough on raw density.** None of
+   the T7/T8 spec lines say "DOMelementsCount ≥ 300" or "cssRules ≥
+   80" in numbers the LLM will treat as binding constraints. They say
+   "preserve tier-4 visual polish" and "highest DOM density of any
+   tier" — directional language.
+
+Plan for the retry: regenerate T7 and T8 only, picking denser genres
+from GENRES (T7 → `data-viz-report` or `infographic` instead of
+brand-identity; T8 → `longform-article` or `multimedia-essay` instead
+of news-feature) and adding numeric density floors to the T7/T8 spec
+text. Re-run score_difficulty.py against the resulting workload set
+and check whether composite ρ crosses 0.7.
+
