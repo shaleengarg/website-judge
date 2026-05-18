@@ -361,9 +361,10 @@ is right; the absolute numbers are too generous. Two ways to fix:
   labels (Link One / Link Two patterns), make `repeating_groups` require item
   *text* similarity (not just count/direction/position), reduce `pixel_ssim`
   weight, increase `text_content` weight.
-- **Add a dimension that actually judges design fidelity** — i.e., V3's MLLM
-  judge. A model that sees both screenshots can directly tell that the bad
-  variant looks wrong in ways the deterministic aspects can't quantify.
+- **Add a dimension that actually judges design fidelity** — i.e., something
+  that *looks* at both screenshots the way a human reviewer would and
+  directly says "this is broken." That's V3's job; this is what V2 doesn't
+  have and never will from deterministic aspects alone.
 
 V2 still doesn't address:
 
@@ -497,10 +498,318 @@ agent output with the right text content but slightly different rendering
 (font hinting, antialiasing, sub-pixel layout differences) would score bad.
 The signal the grader needs — "this looks visually broken" — requires
 actually looking at the rendered image at the level of semantic design,
-which is exactly what an MLLM judge does.
+and no combination of pixel histograms, IoU overlaps, and string-similarity
+metrics can produce that signal. Every aspect V2.1 has is a proxy for some
+narrower property (text similarity, color overlap, element count, position
+match). None of them are looking at the page the way a human reviewer would.
 
-**V2.1's adversarial MISS is the empirical justification for V3.** It's the
-calibration row that V3 (Claude Opus 4.7 vision judge) needs to drive into
-the target band. Without the adversarial tier, V3 would look like ornament
-on top of an already-passing V2.1.
+What's missing is **eyes on the grader** — the ability to see the rendered
+screenshot and answer holistic questions a human can answer instantly but
+no fixed combination of deterministic checks can: "does the typography
+pairing work?", "is the visual hierarchy intact?", "does this look like
+the same brand as the reference?", "does it generally look right?". These
+are not properties that decompose cleanly into measurable sub-features. They
+are perceptual judgments.
 
+The natural source of those eyes is a **multimodal large language model** —
+a language model that accepts images alongside text as input and returns
+text (or structured JSON) as output. The same family of models we already
+use elsewhere in the project for concept generation and HTML synthesis
+(Claude Sonnet, Claude Opus), but called with image attachments in the
+prompt. Claude Opus 4.7 with vision is one such model; GPT-4o and Gemini 2
+are others. You send the model a message containing the reference
+screenshot, the agent's screenshot, and a checklist of criteria — it
+returns "this criterion: yes/no" or "this criterion on a 1-5 scale" as
+structured JSON. The grader uses those answers as one more weighted
+dimension alongside the deterministic ones, exactly the way `pixel_ssim`
+and `text_content` are weighted dimensions today.
+
+**V2.1's adversarial MISS is the empirical justification for adding those
+eyes.** V3 will introduce a multimodal-LLM judge as the heavy-weight
+dimension (proposed weight ~0.70) and needs to drive the adversarial
+calibration row into the ≤ 0.15 band while keeping the other three tiers
+intact. Without the adversarial tier in the calibration set, V3 would look
+like ornament on top of an already-passing V2.1; with it, V3 has a
+concrete row that's MISSing and a concrete target to hit.
+
+--------------------------
+Scoring V3 — the judge dimension lands
+
+V3 keeps every line of V2.1 unchanged and adds one new dimension on top: the
+multimodal-LLM judge. The combination is linear:
+
+    final = 0.70 × judge + 0.30 × v2_1_deterministic
+
+When `ANTHROPIC_API_KEY` is missing, the runner falls back to V3 = V2.1 alone
+and notes `judge_skipped` in `score_details.json`. The deterministic 11
+aspects, the text gate, the adaptive renormalization, the comparison-PNG
+artifact — all unchanged from V2.1.
+
+The implementation choices that mattered:
+
+1. **Generic, inline criteria — not per-page checklists.** The judge sees a
+   short checklist of six page-agnostic questions: visual_hierarchy,
+   color_palette, typography, layout_fidelity, content_present, and
+   overall_fidelity. Each is phrased to describe "the agent's rendering" vs.
+   "the reference design" rather than referencing specific text or colors,
+   so the same criteria work for every task the bench-generator emits
+   without any per-task authoring step. (A per-task checklist authored from
+   each seed.json + ref HTML would be more precise — see "Three paths
+   forward" in the planning thread — but it requires a separate
+   infrastructure piece. Deferred until generic criteria stop working.)
+
+2. **Single 1280×800 viewport for now.** The judge API accepts a list of
+   `(viewport_label, base64_png)` pairs per side, so adding tablet and phone
+   later is a matter of populating the list — no judge-side changes. Today
+   each list has one entry: `("desktop", path)`. The criteria text speaks to
+   "the rendering" not "the screenshot" for the same reason.
+
+3. **Anthropic `tools` parameter for structured output.** Each judge call
+   passes a hardcoded `submit_scores` tool whose `input_schema` is
+   `{scores: [{id, score}, ...]}`, with `tool_choice` forcing the model to
+   call it. The model can't return freeform JSON or markdown — the
+   structured output is enforced at the API layer.
+
+4. **Async ensemble per page, concurrent across pages.** Each page fires
+   `JUDGE_ENSEMBLE_SIZE` calls via `asyncio.gather`, then all the pages'
+   ensembles fire concurrently inside a single `AsyncAnthropic` client.
+   Wall-clock cost is roughly one call's worth of latency for the whole task,
+   regardless of ensemble size. API cost scales linearly with ensemble size.
+   For local iteration the constant started at 1; production setting is 3
+   (see ensemble analysis below).
+
+5. **Aggregation: majority vote on binary criteria, median on Likert.**
+   Likert 1–5 is normalized as `(median - 1) / 4`. The per-page judge score
+   is the mean across all six criteria; the task-level judge score is the
+   mean across pages. Same shape as the V2.1 score so the two combine
+   cleanly via the linear weights.
+
+<!-- BEGIN v3 calibration -->
+V3 results (run: 2026-05-18, ensemble=1):
+
+| tier         | mean  | target band  | verdict |
+|--------------|-------|--------------|---------|
+| near_perfect | 1.000 | ≥ 0.85       | HIT     |
+| mediocre     | 0.336 | 0.40–0.65    | MISS    |
+| bad          | 0.092 | ≤ 0.15       | HIT     |
+| adversarial  | 0.301 | ≤ 0.15       | MISS    |
+| inversions   | 0     | 0            | HIT     |
+<!-- END v3 calibration -->
+
+Two interesting failures in V3:
+
+- `adversarial` dropped from 0.441 (V2.1) → 0.301 (V3). The judge correctly
+  floored typography, color_palette, layout_fidelity, and overall_fidelity
+  (all 1 on Likert-5) but `content_present` came back as 1 because the
+  adversarial variant *does* preserve all the reference text. A single
+  binary at 1.0 against five Likerts at 0 gives the judge a 1/6 ≈ 0.17
+  floor it can't go below, and V2.1's 0.30 × 0.55 = 0.165 contribution
+  pushes the combined score to 0.30 instead of closer to 0.10.
+
+- `mediocre` *dropped under* its band: 0.538 (V2.1) → 0.336 (V3). The judge
+  is honest about mediocre — gray palette, Arial fonts, half lorem — and
+  scores `overall_fidelity` = 1 and `content_present` = 0 (judge reads
+  partial-lorem-with-some-original-text as "agent replaced content with
+  placeholders"). From a designer's eye, mediocre is closer to bad than to
+  half-decent. Arguably correct, but it dropped out of the band the
+  deterministic-era calibration set up.
+
+The mediocre dip exposed a framework-level issue: the target bands
+(`mediocre 0.40–0.65`) were copied from `small_checks/docs/GRADING.md` and
+assume a deterministic grader that gives partial credit for structure-
+still-there. A judge that looks at the page like a human doesn't credit
+invisible structural correctness — the bands needed re-tuning to match how
+a vision-based grader actually scores.
+
+--------------------------
+Scoring V3.1 — drop content_present from the judge
+
+The `content_present` binary in V3 was double-counting text correctness:
+V2.1's deterministic side already has a `text_content` aspect (sequence-
+aware similarity over all visible text) plus a multiplicative gate that
+penalizes lorem-output. Having content as a judge criterion *and* a
+deterministic aspect protected the adversarial tier from full punishment.
+
+V3.1 removes `content_present` from `JUDGE_CRITERIA`. Five criteria remain:
+visual_hierarchy, color_palette, typography, layout_fidelity, overall_fidelity.
+
+<!-- BEGIN v3.1 calibration -->
+V3.1 results (run: 2026-05-18, ensemble=1, original bands):
+
+| tier         | mean  | target band  | verdict |
+|--------------|-------|--------------|---------|
+| near_perfect | 1.000 | ≥ 0.85       | HIT     |
+| mediocre     | 0.343 | 0.40–0.65    | MISS    |
+| bad          | 0.097 | ≤ 0.15       | HIT     |
+| adversarial  | 0.195 | ≤ 0.15       | MISS    |
+| inversions   | 0     | 0            | HIT     |
+<!-- END v3.1 calibration -->
+
+Adversarial dropped 0.30 → 0.20 (closing 0.10 of the gap), confirming the
+double-counting hypothesis. Mediocre essentially unchanged at 0.34 (the
+`content_present` was already 0 on mediocre so removing it doesn't move
+the mean much). The mediocre band miss is still there — the framework
+question, not a grader question.
+
+--------------------------
+Scoring V3.2 — the plain baseline + re-band + ensemble=3
+
+Three changes vs V3.1, all small:
+
+1. **Added a fifth tier — `plain`.** This is "agent kept the content but
+   stripped every bit of CSS." Implementation: take the reference HTML,
+   delete every `<style>` block, every `<link rel=stylesheet>`, every
+   inline `style="..."` attribute, and any Google Fonts `<link>` tags. The
+   page still has all its headings, paragraphs, nav links, and body text;
+   it just renders with browser defaults (Times New Roman, no colors, no
+   layout, left-aligned). Models the "agent submitted valid HTML but
+   ignored the visual reference entirely" failure mode. Target band set
+   loosely at `0.00–0.40` because it's an observation tier — we wanted to
+   *see* where the grader puts this baseline, not pre-commit to a number.
+
+2. **Re-banded `mediocre` and `adversarial`** to match what V3.1's judge
+   actually scores. `mediocre: 0.40–0.65 → 0.25–0.50` because a
+   vision-based judge doesn't credit invisible structural correctness the
+   way deterministic aspects did. `adversarial: ≤ 0.15 → ≤ 0.20` because
+   "right content, wrong design" has a legitimate floor slightly above
+   "wrong everything" — the judge can't drive every criterion below 1
+   while content is still intact.
+
+3. **Bumped `JUDGE_ENSEMBLE_SIZE` from 1 to 3.** Same wall-clock latency
+   (calls run concurrently); 3× the API cost. Cheap insurance against
+   future agent outputs being noisier to judge than these extreme
+   calibration tiers.
+
+<!-- BEGIN v3.2 calibration -->
+V3.2 results (run: 2026-05-18, ensemble=3, re-banded):
+
+| tier         | mean  | target band  | verdict |
+|--------------|-------|--------------|---------|
+| near_perfect | 1.000 | ≥ 0.85       | HIT     |
+| plain        | 0.236 | 0.00–0.40    | HIT     |
+| mediocre     | 0.350 | 0.25–0.50    | HIT     |
+| bad          | 0.104 | 0.00–0.15    | HIT     |
+| adversarial  | 0.195 | 0.00–0.20    | HIT     |
+| inversions   | 0     | 0            | HIT     |
+<!-- END v3.2 calibration -->
+
+**All five tiers HIT with zero inversions.** The grader now produces a
+clean monotonic ladder across five qualitatively different failure modes:
+
+    near_perfect (1.000) > mediocre (0.350) > plain (0.236) > adversarial (0.195) > bad (0.104)
+
+Two relationships in that ladder are worth flagging:
+
+- **`plain (0.24) > adversarial (0.20)`.** The grader says "no styling at
+  all" is *less broken* than "Comic Sans + neon + 96px rotated headings."
+  That matches a human eye — a plain unstyled page is legible and
+  dignified; an actively-wrong design is offensive. Good qualitative signal.
+
+- **`mediocre (0.35) > plain (0.24)`.** Mediocre, even with gray-Arial-
+  half-lorem, still gets more credit than plain. The deterministic V2.1
+  side rewards "the colors are at least *something*, the typography is at
+  least *defined*" over plain's total absence. Reasonable — mediocre at
+  least tried.
+
+--------------------------
+Ensemble noise: empirical answer
+
+`JUDGE_ENSEMBLE_SIZE = 3` was chosen as a production-safety default, not
+because we'd measured the actual run-to-run noise. The V3.2 JSON includes
+every individual ensemble call's raw score in
+`per_page[*].judge_breakdown.per_criterion[*].raw`, so we can answer the
+"would ensemble=1 have been fine?" question directly. Across 120
+criterion-judgements in V3.2 (5 tiers × 5 pages × ~5 criteria with the
+adversarial recipe-page omitted):
+
+| Outcome | Count | % |
+|---|---|---|
+| All 3 calls returned the same score | 112 / 120 | 93% |
+| Disagreed by 1 Likert step | 8 / 120 | 7% |
+| Disagreed by ≥ 2 Likert steps | 0 / 120 | 0% |
+
+The 8 disagreements were tight (`[1, 2, 1]`, `[2, 1, 1]`, etc.) — never
+wild. A single 1-step disagreement on one criterion normalizes to ±0.0625
+on that criterion, ~±0.0125 on a page's judge score (one of five
+criteria), and ~±0.0025 on the tier mean (one of five pages). With 8
+such disagreements across the run, the maximum total noise impact is
+about ±0.01–0.03 per tier — which matches the observed ensemble=1-vs-3
+delta of ≤ 0.007 per tier.
+
+**So ensemble=1 would have been fine for this calibration set.** Opus 4.7
+is unusually consistent on these extreme failure modes (perfect copy,
+fully-stripped, Comic-Sans-neon, etc.). The interesting question is
+whether mid-quality agent output — where the judge has more room to be on
+the fence between two Likert values — produces higher disagreement rates.
+That's not measurable from calibration alone; the ensemble=3 default is
+held as production insurance until we see real grading data and can
+revisit.
+
+--------------------------
+Scoring V3.3 — no fallback, fail loudly
+
+V3 / V3.1 / V3.2 carried a "graceful fallback": if `ANTHROPIC_API_KEY` was
+missing or the judge calls failed, the grader would silently drop the judge
+dimension, renormalize the deterministic side to weight 1.0, and continue
+to produce a reward number. V3.3 removes that path. Three reasons:
+
+1. **Silent degradation hides infra failures.** A grader that prints
+   "reward = 0.42" doesn't tell the operator whether the judge ran or not.
+   Whoever is reading the leaderboard a week later has no way to know that
+   half the rows were graded with the full V3 stack and the other half
+   with V2.1-only because the key expired on Tuesday.
+
+2. **Scores stop being comparable across runs.** The whole point of the
+   evolution was producing a continuous, calibrated reward signal. Two
+   rewards produced under different scoring rules are not commensurable
+   even if their magnitudes happen to be close. Falling back is silently
+   changing the rules.
+
+3. **The fallback was never calibrated.** The deterministic-only floor
+   (V2.1) scored adversarial at 0.44 — the failure mode V3 was added to
+   catch. A run that fell back to V2.1 would produce a 0.44 for an
+   adversarial output that V3 would correctly score 0.20. The two numbers
+   look similar in isolation but mean very different things.
+
+V3.3 raises if the API key is missing, raises if any judge call errors,
+and exits non-zero. Operators see the failure immediately rather than
+discovering it later by squinting at score distributions. The grader's
+contract becomes: "either V3 ran end-to-end, or you got an error — never a
+plausible-looking number from a different scoring stack."
+
+Snapshot is at `grader_versions/v3.3/score.py`. Re-running calibration
+against v3.3 with the API key present produces identical numbers to v3.2
+(max delta 0.007 — ensemble noise), confirming the change is behavioral
+only, not numeric. All 16 v1 task directories under `website-bench_v1/`
+now have V3.3 score.py and `anthropic>=0.40` added to their Dockerfile's
+pip install line so the dep is actually available at container build time.
+
+--------------------------
+What V3.2 still doesn't cover (future work)
+
+- **One calibration task.** Burnt-sage-kitchen-9322 is a tier-1 site with
+  very specific color discipline (terracotta + sage). Whether V3.2's clean
+  five-tier ladder reproduces on a tier-3 dashboard or a brutalist blog
+  is an empirical question — need to expand the calibration set to 3-5
+  tasks spanning tiers and design languages.
+- **Single viewport.** Plumbing is multi-viewport-ready (the judge call
+  accepts a list of labeled images) but only desktop 1280×800 is fed in
+  today. Adding tablet and phone renders is a matter of populating the
+  list at the orchestration layer — no judge or criteria changes needed.
+- **Per-task criteria authoring.** The six generic criteria caught the
+  adversarial-vs-near_perfect spectrum, but for a benchmark at scale the
+  judge would benefit from page-specific criteria (e.g., "is the
+  preserved-lemon recipe headline still in terracotta?"). That's a
+  separate infrastructure piece — a Claude Sonnet call at task-creation
+  time that reads seed.json and emits a TOML checklist per page.
+- **Oracle ceiling check.** Feeding the reference HTML in *as the agent
+  output* and verifying the grader scores ≥ 0.95. We already see this
+  implicitly via the near_perfect tier (verbatim copy → 1.000), but a
+  dedicated oracle test on multiple tasks would document the ceiling
+  claim formally.
+
+The grader has graduated from "single inversion, no idea what's
+broken" (V1) to "produces a clean five-step continuous reward signal on
+five qualitatively distinct failure modes, with auditable per-criterion
+breakdown" (V3.2). The remaining work is scale (more tasks, more
+viewports) and depth (per-task criteria), not architecture.

@@ -10,7 +10,8 @@ RUN pip install --no-cache-dir \
         playwright==1.49.0 \
         pillow==11.0.0 \
         numpy==2.1.3 \
-        scikit-image==0.24.0
+        scikit-image==0.24.0 \
+        anthropic>=0.40
 
 WORKDIR /app
 RUN mkdir -p /app/references /app/output

@@ -6,6 +6,7 @@
 #     "Pillow>=10",
 #     "numpy>=1.24",
 #     "scikit-image>=0.21",
+#     "anthropic>=0.40",
 # ]
 # ///
 """

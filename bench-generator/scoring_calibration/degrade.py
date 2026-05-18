@@ -198,6 +198,42 @@ def remove_stylesheet_links(html: str) -> str:
     )
 
 
+def strip_all_styling(html: str) -> str:
+    """Remove every <style> block, <link rel=stylesheet>, and style="..." attribute.
+
+    The page still has all its HTML structure and text, but renders with whatever
+    the browser's user-agent stylesheet provides: Times New Roman, no colors,
+    no layout, left-aligned. Models the "agent submitted valid HTML but ignored
+    the visual reference entirely" failure mode.
+    """
+    # Remove <style>...</style> blocks (with nested-brace-tolerant matching)
+    html = re.sub(r"<style[^>]*>.*?</style>", "", html, flags=re.IGNORECASE | re.DOTALL)
+    # Remove <link rel="stylesheet" ...>
+    html = remove_stylesheet_links(html)
+    # Remove inline style="..." attributes
+    html = re.sub(r'\sstyle\s*=\s*"[^"]*"', "", html, flags=re.IGNORECASE)
+    html = re.sub(r"\sstyle\s*=\s*'[^']*'", "", html, flags=re.IGNORECASE)
+    # Remove Google-Fonts <link> tags (no point loading fonts that aren't styled)
+    html = re.sub(
+        r'<link[^>]*href="https?://fonts\.(google|gstatic)[^"]*"[^>]*>',
+        "",
+        html,
+    )
+    return html
+
+
+def make_plain(ref_root: Path, out_root: Path, pages: list[str]) -> None:
+    """Reference content with every bit of styling stripped — browser defaults only."""
+    out_root.mkdir(parents=True, exist_ok=True)
+    for page in pages:
+        src = ref_root / page / "index.html"
+        html = src.read_text(encoding="utf-8")
+        html = strip_all_styling(html)
+        dest = out_root / page / "index.html"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(html, encoding="utf-8")
+
+
 def make_near_perfect(ref_root: Path, out_root: Path, pages: list[str]) -> None:
     out_root.mkdir(parents=True, exist_ok=True)
     for page in pages:
@@ -315,6 +351,8 @@ def main() -> None:
     task_out = out_root / task_id
     make_near_perfect(reference_pages, task_out / "near_perfect", pages)
     print(f"  near_perfect/  -> {len(pages)} pages copied verbatim")
+    make_plain(reference_pages, task_out / "plain", pages)
+    print(f"  plain/         -> {len(pages)} pages (content preserved, ALL CSS stripped — browser defaults)")
     make_mediocre(reference_pages, task_out / "mediocre", pages)
     print(f"  mediocre/      -> {len(pages)} pages (wrong palette, system fonts, partial lorem)")
     make_bad(reference_pages, task_out / "bad", pages)

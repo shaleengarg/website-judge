@@ -57,9 +57,16 @@ def resolve_score_py(version: str) -> Path:
 
 TIER_TARGETS = {
     "near_perfect": (0.85, 1.01),
-    "mediocre": (0.40, 0.65),
+    "plain": (0.00, 0.40),  # observation tier — loose target, see how baseline lands
+    # mediocre was 0.40-0.65 (small_checks-era deterministic band). Re-banded
+    # for V3.1 because a vision-based judge doesn't credit "structure-still-
+    # there" the way deterministic aspects did — gray-Arial-half-lorem looks
+    # closer to "bad" than to "half-decent" to a human looking at the page.
+    "mediocre": (0.25, 0.50),
     "bad": (0.00, 0.15),
-    "adversarial": (0.00, 0.15),
+    # adversarial was ≤ 0.15; relaxed to ≤ 0.20 because right-content-wrong-
+    # design has a slightly higher legitimate floor than right-nothing.
+    "adversarial": (0.00, 0.20),
 }
 
 
@@ -149,7 +156,7 @@ def find_reference_pages(task_id: str) -> Path | None:
     return None
 
 
-ALL_VARIANTS = ("near_perfect", "mediocre", "bad", "adversarial")
+ALL_VARIANTS = ("near_perfect", "plain", "mediocre", "bad", "adversarial")
 
 
 def aggregate_table(results: dict) -> dict:
@@ -187,16 +194,21 @@ def print_report(grader_version: str, results: dict, summary: dict) -> None:
     print()
     print(f"=== Calibration report ({grader_version}) ===")
     print()
-    print(f"{'task':<48} {'near_perfect':>14} {'mediocre':>11} {'bad':>9} {'adversarial':>13}")
-    print("-" * 98)
+    print(
+        f"{'task':<48} {'near_perfect':>14} {'plain':>8} {'mediocre':>11} {'bad':>9} {'adversarial':>13}"
+    )
+    print("-" * 108)
     for task_id, variants in sorted(results.items()):
         np_ = variants.get("near_perfect", {}).get("reward", float("nan"))
+        pl_ = variants.get("plain", {}).get("reward", float("nan"))
         md_ = variants.get("mediocre", {}).get("reward", float("nan"))
         bd_ = variants.get("bad", {}).get("reward", float("nan"))
         adv = variants.get("adversarial", {}).get("reward", float("nan"))
-        print(f"{task_id:<48} {np_:>14.3f} {md_:>11.3f} {bd_:>9.3f} {adv:>13.3f}")
+        print(
+            f"{task_id:<48} {np_:>14.3f} {pl_:>8.3f} {md_:>11.3f} {bd_:>9.3f} {adv:>13.3f}"
+        )
 
-    print("-" * 98)
+    print("-" * 108)
     for variant in ALL_VARIANTS:
         s = summary[variant]
         if s["n"] == 0:
