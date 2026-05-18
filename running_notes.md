@@ -785,6 +785,127 @@ now have V3.3 score.py and `anthropic>=0.40` added to their Dockerfile's
 pip install line so the dep is actually available at container build time.
 
 --------------------------
+Running the benchmark end-to-end — what we discovered about the instructions
+
+V3.3 was calibrated and ready, deployed to all 16 v1 tasks. Time to run the
+benchmark for real against Claude Code with Opus 4.7. First attempt, with the
+verifier env-var plumbing not yet set up:
+
+    Trials: 16, Exceptions: 7 (AgentTimeoutError), Mean: 0.000
+
+All zeros. Cause: V3.3 was raising in the container because `ANTHROPIC_API_KEY`
+wasn't being forwarded into Modal. `test.sh` caught the error and wrote 0.0 to
+reward.txt for every trial. Harbor's CLI flag for forwarding env vars into the
+verifier is `--ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY` (referenced in
+small_checks/TASKS.md). Added it to the command, re-ran:
+
+    Trials: 16, Exceptions: 9 (AgentTimeoutError), Mean: 0.841
+
+The grader was now running, but the result was strange: of 16 trials, 9 had
+the agent time out at 900s (15 min), and the remaining 7 scored 0.81–1.00 on
+the agent's actual output. Some tier-1 sites — supposedly the easiest tier —
+were timing out and scoring 0.38 or 0.39, while tier-3 dashboards were
+finishing cleanly at 0.999. The tier ordering wasn't tracking what we thought
+it was tracking.
+
+Looking at one of the timed-out trials' trial.log made the issue obvious: the
+instruction.md we'd been shipping to the agent had three problems that small_
+checks' instruction.md didn't. Side-by-side:
+
+1. **We were embedding the V1 scoring formula in the instruction.**
+
+       score = 0.7 * SSIM + 0.3 * color_histogram_intersection
+
+   Bake-in date: V1 era, never updated as the grader evolved. The agent reads
+   this and thinks pixel SSIM is the objective, so it spends its 15-minute
+   budget on pixel-level reproduction — chasing antialiasing differences and
+   subpixel font positioning — instead of focusing on holistic design
+   fidelity that the V3.3 judge actually grades. small_checks doesn't tell
+   the agent the formula at all; it just lists what visual fidelity *means*
+   (colors / fonts / spacing / layout) and stops there. Telling the agent
+   the metric makes the metric a target (Goodhart). It's also bait for
+   reward hacking: an agent told "you're scored on SSIM" learns it can embed
+   the reference PNG as `<img>` and ace the metric without rendering
+   anything.
+
+2. **We were forbidding Google Fonts and external CDNs.**
+
+       Everything must be self-contained — no external CDNs, no Google Fonts,
+       no network requests.
+
+   The agent's container has internet access during the agent-execution
+   phase, so this restriction was self-imposed, not infrastructure-required.
+   The effect: agents had to either inline base64-encoded font files (slow,
+   error-prone) or fall back to system fonts (which then fails on
+   typography fidelity, which is one of the V3.3 judge's six criteria). So
+   we were handicapping the agent on the exact dimension we then graded.
+   small_checks doesn't have this restriction.
+
+3. **We were not giving the agent the brand palette or fonts.**
+
+   small_checks' instruction.md ends with a brand block: hex codes for
+   primary/secondary/accent colors, named heading and body fonts. The agent
+   reads these and jumps straight to coding. Our instruction doesn't include
+   any of that — the agent has to color-pick from the screenshot pixels (a
+   vision task) and guess fonts from rendered glyphs (also a vision task).
+   We chose to *not* fix this one — color-picking and font-identification
+   are part of what we're testing the agent on, and pre-resolving them
+   would change the nature of the benchmark. Recorded as a deliberate
+   divergence from small_checks rather than a deficiency.
+
+We dropped (1) and (2) from the instruction template and re-ran:
+
+    Trials: 16, Exceptions: 1 (AgentTimeoutError), Mean: 0.908
+
+The improvement was bigger than expected. Side-by-side:
+
+| metric           | before fix | after fix |
+|------------------|-----------:|----------:|
+| mean reward      |      0.841 | **0.908** |
+| median reward    |      0.870 | 0.882     |
+| min reward       |      0.382 | **0.828** |
+| max reward       |      1.000 | 1.000     |
+| timeouts         |     9 / 16 | **1 / 16** |
+| trials < 0.50    |    2 tasks | 0 tasks   |
+
+The min-reward jump (0.38 → 0.83) and the timeout collapse (9 → 1) attribute
+roughly to the two fixes:
+
+- **Dropping the Google Fonts ban** is probably the bigger contributor to
+  the timeout drop. Before, the agent was looping trying to embed font files
+  or fight typography mismatches; after, it just adds
+  `<link href="https://fonts.googleapis.com/...">` and moves on.
+- **Removing the V1 scoring formula** explains the floor jump from 0.38 to
+  0.83. Agents that were optimizing specifically for pixel SSIM weren't
+  finishing the structural work; without the formula, they spend their
+  budget more evenly across all dimensions of fidelity.
+
+The remaining 1 timeout was on `synth-t3-ironclad-fleet-ops` — a tier-3
+fleet-operations dashboard with dense data-tables and multi-column layouts.
+The trajectory shows the agent doing 5 fast `Write` calls (first draft of
+each page), then 40 `Edit` calls + 23 `Read` calls iterating to refine — and
+hit the 900s timeout mid-iteration. Output was still scored at 0.866. The
+same task scored 0.999 in the previous run with the old instruction, so
+this isn't structural — it's the agent's "draft then polish" strategy
+occasionally exceeding the timeout on the densest tier-3 tasks. The fix is
+a bigger `agent.timeout_sec` (1200s for tier-3, or 1200s across the board);
+deferred until we see this fire reproducibly.
+
+**Lesson worth recording**: the instruction.md template was the silent
+half-of-the-benchmark we'd been ignoring all the way through V1 → V3.3 of
+the grader evolution. The grader can be perfectly calibrated and the agent
+can be capable, but if the instruction tells the agent the wrong objective
+or imposes a self-defeating constraint, every benchmark number you get is
+shaped by those bugs. Calibrating the grader is necessary but not
+sufficient — the instruction has to be aligned to the grader's actual
+scoring contract.
+
+The instruction.md is now part of the grader contract. Future grader
+evolutions should check the instruction template too: when scoring rules
+change, the instruction template needs to either (a) not mention the rules
+or (b) be updated in lockstep.
+
+--------------------------
 What V3.2 still doesn't cover (future work)
 
 - **One calibration task.** Burnt-sage-kitchen-9322 is a tier-1 site with

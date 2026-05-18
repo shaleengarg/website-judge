@@ -41,14 +41,6 @@ Create exactly these files:
 - `/app/output/speakers/index.html`
 
 You may use additional files (CSS, fonts, etc.) inside each page's directory.
-Everything must be self-contained — **no external CDNs, no Google Fonts, no
-network requests**. The verifier renders `file://` URLs.
+The verifier renders `file://` URLs, so any external assets you reference
+(Google Fonts, CDNs, etc.) must be reachable during the agent's run.
 
-## Evaluation
-
-Each page is rendered with Chromium at 1280 × 800 and compared to a re-render
-of the reference HTML. The per-page score is:
-
-    score = 0.7 * SSIM + 0.3 * color_histogram_intersection
-
-The final reward is the mean across all 5 pages, clipped to [0, 1].
