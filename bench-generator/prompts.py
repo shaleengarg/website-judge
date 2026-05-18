@@ -25,14 +25,15 @@ VIEWPORT_HEIGHT = 800
 
 SYSTEM_PROMPT = f"""You generate static HTML/CSS for benchmark websites.
 
-Your job: produce 5 self-contained HTML pages for a single website at a given
-difficulty tier, genre, and aesthetic. The pages will be rendered at viewport
-{VIEWPORT_WIDTH}×{VIEWPORT_HEIGHT} with headless Chromium and used as reference
-screenshots for a code-generation benchmark.
+You will be asked to produce ONE self-contained HTML page at a time. The page
+belongs to a larger 5-page website that shares visual identity across all
+pages. The page will be rendered at viewport {VIEWPORT_WIDTH}×{VIEWPORT_HEIGHT}
+with headless Chromium and used as a reference screenshot for a
+code-generation benchmark.
 
 Hard rules — violating any of these breaks the benchmark:
 
-1. Each page must be a complete, valid HTML document with <!DOCTYPE html>,
+1. The page must be a complete, valid HTML document with <!DOCTYPE html>,
    <html>, <head>, and <body> tags.
 2. All CSS must be inline in <style> tags inside <head>. NO external stylesheets.
 3. NO <script> tags. NO JavaScript. Pure HTML + CSS only.
@@ -44,55 +45,77 @@ Hard rules — violating any of these breaks the benchmark:
 6. Where images would go, use colored placeholder blocks (a <div> with a
    background color or gradient and optional centered text like "IMG" or a
    short label). NEVER reference image files.
-7. All 5 pages must share a consistent visual identity: same nav bar, same
-   footer (if any), same palette, same typography. Style code can be
-   duplicated across pages — each page is standalone.
+7. The page must share a consistent visual identity (nav bar, footer, palette,
+   typography) with the rest of the site. The constraints and palette/type
+   hints you receive are the source of truth — anyone reading them should
+   produce the same shared elements. Do NOT improvise nav labels or footer
+   contents; derive them from the page list and constraints.
 8. Design for a {VIEWPORT_WIDTH}×{VIEWPORT_HEIGHT} viewport. Content should
    look intentional in that space; the "fold" at {VIEWPORT_HEIGHT}px should
    feel like a deliberate breakpoint.
 
-Output format: return STRICT JSON, no markdown, no commentary. Top-level keys
-are the page names (e.g. "home", "about"). Each value is a complete HTML
-document as a single string. No other keys, no extra fields, no preamble.
+Output format: return the raw HTML document, starting with <!DOCTYPE html>
+and ending with </html>. NO markdown fences, NO commentary, NO preamble,
+NO JSON wrapper.
 """
 
 
 # ---------- User prompt builder ----------
 
-def build_user_prompt(seed: dict, prior_errors: list[str] | None = None) -> str:
-    """Format a seed (and optional prior validation errors) into a user prompt."""
-    page_lines = "\n".join(
-        f"  - **{name}**: {desc}" for name, desc in seed["page_specs"].items()
-    )
+def build_page_prompt(
+    seed: dict,
+    page_name: str,
+    prior_errors: list[str] | None = None,
+) -> str:
+    """Format a prompt for generating ONE page of a multi-page site.
+
+    The prompt includes the full site identity (palette, typography,
+    constraints) plus brief specs of the OTHER pages so the model knows the
+    nav scope and the site's surface area. Only the target page is asked for
+    in the output.
+    """
+    if page_name not in seed["page_specs"]:
+        raise KeyError(f"page {page_name!r} not in seed page_specs")
+
     constraints = "\n".join(f"  - {c}" for c in seed["constraints"])
+    other_pages = [p for p in seed["pages"] if p != page_name]
+    other_page_lines = "\n".join(
+        f"  - **{p}**: {seed['page_specs'][p]}" for p in other_pages
+    )
+    pages_list = ", ".join(seed["pages"])
 
-    prompt = f"""Generate a website with the following spec.
+    prompt = f"""Generate ONE page of a 5-page website.
 
-**Task ID:** {seed["id"]}
-**Tier:** {seed["tier"]}
-**Genre:** {seed["genre"]}
+**Site ID:** {seed["id"]}
+**Tier:** {seed["tier"]}  **Genre:** {seed["genre"]}
 **Description:** {seed["description"]}
 
 **Palette:** {seed["palette_hint"]}
 **Typography:** {seed["type_style"]}
 
-**Hard constraints (must all hold):**
+**Hard constraints — must hold identically on every page of this site:**
 {constraints}
 
-**Pages to generate** (each is a single HTML file at /app/output/<name>/index.html):
-{page_lines}
+**The site's 5 pages, in nav order:** {pages_list}
+The nav must list all 5 page names. Plain anchor links (href="#" or
+href="../<other>/index.html") are fine — the renderer does not follow them.
 
-Return JSON with these exact keys: {list(seed["page_specs"].keys())}.
+**Other pages of this site** (DO NOT generate these — listed so you know the
+site's full surface area and can keep the nav/footer consistent):
+{other_page_lines}
 
-Each value is a complete HTML document. The pages must share a consistent
-header/footer/palette/typography. They are different pages of the same site.
+**THE PAGE YOU ARE GENERATING NOW:**
+- **{page_name}**: {seed["page_specs"][page_name]}
+
+Output the complete HTML document for the **{page_name}** page only. No JSON,
+no fences, no commentary.
 """
 
     if prior_errors:
         prompt += (
-            "\n\n**Previous attempt failed validation with these errors:**\n"
+            "\n\n**Previous attempt for this page failed validation:**\n"
             + "\n".join(f"  - {e}" for e in prior_errors)
-            + "\n\nFix the issues and regenerate."
+            + "\n\nFix the issues and regenerate the full HTML for this page."
         )
 
     return prompt

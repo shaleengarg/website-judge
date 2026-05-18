@@ -136,8 +136,8 @@ The user prompt to Sonnet contains:
 - `tier` matches the requested tier, `genre` matches the requested genre.
 - Exactly 5 page names, all non-empty strings.
 - `page_specs.keys()` exactly matches `pages` (same order, same names) —
-  this invariant is load-bearing downstream: `call_llm()` checks the same
-  thing on the codegen output, and `score.py` iterates `reference-pages/*`.
+  this invariant is load-bearing downstream: codegen iterates page_specs to
+  spawn per-page calls, and `score.py` iterates `reference-pages/*`.
 - `constraints` has at least 3 items.
 - Free-text fields (`palette_hint`, `type_style`, `description`) non-empty.
 
@@ -162,8 +162,31 @@ The ID returned by Sonnet is sanitized and **always** prefixed with
 **Input:** a `Seed` dict (from Stage 1 or from the hardcoded `SEEDS` list).
 **Output:** five HTML documents, one per page name in `seed["pages"]`.
 **Model:** `claude-opus-4-7` by default at default temperature.
+**Call shape:** one LLM call per page (5 per seed), running in parallel.
 
-### 4.1 Prompt structure
+### 4.1 Why one call per page
+
+An earlier design asked for all 5 pages in a single JSON response keyed by
+page name. On tier-3 seeds (sidebar nav + tables + KPI grids), the combined
+output blew past `max_tokens=16000` and the run failed with truncation
+errors that no amount of retry could fix — every retry produced the same
+oversized output.
+
+Splitting into 5 per-page calls gives each page its own 16k-token budget
+(80k total per seed), runs them concurrently for similar wall-clock, and
+turns "1 of 5 pages broke" from a whole-task failure into a single-page
+retry. The tradeoff is that the model no longer sees the other 4 pages
+while generating each one, so cross-page consistency (nav labels, footer
+text, palette adherence) has to come from the seed's `constraints` and
+`palette_hint` being prescriptive enough. `sanity.py` catches drift after
+the fact.
+
+The next step up — generating a shared layout (nav + footer + CSS) in a
+single call up front and injecting it verbatim into each per-page prompt —
+is the small_checks pattern. It's the right answer for production but a
+larger refactor; see §9 for the extension path.
+
+### 4.2 Prompt structure
 
 `prompts.SYSTEM_PROMPT` declares the hard rules every generated page must obey:
 
@@ -173,28 +196,28 @@ The ID returned by Sonnet is sanitized and **always** prefixed with
 4. No network resources — no Google Fonts, no CDN, no remote images.
 5. System fonts only (`-apple-system`, `Helvetica`, `Georgia`, ...).
 6. Image placeholders are colored `<div>`s, never `<img src=...>`.
-7. All 5 pages share the same nav, footer, palette, typography.
+7. The page shares nav/footer/palette/typography with the rest of the site;
+   the constraints + hints are the source of truth (do not improvise).
 8. Designed for 1280×800 viewport.
 
-`prompts.build_user_prompt(seed, prior_errors=...)` formats the seed into the
-per-task user message, including palette/type hints, constraints, and per-page
-specs. On retry, the validator errors are appended verbatim.
+`prompts.build_page_prompt(seed, page_name, prior_errors=...)` formats the
+prompt for one specific page. It includes:
+- The full site identity (description, palette, typography, all constraints).
+- The full list of page names in nav order (so the model knows the nav scope).
+- Brief specs for the OTHER pages as context (so the model can keep nav and
+  footer consistent with what the other calls will produce).
+- The current page's spec as the explicit generation target.
+- On retry, the validator errors for *this page* appended verbatim.
 
-### 4.2 Output format
+### 4.3 Output format
 
-Strict JSON, top-level keys = page names, values = full HTML documents as
-strings. `call_llm()` strips any markdown fences the model may have added,
-parses as JSON, and checks that the returned keys exactly match
-`seed["page_specs"].keys()`.
+Raw HTML — no JSON wrapper, no fences, no preamble. `call_llm_one_page()`
+strips any markdown fences the model snuck in and checks the response starts
+with `<`. Truncation is caught explicitly via `stop_reason == "max_tokens"`
+so the failure mode reports as "output truncated" rather than a downstream
+HTML parser error.
 
-`max_tokens=16000` is sized for the most content-dense tier-3 seeds (docs sites
-with sidebars + tables + KPI cards). If a future tier blows this, bump it; the
-SDK signals truncation via `stop_reason == "max_tokens"`, which we detect
-explicitly so the failure mode reports as "output truncated" rather than the
-misleading "Unterminated string in JSON" you'd get from parsing the truncated
-buffer.
-
-### 4.3 Validation and retry
+### 4.4 Validation and retry
 
 Every page passes through `validate_html()`:
 - HTML parser doesn't raise.
@@ -203,9 +226,11 @@ Every page passes through `validate_html()`:
 - No `http(s)://` URLs in any attribute value.
 - Length ≥ 200 bytes (catches "the model returned an empty string" failures).
 
-Failures are batched per page and fed back as `prior_errors` on the next
-attempt, with a per-page tag so the model knows which page broke. Up to 3
-retries (controlled by `--max-retries`).
+Each page has its own retry loop (up to `--max-retries`). On retry the
+errors for that specific page are appended to its next prompt. A page that
+exhausts retries kills the whole task — the orchestrator cancels the
+remaining in-flight page calls and propagates the failure, since a missing
+page makes the task unusable.
 
 ---
 
@@ -306,19 +331,24 @@ The generator picks up the new tier automatically — no other changes.
 
 ## 8. Parallelism model
 
-The generator runs two `ThreadPoolExecutor` pools sized to `--concurrency`:
+The generator runs three `ThreadPoolExecutor` pools at two levels:
 
-- **Synth pool** (only with `--synthesize`): one Sonnet call per worker, each
-  producing one seed.
-- **Codegen pool**: one Opus call per worker, each producing 5 HTML pages.
+- **Synth pool** (only with `--synthesize`): outer pool sized to
+  `--concurrency`, one Sonnet call per worker, each producing one seed.
+- **Codegen outer pool**: sized to `--concurrency`, one worker per seed.
+  A worker's job is to produce all 5 pages of its seed, write the task dir,
+  and return the manifest entry.
+- **Codegen inner pool** (one per outer worker): sized to 5, one worker per
+  page. Each runs an independent retry loop and returns the HTML for that
+  page.
 
-Both pools share a single `Anthropic` client instance. The Python SDK is
+All pools share a single `Anthropic` client instance. The Python SDK is
 thread-safe (it uses `httpx` underneath with connection pooling), so sharing
 one client is correct and gives better connection reuse than one client per
 worker.
 
-The two pools are sequential — all seeds are synthesized first, then codegen
-begins. They are not pipelined because:
+The synth stage and the codegen stage are sequential — all seeds are
+synthesized first, then codegen begins. Not pipelined because:
 - Synth is fast (~10 s/seed); codegen is slow (~30-60 s/seed). Pipelining
   would save only the first synth round-trip.
 - Sequential makes failures easier to diagnose: if synth fails, we never spend
@@ -327,16 +357,23 @@ begins. They are not pipelined because:
 Result order is stable: synth seeds are sorted by `id` after collection so
 downstream task numbering is deterministic for a given `--synth-seed`.
 
-### 8.1 Rate-limit guidance
+### 8.1 Concurrency math and rate-limit guidance
 
-| `--concurrency` | Use when |
-|-----------------|----------|
-| 4               | First-time setup, debugging, or org tier-1 API limits |
-| 8 (default)     | Routine generation, single dev account |
-| 16-32           | Tier-3/4 API limits, batch dataset builds |
+With `--concurrency N`, the worst-case in-flight call count is **5N** during
+codegen (N seeds × 5 pages each). With the default `N=8` that's up to 40
+concurrent Anthropic calls; with `N=16` it's 80. The previous (whole-site)
+design held at exactly N in-flight, so per-page codegen is 5× more
+concurrency-hungry for the same `--concurrency` setting.
 
-If you hit HTTP 429, drop concurrency and retry; the generator doesn't have a
-built-in backoff yet.
+| `--concurrency` | Peak in-flight | Use when |
+|-----------------|----------------|----------|
+| 4               | 20             | First-time setup, debugging, org tier-1 API limits |
+| 8 (default)     | 40             | Routine generation, single dev account |
+| 16              | 80             | Tier-3/4 API limits, batch dataset builds |
+| 32              | 160            | Only with tier-4 API limits and a high concurrent-request quota |
+
+If you hit HTTP 429, drop `--concurrency` and retry — there's no built-in
+backoff yet.
 
 ---
 

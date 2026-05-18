@@ -1,107 +1,226 @@
-# Website Bench Generator (v0)
+# Website-bench generator
 
 Generates a Harbor benchmark dataset of 5-page-website replication tasks at
-varying difficulty tiers. The agent under test will be shown the screenshots
-of the 5 reference pages and asked to recreate them in HTML/CSS.
+varying difficulty tiers. An agent under test is shown screenshots of the 5
+reference pages and asked to recreate them in HTML/CSS; `score.py` re-renders
+the agent's output and scores it against the reference.
+
+Two operating modes:
+
+- **Hand-written seeds** — generate from the 10 curated seeds in `seeds.py`.
+  Predictable, reproducible, limited to what's hand-authored.
+- **`--synthesize N`** — ask Claude Sonnet to invent N new seeds across the
+  tier range, then run the same codegen pipeline. Scalable to any dataset
+  size.
+
+For the design rationale and pipeline internals, see
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+---
 
 ## Layout
 
 ```
-website-bench-generator/
-├── generate_dataset.py            # The generator
-├── seeds.py                       # Curated task specs (10 seeds, tiers 1–3)
+bench-generator/
+├── generate_dataset.py            # Orchestrator + codegen (Stage 2 + 3)
+├── concept_gen.py                 # LLM-driven seed synthesis (Stage 1)
+├── seeds.py                       # TIERS, GENRES, hardcoded SEEDS (10)
+├── prompts.py                     # Codegen system + user prompts
+├── sanity.py                      # Local Playwright render + DOM checks
+├── relevance.py                   # Claude vision judge (per-page scoring)
 ├── templates/                     # Harness files copied into every task
 │   ├── task.toml.tpl              # Templated; placeholders for name/tier/genre
 │   ├── instruction.md.tpl         # Templated; placeholders for page list
-│   ├── environment/
-│   │   ├── Dockerfile             # Verbatim per task
-│   │   └── make.py                # Verbatim per task
-│   ├── solution/solve.sh          # Verbatim per task
-│   └── tests/
-│       ├── test.sh                # Verbatim per task
-│       └── score.py               # Verbatim per task
+│   ├── environment/{Dockerfile,make.py}    # Verbatim per task
+│   ├── solution/solve.sh          # Verbatim — oracle solver
+│   └── tests/{test.sh,score.py}   # Verbatim — scoring harness
+├── scripts/test_pipeline.sh       # End-to-end smoke test
+├── docs/
+│   └── ARCHITECTURE.md            # Design + extension guide
 └── README.md                      # This file
 ```
 
-## How it works
+---
 
-For each seed in `seeds.py` (each describes a website by tier, genre, palette,
-typography, page list, per-page specs):
-
-1. The generator sends the seed to an LLM (Sonnet by default — not the same
-   model under test) and asks for 5 HTML files as JSON.
-2. Each HTML page is validated: parses, has `<body>`, no `<script>`, no
-   `http(s)://` URLs, reasonable length.
-3. If validation fails, retry up to 3 times, feeding the errors back to the
-   model for a fixup pass.
-4. On success, write a Harbor task directory: the 5 HTML files go under
-   `environment/reference-pages/<page>/index.html`, harness files are copied
-   verbatim, `task.toml` and `instruction.md` are rendered from templates.
-
-## Run it
+## Quick start
 
 ```bash
-pip install anthropic
 export ANTHROPIC_API_KEY=...
 
-python generate_dataset.py --count 10 --output ./website-bench
+# Mode A — generate from the 10 hardcoded seeds
+uv run generate_dataset.py --count 10 --output ./website-bench
+
+# Mode B — synthesize 50 new tasks via the LLM concept stage
+uv run generate_dataset.py --synthesize 50 --concurrency 16 --output ./website-bench-v1
 ```
 
-Useful flags:
+Both modes write Harbor task directories under `--output`, plus a
+`registry.json` manifest and a `README.md` index.
+
+---
+
+## CLI reference
+
+### Inputs
+
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `--output <dir>` | required | Where to write task directories |
+| `--count N` | 10 | (Mode A) Max number of hardcoded seeds to use |
+| `--synthesize N` | 0 | (Mode B) Ask the LLM to invent N new seeds. Mutually exclusive with `--include-id`. |
+| `--tier-min N`, `--tier-max N` | full range in `TIERS` | Restrict tier range |
+| `--include-id <id>` | — | Mode A only — generate only the named seed(s); repeatable |
+| `--synth-seed K` | random | RNG seed for tier/genre pair selection in Mode B; pass an integer for reproducibility |
+| `--start-index N` | 0 | (Mode A) skip the first N matching seeds (resuming) |
+
+### Models, concurrency, retries
+
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `--model <name>` | `claude-opus-4-7` | Model for HTML/CSS codegen (Stage 2). Concept stage always uses `claude-sonnet-4-6`. |
+| `--concurrency` / `-j N` | 8 | Parallel workers. **Codegen issues one LLM call per page** (5 per seed), so peak in-flight calls = `5N`. With `-j 16` that's up to 80 concurrent calls — drop it if you hit 429s. |
+| `--max-retries N` | 3 | Per-seed codegen retries on HTML validation failure |
+
+### Inspection
+
+| Flag | Purpose |
+|------|---------|
+| `--dry-run` | Plan the run and exit without calling any LLM |
+| `--list-tiers` | Print tier definitions from `seeds.py` and exit |
+
+---
+
+## Examples
 
 ```bash
-# Just the easiest 3 tasks
-python generate_dataset.py --count 3 --tier-min 1 --tier-max 1 --output ./bench-easy
+# See what would happen — no API call, no cost
+uv run generate_dataset.py --synthesize 5 --dry-run --output /tmp/preview
 
-# Regenerate one specific seed
-python generate_dataset.py --include-id 004-saas-marketing --output ./website-bench
+# Regenerate one hand-written seed (overwrites the existing dir)
+uv run generate_dataset.py --include-id 004-saas-marketing --output ./website-bench
 
-# See what would happen without calling the LLM
-python generate_dataset.py --count 10 --output ./website-bench --dry-run
+# Easy-tier-only batch
+uv run generate_dataset.py --synthesize 20 \
+  --tier-min 1 --tier-max 1 \
+  --output ./bench-easy
 
-# Use a different generation model (default is sonnet)
-python generate_dataset.py --count 10 --model claude-opus-4-7 --output ./website-bench
+# Reproducible synthesis — fixed RNG means the same (tier, genre) pairs each run
+uv run generate_dataset.py --synthesize 10 --synth-seed 42 --output ./repro-run
+
+# Larger batch with higher concurrency (needs Tier 3+ Anthropic API limits)
+uv run generate_dataset.py --synthesize 100 --concurrency 24 --output ./big-bench
 ```
 
-## After generation, validate
+---
 
-Always sanity-check that each generated task passes its oracle:
+## Inspecting one seed before kicking off a full run
+
+`concept_gen.py` can be run standalone to see what a single seed looks like
+without going through codegen:
 
 ```bash
-cd website-bench
-for d in */; do
-  echo "=== $d ==="
-  harbor run -p "$d" -a oracle --env modal 2>&1 | tail -5
-done
+uv run concept_gen.py --tier 1 --genre portfolio
+uv run concept_gen.py --tier 3 --genre dashboard
 ```
 
-Every task should print reward ≈ 1.000. If any score lower, the verifier
-isn't agreeing with itself — usually a CSS quirk causing tiny render
-differences between identical inputs (shouldn't happen but worth knowing).
+It prints the generated `Seed` JSON to stdout. Useful when iterating on
+prompts in [prompts.py](prompts.py) or adding a new genre.
+
+---
+
+## Validating generated tasks
+
+Two checks run **after** generation. They take a directory of generated tasks
+and report which ones look good.
+
+### `sanity.py` — deterministic, no LLM
+
+Renders each page locally with Playwright and asserts:
+
+- Render succeeds, screenshot is not blank, page height in `[400, 20000]` px
+- Visible text length ≥ 200 chars
+- Tier 2+: page has `<nav>` and `<footer>` landmarks
+- Tier 3+: page has ≥ 2 flex/grid layout containers
+- **Cross-page (tier 2+):** nav labels identical across all 5 pages, footer
+  text overlap ≥ 80 %, background-color drift < ΔE 12 in LAB space
+
+```bash
+uv run sanity.py ./website-bench-v1/synth-t1-portfolio-a3b2
+uv run sanity.py ./website-bench-v1/*/               # whole dataset
+uv run sanity.py ./website-bench-v1/*/ --json        # machine-readable summary
+```
+
+Exit code 0 if every task passes; 1 otherwise. Failed tasks print exactly
+which threshold tripped and the measured value.
+
+### `relevance.py` — Claude Sonnet vision judge
+
+For each page in a task, sends the rendered screenshot + the seed spec to
+Claude Sonnet (vision-enabled) and collects five 1-5 Likert scores:
+`matches_page_spec`, `matches_palette`, `matches_typography`,
+`respects_constraints`, `overall_coherence`.
+
+A page passes if every rubric is ≥ 3 and `overall_coherence` ≥ 4. A task
+passes if every page passes.
+
+```bash
+uv run relevance.py ./website-bench-v1/synth-t1-portfolio-a3b2
+uv run relevance.py ./website-bench-v1/*/
+```
+
+Cost: ~$0.01/page, ~$0.05/task. Failures print the judge's `notes` field so
+you can see why a page didn't pass.
+
+### `scripts/test_pipeline.sh` — full end-to-end smoke
+
+Generates 3 fresh tasks (one per tier), then runs both checks above:
+
+```bash
+./scripts/test_pipeline.sh           # full pipeline (~3-5 min, costs API)
+./scripts/test_pipeline.sh --fast    # skip relevance/VLM step
+./scripts/test_pipeline.sh --keep    # don't delete the temp output dir
+```
+
+Use this as a CI gate — it exits non-zero on any checkpoint failure.
+
+---
 
 ## Iterating on the dataset
 
-The seed library in `seeds.py` defines the benchmark. To change difficulty,
-genre coverage, or specific page specs, edit that file. Then regenerate.
+The two LLM-facing knobs live in separate files:
 
-Re-running `generate_dataset.py` with the same seed id **overwrites** the
-existing task directory. Use `--include-id <id>` to regenerate just one.
+- **Tier definitions** (`seeds.py:TIERS`) — what each difficulty level
+  encompasses, and the CSS capabilities the agent is expected to demonstrate.
+- **Codegen rules** (`prompts.py:SYSTEM_PROMPT`) — the hard rules every
+  generated page must obey (no JS, no external URLs, system fonts, etc.).
 
-## Where v0 ends and v1 begins
+When you change either, regenerate the affected tasks. Re-running
+`generate_dataset.py` overwrites task directories that already exist at the
+target paths.
 
-v0 (what you have now):
+Genre coverage lives in `seeds.py:GENRES`. Adding a genre is one line; the
+synth pair-picker picks it up automatically.
 
-- 10 hardcoded seeds across tiers 1–3 and 9 genres
-- One-shot LLM generation, three retry attempts on validation failure
-- Basic structural validation (parse, no script, no external URLs)
-- No automatic oracle check — you run it yourself after generation
+---
 
-v1 ideas:
+## Roadmap
 
-- Multi-turn generation: generate → self-critique → refine
-- Automatic oracle smoke test post-generation (reject tasks where oracle < 0.95)
-- LLM-as-judge component in `score.py`
-- Tiers 4–8 (visual polish, complex typography, forms, SVG, magazine layouts)
-- More seeds per tier so `--count 50` is meaningful
-- Real-screenshot ground truth (give the model a real site screenshot, have
-  it produce the HTML — that becomes the task's reference)
+What's in Phase A (the current release):
+
+- Tiers 1-3 with 5 genres each
+- LLM-driven concept stage (`concept_gen.py`)
+- Two-stage parallel pipeline (synth + codegen, both threaded)
+- Three layers of post-generation QA (schema, HTML validity, sanity, relevance)
+- End-to-end smoke test (`scripts/test_pipeline.sh`)
+
+Planned for Phase B and beyond:
+
+- Tiers 4-8 (visual polish, custom typography systems, forms/data, inline SVG,
+  magazine layouts)
+- Bonus tier: animations — requires relaxing the no-JS rule and recording
+  video for scoring
+- Bonus tier: React + Tailwind track — separate codegen prompt + template
+  set, agent produces a buildable project
+
+See [docs/ARCHITECTURE.md §9](docs/ARCHITECTURE.md) for what each extension
+touches and where the seams are.

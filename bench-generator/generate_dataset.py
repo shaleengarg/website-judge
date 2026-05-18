@@ -122,97 +122,141 @@ def validate_html(html: str) -> ValidationResult:
 
 
 # ---------- LLM generation ----------
+#
+# Codegen is one LLM call PER PAGE. The previous design asked for all 5 pages
+# in a single JSON response, which blew the max_tokens budget on dense tier-3
+# seeds (dashboards, docs sites). Per-page calls give each page its own
+# 16000-token budget and let the pages run in parallel within a single seed.
+# Cross-page consistency now relies on the seed constraints + palette/type
+# hints being prescriptive — sanity.py catches drift after the fact.
 
 
-def call_llm(client: Anthropic, model: str, seed: dict, attempt: int = 1,
-             prior_errors: list[str] | None = None) -> dict[str, str]:
-    """Single LLM call; returns dict of page_name -> html. May raise."""
-    user = prompts.build_user_prompt(seed, prior_errors=prior_errors)
+def call_llm_one_page(
+    client: Anthropic,
+    model: str,
+    seed: dict,
+    page_name: str,
+    attempt: int = 1,
+    prior_errors: list[str] | None = None,
+) -> str:
+    """Single LLM call for one page; returns raw HTML. May raise ValueError."""
+    user = prompts.build_page_prompt(seed, page_name, prior_errors=prior_errors)
 
-    print(f"  [{seed['id']}] LLM call (attempt {attempt})")
+    print(f"  [{seed['id']}/{page_name}] LLM call (attempt {attempt})")
     resp = client.messages.create(
         model=model,
-        # 16000 fits even the most content-dense seeds (e.g., dashboards with
-        # sidebars + tables + KPI cards across 5 pages). Sonnet 4.6 supports
-        # up to 64k output. Bump higher if you add tier 6+ seeds with forms,
-        # SVG illustrations, or magazine layouts.
+        # 16000 tokens per page is plenty for tier-3 dashboards and docs.
+        # Sonnet/Opus 4.6+ supports up to 64k output if a future tier needs it.
         max_tokens=16000,
         system=prompts.SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user}],
     )
 
-    # Concatenate text blocks (defensive — should only be one).
     text = "".join(b.text for b in resp.content if hasattr(b, "text"))
 
-    # Detect truncation explicitly. The API tells us in stop_reason when it
-    # ran out of room. If we don't catch this here, the next stage tries to
-    # parse a truncated string and reports a misleading "Unterminated string"
-    # error that doesn't hint at the real cause.
+    # Detect truncation explicitly. Without this, downstream HTML validation
+    # reports a parser error instead of the real cause.
     stop_reason = getattr(resp, "stop_reason", None)
     if stop_reason == "max_tokens":
         raise ValueError(
-            f"output truncated at max_tokens ({len(text)} chars produced). "
-            f"Either raise max_tokens in generate_dataset.py or simplify the seed."
+            f"output truncated at max_tokens ({len(text)} chars produced)."
         )
 
-    # The model is told to return strict JSON. Strip markdown fences just in
-    # case it slipped any in.
+    # Strip any markdown fences the model snuck in (it's told not to, but).
     text = text.strip()
     if text.startswith("```"):
-        text = re.sub(r"^```(?:json)?\s*", "", text)
+        text = re.sub(r"^```(?:html|json)?\s*", "", text)
         text = re.sub(r"\s*```$", "", text)
+        text = text.strip()
 
-    try:
-        data = json.loads(text)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"LLM did not return valid JSON: {e}\n---\n{text[:500]}")
+    if not text:
+        raise ValueError("LLM returned empty output")
+    if not text.lstrip().startswith("<"):
+        raise ValueError(f"LLM did not return HTML; got: {text[:200]!r}")
 
-    if not isinstance(data, dict):
-        raise ValueError(f"LLM returned a {type(data).__name__}, expected dict")
-
-    expected = set(seed["page_specs"].keys())
-    got = set(data.keys())
-    if got != expected:
-        missing = expected - got
-        extra = got - expected
-        raise ValueError(f"key mismatch — missing: {missing}, extra: {extra}")
-
-    return data
+    return text
 
 
-def generate_pages_for_seed(client: Anthropic, model: str, seed: dict,
-                            max_retries: int) -> dict[str, str]:
-    """Generate and validate pages for one seed, retrying on validation failures."""
+def _generate_one_page_with_retries(
+    client: Anthropic,
+    model: str,
+    seed: dict,
+    page_name: str,
+    max_retries: int,
+) -> str:
+    """Generate + validate one page with retries on validation failure."""
     prior_errors: list[str] = []
     for attempt in range(1, max_retries + 1):
         try:
-            pages = call_llm(client, model, seed, attempt=attempt,
-                             prior_errors=prior_errors or None)
+            html = call_llm_one_page(
+                client, model, seed, page_name,
+                attempt=attempt,
+                prior_errors=prior_errors or None,
+            )
         except ValueError as e:
-            print(f"  [{seed['id']}] generation error on attempt {attempt}: {e}")
+            print(f"  [{seed['id']}/{page_name}] generation error on attempt {attempt}: {e}")
             prior_errors = [str(e)]
             continue
 
-        # Validate every page; collect failures.
-        per_page_errors: dict[str, list[str]] = {}
-        for name, html in pages.items():
-            result = validate_html(html)
-            if not result.ok:
-                per_page_errors[name] = result.errors
+        result = validate_html(html)
+        if result.ok:
+            return html
 
-        if not per_page_errors:
-            return pages
-
-        # Build a fixup prompt with the specific failures.
-        prior_errors = []
-        for page, errs in per_page_errors.items():
-            for err in errs:
-                prior_errors.append(f"[{page}] {err}")
-        print(f"  [{seed['id']}] validation failed on attempt {attempt}:")
+        prior_errors = result.errors
+        print(f"  [{seed['id']}/{page_name}] validation failed on attempt {attempt}:")
         for e in prior_errors:
             print(f"    - {e}")
 
-    raise RuntimeError(f"giving up on {seed['id']} after {max_retries} attempts")
+    raise RuntimeError(
+        f"giving up on {seed['id']}/{page_name} after {max_retries} attempts"
+    )
+
+
+def generate_pages_for_seed(
+    client: Anthropic,
+    model: str,
+    seed: dict,
+    max_retries: int,
+) -> dict[str, str]:
+    """Generate all 5 pages for one seed, running per-page calls in parallel.
+
+    Each page has an independent retry loop, so a single flaky page no longer
+    forces re-generation of the other four.
+
+    Note on concurrency: this opens a nested ThreadPoolExecutor with up to 5
+    workers inside the outer per-seed pool. With --concurrency 16 outside,
+    that's up to 16*5 = 80 in-flight API calls. Drop --concurrency if you
+    hit 429s.
+    """
+    page_names = list(seed["page_specs"].keys())
+    results: dict[str, str] = {}
+    first_error: BaseException | None = None
+
+    with ThreadPoolExecutor(max_workers=len(page_names)) as pool:
+        futures = {
+            pool.submit(
+                _generate_one_page_with_retries,
+                client, model, seed, name, max_retries,
+            ): name
+            for name in page_names
+        }
+        for fut in as_completed(futures):
+            page_name = futures[fut]
+            try:
+                results[page_name] = fut.result()
+            except BaseException as e:
+                # Record the first failure and cancel anything still pending;
+                # one dead page means the whole task is unusable.
+                if first_error is None:
+                    first_error = e
+                for other in futures:
+                    if not other.done():
+                        other.cancel()
+
+    if first_error is not None:
+        raise first_error
+
+    return results
 
 
 # ---------- Template rendering ----------

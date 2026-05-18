@@ -281,24 +281,38 @@ def pick_tier_genre_pairs(
     *,
     rng: random.Random | None = None,
 ) -> list[tuple[int, str]]:
-    """Pick N (tier, genre) pairs, distributing roughly evenly across tiers.
+    """Pick N (tier, genre) pairs with even genre distribution per tier.
 
-    Cycles through tiers in the allowed range; within a tier, samples genres
-    with replacement so we can produce more concepts than there are genres.
+    Tiers are cycled in order across picks. Within each tier, genres are
+    drawn from a shuffled per-tier "deck" that is reshuffled whenever
+    exhausted — so for K picks at a given tier you get floor(K/G) complete
+    cycles of all G genres plus a final partial cycle. No genre repeats
+    until every other genre at that tier has been used at least the same
+    number of times.
+
+    Determinism: with a fixed `rng` (i.e. `--synth-seed`), the pair sequence
+    is reproducible across runs.
     """
     rng = rng or random.Random()
     tiers = [t for t in sorted(seeds_mod.TIERS) if tier_min <= t <= tier_max]
     if not tiers:
         raise ValueError(f"no tiers in range [{tier_min}, {tier_max}]")
 
+    decks: dict[int, list[str]] = {t: [] for t in tiers}
+
+    def draw_genre(tier: int) -> str:
+        if not decks[tier]:
+            genres = list(seeds_mod.GENRES.get(tier, []))
+            if not genres:
+                raise ValueError(f"no genres defined for tier {tier}")
+            rng.shuffle(genres)
+            decks[tier] = genres
+        return decks[tier].pop()
+
     pairs: list[tuple[int, str]] = []
     for i in range(n):
         tier = tiers[i % len(tiers)]
-        genres = seeds_mod.GENRES.get(tier, [])
-        if not genres:
-            raise ValueError(f"no genres defined for tier {tier}")
-        genre = rng.choice(genres)
-        pairs.append((tier, genre))
+        pairs.append((tier, draw_genre(tier)))
     return pairs
 
 
