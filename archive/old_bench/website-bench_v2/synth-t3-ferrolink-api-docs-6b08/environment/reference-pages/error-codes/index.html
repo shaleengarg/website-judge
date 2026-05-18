@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Error Codes — FerroLink API</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0f1117;
+    color: #c9d1d9;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 260px;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    overflow-y: auto;
+    padding: 24px 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .brand {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid #30363d;
+    margin-bottom: 16px;
+  }
+  .brand-title {
+    font-weight: 700;
+    font-size: 18px;
+    color: #c9d1d9;
+    letter-spacing: 0.5px;
+  }
+  .brand-title .dot { color: #3fb950; }
+  .brand-sub {
+    font-size: 11px;
+    color: #6e7681;
+    margin-top: 4px;
+    font-family: 'Courier New', monospace;
+  }
+  .nav-section {
+    padding: 8px 20px 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #6e7681;
+    letter-spacing: 0.8px;
+    margin-top: 12px;
+  }
+  .nav-tree { list-style: none; font-size: 14px; }
+  .nav-tree li a {
+    display: block;
+    padding: 6px 20px;
+    color: #c9d1d9;
+    border-left: 2px solid transparent;
+  }
+  .nav-tree li a:hover { background: #1c2128; text-decoration: none; }
+  .nav-tree li a.active {
+    color: #58a6ff;
+    border-left-color: #58a6ff;
+    background: #1c2128;
+    font-weight: 600;
+  }
+  .nav-tree .sub { list-style: none; }
+  .nav-tree .sub li a { padding-left: 36px; font-size: 13px; color: #8b949e; }
+  .nav-tree .sub .sub li a { padding-left: 52px; }
+
+  /* Main */
+  .main {
+    margin-left: 260px;
+    max-width: 860px;
+    padding: 40px 48px;
+  }
+  .crumb {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #6e7681;
+    margin-bottom: 12px;
+  }
+  .crumb span { color: #3fb950; }
+
+  h1 {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: #f0f6fc;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+  .lede {
+    color: #8b949e;
+    margin-bottom: 28px;
+    max-width: 720px;
+  }
+
+  h2 {
+    position: sticky;
+    top: 0;
+    background: #0f1117;
+    border-bottom: 1px solid #30363d;
+    padding: 12px 0;
+    z-index: 10;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #f0f6fc;
+    margin-top: 32px;
+  }
+  h2 .count {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #6e7681;
+    font-weight: 400;
+    margin-left: 8px;
+  }
+
+  code, .icode {
+    background: #1c2128;
+    color: #f78166;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+
+  /* Filter bar (visual only) */
+  .filter-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 14px 16px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+  .filter-bar .search {
+    flex: 1;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+  .filter-bar .search::before { content: "⌕ "; }
+  .chip {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    background: #0d1117;
+  }
+  .chip.on { background: #1c2128; color: #58a6ff; border-color: #58a6ff; }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #30363d;
+    margin-bottom: 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+  thead th {
+    position: sticky;
+    top: 49px;
+    background: #1c2128;
+    color: #c9d1d9;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #30363d;
+    font-weight: 700;
+    font-family: system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    z-index: 5;
+  }
+  tbody tr:nth-child(odd) { background: #0f1117; }
+  tbody tr:nth-child(even) { background: #161b22; }
+  tbody td {
+    padding: 10px 12px;
+    border-top: 1px solid #30363d;
+    vertical-align: top;
+  }
+  td.code-col { color: #58a6ff; font-weight: 700; width: 90px; white-space: nowrap; }
+  td.status-col { width: 110px; }
+  td.name-col { width: 230px; }
+  td.res-col { font-family: Georgia, serif; font-size: 14px; color: #c9d1d9; }
+  .status-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: system-ui, sans-serif;
+  }
+  .s400 { background: rgba(247,129,102,0.15); color: #f78166; }
+  .s429 { background: rgba(227,179,65,0.15); color: #e3b341; }
+  .s500 { background: rgba(248,81,73,0.15); color: #ff7b72; }
+  .s403 { background: rgba(247,129,102,0.15); color: #f78166; }
+  .s404 { background: rgba(139,148,158,0.18); color: #8b949e; }
+  .s409 { background: rgba(227,179,65,0.15); color: #e3b341; }
+
+  .legend {
+    background: #161b22;
+    border-left: 3px solid #58a6ff;
+    padding: 16px;
+    margin: 24px 0 32px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .legend strong { color: #3fb950; font-family: system-ui, sans-serif; }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid #30363d;
+    color: #6e7681;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: space-between;
+  }
+  footer a { color: #8b949e; margin-left: 16px; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-title">Ferro<span class="dot">▮</span>Link</div>
+    <div class="brand-sub">v3.4.1 / docs</div>
+  </div>
+
+  <div class="nav-section">Documentation</div>
+  <ul class="nav-tree">
+    <li><a href="../getting-started/index.html">Getting Started</a></li>
+    <li><a href="../api-reference/index.html">API Reference</a>
+      <ul class="sub">
+        <li><a href="#">Streams</a></li>
+        <li><a href="#">Devices</a></li>
+        <li><a href="#">Alerts</a></li>
+      </ul>
+    </li>
+    <li><a href="../data-models/index.html">Data Models</a></li>
+    <li><a href="../changelog/index.html">Changelog</a></li>
+    <li><a href="#" class="active">Error Codes</a>
+      <ul class="sub">
+        <li><a href="#auth">Authentication (4xx)</a></li>
+        <li><a href="#rate">Rate Limiting</a></li>
+        <li><a href="#stream">Stream Errors</a></li>
+        <li><a href="#device">Device Errors</a></li>
+        <li><a href="#internal">Internal (5xx)</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="nav-section">Resources</div>
+  <ul class="nav-tree">
+    <li><a href="#">Status Page</a></li>
+    <li><a href="#">SDK Downloads</a></li>
+    <li><a href="#">Support</a></li>
+  </ul>
+</aside>
+
+<main class="main">
+  <div class="crumb">docs / reference / <span>error-codes</span></div>
+  <h1>Error Codes</h1>
+  <p class="lede">A complete reference of all 47 HTTP and application-level error codes returned by the FerroLink ingestion gateway and control plane. Codes are grouped by category. Each <code>short_name</code> is the machine-readable identifier returned in the JSON body under the <code>error.code</code> field.</p>
+
+  <div class="filter-bar">
+    <div class="search">filter by code, name, or resolution…</div>
+    <span class="chip on">All</span>
+    <span class="chip">4xx</span>
+    <span class="chip">429</span>
+    <span class="chip">5xx</span>
+  </div>
+
+  <div class="legend">
+    <strong>Response shape</strong><br>
+    All errors return JSON with the structure: <code>{ "error": { "code": "...", "status": 0, "message": "...", "trace_id": "..." } }</code>. Include the <code>trace_id</code> when contacting support to expedite diagnosis.
+  </div>
+
+  <h2 id="auth">Authentication <span class="count">(4xx) — 9 codes</span></h2>
+  <table>
+    <thead>
+      <tr><th>Code</th><th>HTTP Status</th><th>Short Name</th><th>Resolution</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="code-col">FL-1001</td><td class="status-col"><span class="status-pill s400">401</span></td><td class="name-col"><span class="icode">auth.missing_token</span></td><td class="res-col">Include the <code>Authorization: Bearer &lt;key&gt;</code> header. Generate keys in Dashboard → Settings → API Keys.</td></tr>
+      <tr><td class="code-col">FL-1002</td><td class="status-col"><span class="status-pill s400">401</span></td><td class="name-col"><span class="icode">auth.invalid_token</span></td><td class="res-col">The token signature failed verification. Rotate the key and ensure no whitespace was copied.</td></tr>
+      <tr><td class="code-col">FL-1003</td><td class="status-col"><span class="status-pill s400">401</span></td><td class="name-col"><span class="icode">auth.expired_token</span></td><td class="res-col">Refresh via <code>POST /v3/auth/refresh</code> with the stored <code>refresh_token</code>.</td></tr>
+      <tr><td class="code-col">FL-1004</td><td class="status-col"><span class="status-pill s403">403</span></td><td class="name-col"><span class="icode">auth.scope_forbidden</span></td><td class="res-col">Key lacks the required scope. Add <code>streams:write</code> in Dashboard → API Keys → Scopes.</td></tr>
+      <tr><td class="code-col">FL-1005</td><td class="status-col"><span class="status-pill s403">403</span></td><td class="name-col"><span class="icode">auth.org_mismatch</span></td><td class="res-col">Resource belongs to a different organization. Verify <code>X-Org-Id</code> matches the key's org.</td></tr>
+      <tr><td class="code-col">FL-1006</td><td class="status-col"><span class="status-pill s400">401</span></td><td class="name-col"><span class="icode">auth.mfa_required</span></td><td class="res-col">Endpoint requires MFA-elevated session. Re-authenticate with <code>otp</code> parameter.</td></tr>
+      <tr><td class="code-col">FL-1007</td><td class="status-col"><span class="status-pill s403">403</span></td><td class="name-col"><span class="icode">auth.ip_blocked</span></td><td class="res-col">Source IP is outside the allow-list. Edit network rules in Dashboard → Security → IP Allowlist.</td></tr>
+      <tr><td class="code-col">FL-1008</td><td class="status-col"><span class="status-pill s400">401</span></td><td class="name-col"><span class="icode">auth.signature_skew</span></td><td class="res-col">Request timestamp drifted &gt;300s. Sync client clock via NTP and retry.</td></tr>
+      <tr><td class="code-col">FL-1009</td><td class="status-col"><span class="status-pill s403">403</span></td><td class="name-col"><span class="icode">auth.revoked_key</span></td><td class="res-col">API key was revoked. Issue a new key from Dashboard → Settings → API Keys.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="rate">Rate Limiting <span class="count">— 5 codes</span></h2>
+  <table>
+    <thead>
+      <tr><th>Code</th><th>HTTP Status</th><th>Short Name</th><th>Resolution</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="code-col">FL-2001</td><td class="status-col"><span class="status-pill s429">429</span></td><td class="name-col"><span class="icode">rate.requests_per_minute</span></td><td class="res-col">Wait the duration in <code>Retry-After</code>. Upgrade plan or distribute via <code>X-Idempotency-Key</code>.</td></tr>
+      <tr><td class="code-col">FL-2002</td><td class="status-col"><span class="status-pill s429">429</span></td><td class="name-col"><span class="icode">rate.ingest_bandwidth</span></td><td class="res-col">Stream ingest exceeds plan limit. Enable <code>batch_compress=gzip</code> on the publisher.</td></tr>
+      <tr><td class="code-col">FL-2003</td><td class="status-col"><span class="status-pill s429">429</span></td><td class="name-col"><span class="icode">rate.concurrent_streams</span></td><td class="res-col">Too many concurrent subscribers. Close idle streams or raise the <code>concurrency_cap</code>.</td></tr>
+      <tr><td class="code-col">FL-2004</td><td class="status-col"><span class="status-pill s429">429</span></td><td class="name-col"><span class="icode">rate.burst_exceeded</span></td><td class="res-col">Short-window burst tripped. Implement client-side token-bucket pacing at 50 req/s.</td></tr>
+      <tr><td class="code-col">FL-2005</td><td class="status-col"><span class="status-pill s429">429</span></td><td class="name-col"><span class="icode">rate.quota_exhausted</span></td><td class="res-col">Monthly quota reached. Resets on billing anchor day. View usage in Dashboard → Billing.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="stream">Stream Errors <span class="count">— 12 codes</span></h2>
+  <table>
+    <thead>
+      <tr><th>Code</th><th>HTTP Status</th><th>Short Name</th><th>Resolution</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="code-col">FL-3001</td><td class="status-col"><span class="status-pill s404">404</span></td><td class="name-col"><span class="icode">stream.not_found</span></td><td class="res-col">Verify the <code>stream_id</code> exists and the caller has <code>streams:read</code> scope.</td></tr>
+      <tr><td class="code-col">FL-3002</td><td class="status-col"><span class="status-pill s409">409</span></td><td class="name-col"><span class="icode">stream.already_exists</span></td><td class="res-col">A stream with the same <code>name</code> exists. Pass <code>upsert=true</code> or rename.</td></tr>
+      <tr><td class="code-col">FL-3003</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">stream.schema_mismatch</span></td><td class="res-col">Payload fields don't match registered schema. Re-register via <code>PUT /v3/streams/{id}/schema</code>.</td></tr>
+      <tr><td class="code-col">FL-3004</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">stream.payload_too_large</span></td><td class="res-col">Single message exceeds 1 MiB. Split records or enable chunked upload mode.</td></tr>
+      <tr><td class="code-col">FL-3005</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">stream.retention_violation</span></td><td class="res-col">Timestamp outside retention window. Adjust <code>retention_days</code> in stream settings.</td></tr>
+      <tr><td class="code-col">FL-3006</td><td class="status-col"><span class="status-pill s409">409</span></td><td class="name-col"><span class="icode">stream.cursor_invalid</span></td><td class="res-col">Cursor expired or malformed. Restart consumer with <code>from=earliest</code>.</td></tr>
+      <tr><td class="code-col">FL-3007</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">stream.partition_unavailable</span></td><td class="res-col">Target partition is rebalancing. Retry after 2s with exponential backoff.</td></tr>
+      <tr><td class="code-col">FL-3008</td><td class="status-col"><span class="status-pill s403">403</span></td><td class="name-col"><span class="icode">stream.read_only</span></td><td class="res-col">Stream is archived. Restore it from Dashboard → Streams → Archive.</td></tr>
+      <tr><td class="code-col">FL-3009</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">stream.duplicate_record</span></td><td class="res-col">Idempotency key collision. Supply a unique <code>X-Idempotency-Key</code> per record.</td></tr>
+      <tr><td class="code-col">FL-3010</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">stream.invalid_codec</span></td><td class="res-col">Unsupported compression. Use <code>gzip</code>, <code>zstd</code>, or omit the header.</td></tr>
+      <tr><td class="code-col">FL-3011</td><td class="status-col"><span class="status-pill s409">409</span></td><td class="name-col"><span class="icode">stream.checkpoint_conflict</span></td><td class="res-col">Two consumers wrote the same checkpoint. Assign distinct <code>consumer_group</code> ids.</td></tr>
+      <tr><td class="code-col">FL-3012</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">stream.filter_syntax</span></td><td class="res-col">Invalid SQL-like filter expression. See the filter grammar in the API reference.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="device">Device Errors <span class="count">— 11 codes</span></h2>
+  <table>
+    <thead>
+      <tr><th>Code</th><th>HTTP Status</th><th>Short Name</th><th>Resolution</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="code-col">FL-4001</td><td class="status-col"><span class="status-pill s404">404</span></td><td class="name-col"><span class="icode">device.not_registered</span></td><td class="res-col">Provision the device via <code>POST /v3/devices</code> before sending telemetry.</td></tr>
+      <tr><td class="code-col">FL-4002</td><td class="status-col"><span class="status-pill s403">403</span></td><td class="name-col"><span class="icode">device.cert_expired</span></td><td class="res-col">Rotate device x509 certificate. Use the <code>ferrolink certs renew</code> CLI command.</td></tr>
+      <tr><td class="code-col">FL-4003</td><td class="status-col"><span class="status-pill s403">403</span></td><td class="name-col"><span class="icode">device.fingerprint_mismatch</span></td><td class="res-col">Hardware fingerprint changed. Re-attest via Dashboard → Devices → Re-attest.</td></tr>
+      <tr><td class="code-col">FL-4004</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">device.firmware_unsupported</span></td><td class="res-col">Firmware &lt; 4.2.0 is incompatible with v3 API. Upgrade via OTA channel.</td></tr>
+      <tr><td class="code-col">FL-4005</td><td class="status-col"><span class="status-pill s409">409</span></td><td class="name-col"><span class="icode">device.already_paired</span></td><td class="res-col">Device is bound to another gateway. Unpair from the previous gateway first.</td></tr>
+      <tr><td class="code-col">FL-4006</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">device.telemetry_clock_skew</span></td><td class="res-col">Telemetry timestamps drift &gt;60s from server. Enable PTP or NTP on the device.</td></tr>
+      <tr><td class="code-col">FL-4007</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">device.geofence_violation</span></td><td class="res-col">Reported coordinates outside allowed geofence. Update <code>geofence_polygon</code>.</td></tr>
+      <tr><td class="code-col">FL-4008</td><td class="status-col"><span class="status-pill s404">404</span></td><td class="name-col"><span class="icode">device.tag_unknown</span></td><td class="res-col">Tag id not registered for this org. Create tags under Dashboard → Inventory → Tags.</td></tr>
+      <tr><td class="code-col">FL-4009</td><td class="status-col"><span class="status-pill s400">400</span></td><td class="name-col"><span class="icode">device.config_invalid</span></td><td class="res-col">Config blob failed schema validation. Validate against <code>DeviceConfig</code> model.</td></tr>
+      <tr><td class="code-col">FL-4010</td><td class="status-col"><span class="status-pill s403">403</span></td><td class="name-col"><span class="icode">device.quarantined</span></td><td class="res-col">Device flagged by anomaly detection. Review and release in Dashboard → Security → Quarantine.</td></tr>
+      <tr><td class="code-col">FL-4011</td><td class="status-col"><span class="status-pill s409">409</span></td><td class="name-col"><span class="icode">device.ota_in_progress</span></td><td class="res-col">Cannot mutate config during OTA update. Wait for <code>ota.status=idle</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="internal">Internal <span class="count">(5xx) — 10 codes</span></h2>
+  <table>
+    <thead>
+      <tr><th>Code</th><th>HTTP Status</th><th>Short Name</th><th>Resolution</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="code-col">FL-5001</td><td class="status-col"><span class="status-pill s500">500</span></td><td class="name-col"><span class="icode">internal.unexpected</span></td><td class="res-col">Transient server fault. Retry with exponential backoff; report <code>trace_id</code> if persistent.</td></tr>
+      <tr><td class="code-col">FL-5002</td><td class="status-col"><span class="status-pill s500">502</span></td><td class="name-col"><span class="icode">internal.upstream_gateway</span></td><td class="res-col">Edge proxy could not reach the ingestion plane. Check status.ferrolink.io.</td></tr>
+      <tr><td class="code-col">FL-5003</td><td class="status-col"><span class="status-pill s500">503</span></td><td class="name-col"><span class="icode">internal.maintenance</span></td><td class="res-col">Scheduled maintenance window. Honor <code>Retry-After</code>; subscribe to status webhooks.</td></tr>
+      <tr><td class="code-col">FL-5004</td><td class="status-col"><span class="status-pill s500">504</span></td><td class="name-col"><span class="icode">internal.timeout</span></td><td class="res-col">Backend exceeded 30s budget. Reduce <code>page_size</code> or narrow the time range.</td></tr>
+      <tr><td class="code-col">FL-5005</td><td class="status-col"><span class="status-pill s500">500</span></td><td class="name-col"><span class="icode">internal.storage_unavailable</span></td><td class="res-col">Object store partition offline. Retry; data is durably queued for up to 24h.</td></tr>
+      <tr><td class="code-col">FL-5006</td><td class="status-col"><span class="status-pill s500">500</span></td><td class="name-col"><span class="icode">internal.schema_registry_down</span></td><td class="res-col">Registry replica unreachable. Operations requiring validation will queue.</td></tr>
+      <tr><td class="code-col">FL-5007</td><td class="status-col"><span class="status-pill s500">503</span></td><td class="name-col"><span class="icode">internal.region_failover</span></td><td class="res-col">Active region is failing over. Re-resolve <code>api.ferrolink.io</code> DNS.</td></tr>
+      <tr><td class="code-col">FL-5008</td><td class="status-col"><span class="status-pill s500">500</span></td><td class="name-col"><span class="icode">internal.serialization</span></td><td class="res-col">Internal encoding failure. File a ticket including the <code>trace_id</code> header.</td></tr>
+      <tr><td class="code-col">FL-5009</td><td class="status-col"><span class="status-pill s500">500</span></td><td class="name-col"><span class="icode">internal.queue_saturated</span></td><td class="res-col">Backpressure activated. Slow producers; FerroLink will signal with <code>X-Backoff-Ms</code>.</td></tr>
+      <tr><td class="code-col">FL-5010</td><td class="status-col"><span class="status-pill s500">500</span></td><td class="name-col"><span class="icode">internal.feature_disabled</span></td><td class="res-col">Feature flag off for your tenant. Contact support to enable preview features.</td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    <div>© 2025 FerroLink Systems · Build 3.4.1+sha.9f2c1a8</div>
+    <div>
+      <a href="../getting-started/index.html">Getting Started</a>
+      <a href="../api-reference/index.html">API</a>
+      <a href="../data-models/index.html">Models</a>
+      <a href="../changelog/index.html">Changelog</a>
+    </div>
+  </footer>
+</main>
+
+</body>
+</html>

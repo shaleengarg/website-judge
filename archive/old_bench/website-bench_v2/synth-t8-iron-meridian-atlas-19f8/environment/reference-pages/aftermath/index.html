@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Iron Meridian Atlas — Aftermath</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #1a1a1a; color: #e8e2d5; font-family: "Courier New", monospace; font-size: 15px; line-height: 1.8; }
+
+  /* Nav */
+  .topnav {
+    background: #111111;
+    border-bottom: 1px solid #333333;
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    color: #e8e2d5;
+  }
+  .brand span { color: #c0392b; }
+  .topnav ul { list-style: none; display: flex; gap: 28px; }
+  .topnav a {
+    font-family: "Arial Narrow", Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-size: 11px;
+    color: #e8e2d5;
+    text-decoration: none;
+  }
+  .topnav a.active { color: #d4a017; }
+  .topnav a:hover { color: #c0392b; }
+
+  /* Section label */
+  .label {
+    font-family: "Arial Narrow", Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-size: 11px;
+    color: #c0392b;
+    margin-bottom: 12px;
+  }
+
+  /* Header band */
+  .header-band {
+    width: 100vw;
+    min-height: 180px;
+    background: #111111;
+    border-bottom: 1px solid #333333;
+    padding: 80px 48px;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .header-band h1 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.3;
+    color: #e8e2d5;
+    max-width: 900px;
+  }
+  .header-band h1 em {
+    color: #d4a017;
+    font-style: italic;
+    font-weight: 400;
+  }
+  .header-meta {
+    margin-top: 32px;
+    display: flex;
+    gap: 32px;
+    border-top: 1px solid #333333;
+    padding-top: 32px;
+    font-size: 13px;
+    color: #888;
+  }
+  .header-meta span strong {
+    display: block;
+    color: #c0392b;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+
+  /* Editorial column */
+  .editorial {
+    max-width: 740px;
+    margin: 80px auto;
+    padding: 0 24px;
+    position: relative;
+  }
+  .editorial h2 {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 44px;
+    line-height: 1.1;
+    color: #e8e2d5;
+    margin-bottom: 32px;
+  }
+  .editorial p {
+    margin-bottom: 24px;
+    color: #e8e2d5;
+  }
+  .editorial p.lead::first-letter {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 56px;
+    float: left;
+    line-height: 1;
+    padding: 6px 12px 0 0;
+    color: #d4a017;
+  }
+
+  .pullquote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 2rem;
+    line-height: 1.35;
+    color: #d4a017;
+    border-left: 4px solid #c0392b;
+    padding: 12px 24px;
+    width: 360px;
+    float: right;
+    margin: 12px -120px 24px 32px;
+  }
+
+  .closing-quote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 2.4rem;
+    line-height: 1.3;
+    color: #d4a017;
+    border-left: 4px solid #c0392b;
+    padding: 24px 32px;
+    margin: 80px -180px 32px -60px;
+    background: #111111;
+  }
+  .closing-quote cite {
+    display: block;
+    font-style: normal;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-size: 11px;
+    color: #c0392b;
+    margin-top: 24px;
+  }
+
+  /* Further reading grid */
+  .further {
+    width: 100%;
+    max-width: 1100px;
+    margin: 80px auto 0;
+    padding: 80px 24px 80px;
+    border-top: 1px solid #333333;
+  }
+  .further-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 48px;
+    margin-bottom: 80px;
+    align-items: end;
+  }
+  .further-header h3 {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 36px;
+    line-height: 1.15;
+    color: #e8e2d5;
+  }
+  .further-header p {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.7;
+  }
+  .biblio {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .entry {
+    background: #242424;
+    padding: 32px;
+    border-top: 2px solid #c0392b;
+  }
+  .entry .ord {
+    font-family: "Arial Narrow", Arial, sans-serif;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #d4a017;
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+  .entry .title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #e8e2d5;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .entry .author {
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    color: #c0392b;
+    margin-bottom: 12px;
+  }
+  .entry .pub {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .entry .annot {
+    font-size: 13px;
+    color: #e8e2d5;
+    line-height: 1.65;
+    border-top: 1px solid #333333;
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+
+  /* Footer */
+  footer {
+    background: #111111;
+    border-top: 1px solid #333333;
+    padding: 48px;
+    margin-top: 80px;
+  }
+  .foot-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+  .foot-brand {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: #e8e2d5;
+  }
+  .foot-brand span { color: #c0392b; }
+  .foot-brand small {
+    display: block;
+    margin-top: 12px;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: #888;
+    font-weight: 400;
+  }
+  .foot-cols {
+    display: flex;
+    gap: 64px;
+    font-size: 13px;
+  }
+  .foot-cols h4 {
+    font-family: "Arial Narrow", Arial, sans-serif;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: #d4a017;
+    margin-bottom: 12px;
+  }
+  .foot-cols ul { list-style: none; }
+  .foot-cols li { color: #888; line-height: 1.9; }
+  .foot-colophon {
+    max-width: 1100px;
+    margin: 32px auto 0;
+    padding-top: 32px;
+    border-top: 1px solid #333333;
+    font-size: 12px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">IRON <span>MERIDIAN</span> ATLAS</div>
+  <ul>
+    <li><a href="../threshold/index.html">Threshold</a></li>
+    <li><a href="../cartography/index.html">Cartography</a></li>
+    <li><a href="../evidence/index.html">Evidence</a></li>
+    <li><a href="../rupture/index.html">Rupture</a></li>
+    <li><a href="#" class="active">Aftermath</a></li>
+  </ul>
+</nav>
+
+<section class="header-band">
+  <div class="header-inner">
+    <div class="label">What Remains &nbsp;/&nbsp; Chapter Five</div>
+    <h1>Three things still stand in Harwick: <em>the water tower</em>, the union hall steps that lead now to nothing, and <em>Stachowski's tavern sign</em> — its neon long extinguished, its iron bracket eaten by rust the color of the river.</h1>
+    <div class="header-meta">
+      <span><strong>Section</strong>Aftermath</span>
+      <span><strong>Reading Time</strong>11 minutes</span>
+      <span><strong>Published</strong>Iron Meridian Atlas, Part V of V</span>
+      <span><strong>Filed Under</strong>Memory · Labor · Pennsylvania</span>
+    </div>
+  </div>
+</section>
+
+<article class="editorial">
+  <div class="label">Closing Argument</div>
+  <h2>What the ruins refuse to say.</h2>
+
+  <p class="lead">There is a particular silence that settles into a town once the last shift whistle stops being scheduled. It is not the absence of sound — Harwick has plenty of sound, still, fifty years on: the freight line out of Brackenridge, the wind that comes off the river and worries at corrugated tin, the Sunday bells at St. Casimir's. It is, rather, the absence of a sound that organized every other sound around itself. Without the furnace, the town's acoustic geometry collapsed.</p>
+
+  <p class="pullquote">Memory is not a monument. It is a wage someone is still owed.</p>
+
+  <p>The men I spoke with for this essay — those still alive to speak — described the closure not as an event but as a long subtraction. First the second shift went. Then the open-hearth. Then the rolling mill, sold for parts to a buyer in Hamilton, Ontario. Then the pension office, relocated to a strip-mall suite in Pittsburgh that closed without notice in 1981. Each subtraction took a piece of the town's vocabulary with it: words like <em>tap</em>, <em>charge</em>, <em>cinder pit</em>, words that had meant something specific and were now merely picturesque.</p>
+
+  <p>What Meridian Industrial Holdings called "rationalization" was, in Harwick, the unmaking of a grammar. Fathers who had taught sons how to read the color of molten steel — cherry, salmon, lemon, white — found those readings useless in a labor market that wanted, instead, a forklift certification and a willingness to commute. The trade did not transfer. It evaporated.</p>
+
+  <p>And so the question this essay has circled, page after page, is not whether Harwick was killed — the documentary record is unambiguous on that count — but whether what was killed there can be said to have left an heir. The town's population in 1970 was 4,318. In 2020 it was 1,902. The arithmetic is brutal but it is not, on its own, the argument. The argument is that a kind of knowledge died with the place, and that knowledge cannot be reconstituted by museums, by historical markers, by the well-meaning oral history projects that arrive every decade with their tape recorders and their grant money.</p>
+
+  <p>This is not a counsel of despair. Stachowski's grandson still owns the building, though the tavern has been closed since 2007; he keeps the sign because, he told me, taking it down would feel like a second closure. The union hall steps are swept, irregularly, by a man named Pavel who lives across the street and was never a union member himself. The water tower bears, faintly, the painted-over outline of a name that was once HARWICK STEEL and is now nothing — but the outline persists. These are not monuments. They are wages someone is still owed, paid in the only currency left.</p>
+
+  <div class="closing-quote">
+    "The furnace is cold. The ledger is closed. The story is not — because a story is what a town tells itself about why its children left, and Harwick is still talking, still arguing, still naming the dead by trade."
+    <cite>— Closing Lines / Iron Meridian Atlas</cite>
+  </div>
+
+  <p>What remains, then, is the obligation to listen — not to recover what was lost, which cannot be recovered, but to mark, precisely and without sentiment, the shape of its absence. That is what this atlas has tried to do. The territory it maps is no longer there. The map is the point.</p>
+</article>
+
+<section class="further">
+  <div class="further-header">
+    <div>
+      <div class="label">Further Reading</div>
+      <h3>A working bibliography for the territory described.</h3>
+    </div>
+    <p>The following four sources informed the methodology and argumentative spine of this essay. The two pamphlets are held in the Harwick Public Library local-history collection and are not, to this author's knowledge, available in digital facsimile.</p>
+  </div>
+
+  <div class="biblio">
+    <div class="entry">
+      <div class="ord">Entry 01 · Book</div>
+      <div class="title">Deindustrializing Chicago</div>
+      <div class="author">Bluestone, B. &amp; Harrison, B.</div>
+      <div class="pub">Basic Books, New York. 1982. 323 pp. Hardcover, first edition.</div>
+      <div class="annot">The foundational text on capital flight and the political economy of plant closure in the late-Fordist United States; its methodological frame underlies this essay's central economic argument.</div>
+    </div>
+
+    <div class="entry">
+      <div class="ord">Entry 02 · Book</div>
+      <div class="title">Steeltown USA: Work and Memory in Youngstown</div>
+      <div class="author">Linkon, S. L. &amp; Russo, J.</div>
+      <div class="pub">University Press of Kansas, Lawrence. 2002. 287 pp. Paperback.</div>
+      <div class="annot">Linkon's reading of contested industrial memory in Youngstown provided the vocabulary for this essay's treatment of Harwick as a site of unresolved mourning rather than completed loss.</div>
+    </div>
+
+    <div class="entry">
+      <div class="ord">Entry 03 · Pamphlet</div>
+      <div class="title">A Brief Accounting: Harwick Steel Pension Fund, 1974–1981</div>
+      <div class="author">Local 1408, Compiled by D. Fenwick</div>
+      <div class="pub">Self-published, mimeograph, 28 pp. Harwick Public Library, local-history collection, shelfmark HW-L-019.</div>
+      <div class="annot">Dolores Fenwick's meticulous reconstruction of the pension fund's dissolution remains the only ledger-level account of what Meridian Industrial Holdings paid, deferred, and ultimately defaulted on.</div>
+    </div>
+
+    <div class="entry">
+      <div class="ord">Entry 04 · Pamphlet</div>
+      <div class="title">The Shutdown Letters: Correspondence from the Mill Gate, 1973</div>
+      <div class="author">Edited by R. Stachowski (the elder)</div>
+      <div class="pub">Stachowski Press, Harwick PA. 1986. 64 pp. Stapled chapbook.</div>
+      <div class="annot">Forty-one letters between former coworkers in the eighteen months following closure, assembled by the tavern-keeper whose sign now stands as one of the three remaining landmarks discussed above.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">
+      IRON <span>MERIDIAN</span> ATLAS
+      <small>A long-form essay in five chapters</small>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <h4>Chapters</h4>
+        <ul>
+          <li>I. Threshold</li>
+          <li>II. Cartography</li>
+          <li>III. Evidence</li>
+          <li>IV. Rupture</li>
+          <li>V. Aftermath</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li>About the Atlas</li>
+          <li>Sources &amp; Methods</li>
+          <li>Acknowledgments</li>
+          <li>Contact</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Archive</h4>
+        <ul>
+          <li>Harwick Gazette, 1971–74</li>
+          <li>Local 1408 Records</li>
+          <li>Oral History Tapes</li>
+          <li>Meridian Holdings Memos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot-colophon">
+    <span>© 2024 Iron Meridian Atlas — research and writing dedicated to the workers of Harwick, PA.</span>
+    <span>Set in Georgia &amp; Courier. No images were used in the making of this document.</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Catering — Ember & Rye Smokehouse</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1e1a18;
+    color: #f0ebe3;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .nav {
+    background: #2a2420;
+    width: 100%;
+  }
+  .nav-inner {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 22px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .nav-inner a {
+    color: #f0ebe3;
+    text-decoration: none;
+    padding-bottom: 4px;
+  }
+  .nav-inner a.active {
+    color: #f0ebe3;
+    border-bottom: 2px solid #c95f2a;
+  }
+  .wrap {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 60px 20px 80px;
+  }
+  .brand {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-weight: 800;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .tagline {
+    text-align: center;
+    color: #a68b6e;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 36px;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #a68b6e;
+    margin: 40px 0;
+  }
+  h1, h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #c95f2a;
+    font-weight: 800;
+  }
+  h1 {
+    font-size: 30px;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+  h2 {
+    font-size: 18px;
+    margin-bottom: 22px;
+  }
+  p { margin-bottom: 18px; }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul li {
+    padding: 14px 0;
+    border-bottom: 1px dashed #3a322e;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  ul li:last-child { border-bottom: none; }
+  ul li .pkg {
+    font-weight: 700;
+    color: #f0ebe3;
+  }
+  ul li .desc {
+    color: #a68b6e;
+    font-size: 14px;
+    font-style: italic;
+    flex: 1;
+    padding: 0 16px;
+  }
+  ul li .price {
+    color: #c95f2a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .contact {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .contact .label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    color: #a68b6e;
+    margin-bottom: 10px;
+  }
+  .phone {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 800;
+    font-size: 38px;
+    letter-spacing: 0.04em;
+    color: #f0ebe3;
+    margin-bottom: 14px;
+  }
+  .email {
+    font-size: 18px;
+    color: #c95f2a;
+    letter-spacing: 0.02em;
+  }
+  footer {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 30px 20px 50px;
+    text-align: center;
+    color: #a68b6e;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  footer hr {
+    margin: 0 0 28px 0;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../menu/index.html">Menu</a>
+    <a href="../pitmaster/index.html">Pitmaster</a>
+    <a href="../find-us/index.html">Find Us</a>
+    <a href="../hours/index.html">Hours</a>
+    <a href="#" class="active">Catering</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="brand">Ember &amp; Rye</div>
+  <div class="tagline">— smokehouse since aught-eight —</div>
+
+  <h1>Catering</h1>
+
+  <h2>We Bring The Pit</h2>
+  <p>Ember &amp; Rye handles off-site events for <strong>20 to 300 guests</strong>, hauling our full pit setup wherever the work goes — backyard weddings, ranch reunions, company barbecues, wakes, christenings, and anything else that calls for honest smoke and a long table.</p>
+  <p>We arrive the night before, light the oak, and feed your people hot off the fire. No chafing dishes pretending to be lunch. No shortcuts. Just brisket, ribs, and sausage cooked the only way we know how.</p>
+
+  <hr>
+
+  <h2>Package Tiers</h2>
+  <ul>
+    <li>
+      <span class="pkg">The Tailgate</span>
+      <span class="desc">sausage, slaw, beans, bread</span>
+      <span class="price">$18 – $22 / head</span>
+    </li>
+    <li>
+      <span class="pkg">The Backyard</span>
+      <span class="desc">pulled pork &amp; chicken, three sides</span>
+      <span class="price">$24 – $28 / head</span>
+    </li>
+    <li>
+      <span class="pkg">The Sunday Spread</span>
+      <span class="desc">brisket, sausage, four sides, dessert</span>
+      <span class="price">$32 – $38 / head</span>
+    </li>
+    <li>
+      <span class="pkg">The Whole Hog</span>
+      <span class="desc">full pit, four meats, all sides, on-site carver</span>
+      <span class="price">$44 – $52 / head</span>
+    </li>
+    <li>
+      <span class="pkg">The Cinder Road</span>
+      <span class="desc">custom menu, open bar service, wait staff</span>
+      <span class="price">$65 + / head</span>
+    </li>
+  </ul>
+
+  <hr>
+
+  <h2>Book A Date</h2>
+  <p>Call the smokehouse direct. We book three to four weeks out in season — longer for weddings and parties past 150 guests. Deposit holds the date. No deposit, no fire.</p>
+
+  <div class="contact">
+    <div class="label">Catering Line</div>
+    <div class="phone">(806) 555&#8209;0184</div>
+    <div class="email">catering@emberandrye.co</div>
+  </div>
+</div>
+
+<footer>
+  <hr>
+  Ember &amp; Rye Smokehouse &nbsp;·&nbsp; Amarillo, Texas
+</footer>
+
+</body>
+</html>

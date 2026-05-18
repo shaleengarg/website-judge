@@ -1,0 +1,29 @@
+{
+  "id": "synth-t7-deep-current-ocean-data-be0f",
+  "tier": 7,
+  "genre": "infographic",
+  "pages": [
+    "overview",
+    "currents",
+    "depth-zones",
+    "biodiversity",
+    "threats"
+  ],
+  "palette_hint": "Deep navy #0a1628 background, crisp white #f0f4ff text, electric teal #00d4b8 and amber #f5a623 as accent colors",
+  "type_style": "System sans-serif (Arial, Helvetica) for body at 16px/1.6, bold 700-weight geometric headings, clinical and precise feel",
+  "description": "An interactive infographic site called 'Abyssal Atlas' presenting data-driven visual essays about Earth's ocean systems, using inline SVG diagrams, clipped depth cross-sections, and path-drawn marine silhouettes.",
+  "constraints": [
+    "Max content width 1100px centered, with full-bleed #0a1628 navy background on every page",
+    "Every page must feature at least one inline SVG illustration occupying no less than 400px height with custom paths \u2014 no rectangles or circles alone",
+    "Navigation bar uses a clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%) cut at the bottom edge, colored #0d2040, 60px tall",
+    "Section dividers use skewed CSS transforms (skewY(-3deg)) on colored bands \u2014 teal #00d4b8 at 40% opacity \u2014 to break the grid",
+    "All data callout numbers (e.g. '3,800m average depth') must appear inside SVG-drawn hexagonal badge shapes filled with #f5a623, white text"
+  ],
+  "page_specs": {
+    "overview": "The landing page presents a full-width inline SVG world map (Mercator projection drawn with simplified continent path outlines in #1a3a5c) with ocean basins labeled and teal fill on the water areas. Three amber hexagon badges overlay the map showing '361 million km\u00b2', '97% of Earth's water', and '3,800m average depth'. Below the map, a horizontal strip of five icon-glyphs \u2014 each a custom SVG path representing a wave, a fish, a thermometer, a pressure gauge, and a DNA strand \u2014 introduces the five sections of the atlas.",
+    "currents": "A full-height inline SVG diagram depicts the global thermohaline conveyor belt as animated-looking curved arrow paths (using SVG stroke-dasharray for dashed flow lines) in teal and amber, sweeping across a simplified globe outline. A sidebar column lists six named currents (Gulf Stream, Humboldt, Kuroshio, Agulhas, Antarctic Circumpolar, Labrador) each with a small SVG path icon and a stat badge. The background uses an SVG radial gradient from #0d2040 to #0a1628 defined inside a <defs> block.",
+    "depth-zones": "A vertical cross-section SVG illustration (800px tall, full-width) shows five ocean depth zones \u2014 Sunlight (0\u2013200m), Twilight (200\u20131000m), Midnight (1000\u20134000m), Abyssal (4000\u20136000m), Hadal (6000\u201311000m) \u2014 as horizontal bands with graduated fills defined via SVG linearGradient, darkening from teal-tinted #1a4a6e at the surface to near-black #020810 at the trench. Each zone band is clipped with a subtle wave-path edge at its bottom border. Silhouettes of representative creatures (whale, lanternfish, anglerfish, sea cucumber, amphipod) are drawn as SVG filled paths positioned at the correct depth.",
+    "biodiversity": "A radial SVG diagram resembling a phylogenetic wheel (600px \u00d7 600px, centered) branches outward from a central 'Marine Life' label into six taxonomic groups: Fish, Cephalopods, Cnidarians, Echinoderms, Marine Mammals, Microbes. Each branch terminates in a leaf-shaped SVG path filled with teal or amber alternately, containing the species-count stat (e.g. '34,000 fish species'). The page background features a repeating SVG pattern of tiny hexagons defined in <defs> and applied as a fill on a background rect, giving a subtle honeycomb texture at 8% opacity.",
+    "threats": "Four threat panels are arranged in a 2\u00d72 grid, each panel using clip-path: polygon() to create a parallelogram shape rather than a rectangle \u2014 alternating left-leaning and right-leaning cuts. Each parallelogram contains an SVG icon (melting ice cap, factory pipe, trawl net, plastic bag \u2014 all custom paths), a bold stat in an amber hexagon badge, and two lines of explanatory text. A footer SVG illustration spans full width showing a coastline silhouette with a rising sea-level indicator line in red #e84040, annotated with '+3.6mm/year' in a hexagon badge."
+  }
+}

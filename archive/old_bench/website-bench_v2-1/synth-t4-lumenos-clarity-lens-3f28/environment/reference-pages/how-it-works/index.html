@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How It Works — Lumenos</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0D1B2A;
+    color: #E8F0F7;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    color: #E8F0F7;
+    line-height: 1.15;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+
+  /* Nav */
+  .nav-wrap {
+    border-bottom: 1px solid rgba(232,240,247,0.08);
+    background: #0D1B2A;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 76px;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+  }
+  .brand .dot { color: #F0A500; }
+  .nav-links { display: flex; gap: 8px; }
+  .nav-links a {
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #E8F0F7;
+    opacity: 0.78;
+  }
+  .nav-links a.active {
+    background: rgba(0,201,177,0.12);
+    color: #00C9B1;
+    opacity: 1;
+  }
+  .nav-cta {
+    background: #F0A500;
+    color: #0D1B2A;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* Sections */
+  section { padding: 80px 0; position: relative; overflow: hidden; }
+  .alt {
+    background: radial-gradient(ellipse at 30% 50%, #112236 0%, #0D1B2A 70%);
+  }
+  .hero {
+    position: relative;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    width: 520px; height: 320px;
+    background: #F0A500;
+    opacity: 0.08;
+    filter: blur(80px);
+    top: 40px; left: -120px;
+    border-radius: 50%;
+    z-index: 0;
+  }
+  .hero .container { position: relative; z-index: 1; }
+
+  .eyebrow {
+    display: inline-block;
+    color: #00C9B1;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 6px 14px;
+    border: 1px solid rgba(0,201,177,0.35);
+    border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  h1.title {
+    font-size: 56px;
+    color: #F0A500;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+  .subtitle {
+    font-size: 18px;
+    color: rgba(232,240,247,0.78);
+    max-width: 680px;
+  }
+
+  /* Timeline */
+  .timeline-wrap {
+    margin-top: 72px;
+    position: relative;
+  }
+  .timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    position: relative;
+    align-items: start;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 8%; right: 8%;
+    top: 36px;
+    height: 3px;
+    background: linear-gradient(90deg, #F0A500, #00C9B1);
+    border-radius: 999px;
+    z-index: 0;
+  }
+  .step { position: relative; z-index: 1; text-align: center; padding: 0 8px; }
+  .node {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #112236;
+    border: 1px solid rgba(240,165,0,0.35);
+    color: #E8F0F7;
+    padding: 16px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    margin-bottom: 28px;
+  }
+  .step:nth-child(2) .node { border-color: rgba(240,165,0,0.5); }
+  .step:nth-child(3) .node { border-color: rgba(0,201,177,0.5); }
+  .num {
+    width: 28px; height: 28px;
+    background: #F0A500;
+    color: #0D1B2A;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .step:nth-child(2) .num { background: linear-gradient(135deg, #F0A500, #00C9B1); }
+  .step:nth-child(3) .num { background: #00C9B1; }
+
+  .step h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  .step p {
+    font-size: 14px;
+    color: rgba(232,240,247,0.7);
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  .meta {
+    margin-top: 14px;
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #00C9B1;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(0,201,177,0.08);
+  }
+
+  /* Report Preview */
+  .report-section h2 {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  .report-section .lead {
+    color: rgba(232,240,247,0.7);
+    max-width: 620px;
+    margin-bottom: 48px;
+    font-size: 16px;
+  }
+
+  .report {
+    background: linear-gradient(180deg, #112236 0%, #0D1B2A 100%);
+    border: 1px solid rgba(0,201,177,0.18);
+    border-radius: 12px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.65);
+    overflow: hidden;
+  }
+  .report-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: rgba(13,27,42,0.6);
+    border-bottom: 1px solid rgba(232,240,247,0.06);
+  }
+  .report-head .dots { display: flex; gap: 6px; }
+  .report-head .dots span {
+    width: 10px; height: 10px; border-radius: 999px;
+    background: rgba(232,240,247,0.15);
+  }
+  .report-head .dots span:nth-child(1) { background: #F0A500; opacity: 0.7; }
+  .report-head .dots span:nth-child(2) { background: #00C9B1; opacity: 0.7; }
+  .filename {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: rgba(232,240,247,0.55);
+  }
+  .score-badge {
+    display: flex; gap: 12px; align-items: center;
+    font-size: 12px;
+    color: rgba(232,240,247,0.6);
+  }
+  .score-badge b { color: #F0A500; font-family: Georgia, serif; font-size: 16px; }
+
+  .report-body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 0;
+  }
+  .excerpt {
+    padding: 32px 36px;
+    border-right: 1px solid rgba(232,240,247,0.06);
+  }
+  .clause-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(232,240,247,0.45);
+    margin-bottom: 8px;
+  }
+  .clause-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 14px;
+    color: #E8F0F7;
+  }
+  .excerpt p {
+    font-size: 14.5px;
+    color: rgba(232,240,247,0.85);
+    margin-bottom: 16px;
+    line-height: 1.75;
+  }
+  .ambig {
+    background: rgba(240,165,0,0.18);
+    color: #F0A500;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    border-bottom: 1px dashed rgba(240,165,0,0.5);
+  }
+  .jargon {
+    color: #00C9B1;
+    border-bottom: 2px solid #00C9B1;
+    padding-bottom: 1px;
+  }
+
+  .sidebar {
+    padding: 28px 24px;
+    background: rgba(17,34,54,0.5);
+  }
+  .sidebar h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(232,240,247,0.55);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .metric {
+    margin-bottom: 18px;
+  }
+  .metric-label {
+    display: flex; justify-content: space-between;
+    font-size: 12px;
+    color: rgba(232,240,247,0.75);
+    margin-bottom: 6px;
+  }
+  .metric-label b { font-family: Georgia, serif; }
+  .bar {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(232,240,247,0.08);
+    overflow: hidden;
+  }
+  .bar > i {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+  }
+  .b1 > i { width: 72%; background: #F0A500; }
+  .b2 > i { width: 48%; background: #00C9B1; }
+  .b3 > i { width: 31%; background: linear-gradient(90deg,#F0A500,#00C9B1); }
+
+  .tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 8px;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(0,201,177,0.1);
+    color: #00C9B1;
+    border: 1px solid rgba(0,201,177,0.25);
+  }
+  .tag.gold {
+    background: rgba(240,165,0,0.1);
+    color: #F0A500;
+    border-color: rgba(240,165,0,0.3);
+  }
+
+  .legend {
+    margin-top: 28px;
+    display: flex;
+    gap: 24px;
+    padding: 16px 24px;
+    background: rgba(13,27,42,0.4);
+    border-top: 1px solid rgba(232,240,247,0.06);
+    font-size: 12px;
+    color: rgba(232,240,247,0.65);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; }
+  .sw-gold { background: rgba(240,165,0,0.5); border: 1px dashed #F0A500; }
+  .sw-teal { background: transparent; border-bottom: 2px solid #00C9B1; border-radius: 0; height: 10px; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid rgba(232,240,247,0.08);
+    padding: 48px 0 36px;
+    background: #0D1B2A;
+  }
+  .foot {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .foot p { font-size: 13px; color: rgba(232,240,247,0.5); max-width: 320px; }
+  .foot-cols { display: flex; gap: 56px; }
+  .foot-col h5 {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #00C9B1;
+    margin-bottom: 14px;
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+  }
+  .foot-col a {
+    display: block;
+    font-size: 13px;
+    color: rgba(232,240,247,0.7);
+    padding: 4px 0;
+  }
+  .copy {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(232,240,247,0.06);
+    font-size: 12px;
+    color: rgba(232,240,247,0.4);
+    display: flex; justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <div class="container nav">
+    <div class="brand">Lumenos<span class="dot">.</span></div>
+    <nav class="nav-links">
+      <a href="../vision/index.html">Vision</a>
+      <a href="../features/index.html">Features</a>
+      <a href="#" class="active">How It Works</a>
+      <a href="../pricing/index.html">Pricing</a>
+      <a href="../get-started/index.html">Get Started</a>
+    </nav>
+    <a href="../get-started/index.html" class="nav-cta">Try Free</a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">How It Works</span>
+    <h1 class="title">From Upload to<br>Clarity in Seconds</h1>
+    <p class="subtitle">Three steps separate ambiguous boilerplate from a contract that holds up under scrutiny. Lumenos handles the heavy reading so your team handles the decisions.</p>
+
+    <div class="timeline-wrap">
+      <div class="timeline">
+        <div class="step">
+          <div class="node"><span class="num">1</span> Upload Your Document</div>
+          <h3>Drag, drop, done.</h3>
+          <p>Drop PDFs, DOCX, or paste raw text. Files are encrypted in transit and processed in an isolated sandbox.</p>
+          <span class="meta">PDF · DOCX · TXT</span>
+        </div>
+        <div class="step">
+          <div class="node"><span class="num">2</span> Lumenos Analyzes in 8 Seconds</div>
+          <h3>Every clause, parsed.</h3>
+          <p>Our model scans for ambiguity, jargon density, and conflicting clauses across the entire document at once.</p>
+          <span class="meta">~8s average runtime</span>
+        </div>
+        <div class="step">
+          <div class="node"><span class="num">3</span> Receive Your Clarity Report</div>
+          <h3>Actionable, line-level.</h3>
+          <p>Get a sharable report with highlighted risks, plain-English rewrites, and a per-section clarity score.</p>
+          <span class="meta">PDF · Web · API</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt report-section">
+  <div class="container">
+    <h2>What the Clarity Report Looks Like</h2>
+    <p class="lead">An excerpt from a real-world style indemnification clause, annotated by Lumenos. Gold spans flag ambiguity. Teal underlines flag domain jargon that may need plain-language alternatives.</p>
+
+    <div class="report">
+      <div class="report-head">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="filename">MSA_VerentisLegal_v3.docx · §7.2 Indemnification</div>
+        </div>
+        <div class="score-badge">Clarity Score <b>72 / 100</b></div>
+      </div>
+
+      <div class="report-body">
+        <div class="excerpt">
+          <div class="clause-label">Clause 7.2 — Excerpt</div>
+          <div class="clause-title">Indemnification and Limitation of Liability</div>
+          <p>The Provider shall, <span class="ambig">to the fullest extent reasonably practicable</span>, indemnify and hold harmless the Client from any and all <span class="jargon">consequential damages</span> arising out of <span class="ambig">material breaches</span> of this Agreement, except where such breach results from the Client's <span class="jargon">gross negligence</span> or willful misconduct.</p>
+          <p>Notwithstanding the foregoing, the Provider's aggregate liability shall <span class="ambig">in no event exceed amounts commensurate with the fees paid</span> during the preceding twelve (12) months, and shall exclude any claims arising under <span class="jargon">force majeure</span>, <span class="jargon">subrogation</span>, or third-party <span class="jargon">tortious interference</span>.</p>
+          <p>Any dispute shall be resolved <span class="ambig">in a timely manner through good-faith negotiation</span> before resorting to binding arbitration in the jurisdiction set forth in Schedule A.</p>
+        </div>
+
+        <aside class="sidebar">
+          <h4>Section Diagnostics</h4>
+
+          <div class="metric">
+            <div class="metric-label"><span>Ambiguity</span><b>High</b></div>
+            <div class="bar b1"><i></i></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label"><span>Jargon Density</span><b>Med</b></div>
+            <div class="bar b2"><i></i></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label"><span>Readability Gap</span><b>Low</b></div>
+            <div class="bar b3"><i></i></div>
+          </div>
+
+          <h4 style="margin-top:24px;">Flagged Terms</h4>
+          <div class="tags">
+            <span class="tag gold">reasonably practicable</span>
+            <span class="tag gold">material breaches</span>
+            <span class="tag">consequential damages</span>
+            <span class="tag">subrogation</span>
+            <span class="tag">force majeure</span>
+            <span class="tag gold">timely manner</span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="legend">
+        <span><span class="swatch sw-gold"></span> Ambiguous phrasing</span>
+        <span><span class="swatch sw-teal"></span> Domain jargon</span>
+        <span style="margin-left:auto;">Generated 2.4s · 14 flags total</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div>
+        <div class="brand" style="margin-bottom:12px;">Lumenos<span class="dot">.</span></div>
+        <p>AI-powered document clarity for legal and compliance teams who can't afford ambiguity.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="../vision/index.html">Vision</a>
+          <a href="../features/index.html">Features</a>
+          <a href="#">How It Works</a>
+          <a href="../pricing/index.html">Pricing</a>
+        </div>
+        <div class="foot-col">
+          <h5>Company</h5>
+          <a href="#">About</a>
+          <a href="#">Security</a>
+          <a href="#">Contact</a>
+          <a href="../get-started/index.html">Get Started</a>
+        </div>
+        <div class="foot-col">
+          <h5>Legal</h5>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">DPA</a>
+          <a href="#">SOC 2</a>
+        </div>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© 2025 Lumenos Inc. All rights reserved.</span>
+      <span>Made for teams that read every line.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

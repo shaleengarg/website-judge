@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Instructions — Copper Kettle Recipes</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #FDF6EC;
+    color: #2C1A0E;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .wrapper {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  h1, h2, h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+    color: #C1440E;
+    margin: 0 0 16px 0;
+    line-height: 1.25;
+  }
+  .site-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    color: #C1440E;
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 0 0 20px 0;
+    letter-spacing: 0.5px;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 18px;
+    margin-bottom: 8px;
+  }
+  nav a {
+    color: #2C1A0E;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 4px 2px;
+    border-bottom: 1px solid transparent;
+  }
+  nav a.current {
+    border-bottom: 1px solid #6B7A3E;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #C1440E;
+    margin: 32px 0;
+  }
+  h2 {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+  ol.steps {
+    list-style: none;
+    counter-reset: stepnum;
+    padding: 0;
+    margin: 0;
+  }
+  ol.steps li {
+    counter-increment: stepnum;
+    position: relative;
+    padding: 14px 0 14px 56px;
+    border-bottom: 1px dashed #6B7A3E;
+  }
+  ol.steps li:last-child {
+    border-bottom: none;
+  }
+  ol.steps li::before {
+    content: counter(stepnum);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 40px;
+    height: 40px;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #FDF6EC;
+    background: #2C1A0E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ol.steps li .action {
+    font-weight: bold;
+    color: #2C1A0E;
+  }
+  .kettle-card {
+    background: linear-gradient(135deg, #C1440E 0%, #8a2e08 60%, #2C1A0E 100%);
+    color: #FDF6EC;
+    padding: 24px;
+    text-align: center;
+    font-family: Georgia, serif;
+    margin-bottom: 8px;
+  }
+  .kettle-card .label {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .kettle-card .big {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 6px;
+  }
+  .btn {
+    display: block;
+    max-width: 200px;
+    margin: 24px auto 0 auto;
+    background: #2C1A0E;
+    color: #FDF6EC;
+    text-decoration: none;
+    padding: 12px 24px;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+  footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #2C1A0E;
+    padding-bottom: 8px;
+  }
+  footer .olive {
+    color: #6B7A3E;
+  }
+</style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="site-title">Copper Kettle Recipes</div>
+    <nav>
+      <a href="../featured-recipe/index.html">Featured Recipe</a>
+      <a href="../ingredients/index.html">Ingredients</a>
+      <a href="#" class="current">Instructions</a>
+      <a href="../tips-and-notes/index.html">Tips &amp; Notes</a>
+      <a href="../about-the-cook/index.html">About the Cook</a>
+    </nav>
+
+    <hr>
+
+    <div class="kettle-card">
+      <div class="label">Hungarian Beef Goulash</div>
+      <div class="big">Step-by-Step</div>
+    </div>
+
+    <h2>How to Make It</h2>
+
+    <ol class="steps">
+      <li><span class="action">Sear</span> the beef. Heat 2 tablespoons of lard in a heavy Dutch oven over medium-high heat and brown the cubed chuck in batches, about 3 minutes per side, until deeply caramelized. Transfer the meat to a plate and reserve the rendered fat.</li>
+      <li><span class="action">Sweat</span> the onions. Lower the heat to medium and add the sliced yellow onions to the pot, stirring occasionally for 10–12 minutes until soft, golden, and jammy. Add the minced garlic in the last minute so it perfumes the fat without burning.</li>
+      <li><span class="action">Bloom</span> the paprika. Pull the pot off the heat entirely, then stir in 3 tablespoons of sweet Hungarian paprika and a pinch of caraway, coating the onions thoroughly. Working off heat prevents the paprika from scorching, which would turn the whole pot bitter.</li>
+      <li><span class="action">Deglaze</span> with beef stock. Return the pot to medium heat and pour in 1 cup of warm stock, scraping up every browned bit from the bottom with a wooden spoon. Add the seared beef back along with its juices, the diced green pepper, and a single bay leaf.</li>
+      <li><span class="action">Simmer</span> low and slow. Add enough remaining stock to just cover the meat, bring to a bare tremble — never a rolling boil — then cover and braise for 2 hours, stirring every 30 minutes. The goulash is ready when the beef yields to a spoon and the sauce runs glossy and brick-red.</li>
+      <li><span class="action">Finish</span> and rest. Stir in the diced potatoes during the final 30 minutes of cooking and season generously with salt to taste. Let the pot rest off the heat for 10 minutes before ladling into warm bowls.</li>
+    </ol>
+
+    <a href="../tips-and-notes/index.html" class="btn">Read the Tips</a>
+
+    <hr>
+
+    <footer>
+      <div>© Copper Kettle Recipes</div>
+      <div class="olive">A single-dish devotion to Hungarian goulash.</div>
+    </footer>
+  </div>
+</body>
+</html>

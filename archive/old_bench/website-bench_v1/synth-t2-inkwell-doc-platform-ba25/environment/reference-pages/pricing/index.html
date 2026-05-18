@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pricing — Inkwell</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f7f5f0;
+    color: #2c3240;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* NAV */
+  nav.topnav {
+    border-bottom: 1px solid #e6e2d8;
+    background: #f7f5f0;
+  }
+  nav.topnav .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 24px;
+    color: #2c3240;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+  }
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #2c3240;
+    text-decoration: none;
+    font-variant: small-caps;
+  }
+  .nav-links a.active { color: #e8a020; }
+  .cta-btn {
+    background: #e8a020;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  /* HERO */
+  .pricing-hero {
+    text-align: center;
+    padding: 72px 0 32px;
+  }
+  .pricing-hero h1 {
+    font-family: Georgia, serif;
+    font-size: 44px;
+    font-weight: bold;
+    margin-bottom: 18px;
+  }
+  .pricing-hero p {
+    max-width: 640px;
+    margin: 0 auto 28px;
+    color: #555a68;
+  }
+  .billing-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+  .billing-toggle .opt {
+    padding: 4px 12px;
+    border-radius: 6px;
+  }
+  .billing-toggle .opt.active {
+    background: #2a7d6f;
+    color: #fff;
+    font-weight: bold;
+  }
+  .billing-note {
+    display: block;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #2a7d6f;
+    font-style: italic;
+  }
+
+  /* PLAN CARDS */
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 48px 0 80px;
+  }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 24px;
+    background: #fff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .card.featured {
+    border: 2px solid #e8a020;
+  }
+  .badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e8a020;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 6px;
+  }
+  .plan-name {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .plan-tag {
+    font-size: 13px;
+    color: #7a7f8c;
+    margin-bottom: 18px;
+  }
+  .price {
+    font-family: Georgia, serif;
+    font-size: 40px;
+    font-weight: bold;
+    color: #2c3240;
+  }
+  .price small {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    color: #7a7f8c;
+  }
+  .divider {
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+  }
+  ul.features {
+    list-style: none;
+    margin-bottom: 24px;
+    flex-grow: 1;
+  }
+  ul.features li {
+    padding: 7px 0 7px 24px;
+    position: relative;
+    font-size: 15px;
+  }
+  ul.features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #2a7d6f;
+    font-weight: bold;
+  }
+  .plan-cta {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .plan-cta.primary {
+    background: #e8a020;
+    color: #fff;
+  }
+  .plan-cta.outline {
+    border: 2px solid #2a7d6f;
+    color: #2a7d6f;
+    background: #fff;
+    padding: 10px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 2px solid #2a7d6f;
+    margin-top: 40px;
+    padding: 40px 0 50px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+  }
+  .footer-brand .fb-name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  .footer-brand p {
+    font-size: 14px;
+    color: #555a68;
+    max-width: 320px;
+  }
+  .footer-col h4 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #2a7d6f;
+    margin-bottom: 14px;
+  }
+  .footer-col a, .footer-col p {
+    display: block;
+    font-size: 14px;
+    color: #2c3240;
+    text-decoration: none;
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="container inner">
+    <a href="../home/index.html" class="wordmark">Inkwell</a>
+    <div class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="../features/index.html">Features</a>
+      <a href="#" class="active">Pricing</a>
+      <a href="../integrations/index.html">Integrations</a>
+      <a href="../contact/index.html">Contact</a>
+    </div>
+    <a href="#" class="cta-btn">Start Free Trial</a>
+  </div>
+</nav>
+
+<section class="container pricing-hero">
+  <h1>Simple, Transparent Pricing</h1>
+  <p>Pick the plan that fits your team today. Upgrade, downgrade, or cancel anytime — no surprise fees, no sales calls.</p>
+  <div class="billing-toggle">
+    <span class="opt active">Annual</span>
+    <span class="opt">Monthly</span>
+  </div>
+  <span class="billing-note">Annual billing saves 20%</span>
+</section>
+
+<section class="container">
+  <div class="plans">
+
+    <div class="card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-tag">For small teams getting organized</div>
+      <div class="price">$0<small>/mo</small></div>
+      <div class="divider"></div>
+      <ul class="features">
+        <li>Up to 5 team members</li>
+        <li>100 documents</li>
+        <li>Basic search</li>
+        <li>Slack import (one-time)</li>
+        <li>Community support</li>
+      </ul>
+      <a href="#" class="plan-cta outline">Get Started</a>
+    </div>
+
+    <div class="card featured">
+      <span class="badge">Most Popular</span>
+      <div class="plan-name">Growth</div>
+      <div class="plan-tag">For scaling engineering teams</div>
+      <div class="price">$49<small>/mo</small></div>
+      <div class="divider"></div>
+      <ul class="features">
+        <li>Up to 30 team members</li>
+        <li>Unlimited documents</li>
+        <li>AI tag suggestions</li>
+        <li>Version history (90 days)</li>
+        <li>Email + chat support</li>
+      </ul>
+      <a href="#" class="plan-cta primary">Start Free Trial</a>
+    </div>
+
+    <div class="card">
+      <div class="plan-name">Scale</div>
+      <div class="plan-tag">For org-wide knowledge hubs</div>
+      <div class="price">$149<small>/mo</small></div>
+      <div class="divider"></div>
+      <ul class="features">
+        <li>Unlimited team members</li>
+        <li>Role-based access control</li>
+        <li>Unlimited version history</li>
+        <li>SSO + audit logs</li>
+        <li>Dedicated success manager</li>
+      </ul>
+      <a href="#" class="plan-cta outline">Contact Sales</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="fb-name">Inkwell</div>
+      <p>Turn messy internal knowledge into clean, searchable documentation hubs your engineering team will actually use.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Site</h4>
+      <a href="../home/index.html">Home</a>
+      <a href="../features/index.html">Features</a>
+      <a href="#">Pricing</a>
+      <a href="../integrations/index.html">Integrations</a>
+      <a href="../contact/index.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>hello@inkwell.app</p>
+      <p>(503) 555-0142</p>
+      <p>Portland, OR</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Status — FerroFlux Docs v2.4.1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0f1117;
+    color: #c9d1d9;
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  a { color: #58a6ff; text-decoration: none; }
+
+  /* Top nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 50;
+    height: 56px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    display: flex; align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+  }
+  .logo {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #58a6ff;
+    letter-spacing: -0.02em;
+  }
+  .logo::before { content: "◈ "; }
+  .breadcrumb {
+    color: #8b949e;
+    font-size: 13px;
+    flex: 1;
+  }
+  .breadcrumb a { color: #8b949e; }
+  .breadcrumb .sep { margin: 0 8px; color: #484f58; }
+  .breadcrumb .current { color: #c9d1d9; }
+  .version-badge {
+    color: #8b949e;
+    font-size: 13px;
+    padding: 4px 10px;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+  }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 56px); }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    height: calc(100vh - 56px);
+    position: sticky; top: 56px;
+    overflow-y: auto;
+    padding: 24px 0;
+    flex-shrink: 0;
+  }
+  .sidebar h4 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    color: #8b949e;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 24px;
+    margin-bottom: 12px;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li a {
+    display: block;
+    padding: 8px 24px;
+    color: #c9d1d9;
+    border-left: 3px solid transparent;
+    font-size: 14px;
+  }
+  .sidebar li a:hover { background: #1c2128; }
+  .sidebar li a.active {
+    background: #1c2128;
+    color: #58a6ff;
+    border-left: 3px solid #58a6ff;
+    font-weight: 700;
+  }
+  .sidebar-divider {
+    height: 1px; background: #30363d;
+    margin: 16px 24px;
+  }
+
+  /* Main */
+  .main {
+    flex: 1;
+    padding: 32px 48px 64px;
+    overflow-x: auto;
+  }
+  .content { max-width: 900px; margin: 0 auto; }
+
+  h1 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: #c9d1d9;
+    margin-bottom: 8px;
+  }
+  .subtitle { color: #8b949e; font-size: 14px; margin-bottom: 24px; }
+
+  h2 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #c9d1d9;
+    margin: 32px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #30363d;
+  }
+
+  /* Sticky banner */
+  .status-banner {
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+    background: #0f1117;
+    border: 1px solid #3fb950;
+    border-left: 4px solid #3fb950;
+    border-radius: 6px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .pulse-dot {
+    width: 12px; height: 12px;
+    background: #3fb950;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(63,185,80,0.15);
+    flex-shrink: 0;
+  }
+  .banner-text { flex: 1; }
+  .banner-title {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #3fb950;
+  }
+  .banner-sub { color: #8b949e; font-size: 13px; margin-top: 2px; }
+  .banner-time { color: #8b949e; font-size: 13px; }
+
+  /* Status table */
+  table.status {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  table.status th, table.status td {
+    border: 1px solid #30363d;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: middle;
+  }
+  table.status thead th {
+    background: #161b22;
+    color: #8b949e;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  table.status tbody tr:nth-child(odd) td { background: #161b22; }
+  table.status tbody tr:nth-child(even) td { background: #0f1117; }
+  td.svc { font-weight: 700; color: #c9d1d9; }
+  td.region { color: #8b949e; font-size: 12px; }
+  td.uptime { color: #3fb950; font-family: 'Courier New', monospace; }
+  td.incident { color: #8b949e; font-size: 12px; }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+  }
+  .b-green { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .b-yellow { background: rgba(210,153,34,0.15); color: #d29922; }
+  .b-red { background: rgba(248,81,73,0.15); color: #f85149; }
+
+  /* Incident definition list */
+  .incidents dl {
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .incidents .row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border-bottom: 1px solid #30363d;
+  }
+  .incidents .row:last-child { border-bottom: 0; }
+  .incidents .row:nth-child(odd) { background: #161b22; }
+  .incidents dt {
+    padding: 14px 16px;
+    color: #c9d1d9;
+    font-weight: 700;
+    font-size: 13px;
+    border-right: 1px solid #30363d;
+  }
+  .incidents dt .ts {
+    display: block;
+    color: #8b949e;
+    font-weight: 400;
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  .incidents dd {
+    padding: 14px 16px;
+    color: #8b949e;
+    font-size: 13px;
+  }
+  .incidents dd .title-line {
+    color: #c9d1d9;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .incidents dd .meta {
+    display: inline-block;
+    color: #58a6ff;
+    font-size: 12px;
+    margin-right: 12px;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #30363d;
+    margin-top: 48px;
+    padding: 24px 0;
+    color: #8b949e;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+  footer a { color: #8b949e; margin-left: 16px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="logo">FerroFlux</div>
+  <div class="breadcrumb">
+    <a href="../getting-started/index.html">Docs</a>
+    <span class="sep">/</span>
+    <span class="current">Status</span>
+  </div>
+  <div class="version-badge">v2.4.1</div>
+</nav>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <h4>Documentation</h4>
+    <ul>
+      <li><a href="../getting-started/index.html">Getting Started</a></li>
+      <li><a href="../api-reference/index.html">API Reference</a></li>
+      <li><a href="../data-types/index.html">Data Types</a></li>
+      <li><a href="../changelog/index.html">Changelog</a></li>
+      <li><a href="#" class="active">Status</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <h4>On this page</h4>
+    <ul>
+      <li><a href="#overall">Overall Status</a></li>
+      <li><a href="#services">Service Health</a></li>
+      <li><a href="#incidents">Incident History</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <h4>Resources</h4>
+    <ul>
+      <li><a href="#">Support</a></li>
+      <li><a href="#">RSS Feed</a></li>
+      <li><a href="#">Subscribe</a></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="content">
+
+      <h1 id="overall">Service Status</h1>
+      <p class="subtitle">Real-time operational status of FerroFlux platform services across all regions.</p>
+
+      <div class="status-banner">
+        <div class="pulse-dot"></div>
+        <div class="banner-text">
+          <div class="banner-title">All Systems Operational</div>
+          <div class="banner-sub">8 services monitored across 3 regions — no active incidents</div>
+        </div>
+        <div class="banner-time">Last checked: 2025-03-14T14:22:08Z</div>
+      </div>
+
+      <h2 id="services">Service Health</h2>
+
+      <table class="status">
+        <thead>
+          <tr>
+            <th style="width: 22%;">Service</th>
+            <th style="width: 16%;">Region</th>
+            <th style="width: 16%;">Status</th>
+            <th style="width: 14%;">Uptime (30d)</th>
+            <th style="width: 32%;">Last Incident</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="svc">API Gateway</td>
+            <td class="region">US-East · EU-West · AP-South</td>
+            <td><span class="badge b-green">Operational</span></td>
+            <td class="uptime">99.998%</td>
+            <td class="incident">2025-02-04 — Brief latency spike</td>
+          </tr>
+          <tr>
+            <td class="svc">Sensor Polling</td>
+            <td class="region">US-East · EU-West · AP-South</td>
+            <td><span class="badge b-green">Operational</span></td>
+            <td class="uptime">99.992%</td>
+            <td class="incident">2025-01-22 — Calibration drift fix</td>
+          </tr>
+          <tr>
+            <td class="svc">Stream Broker</td>
+            <td class="region">US-East · EU-West · AP-South</td>
+            <td><span class="badge b-yellow">Degraded</span></td>
+            <td class="uptime">99.871%</td>
+            <td class="incident">2025-03-14 — AP-South queue backlog</td>
+          </tr>
+          <tr>
+            <td class="svc">Webhook Dispatcher</td>
+            <td class="region">US-East · EU-West · AP-South</td>
+            <td><span class="badge b-green">Operational</span></td>
+            <td class="uptime">99.984%</td>
+            <td class="incident">2025-02-28 — Retry policy update</td>
+          </tr>
+          <tr>
+            <td class="svc">Auth Service</td>
+            <td class="region">US-East · EU-West · AP-South</td>
+            <td><span class="badge b-green">Operational</span></td>
+            <td class="uptime">100.000%</td>
+            <td class="incident">— No incidents in 30d</td>
+          </tr>
+          <tr>
+            <td class="svc">Dashboard</td>
+            <td class="region">US-East · EU-West · AP-South</td>
+            <td><span class="badge b-green">Operational</span></td>
+            <td class="uptime">99.961%</td>
+            <td class="incident">2025-03-01 — Chart rendering bug</td>
+          </tr>
+          <tr>
+            <td class="svc">SDKs CDN</td>
+            <td class="region">US-East · EU-West · AP-South</td>
+            <td><span class="badge b-green">Operational</span></td>
+            <td class="uptime">99.999%</td>
+            <td class="incident">2025-02-11 — Cache invalidation</td>
+          </tr>
+          <tr>
+            <td class="svc">Developer Portal</td>
+            <td class="region">US-East · EU-West · AP-South</td>
+            <td><span class="badge b-green">Operational</span></td>
+            <td class="uptime">99.945%</td>
+            <td class="incident">2025-02-19 — Search reindex</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="incidents">Incident History</h2>
+
+      <div class="incidents">
+        <dl>
+          <div class="row">
+            <dt>
+              INC-2025-0314-01
+              <span class="ts">2025-03-14T11:48:00Z</span>
+            </dt>
+            <dd>
+              <div class="title-line">Stream Broker queue backlog in AP-South</div>
+              <span class="meta">Affected: Stream Broker</span>
+              <span class="meta">Duration: 42m</span>
+              <span class="meta">Status: Monitoring</span>
+              <br>
+              Elevated queue depth on broker-ap-03 caused delivery delays up to 18s. Capacity scaled by 2x; backlog drained at 12:30Z. Root cause investigation ongoing.
+            </dd>
+          </div>
+          <div class="row">
+            <dt>
+              INC-2025-0301-04
+              <span class="ts">2025-03-01T09:12:00Z</span>
+            </dt>
+            <dd>
+              <div class="title-line">Dashboard chart rendering regression</div>
+              <span class="meta">Affected: Dashboard</span>
+              <span class="meta">Duration: 1h 14m</span>
+              <span class="meta">Status: Resolved</span>
+              <br>
+              A frontend release introduced a null-handling bug in the magnetic-vector chart component. Rolled back to prior build; hotfix deployed at 10:26Z.
+            </dd>
+          </div>
+          <div class="row">
+            <dt>
+              INC-2025-0228-02
+              <span class="ts">2025-02-28T17:33:00Z</span>
+            </dt>
+            <dd>
+              <div class="title-line">Webhook retries exceeding configured backoff</div>
+              <span class="meta">Affected: Webhook Dispatcher</span>
+              <span class="meta">Duration: 28m</span>
+              <span class="meta">Status: Resolved</span>
+              <br>
+              Retry policy update inadvertently disabled exponential backoff for 5xx responses. Patched and replayed 1,247 duplicated deliveries with idempotency keys preserved.
+            </dd>
+          </div>
+          <div class="row">
+            <dt>
+              INC-2025-0211-03
+              <span class="ts">2025-02-11T03:07:00Z</span>
+            </dt>
+            <dd>
+              <div class="title-line">SDKs CDN cache invalidation delay</div>
+              <span class="meta">Affected: SDKs CDN</span>
+              <span class="meta">Duration: 19m</span>
+              <span class="meta">Status: Resolved</span>
+              <br>
+              Edge nodes in EU-West served stale v2.4.0 SDK bundle after v2.4.1 publish. Manual purge issued across all PoPs; integrity verified.
+            </dd>
+          </div>
+          <div class="row">
+            <dt>
+              INC-2025-0204-01
+              <span class="ts">2025-02-04T22:51:00Z</span>
+            </dt>
+            <dd>
+              <div class="title-line">API Gateway latency spike — US-East</div>
+              <span class="meta">Affected: API Gateway, Sensor Polling</span>
+              <span class="meta">Duration: 11m</span>
+              <span class="meta">Status: Resolved</span>
+              <br>
+              p99 latency increased from 84ms to 612ms due to an upstream DNS resolver issue. Failover to secondary resolver completed; metrics normalized.
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <footer>
+        <div>© 2025 FerroFlux Systems — Real-time magnetic field telemetry.</div>
+        <div>
+          <a href="#">Status RSS</a>
+          <a href="#">Contact</a>
+          <a href="#">Privacy</a>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+</div>
+
+</body>
+</html>

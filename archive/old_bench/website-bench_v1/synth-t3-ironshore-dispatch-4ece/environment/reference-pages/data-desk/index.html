@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Desk — Ironshore Dispatch</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f5f2ec;
+    color: #1a1a1a;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  a { color: #2a4a6b; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Masthead */
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #f5f2ec;
+    border-bottom: 2px solid #1a1a1a;
+  }
+  .masthead-top {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    border-bottom: 1px solid #d9d4c8;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #1a1a1a;
+  }
+  .brand .accent { color: #b5001f; }
+  .masthead-meta {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #555;
+  }
+  .masthead-meta span { margin-left: 14px; }
+  .primary-nav {
+    display: flex;
+    padding: 0 32px;
+    height: 40px;
+    align-items: center;
+    gap: 28px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+  }
+  .primary-nav a {
+    color: #1a1a1a;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .primary-nav a.active {
+    color: #b5001f;
+    border-bottom-color: #b5001f;
+  }
+
+  /* Layout */
+  .container {
+    display: flex;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px 32px 0;
+    gap: 28px;
+  }
+
+  /* Filter panel */
+  .filters {
+    width: 220px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 128px;
+    align-self: flex-start;
+    border-right: 1px solid #d9d4c8;
+    padding-right: 20px;
+  }
+  .filters h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #2a4a6b;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d9d4c8;
+  }
+  .filter-group { margin-bottom: 24px; }
+  .filter-option {
+    display: flex;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+  }
+  .filter-option input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #b5001f;
+  }
+  .date-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .date-inputs label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #555;
+  }
+  .date-inputs input[type="text"] {
+    border: 1px solid #cfc8b8;
+    background: #fff;
+    padding: 6px 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #1a1a1a;
+  }
+  .apply-btn {
+    margin-top: 14px;
+    width: 100%;
+    background: #2a4a6b;
+    color: #f5f2ec;
+    border: none;
+    padding: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+  }
+  .reset-btn {
+    margin-top: 6px;
+    width: 100%;
+    background: transparent;
+    color: #1a1a1a;
+    border: 1px solid #1a1a1a;
+    padding: 7px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+  }
+
+  /* Main */
+  .main {
+    flex: 1;
+    min-width: 0;
+    padding-bottom: 40px;
+  }
+  .section-tag {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b5001f;
+    margin-bottom: 8px;
+  }
+  .page-title {
+    font-family: Georgia, serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 14px;
+    color: #1a1a1a;
+  }
+  .methodology {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    color: #333;
+    max-width: 760px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #d9d4c8;
+  }
+  .table-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #555;
+  }
+  .table-meta .export a { margin-left: 14px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    background: #fff;
+    border: 1px solid #d9d4c8;
+  }
+  thead th {
+    background: #1a1a1a;
+    color: #f5f2ec;
+    text-align: left;
+    padding: 10px 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    border-right: 1px solid #333;
+    position: relative;
+  }
+  thead th:last-child { border-right: none; }
+  thead th::after {
+    content: " ▾";
+    color: #888;
+    font-size: 10px;
+  }
+  thead th.sorted::after {
+    content: " ▼";
+    color: #b5001f;
+  }
+  tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #ece7da;
+    color: #1a1a1a;
+  }
+  tbody tr:nth-child(even) { background: #faf7f1; }
+  tbody tr:hover { background: #f0ebde; }
+  .num { font-variant-numeric: tabular-nums; }
+  .up { color: #1f7a3d; font-weight: 700; }
+  .down { color: #b5001f; font-weight: 700; }
+  .source { color: #2a4a6b; }
+
+  /* Footer */
+  footer {
+    border-top: 2px solid #1a1a1a;
+    margin-top: 40px;
+    padding: 24px 32px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+  }
+  footer .cols { display: flex; gap: 28px; }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="brand">Ironshore <span class="accent">Dispatch</span></div>
+    <div class="masthead-meta">
+      <span>Vol. XII · No. 184</span>
+      <span>Thursday, March 14</span>
+      <span>Subscribe</span>
+    </div>
+  </div>
+  <nav class="primary-nav">
+    <a href="../front-page/index.html">Front Page</a>
+    <a href="../world/index.html">World</a>
+    <a href="#" class="active">Data Desk</a>
+    <a href="../opinion/index.html">Opinion</a>
+    <a href="../archive/index.html">Archive</a>
+  </nav>
+</header>
+
+<div class="container">
+  <aside class="filters">
+    <div class="filter-group">
+      <h3>Topic Filters</h3>
+      <label class="filter-option"><input type="checkbox" checked> Economy</label>
+      <label class="filter-option"><input type="checkbox" checked> Climate</label>
+      <label class="filter-option"><input type="checkbox"> Elections</label>
+      <label class="filter-option"><input type="checkbox" checked> Trade</label>
+      <label class="filter-option"><input type="checkbox"> Health</label>
+      <label class="filter-option"><input type="checkbox"> Migration</label>
+    </div>
+    <div class="filter-group">
+      <h3>Date Range</h3>
+      <div class="date-inputs">
+        <label>From</label>
+        <input type="text" value="2018-01-01">
+        <label>To</label>
+        <input type="text" value="2024-12-31">
+      </div>
+      <button class="apply-btn">Apply Filters</button>
+      <button class="reset-btn">Reset</button>
+    </div>
+    <div class="filter-group">
+      <h3>View</h3>
+      <label class="filter-option"><input type="checkbox" checked> Show change %</label>
+      <label class="filter-option"><input type="checkbox" checked> Show sources</label>
+      <label class="filter-option"><input type="checkbox"> Annotations</label>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="section-tag">Data Desk · Indicators</div>
+    <h1 class="page-title">The Numbers Behind the Headlines</h1>
+    <p class="methodology">
+      The Ironshore Data Desk compiles cross-national indicators from a curated set of multilateral and national statistical agencies. Figures are normalized to constant 2015 USD where applicable, indexed to the most recent comparable year, and weighted by purchasing-power parity for cross-country comparisons. Sources are linked per row; readers should consult the methodology appendix for revisions, definitional changes, and reporting lag estimates.
+    </p>
+
+    <div class="table-meta">
+      <div>Showing 12 of 2,418 indicators · Last updated March 12, 2024</div>
+      <div class="export">
+        <a href="#">Download CSV</a>
+        <a href="#">API</a>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="sorted">Country</th>
+          <th>Year</th>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Change</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Germany</td><td class="num">2023</td><td>GDP per capita (USD)</td><td class="num">52,824</td><td class="up num">+1.4%</td><td class="source">OECD</td></tr>
+        <tr><td>Brazil</td><td class="num">2023</td><td>Inflation, annual avg.</td><td class="num">4.6%</td><td class="down num">−1.2pp</td><td class="source">IBGE</td></tr>
+        <tr><td>India</td><td class="num">2022</td><td>Renewable share of grid</td><td class="num">22.8%</td><td class="up num">+3.1pp</td><td class="source">IRENA</td></tr>
+        <tr><td>Nigeria</td><td class="num">2023</td><td>Trade balance (bn USD)</td><td class="num">−6.4</td><td class="down num">−2.7</td><td class="source">CBN</td></tr>
+        <tr><td>Japan</td><td class="num">2023</td><td>Population, total (m)</td><td class="num">123.3</td><td class="down num">−0.5%</td><td class="source">Stat. Bureau</td></tr>
+        <tr><td>Mexico</td><td class="num">2023</td><td>Manufacturing PMI</td><td class="num">51.4</td><td class="up num">+0.8</td><td class="source">INEGI</td></tr>
+        <tr><td>South Africa</td><td class="num">2022</td><td>Unemployment, official</td><td class="num">32.7%</td><td class="up num">+0.4pp</td><td class="source">Stats SA</td></tr>
+        <tr><td>Indonesia</td><td class="num">2023</td><td>Exports, FOB (bn USD)</td><td class="num">258.8</td><td class="down num">−11.3%</td><td class="source">BPS</td></tr>
+        <tr><td>France</td><td class="num">2023</td><td>CO₂ intensity (kg/USD)</td><td class="num">0.14</td><td class="down num">−4.0%</td><td class="source">Eurostat</td></tr>
+        <tr><td>Turkey</td><td class="num">2023</td><td>Policy interest rate</td><td class="num">45.0%</td><td class="up num">+36.5pp</td><td class="source">TCMB</td></tr>
+        <tr><td>Canada</td><td class="num">2023</td><td>Net migration (k)</td><td class="num">+468</td><td class="up num">+12.0%</td><td class="source">StatCan</td></tr>
+        <tr><td>Vietnam</td><td class="num">2023</td><td>Real GDP growth</td><td class="num">5.1%</td><td class="down num">−2.9pp</td><td class="source">GSO</td></tr>
+      </tbody>
+    </table>
+  </main>
+</div>
+
+<footer>
+  <div>© 2024 Ironshore Dispatch · Independent journalism since 2012</div>
+  <div class="cols">
+    <span>About</span>
+    <span>Masthead</span>
+    <span>Ethics</span>
+    <span>Contact</span>
+  </div>
+</footer>
+
+</body>
+</html>

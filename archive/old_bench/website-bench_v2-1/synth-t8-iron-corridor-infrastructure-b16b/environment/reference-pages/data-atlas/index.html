@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Atlas — The Iron Corridor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1a1a;
+    color: #f0ede6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  a { color: #f0ede6; text-decoration: none; }
+  a.active, a:hover { color: #c8601a; }
+
+  /* ---------- Editorial Header ---------- */
+  .editorial-header {
+    max-width: none;
+    padding: 48px 64px;
+    border-bottom: 2px solid #c8601a;
+    position: relative;
+  }
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 36px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #f0ede6;
+  }
+  .masthead .brand { color: #c8601a; }
+  nav ul {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .page-label {
+    position: absolute;
+    top: 48px;
+    right: 64px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem;
+    color: #c8601a;
+    letter-spacing: 0.2em;
+  }
+  h1.page-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 900;
+    font-size: 2.8rem;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    max-width: 780px;
+  }
+  .deck {
+    margin-top: 18px;
+    max-width: 680px;
+    color: #cfccc4;
+    font-size: 1.05rem;
+  }
+  .byline-row {
+    display: flex;
+    gap: 36px;
+    margin-top: 28px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #9b9890;
+  }
+  .byline-row span strong { color: #f0ede6; display: block; margin-top: 2px; letter-spacing: 0.08em; }
+
+  /* ---------- Main Grid ---------- */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 24px 24px;
+  }
+  .atlas-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+  }
+  .panel {
+    background: #1a1a1a;
+    border: 1px solid #2e2e2e;
+    padding: 36px 24px 24px;
+    position: relative;
+  }
+  .panel-label {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem;
+    color: #c8601a;
+    letter-spacing: 0.2em;
+  }
+  .panel-num {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-family: Georgia, serif;
+    font-size: 2.2rem;
+    color: #2e2e2e;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .panel h2 {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #c8601a;
+  }
+
+  /* Panel A — Ranked Corridors */
+  .panel-a { grid-column: span 4; }
+  .corridor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.78rem;
+  }
+  .corridor-list li {
+    display: grid;
+    grid-template-columns: 24px 1fr 48px;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #2e2e2e;
+  }
+  .corridor-list .rank { color: #c8601a; }
+  .corridor-list .name { color: #f0ede6; letter-spacing: 0.04em; }
+  .corridor-list .score { color: #4a7fa5; text-align: right; }
+
+  /* Panel B — ASCII Grid */
+  .panel-b { grid-column: span 5; }
+  .ascii-wrap {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+  .ascii-grid {
+    display: grid;
+    grid-template-columns: 56px repeat(6, 1fr);
+    gap: 2px;
+    margin-top: 4px;
+  }
+  .ascii-grid .hdr {
+    color: #9b9890;
+    font-size: 0.7rem;
+    text-align: center;
+    padding: 2px 0;
+    letter-spacing: 0.08em;
+  }
+  .ascii-grid .row-label {
+    color: #4a7fa5;
+    font-size: 0.72rem;
+    padding-right: 6px;
+    display: flex;
+    align-items: center;
+  }
+  .ascii-grid .cell {
+    text-align: center;
+    padding: 4px 0;
+    background: #141414;
+    color: #f0ede6;
+  }
+  .ascii-grid .c0 { color: #2e2e2e; }
+  .ascii-grid .c1 { color: #5a5a5a; }
+  .ascii-grid .c2 { color: #9b9890; }
+  .ascii-grid .c3 { color: #4a7fa5; }
+  .ascii-grid .c4 { color: #c8601a; font-weight: 700; }
+  .legend {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem;
+    color: #9b9890;
+  }
+  .legend span b { color: inherit; margin-right: 4px; font-weight: 400; }
+
+  /* Sidebar (Glossary) — Panel E */
+  .panel-e {
+    grid-column: span 3;
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    background: #141414;
+    border: 1px solid #2e2e2e;
+  }
+  .glossary { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .glossary li { border-left: 2px solid #c8601a; padding-left: 10px; }
+  .glossary .term {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem;
+    color: #c8601a;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .glossary .def {
+    font-size: 0.82rem;
+    color: #cfccc4;
+    line-height: 1.5;
+  }
+
+  /* Panel C — Bridge Table */
+  .panel-c { grid-column: span 9; }
+  .bridge-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.78rem;
+  }
+  .bridge-table thead th {
+    text-align: left;
+    color: #9b9890;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    font-size: 0.68rem;
+    padding: 6px 8px;
+    border-bottom: 2px solid #c8601a;
+    text-transform: uppercase;
+  }
+  .bridge-table tbody td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #2e2e2e;
+    color: #f0ede6;
+  }
+  .bridge-table tbody td.id { color: #4a7fa5; }
+  .bridge-table tbody td.rating-low { color: #c8601a; font-weight: 700; }
+  .bridge-table tbody td.rating-mid { color: #f0ede6; }
+
+  /* Interstitial chapter band (every-3rd rhythm break) */
+  .interstitial {
+    grid-column: 1 / -1;
+    background: #2e2e2e;
+    color: #ffffff;
+    min-height: 120px;
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    position: relative;
+  }
+  .interstitial .chapter-num {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem;
+    color: #c8601a;
+    letter-spacing: 0.2em;
+  }
+  .interstitial .marker {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #c8601a;
+    margin-bottom: 8px;
+  }
+  .interstitial h3 {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    max-width: 720px;
+  }
+  .interstitial .stat {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 3.5rem;
+    color: #c8601a;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Panel D — 1990 vs 2023 */
+  .panel-d { grid-column: span 12; }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .compare-col {
+    padding: 12px 24px;
+    position: relative;
+  }
+  .compare-col + .compare-col { border-left: 2px solid #c8601a; }
+  .compare-col .year {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem;
+    color: #4a7fa5;
+    letter-spacing: 0.2em;
+  }
+  .compare-col .fig {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 3.5rem;
+    color: #c8601a;
+    line-height: 1.05;
+    margin: 6px 0 4px;
+    font-weight: 400;
+  }
+  .compare-col .unit {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem;
+    color: #9b9890;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .compare-col p {
+    font-size: 0.92rem;
+    color: #cfccc4;
+    max-width: 460px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 56px;
+    background: #2e2e2e;
+    min-height: 80px;
+    padding: 22px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem;
+    color: #9b9890;
+    letter-spacing: 0.1em;
+  }
+  footer .col strong { color: #f0ede6; display: block; margin-bottom: 4px; }
+  footer .col.amber { color: #c8601a; }
+</style>
+</head>
+<body>
+
+<header class="editorial-header">
+  <div class="masthead">
+    <div class="brand">◼ THE IRON CORRIDOR — A SPECIAL INVESTIGATION</div>
+    <nav>
+      <ul>
+        <li><a href="../overview/index.html">Overview</a></li>
+        <li><a class="active" href="#">Data Atlas</a></li>
+        <li><a href="../case-studies/index.html">Case Studies</a></li>
+        <li><a href="../policy-gaps/index.html">Policy Gaps</a></li>
+        <li><a href="../methodology/index.html">Methodology</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="page-label">PART II / V — DATA ATLAS</div>
+  <h1 class="page-title">The Atlas of Decay: Measuring the Continental Freight Network</h1>
+  <p class="deck">Five panels of federal inspection data, agency disclosures, and engineering audits — assembled to map the where, when, and how-much of structural failure across 47,000 miles of inland track.</p>
+  <div class="byline-row">
+    <span>Reporting<strong>M. Halberstam &amp; J. Kowalczyk</strong></span>
+    <span>Data Analysis<strong>R. Okafor</strong></span>
+    <span>Published<strong>Vol. 03 / Nov 2024</strong></span>
+    <span>Records Surveyed<strong>14,082</strong></span>
+  </div>
+</header>
+
+<main>
+  <div class="atlas-grid">
+
+    <!-- PANEL A — Ranked Corridors -->
+    <section class="panel panel-a">
+      <span class="panel-label">PANEL A</span>
+      <span class="panel-num">01</span>
+      <h2>Ten Most At-Risk Corridors</h2>
+      <ol class="corridor-list">
+        <li><span class="rank">01</span><span class="name">WABASH–KANKAKEE / IN-IL</span><span class="score">94.2</span></li>
+        <li><span class="rank">02</span><span class="name">FLATHEAD SUB / MT</span><span class="score">91.7</span></li>
+        <li><span class="rank">03</span><span class="name">GULF COAST CNTR / LA</span><span class="score">89.5</span></li>
+        <li><span class="rank">04</span><span class="name">MONONGAHELA LINE / WV-PA</span><span class="score">87.1</span></li>
+        <li><span class="rank">05</span><span class="name">RED RIVER DIV / ND</span><span class="score">85.4</span></li>
+        <li><span class="rank">06</span><span class="name">OZARK BRANCH / MO-AR</span><span class="score">82.9</span></li>
+        <li><span class="rank">07</span><span class="name">CASCADE TUNNEL APPR / WA</span><span class="score">81.0</span></li>
+        <li><span class="rank">08</span><span class="name">PEE DEE INTERCHG / SC</span><span class="score">78.6</span></li>
+        <li><span class="rank">09</span><span class="name">SAGINAW NORTH / MI</span><span class="score">77.3</span></li>
+        <li><span class="rank">10</span><span class="name">PANHANDLE EXT / TX-OK</span><span class="score">74.8</span></li>
+      </ol>
+    </section>
+
+    <!-- PANEL B — ASCII derailment grid -->
+    <section class="panel panel-b">
+      <span class="panel-label">PANEL B</span>
+      <span class="panel-num">02</span>
+      <h2>Derailment Density, 2018–2023</h2>
+      <div class="ascii-wrap">
+        <div class="ascii-grid">
+          <div></div>
+          <div class="hdr">'18</div><div class="hdr">'19</div><div class="hdr">'20</div><div class="hdr">'21</div><div class="hdr">'22</div><div class="hdr">'23</div>
+
+          <div class="row-label">IN</div>
+          <div class="cell c2">·</div><div class="cell c3">▪</div><div class="cell c3">▪</div><div class="cell c4">█</div><div class="cell c4">█</div><div class="cell c4">█</div>
+
+          <div class="row-label">MT</div>
+          <div class="cell c1">·</div><div class="cell c2">·</div><div class="cell c3">▪</div><div class="cell c3">▪</div><div class="cell c4">█</div><div class="cell c4">█</div>
+
+          <div class="row-label">LA</div>
+          <div class="cell c2">·</div><div class="cell c2">·</div><div class="cell c3">▪</div><div class="cell c4">█</div><div class="cell c4">█</div><div class="cell c4">█</div>
+
+          <div class="row-label">PA</div>
+          <div class="cell c3">▪</div><div class="cell c3">▪</div><div class="cell c4">█</div><div class="cell c4">█</div><div class="cell c4">█</div><div class="cell c3">▪</div>
+
+          <div class="row-label">ND</div>
+          <div class="cell c1">·</div><div class="cell c2">·</div><div class="cell c2">·</div><div class="cell c3">▪</div><div class="cell c3">▪</div><div class="cell c4">█</div>
+
+          <div class="row-label">MO</div>
+          <div class="cell c2">·</div><div class="cell c3">▪</div><div class="cell c3">▪</div><div class="cell c3">▪</div><div class="cell c4">█</div><div class="cell c4">█</div>
+
+          <div class="row-label">WA</div>
+          <div class="cell c1">·</div><div class="cell c1">·</div><div class="cell c2">·</div><div class="cell c3">▪</div><div class="cell c3">▪</div><div class="cell c3">▪</div>
+
+          <div class="row-label">SC</div>
+          <div class="cell c2">·</div><div class="cell c2">·</div><div class="cell c3">▪</div><div class="cell c3">▪</div><div class="cell c4">█</div><div class="cell c4">█</div>
+        </div>
+        <div class="legend">
+          <span><b>·</b> 0–1</span>
+          <span><b>▪</b> 2–4</span>
+          <span style="color:#c8601a;"><b>█</b> 5+ incidents</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL E — Sticky Glossary Sidebar -->
+    <aside class="panel panel-e">
+      <span class="panel-label">PANEL E</span>
+      <span class="panel-num">05</span>
+      <h2>Rail-Grade Glossary</h2>
+      <ul class="glossary">
+        <li>
+          <span class="term">CLASS I</span>
+          <span class="def">Operating revenue ≥ $943M. Trunk-line carriers; 7 active in North America.</span>
+        </li>
+        <li>
+          <span class="term">CLASS II</span>
+          <span class="def">Regional rail, $42M–$943M. Focus of this report's structural audit.</span>
+        </li>
+        <li>
+          <span class="term">CLASS III</span>
+          <span class="def">Short-line / terminal carriers. Often single-shipper dependent.</span>
+        </li>
+        <li>
+          <span class="term">FRA T-1 / T-2</span>
+          <span class="def">Track classes limiting freight to 10/25 mph; speed restriction as proxy for decay.</span>
+        </li>
+        <li>
+          <span class="term">SD / FO</span>
+          <span class="def">Structurally Deficient / Functionally Obsolete — federal bridge ratings.</span>
+        </li>
+        <li>
+          <span class="term">LOAD RATING</span>
+          <span class="def">Max axle load (tons) the structure can carry without programmed repair.</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- INTERSTITIAL — chapter marker (rhythm break) -->
+    <div class="interstitial">
+      <span class="chapter-num">CHAPTER MARKER · II.A</span>
+      <div>
+        <div class="marker">— INTERSTITIAL —</div>
+        <h3>Of 4,812 Class II bridges surveyed, more than one in three has not received a formal load-rating review since the Clinton administration.</h3>
+      </div>
+      <div class="stat">34%</div>
+    </div>
+
+    <!-- PANEL C — Bridge table -->
+    <section class="panel panel-c">
+      <span class="panel-label">PANEL C</span>
+      <span class="panel-num">03</span>
+      <h2>Bridge Inventory Sample (n = 20)</h2>
+      <table class="bridge-table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Subdivision</th><th>Yr Built</th><th>Age</th><th>Load Rating (tons)</th><th>Last Inspection</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="id">B-0142</td><td>Wabash Crossing, IN</td><td>1908</td><td>116</td><td class="rating-low">142</td><td>2019-04-11</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-0218</td><td>Flathead Sub, MT</td><td>1921</td><td>103</td><td class="rating-low">156</td><td>2020-08-02</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-0307</td><td>Gulf Coast, LA</td><td>1935</td><td>89</td><td class="rating-low">168</td><td>2018-11-23</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-0411</td><td>Monongahela, PA</td><td>1916</td><td>108</td><td>178</td><td>2021-06-09</td><td>FO</td></tr>
+          <tr><td class="id">B-0523</td><td>Red River, ND</td><td>1947</td><td>77</td><td>192</td><td>2022-03-14</td><td>FO</td></tr>
+          <tr><td class="id">B-0612</td><td>Ozark Branch, MO</td><td>1929</td><td>95</td><td class="rating-low">163</td><td>2017-10-30</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-0701</td><td>Cascade Appr, WA</td><td>1953</td><td>71</td><td>204</td><td>2022-09-18</td><td>FO</td></tr>
+          <tr><td class="id">B-0809</td><td>Pee Dee, SC</td><td>1939</td><td>85</td><td class="rating-low">171</td><td>2019-02-05</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-0884</td><td>Saginaw North, MI</td><td>1962</td><td>62</td><td>211</td><td>2023-01-22</td><td>FO</td></tr>
+          <tr><td class="id">B-0917</td><td>Panhandle Ext, TX</td><td>1958</td><td>66</td><td>198</td><td>2022-11-04</td><td>FO</td></tr>
+          <tr><td class="id">B-1042</td><td>Wabash Crossing, IN</td><td>1911</td><td>113</td><td class="rating-low">148</td><td>2018-05-19</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-1108</td><td>Flathead Sub, MT</td><td>1944</td><td>80</td><td>182</td><td>2020-12-11</td><td>FO</td></tr>
+          <tr><td class="id">B-1219</td><td>Gulf Coast, LA</td><td>1924</td><td>100</td><td class="rating-low">159</td><td>2019-07-08</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-1322</td><td>Monongahela, PA</td><td>1903</td><td>121</td><td class="rating-low">138</td><td>2017-04-27</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-1418</td><td>Red River, ND</td><td>1969</td><td>55</td><td>218</td><td>2023-04-03</td><td>FO</td></tr>
+          <tr><td class="id">B-1527</td><td>Ozark Branch, MO</td><td>1948</td><td>76</td><td>189</td><td>2021-08-15</td><td>FO</td></tr>
+          <tr><td class="id">B-1604</td><td>Cascade Appr, WA</td><td>1936</td><td>88</td><td class="rating-low">167</td><td>2018-10-12</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-1711</td><td>Pee Dee, SC</td><td>1955</td><td>69</td><td>201</td><td>2022-05-29</td><td>FO</td></tr>
+          <tr><td class="id">B-1820</td><td>Saginaw North, MI</td><td>1942</td><td>82</td><td class="rating-low">174</td><td>2019-09-21</td><td class="rating-low">SD</td></tr>
+          <tr><td class="id">B-1933</td><td>Panhandle Ext, TX</td><td>1971</td><td>53</td><td>222</td><td>2023-07-16</td><td>FO</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- PANEL D — Comparison 1990 vs 2023 -->
+    <section class="panel panel-d">
+      <span class="panel-label">PANEL D</span>
+      <span class="panel-num">04</span>
+      <h2>Maintenance Expenditure — 1990 vs. 2023 (constant USD)</h2>
+      <div class="compare">
+        <div class="compare-col">
+          <div class="year">— 1990 —</div>
+          <div class="fig">$5.8B</div>
+          <div class="unit">CLASS II / III TRACK &amp; STRUCTURE</div>
+          <p>Federal cost-share programs administered through the Local Rail Freight Assistance line item underwrote 41% of regional carrier capital plans, with median per-mile spend of $48,200.</p>
+        </div>
+        <div class="compare-col">
+          <div class="year">— 2023 —</div>
+          <div class="fig">$2.3B</div>
+          <div class="unit">CLASS II / III TRACK &amp; STRUCTURE</div>
+          <p>Despite a 19% increase in route-miles served and a 64% rise in average gross weight per car, real-dollar spending has contracted to a per-mile median of $19,700 — a 60-percent decline.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="col"><strong>THE IRON CORRIDOR</strong>A Special Report · Vol. 03</div>
+  <div class="col">REPORT v3.1 · DOI 10.4827/IC.2024.DA02</div>
+  <div class="col">DATA REQUESTS<br>atlas@ironcorridor.report</div>
+  <div class="col amber">↳ NEXT: CASE STUDIES / III</div>
+</footer>
+
+</body>
+</html>

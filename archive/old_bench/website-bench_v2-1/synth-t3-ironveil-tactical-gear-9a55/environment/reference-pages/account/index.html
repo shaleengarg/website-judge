@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Account — Ironveil Tactical Gear</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #1A1A18;
+    background: #F5F3EF;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; margin: 0; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Top nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    height: 56px;
+    background: #1A1A18;
+    color: #F5F3EF;
+    border-bottom: 1px solid #000;
+  }
+  .topnav-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    height: 100%; display: flex; align-items: center; justify-content: space-between;
+  }
+  .wordmark {
+    font-family: Georgia, serif; font-weight: bold; font-size: 20px;
+    letter-spacing: 2px; color: #F5F3EF;
+  }
+  .wordmark .dot { color: #B84C2E; }
+  .nav-links { display: flex; gap: 28px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+  .nav-links a { color: #C9C7C1; padding: 4px 0; }
+  .nav-links a.active { color: #F5F3EF; border-bottom: 2px solid #B84C2E; }
+  .nav-utils { display: flex; gap: 16px; font-size: 12px; color: #C9C7C1; }
+  .nav-utils .cart-badge {
+    background: #B84C2E; color: #F5F3EF; padding: 2px 8px; border-radius: 2px;
+  }
+
+  /* Page header */
+  .page-head {
+    max-width: 1200px; margin: 0 auto; padding: 28px 24px 16px;
+  }
+  .page-head h1 { font-size: 28px; letter-spacing: 0.5px; }
+  .page-head .crumbs { font-size: 12px; color: #6E6B65; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+  .page-head .welcome { color: #4A5240; font-size: 13px; margin-top: 6px; }
+
+  /* Account layout */
+  .account-shell {
+    max-width: 1200px; margin: 0 auto; padding: 8px 24px 48px;
+    display: flex; gap: 28px; align-items: flex-start;
+  }
+  .account-sidebar {
+    width: 200px; flex: 0 0 200px;
+    background: #FFFFFF;
+    border: 1px solid #DEDAD4;
+  }
+  .sidebar-head {
+    padding: 14px 16px;
+    border-bottom: 1px solid #DEDAD4;
+    font-family: Georgia, serif; font-weight: bold; font-size: 15px;
+  }
+  .sidebar-head small { display: block; font-family: system-ui, sans-serif; font-weight: normal; font-size: 11px; color: #6E6B65; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .acct-nav { list-style: none; margin: 0; padding: 0; }
+  .acct-nav li a {
+    display: block;
+    padding: 11px 16px 11px 16px;
+    border-left: 4px solid transparent;
+    border-bottom: 1px solid #EFEDE8;
+    font-size: 13px;
+    color: #1A1A18;
+  }
+  .acct-nav li a:hover { background: #F5F3EF; }
+  .acct-nav li a.active {
+    border-left: 4px solid #4A5240;
+    background: #F5F3EF;
+    font-weight: 600;
+  }
+  .acct-nav li:last-child a { border-bottom: none; }
+  .sidebar-foot {
+    padding: 12px 16px;
+    border-top: 1px solid #DEDAD4;
+    font-size: 12px;
+    color: #B84C2E;
+  }
+
+  /* Content area */
+  .account-content { flex: 1; min-width: 0; }
+  .section { background: #FFFFFF; border: 1px solid #DEDAD4; margin-bottom: 24px; }
+  .section-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 16px 20px; border-bottom: 1px solid #DEDAD4;
+  }
+  .section-head h2 { font-size: 18px; }
+  .section-head .meta { font-size: 12px; color: #6E6B65; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Orders table */
+  .orders { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .orders thead th {
+    text-align: left; font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1px; color: #6E6B65;
+    padding: 10px 16px; border-bottom: 1px solid #DEDAD4; background: #FAF8F4;
+  }
+  .orders td { padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #EFEDE8; }
+  .orders tr.order-row td { background: #FFFFFF; }
+  .orders tr.details-row td { padding: 0; border-bottom: 1px solid #DEDAD4; background: #FAF8F4; }
+  .order-num { font-family: Georgia, serif; font-weight: bold; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    padding: 4px 10px; letter-spacing: 1px; text-transform: uppercase;
+    color: #F5F3EF;
+  }
+  .badge.shipped { background: #4A5240; }
+  .badge.processing { background: #B84C2E; }
+  .badge.delivered { background: #2F3528; }
+
+  details { width: 100%; }
+  details summary {
+    list-style: none; cursor: pointer;
+    padding: 10px 16px;
+    font-size: 12px; color: #4A5240; text-transform: uppercase; letter-spacing: 1px;
+    border-bottom: 1px solid #EFEDE8;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before {
+    content: "▸ "; color: #B84C2E; font-weight: bold;
+  }
+  details[open] summary::before { content: "▾ "; }
+  .line-items { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .line-items th, .line-items td { padding: 8px 16px; text-align: left; }
+  .line-items th { font-weight: 600; color: #6E6B65; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; background: #F5F3EF; }
+  .line-items tr td { border-top: 1px dotted #DEDAD4; }
+  .thumb {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #4A5240, #2F3528);
+    display: inline-block; vertical-align: middle; margin-right: 10px;
+    border: 1px solid #1A1A18;
+  }
+  .thumb.b { background: linear-gradient(135deg, #6E6B65, #3A3A36); }
+  .thumb.c { background: linear-gradient(135deg, #8A6A4A, #4A3A28); }
+
+  /* Address book */
+  .addr-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+    padding: 20px;
+  }
+  .addr-card {
+    border: 1px solid #DEDAD4; padding: 16px; background: #FAF8F4;
+    font-size: 13px; position: relative;
+  }
+  .addr-card .label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: #4A5240; font-weight: 700; margin-bottom: 8px;
+  }
+  .addr-card .name { font-family: Georgia, serif; font-weight: bold; font-size: 15px; margin-bottom: 6px; }
+  .addr-card .lines { color: #3A3A36; line-height: 1.55; }
+  .addr-card .edit { position: absolute; top: 14px; right: 14px; font-size: 11px; color: #B84C2E; text-transform: uppercase; letter-spacing: 1px; }
+  .addr-card.add-new {
+    border: 2px dashed #B84C2E; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    color: #B84C2E; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px;
+    text-align: center; font-weight: 600; min-height: 140px;
+  }
+  .addr-card.add-new .plus { display: block; font-size: 28px; line-height: 1; margin-bottom: 6px; }
+
+  /* Footer */
+  footer {
+    background: #1A1A18; color: #C9C7C1;
+    margin-top: 24px;
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto; padding: 28px 24px 18px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px;
+    font-size: 12px;
+  }
+  .footer-inner h4 { color: #F5F3EF; font-size: 12px; font-family: system-ui, sans-serif; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+  .footer-inner ul { list-style: none; padding: 0; margin: 0; }
+  .footer-inner li { padding: 3px 0; color: #9A9790; }
+  .footer-tag {
+    font-family: Georgia, serif; font-weight: bold; color: #F5F3EF; font-size: 18px; letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .footer-bottom {
+    border-top: 1px solid #2F2F2D;
+    padding: 14px 24px;
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: #6E6B65; text-transform: uppercase; letter-spacing: 1.5px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="wordmark">IRONVEIL<span class="dot">.</span></div>
+    <div class="nav-links">
+      <a href="../shop/index.html">Shop</a>
+      <a href="../product-detail/index.html">Product</a>
+      <a href="../cart/index.html">Cart</a>
+      <a href="#" class="active">Account</a>
+      <a href="../about/index.html">About</a>
+    </div>
+    <div class="nav-utils">
+      <span>SGT. YELLEN</span>
+      <span class="cart-badge">CART · 3</span>
+    </div>
+  </div>
+</nav>
+
+<div class="page-head">
+  <div class="crumbs">Home / Account / Orders</div>
+  <h1>Operator Account</h1>
+  <div class="welcome">Welcome back, M. Yellen — Member since 03 / 2019 · Tier II</div>
+</div>
+
+<div class="account-shell">
+
+  <aside class="account-sidebar">
+    <div class="sidebar-head">
+      Account
+      <small>5 sections</small>
+    </div>
+    <ul class="acct-nav">
+      <li><a href="#" class="active">Orders</a></li>
+      <li><a href="#">Saved Gear Lists</a></li>
+      <li><a href="#">Address Book</a></li>
+      <li><a href="#">Payment Methods</a></li>
+      <li><a href="#">Profile &amp; Security</a></li>
+    </ul>
+    <div class="sidebar-foot">Sign Out →</div>
+  </aside>
+
+  <main class="account-content">
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Order History</h2>
+        <div class="meta">4 orders · Last 12 months</div>
+      </div>
+      <table class="orders">
+        <thead>
+          <tr>
+            <th style="width:130px;">Order #</th>
+            <th style="width:110px;">Date</th>
+            <th>Items</th>
+            <th style="width:100px;">Total</th>
+            <th style="width:130px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="order-row">
+            <td class="order-num">IV-08841</td>
+            <td>Oct 14, 2024</td>
+            <td>3 items — MK-IV Plate Carrier, Admin Pouch, Rigger Belt</td>
+            <td>$386.97</td>
+            <td><span class="badge processing">Processing</span></td>
+          </tr>
+          <tr class="details-row">
+            <td colspan="5">
+              <details>
+                <summary>View line items &amp; tracking</summary>
+                <table class="line-items">
+                  <thead>
+                    <tr><th style="width:55%;">Item</th><th>SKU</th><th>Qty</th><th>Unit</th><th>Subtotal</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><span class="thumb"></span>Ironveil MK-IV Plate Carrier (Ranger)</td><td>IVC-MK4-RNG</td><td>1</td><td>$289.00</td><td>$289.00</td></tr>
+                    <tr><td><span class="thumb b"></span>MOLLE Admin Pouch</td><td>IVP-ADM-BLK</td><td>1</td><td>$42.00</td><td>$42.00</td></tr>
+                    <tr><td><span class="thumb c"></span>Tactical Rigger Belt — 34"</td><td>IVB-RGR-34</td><td>1</td><td>$55.97</td><td>$55.97</td></tr>
+                  </tbody>
+                </table>
+              </details>
+            </td>
+          </tr>
+
+          <tr class="order-row">
+            <td class="order-num">IV-08612</td>
+            <td>Sep 02, 2024</td>
+            <td>2 items — Cordura Gloves (L), Hydration Carrier</td>
+            <td>$118.50</td>
+            <td><span class="badge shipped">Shipped</span></td>
+          </tr>
+          <tr class="details-row">
+            <td colspan="5">
+              <details>
+                <summary>View line items &amp; tracking</summary>
+                <table class="line-items">
+                  <thead>
+                    <tr><th style="width:55%;">Item</th><th>SKU</th><th>Qty</th><th>Unit</th><th>Subtotal</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><span class="thumb b"></span>Cordura Tactical Gloves (L)</td><td>IVG-COR-L</td><td>1</td><td>$48.50</td><td>$48.50</td></tr>
+                    <tr><td><span class="thumb"></span>Hydration Carrier 2L</td><td>IVH-HYD-2L</td><td>1</td><td>$70.00</td><td>$70.00</td></tr>
+                  </tbody>
+                </table>
+              </details>
+            </td>
+          </tr>
+
+          <tr class="order-row">
+            <td class="order-num">IV-08410</td>
+            <td>Jul 18, 2024</td>
+            <td>1 item — Low-Vis Chest Rig (Coyote)</td>
+            <td>$174.00</td>
+            <td><span class="badge delivered">Delivered</span></td>
+          </tr>
+          <tr class="details-row">
+            <td colspan="5">
+              <details>
+                <summary>View line items &amp; tracking</summary>
+                <table class="line-items">
+                  <thead>
+                    <tr><th style="width:55%;">Item</th><th>SKU</th><th>Qty</th><th>Unit</th><th>Subtotal</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><span class="thumb c"></span>Low-Vis Chest Rig (Coyote)</td><td>IVR-LVC-COY</td><td>1</td><td>$174.00</td><td>$174.00</td></tr>
+                  </tbody>
+                </table>
+              </details>
+            </td>
+          </tr>
+
+          <tr class="order-row">
+            <td class="order-num">IV-08197</td>
+            <td>May 06, 2024</td>
+            <td>4 items — Mag Pouches ×3, IFAK Kit</td>
+            <td>$132.80</td>
+            <td><span class="badge delivered">Delivered</span></td>
+          </tr>
+          <tr class="details-row">
+            <td colspan="5">
+              <details>
+                <summary>View line items &amp; tracking</summary>
+                <table class="line-items">
+                  <thead>
+                    <tr><th style="width:55%;">Item</th><th>SKU</th><th>Qty</th><th>Unit</th><th>Subtotal</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><span class="thumb"></span>Single Mag Pouch — 5.56</td><td>IVP-MAG-556</td><td>3</td><td>$22.00</td><td>$66.00</td></tr>
+                    <tr><td><span class="thumb b"></span>IFAK Trauma Kit — Compact</td><td>IVK-IFK-CMP</td><td>1</td><td>$66.80</td><td>$66.80</td></tr>
+                  </tbody>
+                </table>
+              </details>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Address Book</h2>
+        <div class="meta">2 saved · 1 default</div>
+      </div>
+      <div class="addr-grid">
+        <div class="addr-card">
+          <div class="label">Default · Shipping</div>
+          <a href="#" class="edit">Edit</a>
+          <div class="name">Marcus Yellen</div>
+          <div class="lines">
+            422 N Liberty St, Unit 3<br>
+            Boise, ID 83702<br>
+            United States<br>
+            +1 (208) 555-0149
+          </div>
+        </div>
+        <div class="addr-card">
+          <div class="label">Workshop · Billing</div>
+          <a href="#" class="edit">Edit</a>
+          <div class="name">Ironveil Range Box</div>
+          <div class="lines">
+            1208 Industrial Way, Bay 7<br>
+            Meridian, ID 83642<br>
+            United States<br>
+            +1 (208) 555-0207
+          </div>
+        </div>
+        <a href="#" class="addr-card add-new">
+          <div>
+            <span class="plus">+</span>
+            Add New Address
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-tag">IRONVEIL.</div>
+      <div style="color:#9A9790; max-width: 320px;">Modular load-bearing gear built in Boise, Idaho since 2014. Shipped in 48 hours. Lifetime stitching warranty.</div>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        <li>Plate Carriers</li>
+        <li>Pouches</li>
+        <li>Gloves</li>
+        <li>Footwear</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul>
+        <li>Order Status</li>
+        <li>Returns</li>
+        <li>Sizing Guide</li>
+        <li>Contact</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li>About Ironveil</li>
+        <li>Veteran Program</li>
+        <li>Pro &amp; Agency</li>
+        <li>Press</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Ironveil Tactical, LLC · Boise, ID</span>
+    <span>ITAR · Compliance · Terms</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/001-minimal-portfolio"
+description = "A minimalist designer's portfolio. Single column, lots of negative space, very restrained."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "portfolio", "tier-1"]
+
+[metadata]
+difficulty_explanation = "Tier 1 (portfolio): A minimalist designer's portfolio. Single column, lots of negative space, very restrained."
+category = "frontend"
+tier = 1
+genre = "portfolio"
+
+[verifier]
+timeout_sec = 420.0
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

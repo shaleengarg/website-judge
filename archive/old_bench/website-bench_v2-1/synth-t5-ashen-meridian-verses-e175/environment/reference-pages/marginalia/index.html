@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notes Toward the Smoke — Ashen Meridian</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1a1a;
+    color: #f0ebe1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  nav {
+    border-bottom: 1px solid #2c2c2c;
+    padding: 1.75rem 0 1.5rem;
+  }
+  .nav-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    text-decoration: none;
+  }
+  .brand span { color: #c4622d; }
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  .nav-links a:hover { color: #c4622d; }
+  .nav-links a.active {
+    color: #c4622d;
+    border-bottom-color: #c4622d;
+  }
+
+  /* Hero */
+  header.hero {
+    padding: 5rem 0 3rem;
+    border-bottom: 1px solid #2c2c2c;
+  }
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #7a9e7e;
+    margin-bottom: 1.5rem;
+  }
+  h1.hero-title {
+    font-family: Georgia, serif;
+    font-weight: 300;
+    font-size: 3.4rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #f0ebe1;
+  }
+  .hero-sub {
+    margin-top: 1.75rem;
+    font-size: 1rem;
+    color: #f0ebe1;
+    opacity: 0.78;
+    max-width: 560px;
+  }
+
+  /* Intro */
+  .intro {
+    padding: 3rem 0 1.5rem;
+    font-size: 1.45rem;
+    font-family: Georgia, serif;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #f0ebe1;
+    border-bottom: 1px solid #2c2c2c;
+  }
+
+  /* Glossary */
+  .glossary { padding: 2.5rem 0; }
+  .entry {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #242424;
+  }
+  .num {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c4622d;
+    padding-top: 0.35rem;
+    font-family: Georgia, serif;
+  }
+  .entry-body { }
+  .label {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a9e7e;
+    display: block;
+    margin-bottom: 0.65rem;
+  }
+  .def {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: #f0ebe1;
+  }
+  .def em { color: #c4622d; font-style: italic; }
+
+  /* Pull quote */
+  .pullquote {
+    border-left: 3px solid #c4622d;
+    padding-left: 1.5rem;
+    color: #c4622d;
+    font-style: italic;
+    font-family: Georgia, serif;
+    font-weight: 300;
+    font-size: 1.45rem;
+    line-height: 1.5;
+    margin: 2.5rem 0;
+  }
+  .pullquote cite {
+    display: block;
+    margin-top: 0.85rem;
+    font-style: normal;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a9e7e;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #2c2c2c;
+    margin-top: 4rem;
+    padding: 3rem 0 4rem;
+  }
+  .foot-grid {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+  .foot-col h4 {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a9e7e;
+    margin-bottom: 1rem;
+    font-family: Georgia, serif;
+    font-weight: 700;
+  }
+  .foot-col p, .foot-col a {
+    font-size: 1rem;
+    color: #f0ebe1;
+    opacity: 0.7;
+    text-decoration: none;
+    display: block;
+    line-height: 1.85;
+  }
+  .foot-col a:hover { color: #c4622d; opacity: 1; }
+  .colophon {
+    max-width: 680px;
+    margin: 2.5rem auto 0;
+    padding: 1.75rem 24px 0;
+    border-top: 1px solid #242424;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    opacity: 0.5;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../collection/index.html" class="brand">Ashen <span>Meridian</span></a>
+    <ul class="nav-links">
+      <li><a href="../collection/index.html">Collection</a></li>
+      <li><a href="../poet/index.html">Poet</a></li>
+      <li><a href="../single-poem/index.html">Poem</a></li>
+      <li><a href="#" class="active">Marginalia</a></li>
+      <li><a href="../correspondence/index.html">Correspondence</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Apparatus &nbsp;·&nbsp; Glossary &amp; Notes</div>
+    <h1 class="hero-title">Notes Toward<br>the Smoke</h1>
+    <p class="hero-sub">Fourteen contextual entries — geographical, industrial, and Québécois vernacular — keyed to terms appearing throughout <em>The Longitude of Smoke</em>.</p>
+  </header>
+
+  <section class="intro">
+    Read in any order. The collection assumes the river knows its own vocabulary; these notes are for the reader who has not yet stood on the wharf at Sorel-Tracy in late November.
+  </section>
+
+  <section class="glossary">
+
+    <div class="entry">
+      <div class="num">01</div>
+      <div class="entry-body">
+        <span class="label">Sorel-Tracy</span>
+        <p class="def">Industrial town at the confluence of the Richelieu and St. Lawrence rivers; the poet's birthplace and the geographic anchor of section II, <em>Foundry Light</em>. Home to the Marine Industries shipyards until their dismantling in 1986.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">02</div>
+      <div class="entry-body">
+        <span class="label">Batture</span>
+        <p class="def">Québécois French for the tidal flats exposed at low water along the St. Lawrence estuary — a zone neither river nor shore. Recurs as a structuring image in poems VII and XIX.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">03</div>
+      <div class="entry-body">
+        <span class="label">QIT-Fer et Titane</span>
+        <p class="def">Titanium dioxide smelter operating in Sorel-Tracy since 1950. The pale plume visible from the wharf is the literal referent of the collection's title and the subject of the opening poem.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">04</div>
+      <div class="entry-body">
+        <span class="label">Cadastre</span>
+        <p class="def">A public register of land parcels and their boundaries. In <em>Molten Cadastre</em> the word is deformed to describe the foundry floor as a map of property re-cast in iron.</p>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      "We inherited the river the way one inherits a bruise — without ceremony, without choosing the colour it would become."
+      <cite>— from XI · Inventory of the Slow Thaw</cite>
+    </div>
+
+    <div class="entry">
+      <div class="num">05</div>
+      <div class="entry-body">
+        <span class="label">Goélette</span>
+        <p class="def">A small wooden cargo schooner once used to haul lumber and pulp along the lower St. Lawrence. Largely vanished by 1970; their hulks remain visible at low tide near Île aux Coudres.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">06</div>
+      <div class="entry-body">
+        <span class="label">Lac Saint-Pierre</span>
+        <p class="def">A widening of the St. Lawrence between Sorel and Trois-Rivières; UNESCO biosphere reserve. Its winter ice is the setting of the long central poem <em>Argentine of the Frozen Channels</em>.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">07</div>
+      <div class="entry-body">
+        <span class="label">Frasil</span>
+        <p class="def">Fine spicules of ice that form in turbulent, supercooled water before consolidating into sheet ice. The poet uses the term as a verb in poem XVI: <em>"the years frasil along the bank."</em></p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">08</div>
+      <div class="entry-body">
+        <span class="label">Mouleur</span>
+        <p class="def">Foundry moulder; the worker who prepares the sand cast into which molten metal is poured. The poet's maternal grandfather worked as a mouleur at Sorel Steel from 1938 to 1971.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">09</div>
+      <div class="entry-body">
+        <span class="label">Acier-Bessemer</span>
+        <p class="def">Bessemer-process steel; obsolete by the time the collection's industrial scenes are set, but the term survives in regional speech to denote any cheaply-made or brittle thing.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">10</div>
+      <div class="entry-body">
+        <span class="label">Marée d'équinoxe</span>
+        <p class="def">The equinoctial tide, highest of the year on the lower estuary. Forms the temporal frame of the closing section, <em>Estuary</em>, in which each poem is dated to a specific tide.</p>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      "What the smelter exhales the river inhales — there is no third party to this respiration, only us standing at the rail counting our breath in someone else's measure."
+      <cite>— from III · Plume Catechism</cite>
+    </div>
+
+    <div class="entry">
+      <div class="num">11</div>
+      <div class="entry-body">
+        <span class="label">Beluga</span>
+        <p class="def">The white whale of the St. Lawrence; a non-migratory population of roughly 900, listed as endangered. Their bodies, when stranded, are classified as toxic waste under Canadian law — a fact the collection refuses to let pass without elegy.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">12</div>
+      <div class="entry-body">
+        <span class="label">Bardeau</span>
+        <p class="def">Wooden shingle; by metonymy, the modest gabled houses of the Sorel suburbs. The poet's childhood home, demolished in 2009, is described in poem XX as <em>"a bardeau remembering its tree."</em></p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">13</div>
+      <div class="entry-body">
+        <span class="label">Drague</span>
+        <p class="def">Dredge; the vessels that maintain the shipping channel to Montréal. Their slow night-passage past Sorel is invoked as a counter-rhythm to the foundry whistle in the volume's penultimate poem.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="num">14</div>
+      <div class="entry-body">
+        <span class="label">Longitude</span>
+        <p class="def">A meridian; here, the imagined line running north from the smelter stack through the poet's body and into the cold mouth of the Gulf. The book's organising fiction: that grief, like geography, can be measured westward from a fixed plume.</p>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <h4>Ashen Meridian</h4>
+      <p>The online home of <em>The Longitude of Smoke</em> by Céleste Vaudreuil. Twenty-three poems on industrial grief, inherited memory, and the St. Lawrence delta.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Navigate</h4>
+      <a href="../collection/index.html">The Collection</a>
+      <a href="../poet/index.html">The Poet</a>
+      <a href="../single-poem/index.html">Featured Poem</a>
+      <a href="#">Marginalia</a>
+      <a href="../correspondence/index.html">Correspondence</a>
+    </div>
+  </div>
+  <div class="colophon">
+    <span>© MMXXIV · Vaudreuil</span>
+    <span>Sorel-Tracy → Tadoussac</span>
+  </div>
+</footer>
+
+</body>
+</html>

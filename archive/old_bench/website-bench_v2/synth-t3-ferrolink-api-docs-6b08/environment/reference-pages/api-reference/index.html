@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>API Reference — FerroLink</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #0f1117; color: #c9d1d9; }
+  body { font-family: Georgia, serif; font-size: 15px; line-height: 1.5; }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; top: 0; left: 0; width: 260px; height: 100vh;
+    background: #161b22; border-right: 1px solid #30363d;
+    overflow-y: auto; padding: 24px 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .sidebar .brand {
+    padding: 0 20px 20px; font-weight: 700; font-size: 18px; color: #c9d1d9;
+    border-bottom: 1px solid #30363d; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sidebar .brand .logo {
+    width: 22px; height: 22px; background: linear-gradient(135deg,#58a6ff,#3fb950);
+    border-radius: 4px;
+  }
+  .sidebar .brand small { display:block; font-weight:400; font-size:11px; color:#7d8590; letter-spacing:1px;}
+  .nav-section { padding: 6px 0; }
+  .nav-section .label {
+    padding: 6px 20px; font-size: 11px; letter-spacing: 1.2px;
+    color: #7d8590; text-transform: uppercase; font-weight: 700;
+  }
+  .nav-section a {
+    display: block; padding: 5px 20px; color: #c9d1d9;
+    text-decoration: none; font-size: 13px;
+  }
+  .nav-section a.active { color: #58a6ff; background: #1c2128; border-left: 2px solid #58a6ff; padding-left: 18px; }
+  .nav-section a.sub { padding-left: 36px; color: #8b949e; font-size: 12.5px; }
+  .nav-section a.sub2 { padding-left: 52px; color: #6e7681; font-size: 12px; font-family: "Courier New", monospace; }
+  .nav-section a:hover { color: #58a6ff; }
+
+  /* Main */
+  main {
+    margin-left: 260px; max-width: 860px; padding: 40px 48px;
+  }
+  h1 { font-family: system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 32px; margin: 0 0 8px; color: #fff;}
+  .crumb { color: #7d8590; font-size: 12px; font-family: "Courier New", monospace; margin-bottom: 24px; }
+  .crumb span { color: #58a6ff; }
+  .lede { color: #8b949e; font-size: 15px; margin-bottom: 32px; max-width: 700px; }
+
+  h2.sticky {
+    position: sticky; top: 0; background: #0f1117;
+    border-bottom: 1px solid #30363d; padding: 12px 0; z-index: 10;
+    font-family: system-ui, sans-serif; font-weight: 700; font-size: 20px;
+    color: #fff; margin: 32px 0 0;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  h2.sticky .count { font-size: 12px; color: #7d8590; font-family: "Courier New", monospace; font-weight: 400;}
+
+  /* Endpoint row: 60/40 split */
+  .endpoint {
+    display: grid; grid-template-columns: 60% 40%;
+    border-bottom: 1px solid #21262d;
+    padding: 24px 0;
+    gap: 0;
+  }
+  .ep-left { padding-right: 24px; }
+  .ep-right {
+    background: #0d1117; border: 1px solid #21262d; border-radius: 6px;
+    position: sticky; top: 70px; align-self: start;
+    max-height: 600px; overflow: hidden;
+    font-family: "Courier New", monospace; font-size: 12.5px;
+  }
+
+  .method-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .badge {
+    display: inline-block; font-family: system-ui, sans-serif;
+    font-weight: 700; font-size: 11px; padding: 3px 8px; border-radius: 3px;
+    letter-spacing: 0.5px; color: #0f1117;
+  }
+  .badge.get { background: #3fb950; }
+  .badge.post { background: #58a6ff; color:#fff;}
+  .badge.delete { background: #f78166; color:#fff;}
+  .badge.put { background: #e3b341; }
+  .badge.patch { background: #d2a8ff; }
+
+  .path {
+    font-family: "Courier New", monospace; font-size: 14px;
+    color: #c9d1d9; font-weight: 700;
+  }
+  .path .var { color: #f78166; }
+  .ep-name { font-family: system-ui, sans-serif; font-weight: 700; font-size: 15px; color:#fff; margin: 2px 0 6px;}
+  .ep-desc { font-size: 14px; color: #c9d1d9; margin: 0 0 12px; }
+
+  code.inline {
+    background: #1c2128; color: #f78166; border-radius: 4px;
+    padding: 2px 6px; font-family: "Courier New", monospace; font-size: 13px;
+  }
+
+  .params { margin-top: 10px; font-family: "Courier New", monospace; font-size: 12.5px; }
+  .params .row {
+    display: grid; grid-template-columns: 130px 80px 1fr;
+    padding: 5px 0; border-top: 1px solid #21262d;
+  }
+  .params .row.head { color:#7d8590; font-weight:700; font-family: system-ui, sans-serif; font-size:11px; letter-spacing:.5px; text-transform:uppercase; border-top:none;}
+  .params .pname { color:#58a6ff; }
+  .params .ptype { color:#3fb950; }
+  .params .pdesc { color:#8b949e; font-family: Georgia, serif; font-size: 13px; }
+  .req { color:#f78166; }
+
+  /* Right panel */
+  .ep-right .tabs {
+    display: flex; background: #161b22; border-bottom: 1px solid #21262d;
+  }
+  .ep-right .tab {
+    padding: 8px 12px; font-family: system-ui, sans-serif; font-size: 11px;
+    color: #8b949e; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+    border-right: 1px solid #21262d;
+  }
+  .ep-right .tab.on { color: #58a6ff; background: #0d1117; border-top: 2px solid #58a6ff; }
+  .codeblock {
+    background: #161b22; border-left: 3px solid #58a6ff;
+    padding: 16px; font-family: "Courier New", monospace; font-size: 13px;
+    color: #c9d1d9; overflow-x: auto; white-space: pre;
+    margin: 0;
+  }
+  .codeblock.dark { background: #0d1117; border-left: none; padding: 14px 16px; }
+  .panel-label {
+    padding: 8px 14px 4px; font-family: system-ui, sans-serif; font-size: 10px;
+    letter-spacing: 1px; color: #7d8590; text-transform: uppercase; font-weight: 700;
+  }
+  .k { color: #79c0ff; }
+  .s { color: #a5d6ff; }
+  .n { color: #f2cc60; }
+  .c { color: #6e7681; }
+  .g { color: #3fb950; }
+  .m { color: #d2a8ff; }
+  .punct { color: #8b949e; }
+
+  /* Footer */
+  footer {
+    margin-left: 260px; max-width: 860px; padding: 32px 48px;
+    border-top: 1px solid #21262d; color: #7d8590; font-size: 12px;
+    font-family: system-ui, sans-serif;
+    display: flex; justify-content: space-between;
+  }
+  footer a { color: #7d8590; text-decoration: none; margin-left: 16px; }
+
+  .auth-note {
+    background: #161b22; border-left: 3px solid #3fb950;
+    padding: 12px 16px; margin: 16px 0 28px; font-size: 13.5px;
+    color: #c9d1d9;
+  }
+  .auth-note strong { color: #3fb950; font-family: system-ui, sans-serif;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="logo"></div>
+    <div>FerroLink<small>API v3.4.1</small></div>
+  </div>
+  <div class="nav-section">
+    <div class="label">Documentation</div>
+    <a href="../getting-started/index.html">Getting Started</a>
+    <a href="#" class="active">API Reference</a>
+    <a href="#streams" class="sub">Streams</a>
+    <a href="#" class="sub2">GET /streams</a>
+    <a href="#" class="sub2">POST /streams</a>
+    <a href="#" class="sub2">GET /streams/{id}</a>
+    <a href="#" class="sub2">DELETE /streams/{id}</a>
+    <a href="#" class="sub2">POST /streams/{id}/pause</a>
+    <a href="#devices" class="sub">Devices</a>
+    <a href="#" class="sub2">GET /devices</a>
+    <a href="#" class="sub2">POST /devices</a>
+    <a href="#" class="sub2">GET /devices/{id}</a>
+    <a href="#" class="sub2">PATCH /devices/{id}</a>
+    <a href="#" class="sub2">DELETE /devices/{id}</a>
+    <a href="#alerts" class="sub">Alerts</a>
+    <a href="#" class="sub2">GET /alerts</a>
+    <a href="#" class="sub2">POST /alerts</a>
+    <a href="#" class="sub2">GET /alerts/{id}</a>
+    <a href="#" class="sub2">DELETE /alerts/{id}</a>
+    <a href="../data-models/index.html">Data Models</a>
+    <a href="../changelog/index.html">Changelog</a>
+    <a href="../error-codes/index.html">Error Codes</a>
+  </div>
+  <div class="nav-section">
+    <div class="label">Resources</div>
+    <a href="#">SDK Downloads</a>
+    <a href="#">Status Page</a>
+    <a href="#">Support</a>
+  </div>
+</aside>
+
+<main>
+  <div class="crumb">docs <span>/</span> api-reference</div>
+  <h1>API Reference</h1>
+  <p class="lede">FerroLink exposes 14 REST endpoints across three resource groups for ingesting, retrieving, and reacting to industrial sensor telemetry. All endpoints accept and return <code class="inline">application/json</code> and require a bearer token.</p>
+
+  <div class="auth-note">
+    <strong>AUTH ▸</strong> All requests must include <code class="inline">Authorization: Bearer &lt;FERROLINK_API_KEY&gt;</code>. Tokens are scoped per-organization and rotate every 90 days. See <a href="../getting-started/index.html" style="color:#58a6ff;">Getting Started</a>.
+  </div>
+
+  <h2 class="sticky" id="streams">Streams <span class="count">5 endpoints · /v3/streams</span></h2>
+
+  <div class="endpoint">
+    <div class="ep-left">
+      <div class="method-row">
+        <span class="badge get">GET</span>
+        <span class="path">/v3/streams</span>
+      </div>
+      <div class="ep-name">List telemetry streams</div>
+      <p class="ep-desc">Returns a paginated collection of <code class="inline">StreamObject</code> records visible to the authenticated organization. Streams can be filtered by <code class="inline">device_id</code>, <code class="inline">status</code>, or creation window.</p>
+      <div class="params">
+        <div class="row head"><div>Parameter</div><div>Type</div><div>Description</div></div>
+        <div class="row"><div class="pname">limit</div><div class="ptype">integer</div><div class="pdesc">Page size, 1–500. Default 50.</div></div>
+        <div class="row"><div class="pname">cursor</div><div class="ptype">string</div><div class="pdesc">Opaque pagination token from previous response.</div></div>
+        <div class="row"><div class="pname">status</div><div class="ptype">enum</div><div class="pdesc">One of <code class="inline">active</code>, <code class="inline">paused</code>, <code class="inline">error</code>.</div></div>
+      </div>
+    </div>
+    <div class="ep-right">
+      <div class="tabs">
+        <div class="tab on">cURL</div>
+        <div class="tab">Headers</div>
+        <div class="tab">Response</div>
+      </div>
+      <div class="panel-label">Request</div>
+<pre class="codeblock dark"><span class="c"># list active streams</span>
+<span class="g">curl</span> -X <span class="k">GET</span> <span class="s">"https://api.ferrolink.io/v3/streams?status=active&amp;limit=50"</span> \
+  -H <span class="s">"Authorization: Bearer $FL_KEY"</span> \
+  -H <span class="s">"Accept: application/json"</span></pre>
+      <div class="panel-label">200 OK · application/json</div>
+<pre class="codeblock dark"><span class="punct">{</span>
+  <span class="k">"data"</span><span class="punct">:</span> <span class="punct">[</span>
+    <span class="punct">{</span>
+      <span class="k">"id"</span><span class="punct">:</span> <span class="s">"strm_8H2kQa"</span><span class="punct">,</span>
+      <span class="k">"device_id"</span><span class="punct">:</span> <span class="s">"dev_TX-441"</span><span class="punct">,</span>
+      <span class="k">"status"</span><span class="punct">:</span> <span class="s">"active"</span><span class="punct">,</span>
+      <span class="k">"rate_hz"</span><span class="punct">:</span> <span class="n">240</span><span class="punct">,</span>
+      <span class="k">"created_at"</span><span class="punct">:</span> <span class="s">"2024-11-03T14:02:11Z"</span>
+    <span class="punct">}</span>
+  <span class="punct">],</span>
+  <span class="k">"cursor"</span><span class="punct">:</span> <span class="s">"eyJvIjo1MH0"</span>
+<span class="punct">}</span></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-left">
+      <div class="method-row">
+        <span class="badge post">POST</span>
+        <span class="path">/v3/streams</span>
+      </div>
+      <div class="ep-name">Create a stream</div>
+      <p class="ep-desc">Provisions a new ingestion stream bound to one or more devices. The request body must satisfy the <code class="inline">StreamObject</code> schema; <code class="inline">device_id</code> and <code class="inline">rate_hz</code> are required.</p>
+      <div class="params">
+        <div class="row head"><div>Field</div><div>Type</div><div>Description</div></div>
+        <div class="row"><div class="pname">device_id <span class="req">*</span></div><div class="ptype">string</div><div class="pdesc">Identifier of a registered <code class="inline">DeviceRecord</code>.</div></div>
+        <div class="row"><div class="pname">rate_hz <span class="req">*</span></div><div class="ptype">integer</div><div class="pdesc">Sample rate, 1–10000 Hz.</div></div>
+        <div class="row"><div class="pname">encoding</div><div class="ptype">enum</div><div class="pdesc"><code class="inline">cbor</code> (default) or <code class="inline">json</code>.</div></div>
+        <div class="row"><div class="pname">retention_days</div><div class="ptype">integer</div><div class="pdesc">1–365. Defaults to plan minimum.</div></div>
+      </div>
+    </div>
+    <div class="ep-right">
+      <div class="tabs">
+        <div class="tab on">cURL</div>
+        <div class="tab">Headers</div>
+        <div class="tab">Response</div>
+      </div>
+      <div class="panel-label">Request</div>
+<pre class="codeblock dark"><span class="g">curl</span> -X <span class="m">POST</span> <span class="s">"https://api.ferrolink.io/v3/streams"</span> \
+  -H <span class="s">"Authorization: Bearer $FL_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "device_id": "dev_TX-441",
+    "rate_hz": 240,
+    "encoding": "cbor",
+    "retention_days": 30
+  }'</span></pre>
+      <div class="panel-label">201 Created</div>
+<pre class="codeblock dark"><span class="punct">{</span>
+  <span class="k">"id"</span><span class="punct">:</span> <span class="s">"strm_R9pLm2"</span><span class="punct">,</span>
+  <span class="k">"status"</span><span class="punct">:</span> <span class="s">"provisioning"</span><span class="punct">,</span>
+  <span class="k">"ingest_url"</span><span class="punct">:</span> <span class="s">"wss://ingest.ferrolink.io/s/R9pLm2"</span><span class="punct">,</span>
+  <span class="k">"created_at"</span><span class="punct">:</span> <span class="s">"2024-11-22T09:14:00Z"</span>
+<span class="punct">}</span></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-left">
+      <div class="method-row">
+        <span class="badge delete">DELETE</span>
+        <span class="path">/v3/streams/<span class="var">{id}</span></span>
+      </div>
+      <div class="ep-name">Delete a stream</div>
+      <p class="ep-desc">Permanently terminates ingestion and purges buffered telemetry older than the stream's retention window. This call is idempotent — a second invocation returns <code class="inline">204 No Content</code>. Associated <code class="inline">AlertPayload</code> rules are not removed.</p>
+      <div class="params">
+        <div class="row head"><div>Parameter</div><div>Type</div><div>Description</div></div>
+        <div class="row"><div class="pname">id <span class="req">*</span></div><div class="ptype">path</div><div class="pdesc">Stream identifier, e.g. <code class="inline">strm_R9pLm2</code>.</div></div>
+        <div class="row"><div class="pname">purge</div><div class="ptype">boolean</div><div class="pdesc">If true, deletes all historical points regardless of retention.</div></div>
+      </div>
+    </div>
+    <div class="ep-right">
+      <div class="tabs">
+        <div class="tab on">cURL</div>
+        <div class="tab">Headers</div>
+        <div class="tab">Response</div>
+      </div>
+      <div class="panel-label">Request</div>
+<pre class="codeblock dark"><span class="g">curl</span> -X <span class="m">DELETE</span> <span class="s">"https://api.ferrolink.io/v3/streams/strm_R9pLm2?purge=true"</span> \
+  -H <span class="s">"Authorization: Bearer $FL_KEY"</span></pre>
+      <div class="panel-label">204 No Content</div>
+<pre class="codeblock dark"><span class="c"># empty response body</span>
+<span class="c"># headers:</span>
+<span class="c">#   X-FerroLink-Request-Id: 7c1f...e22</span>
+<span class="c">#   X-RateLimit-Remaining: 4998</span></pre>
+    </div>
+  </div>
+
+  <h2 class="sticky" id="devices">Devices <span class="count">5 endpoints · /v3/devices</span></h2>
+
+  <div class="endpoint">
+    <div class="ep-left">
+      <div class="method-row">
+        <span class="badge get">GET</span>
+        <span class="path">/v3/devices/<span class="var">{id}</span></span>
+      </div>
+      <div class="ep-name">Retrieve a device</div>
+      <p class="ep-desc">Returns a single <code class="inline">DeviceRecord</code> including firmware revision, last-seen timestamp, and the rolling 24h connection-health histogram. Devices that have been offline for more than 72h emit <code class="inline">status: "stale"</code>.</p>
+      <div class="params">
+        <div class="row head"><div>Parameter</div><div>Type</div><div>Description</div></div>
+        <div class="row"><div class="pname">id <span class="req">*</span></div><div class="ptype">path</div><div class="pdesc">Device identifier, e.g. <code class="inline">dev_TX-441</code>.</div></div>
+        <div class="row"><div class="pname">expand</div><div class="ptype">string[]</div><div class="pdesc">Comma-separated. Supports <code class="inline">streams</code>, <code class="inline">alerts</code>.</div></div>
+      </div>
+    </div>
+    <div class="ep-right">
+      <div class="tabs">
+        <div class="tab on">cURL</div>
+        <div class="tab">Headers</div>
+        <div class="tab">Response</div>
+      </div>
+      <div class="panel-label">Request</div>
+<pre class="codeblock dark"><span class="g">curl</span> <span class="s">"https://api.ferrolink.io/v3/devices/dev_TX-441?expand=streams"</span> \
+  -H <span class="s">"Authorization: Bearer $FL_KEY"</span></pre>
+      <div class="panel-label">200 OK</div>
+<pre class="codeblock dark"><span class="punct">{</span>
+  <span class="k">"id"</span><span class="punct">:</span> <span class="s">"dev_TX-441"</span><span class="punct">,</span>
+  <span class="k">"model"</span><span class="punct">:</span> <span class="s">"FerroNode-T4"</span><span class="punct">,</span>
+  <span class="k">"firmware"</span><span class="punct">:</span> <span class="s">"2.11.4"</span><span class="punct">,</span>
+  <span class="k">"status"</span><span class="punct">:</span> <span class="s">"online"</span><span class="punct">,</span>
+  <span class="k">"site"</span><span class="punct">:</span> <span class="s">"plant-04/bay-B"</span><span class="punct">,</span>
+  <span class="k">"last_seen"</span><span class="punct">:</span> <span class="s">"2024-11-22T09:13:58Z"</span><span class="punct">,</span>
+  <span class="k">"streams"</span><span class="punct">:</span> <span class="punct">[</span><span class="s">"strm_8H2kQa"</span><span class="punct">]</span>
+<span class="punct">}</span></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-left">
+      <div class="method-row">
+        <span class="badge post">POST</span>
+        <span class="path">/v3/devices</span>
+      </div>
+      <div class="ep-name">Register a device</div>
+      <p class="ep-desc">Onboards a new physical FerroNode gateway. The response contains a one-time <code class="inline">enrollment_token</code> that must be flashed into the device within 30 minutes via the on-prem provisioning utility.</p>
+      <div class="params">
+        <div class="row head"><div>Field</div><div>Type</div><div>Description</div></div>
+        <div class="row"><div class="pname">serial <span class="req">*</span></div><div class="ptype">string</div><div class="pdesc">Hardware serial printed on the gateway label.</div></div>
+        <div class="row"><div class="pname">site</div><div class="ptype">string</div><div class="pdesc">Free-form location label, max 64 chars.</div></div>
+        <div class="row"><div class="pname">tags</div><div class="ptype">string[]</div><div class="pdesc">Up to 16 organizational tags.</div></div>
+      </div>
+    </div>
+    <div class="ep-right">
+      <div class="tabs">
+        <div class="tab on">cURL</div>
+        <div class="tab">Headers</div>
+        <div class="tab">Response</div>
+      </div>
+      <div class="panel-label">Request</div>
+<pre class="codeblock dark"><span class="g">curl</span> -X <span class="m">POST</span> <span class="s">"https://api.ferrolink.io/v3/devices"</span> \
+  -H <span class="s">"Authorization: Bearer $FL_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"serial":"FN-T4-00081A2","site":"plant-04/bay-B"}'</span></pre>
+      <div class="panel-label">201 Created</div>
+<pre class="codeblock dark"><span class="punct">{</span>
+  <span class="k">"id"</span><span class="punct">:</span> <span class="s">"dev_LQ8m1k"</span><span class="punct">,</span>
+  <span class="k">"enrollment_token"</span><span class="punct">:</span> <span class="s">"flk_enr_zx9..."</span><span class="punct">,</span>
+  <span class="k">"expires_at"</span><span class="punct">:</span> <span class="s">"2024-11-22T09:44:00Z"</span>
+<span class="punct">}</span></pre>
+    </div>
+  </div>
+
+  <h2 class="sticky" id="alerts">Alerts <span class="count">4 endpoints · /v3/alerts</span></h2>
+
+  <div class="endpoint">
+    <div class="ep-left">
+      <div class="method-row">
+        <span class="badge get">GET</span>
+        <span class="path">/v3/alerts</span>
+      </div>
+      <div class="ep-name">List active alerts</div>
+      <p class="ep-desc">Returns currently-firing alerts ordered by <code class="inline">severity</code> then <code class="inline">triggered_at</code> descending. Alerts that have resolved within the last 30 minutes are included with <code class="inline">resolved: true</code>.</p>
+      <div class="params">
+        <div class="row head"><div>Parameter</div><div>Type</div><div>Description</div></div>
+        <div class="row"><div class="pname">severity</div><div class="ptype">enum</div><div class="pdesc"><code class="inline">info</code>, <code class="inline">warn</code>, <code class="inline">critical</code>.</div></div>
+        <div class="row"><div class="pname">device_id</div><div class="ptype">string</div><div class="pdesc">Filter to alerts originating from a specific device.</div></div>
+      </div>
+    </div>
+    <div class="ep-right">
+      <div class="tabs">
+        <div class="tab on">cURL</div>
+        <div class="tab">Headers</div>
+        <div class="tab">Response</div>
+      </div>
+      <div class="panel-label">Request</div>
+<pre class="codeblock dark"><span class="g">curl</span> <span class="s">"https://api.ferrolink.io/v3/alerts?severity=critical"</span> \
+  -H <span class="s">"Authorization: Bearer $FL_KEY"</span></pre>
+      <div class="panel-label">200 OK</div>
+<pre class="codeblock dark"><span class="punct">{</span>
+  <span class="k">"data"</span><span class="punct">:</span> <span class="punct">[{</span>
+    <span class="k">"id"</span><span class="punct">:</span> <span class="s">"alr_77Hk2"</span><span class="punct">,</span>
+    <span class="k">"severity"</span><span class="punct">:</span> <span class="s">"critical"</span><span class="punct">,</span>
+    <span class="k">"device_id"</span><span class="punct">:</span> <span class="s">"dev_TX-441"</span><span class="punct">,</span>
+    <span class="k">"metric"</span><span class="punct">:</span> <span class="s">"bearing.temp_c"</span><span class="punct">,</span>
+    <span class="k">"value"</span><span class="punct">:</span> <span class="n">94.2</span><span class="punct">,</span>
+    <span class="k">"threshold"</span><span class="punct">:</span> <span class="n">85</span><span class="punct">,</span>
+    <span class="k">"triggered_at"</span><span class="punct">:</span> <span class="s">"2024-11-22T09:11:02Z"</span>
+  <span class="punct">}]</span>
+<span class="punct">}</span></pre>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div>© 2024 FerroLink Industrial Systems · API v3.4.1</div>
+  <div>
+    <a href="../getting-started/index.html">Getting Started</a>
+    <a href="../data-models/index.html">Data Models</a>
+    <a href="../changelog/index.html">Changelog</a>
+    <a href="../error-codes/index.html">Error Codes</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "id": "synth-t8-iron-corridor-infrastructure-b16b",
+  "tier": 8,
+  "genre": "special-report",
+  "pages": [
+    "overview",
+    "data-atlas",
+    "case-studies",
+    "policy-gaps",
+    "methodology"
+  ],
+  "palette_hint": "Deep charcoal background #1a1a1a with off-white body text #f0ede6, accents of burnt amber #c8601a and cold steel blue #4a7fa5; section dividers use #2e2e2e.",
+  "type_style": "Headings in Georgia serif at heavy weight for authoritative gravitas; body in system-ui sans-serif at 400 weight for readability; data labels in monospace for technical credibility.",
+  "description": "A special investigative report \u2014 'The Iron Corridor' \u2014 examining the structural decay of North America's inland freight rail network across five densely composed editorial pages.",
+  "constraints": [
+    "Each page uses at least 3 distinct layout regions: a full-bleed editorial header (max-width none, padding 48px 64px), a main content zone (max-width 1200px, centered), and a sidebar or footnote strip (200px wide or 100% footer-band at 80px min-height).",
+    "Mix CSS grid (for data tables and card assemblies), flexbox (for byline rows and pull-quote layouts), and position:absolute (for section labels and callout numerals) on every page.",
+    "Typography rhythm: section headers use font-size 2.8rem with letter-spacing -0.02em; pull quotes use font-size 1.6rem italic; body copy uses 1rem/1.75 line-height; data figures use 3.5rem monospace in #c8601a.",
+    "Intentional rhythm breaks: every third content block introduces a full-width #2e2e2e band with white reversed type, acting as an interstitial chapter marker \u2014 minimum 120px tall.",
+    "All decorative dividers use a 2px solid #c8601a rule; no box-shadows, no border-radius on structural containers; accent color reserved only for data figures, active links, and divider rules."
+  ],
+  "page_specs": {
+    "overview": "A magazine-style cover page with a full-bleed dark header containing the report title 'The Iron Corridor: Collapse in Slow Motion' in 5rem Georgia, a deck subhead explaining that 34% of Class II freight rail bridges rated structurally deficient, and a byline/date strip in flex layout. Below the header, a three-column CSS grid presents three 'key finding' cards (bridge failures, derailment incidents 2018\u20132023, federal funding shortfall in billions), each with a large amber data numeral above a two-sentence summary. A full-width interstitial band closes the page with a single sentence: 'This report draws on 14,000 federal inspection records and 62 field interviews.'",
+    "data-atlas": "A dashboard-style page where the main zone uses a 12-column CSS grid to assemble five distinct data panels: a ranked list of the 10 most at-risk corridors (flex column, monospace labels), a 6\u00d78 ASCII-style frequency grid mapping derailment density by state, a three-column table of bridge age vs. load rating vs. last inspection date for 20 bridges, a two-up comparison block contrasting 1990 vs. 2023 maintenance expenditure, and a sidebar pinned via position:sticky showing a glossary of rail-grade classifications. Section labels ('PANEL A', 'PANEL B') are positioned absolutely in #c8601a at 0.7rem monospace in the top-left corner of each panel.",
+    "case-studies": "Three deep-dive case studies \u2014 the Wabash Crossing (Indiana), the Flathead Subdivision (Montana), and the Gulf Coast Connector (Louisiana) \u2014 each occupying its own grid row with a different internal layout: Wabash uses a two-column editorial split (text left, stats right in a bordered data box); Flathead uses a full-width narrative band with an inline pull quote in 1.6rem italic centered over a #2e2e2e interstitial; Gulf Coast uses a three-column card grid with inspection timeline entries. Each case study opens with a 2.8rem serif location name and a one-line status indicator ('CRITICAL / MONITORED / DEFERRED REPAIR') in monospace.",
+    "policy-gaps": "An analytical page structured as three sequential sections separated by amber ruled dividers: first, a flex-row 'gap matrix' showing five federal agencies and their overlapping (and absent) rail oversight jurisdictions rendered as a grid of filled/empty cells; second, a two-column editorial block contrasting the 2015 FAST Act promises against 2023 audit findings, with a large pull quote ('$12.4 billion authorized. $3.1 billion disbursed.') centered in reversed type on a #2e2e2e band; third, a ranked list of 8 legislative recommendations formatted as a numbered editorial list with bold lead-ins and 60-character-max supporting sentences, sitting in a max-width 720px centered column for deliberate narrowness.",
+    "methodology": "A transparent sourcing page with four layout regions: a top editorial note (full-width, 480px max prose column, centered) explaining the 18-month data collection process; a two-column grid listing 14 primary data sources (left: source name in bold, right: record count and date range in monospace); a flex-wrap row of 8 'field partner' organization names displayed as bordered inline badges in #4a7fa5 text on #2e2e2e background; and a closing footnote strip (full-width, 80px tall, #2e2e2e background) with the report version number, DOI-style citation string, and a contact address for data requests, all in 0.8rem monospace."
+  }
+}

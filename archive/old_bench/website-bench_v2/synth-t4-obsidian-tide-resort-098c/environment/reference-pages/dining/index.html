@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dining — Obsidian Tide Resort</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #0B1B2B; color: #F5EDD8; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; line-height: 1.6; }
+a { color: inherit; text-decoration: none; }
+
+/* Nav */
+.nav { position: sticky; top: 0; z-index: 100; background: rgba(11,27,43,0.92); backdrop-filter: blur(12px); box-shadow: 0 2px 8px rgba(0,0,0,0.5); border-bottom: 1px solid rgba(201,168,76,0.2); }
+.nav-inner { max-width: 1160px; margin: 0 auto; padding: 20px 80px; display: flex; align-items: center; justify-content: space-between; }
+.brand { font-family: Georgia, serif; font-weight: 700; font-size: 20px; background: linear-gradient(90deg, #C9A84C, #E8C96A); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+.nav ul { list-style: none; display: flex; gap: 36px; }
+.nav ul a { font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #F5EDD8; transition: color 0.2s; }
+.nav ul a.active { color: #C9A84C; }
+
+/* Containers */
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 80px; }
+section { padding: 96px 0; }
+
+/* Header */
+.intro { padding-top: 120px; padding-bottom: 80px; background: linear-gradient(160deg, #0B1B2B 60%, #112233 100%); }
+.eyebrow { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #2ABFBF; margin-bottom: 24px; position: relative; padding-left: 64px; }
+.eyebrow::before { content: ""; position: absolute; left: 0; top: 50%; width: 48px; height: 2px; background: linear-gradient(90deg, #C9A84C, transparent); }
+.intro h1 { font-family: Georgia, serif; font-weight: 700; font-size: 64px; line-height: 1.05; margin-bottom: 28px; background: linear-gradient(90deg, #C9A84C, #E8C96A); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; max-width: 820px; }
+.intro p.lede { font-size: 20px; line-height: 1.6; color: #F5EDD8; max-width: 720px; opacity: 0.88; }
+.chef-line { margin-top: 40px; display: flex; align-items: center; gap: 20px; }
+.chef-circle { width: 64px; height: 64px; border-radius: 999px; background: linear-gradient(135deg, #2ABFBF, #0B1B2B); display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-size: 20px; color: #F5EDD8; border: 1px solid rgba(201,168,76,0.4); }
+.chef-line .chef-meta small { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; }
+.chef-line .chef-meta div { font-family: Georgia, serif; font-size: 20px; margin-top: 4px; }
+
+/* Dining rows */
+.experiences { padding: 64px 0; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; padding: 64px 0; border-bottom: 1px solid rgba(42,191,191,0.18); }
+.row:last-of-type { border-bottom: none; }
+.row.reverse .text-block { order: 2; }
+.row.reverse .visual { order: 1; }
+.visual { height: 420px; border-radius: 12px; background: linear-gradient(160deg, #0B1B2B 60%, #112233 100%); position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.35); border: 1px solid rgba(201,168,76,0.15); display: flex; align-items: flex-end; padding: 32px; }
+.visual.v1 { background: linear-gradient(160deg, #0B1B2B 40%, #1a3a3a 100%); }
+.visual.v2 { background: linear-gradient(160deg, #112233 0%, #0B1B2B 60%, #2a1a0b 100%); }
+.visual.v3 { background: linear-gradient(160deg, #0B1B2B 50%, #2ABFBF 200%); }
+.visual::before { content: ""; position: absolute; top: 24px; left: 24px; width: 48px; height: 2px; background: linear-gradient(90deg, #C9A84C, transparent); }
+.visual-label { font-family: Georgia, serif; font-size: 28px; color: rgba(245,237,216,0.35); letter-spacing: 1px; }
+.text-block .kind { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #2ABFBF; margin-bottom: 16px; }
+.text-block h2 { font-family: Georgia, serif; font-weight: 700; font-size: 42px; line-height: 1.1; margin-bottom: 20px; color: #F5EDD8; }
+.text-block .hours { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 24px; }
+.text-block p { font-size: 16px; line-height: 1.75; color: #F5EDD8; opacity: 0.88; margin-bottom: 20px; }
+.dishes { list-style: none; margin-top: 24px; border-top: 1px solid rgba(201,168,76,0.2); padding-top: 20px; }
+.dishes li { padding: 10px 0; font-size: 16px; display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px dashed rgba(245,237,216,0.1); }
+.dishes li:last-child { border-bottom: none; }
+.dishes .dish-name { font-family: Georgia, serif; font-style: italic; }
+.dishes .dish-note { color: #C9A84C; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
+
+/* Banner */
+.banner { margin: 96px 80px; max-width: 1160px; margin-left: auto; margin-right: auto; background: linear-gradient(90deg, #C9A84C, #E8C96A); color: #0B1B2B; border-radius: 12px; padding: 56px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.35); }
+.banner h3 { font-family: Georgia, serif; font-weight: 700; font-size: 42px; line-height: 1.1; margin-bottom: 12px; }
+.banner p { font-size: 16px; max-width: 540px; opacity: 0.85; }
+.cta { display: inline-block; background: #0B1B2B; color: #F5EDD8; padding: 18px 40px; border-radius: 32px; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; white-space: nowrap; }
+
+/* Footer */
+footer { background: #08131f; padding: 64px 0 40px; border-top: 1px solid rgba(201,168,76,0.2); }
+.foot { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+.foot h4 { font-family: Georgia, serif; font-size: 20px; margin-bottom: 16px; background: linear-gradient(90deg, #C9A84C, #E8C96A); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.foot p, .foot li { font-size: 13px; line-height: 1.9; opacity: 0.75; list-style: none; }
+.foot a { display: block; padding: 2px 0; }
+.copy { max-width: 1160px; margin: 48px auto 0; padding: 24px 80px 0; border-top: 1px solid rgba(245,237,216,0.08); font-size: 13px; opacity: 0.5; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">OBSIDIAN TIDE</div>
+    <ul>
+      <li><a href="../arrival/index.html">Arrival</a></li>
+      <li><a href="../suites/index.html">Suites</a></li>
+      <li><a href="#" class="active">Dining</a></li>
+      <li><a href="../experiences/index.html">Experiences</a></li>
+      <li><a href="../reserve/index.html">Reserve</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="intro">
+  <div class="wrap">
+    <div class="eyebrow">The Culinary Program</div>
+    <h1>The Crevasse Kitchen</h1>
+    <p class="lede">Pacific Northwest terroir served at the edge of the basalt cliffs. Every plate is shaped by what the tide returns and the forest gives — foraged, fermented, and finished over open coastal fire.</p>
+    <div class="chef-line">
+      <div class="chef-circle">MS</div>
+      <div class="chef-meta">
+        <small>Executive Chef</small>
+        <div>Maren Solvik</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="experiences">
+  <div class="wrap">
+
+    <div class="row">
+      <div class="visual v1"><span class="visual-label">Tasting Menu</span></div>
+      <div class="text-block">
+        <div class="kind">Seven Courses · Nightly</div>
+        <h2>The Tide Tasting</h2>
+        <div class="hours">Seatings 6:30 &amp; 8:45 PM</div>
+        <p>A seven-act narrative built from the morning's foraged ingredients — sea beans pulled from the bluff at dawn, halibut line-caught off Cape Foulweather, and madrone-smoked finishes that arrive under cloche to reveal driftwood embers.</p>
+        <ul class="dishes">
+          <li><span class="dish-name">Dungeness crab bisque, smoked kelp oil</span><span class="dish-note">Course II</span></li>
+          <li><span class="dish-name">Charred chanterelle, fermented spruce</span><span class="dish-note">Course IV</span></li>
+          <li><span class="dish-name">Black cod, lava salt, sea buckthorn</span><span class="dish-note">Course V</span></li>
+          <li><span class="dish-name">Honeycomb sorbet, basalt-aged mead</span><span class="dish-note">Course VII</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row reverse">
+      <div class="visual v2"><span class="visual-label">Raw Bar</span></div>
+      <div class="text-block">
+        <div class="kind">Cliffside Counter · 12 Seats</div>
+        <h2>The Obsidian Raw Bar</h2>
+        <div class="hours">Open 4:00 – 11:00 PM</div>
+        <p>An intimate twelve-seat counter carved from a single slab of cooled lava rock, facing the Pacific through floor-to-ceiling glass. Oysters are shucked to order from four Oregon estuaries while the staff pours rare grower champagnes and aquavits aged in driftwood casks.</p>
+        <ul class="dishes">
+          <li><span class="dish-name">Netarts Bay oysters, finger lime mignonette</span><span class="dish-note">By the half-dozen</span></li>
+          <li><span class="dish-name">Albacore crudo, green strawberry, shiso</span><span class="dish-note">Daily catch</span></li>
+          <li><span class="dish-name">Spot prawn tartare, fermented chili</span><span class="dish-note">Seasonal</span></li>
+          <li><span class="dish-name">Sea urchin toast, cultured butter, nori</span><span class="dish-note">Signature</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="visual v3"><span class="visual-label">Weekend Brunch</span></div>
+      <div class="text-block">
+        <div class="kind">Saturdays &amp; Sundays</div>
+        <h2>Tide-Watch Brunch</h2>
+        <div class="hours">10:00 AM – 2:00 PM</div>
+        <p>A leisurely cliffside ritual served on the south-facing terrace as the morning fog lifts off the headlands. Cast-iron skillets, sparkling flights from Willamette Valley, and a roving cart of cured house-meats wheeled between tables by the sommelier.</p>
+        <ul class="dishes">
+          <li><span class="dish-name">Smoked trout benedict, nettle hollandaise</span><span class="dish-note">House classic</span></li>
+          <li><span class="dish-name">Sourdough pancake, douglas fir syrup</span><span class="dish-note">From the hearth</span></li>
+          <li><span class="dish-name">Wild mushroom hash, soft farm egg</span><span class="dish-note">Foraged</span></li>
+          <li><span class="dish-name">Hazelnut waffle, marionberry, crème fraîche</span><span class="dish-note">Sweet</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="banner">
+  <div>
+    <h3>Reserve a table at The Crevasse.</h3>
+    <p>Tasting menu seatings release thirty days in advance. Resort guests receive priority access and may pair courses with a private terrace.</p>
+  </div>
+  <a class="cta" href="../reserve/index.html">Book a Seating →</a>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <h4>Obsidian Tide</h4>
+      <p>A cliffside sanctuary on the central Oregon coast. Adults-only, year-round, weather-permitting access via the cliff road.</p>
+    </div>
+    <div>
+      <h4>Visit</h4>
+      <ul>
+        <li><a href="../arrival/index.html">Arrival</a></li>
+        <li><a href="../suites/index.html">Suites</a></li>
+        <li><a href="#">Dining</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Stay</h4>
+      <ul>
+        <li><a href="../experiences/index.html">Experiences</a></li>
+        <li><a href="../reserve/index.html">Reserve</a></li>
+        <li><a href="#">Concierge</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>+1 (541) 555 0188</li>
+        <li>stay@obsidiantide.co</li>
+        <li>Yachats, OR</li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">
+    <span>© 2025 Obsidian Tide Resort</span>
+    <span>Crafted on the Pacific edge</span>
+  </div>
+</footer>
+
+</body>
+</html>

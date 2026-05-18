@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Molten Cadastre — Ashen Meridian</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #1a1a1a; color: #f0ebe1; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* Header / Nav */
+  header.site {
+    border-bottom: 1px solid #2a2a2a;
+    padding: 2.25rem 0 1.5rem;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    margin-bottom: 1.25rem;
+  }
+  .brand .dot { color: #c4622d; }
+  nav.primary ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+  }
+  nav.primary a {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  nav.primary a:hover { color: #c4622d; }
+  nav.primary a.active {
+    color: #c4622d;
+    border-bottom-color: #c4622d;
+  }
+
+  /* Section label */
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a9e7e;
+    margin: 3rem 0 1rem;
+  }
+  .section-label .roman { color: #c4622d; margin-right: 0.6rem; }
+
+  /* Poem title */
+  h1.poem {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 2.1rem;
+    letter-spacing: 0.04em;
+    line-height: 1.15;
+    color: #f0ebe1;
+    margin: 0 0 0.5rem;
+  }
+  .byline {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    opacity: 0.65;
+    margin-bottom: 2.5rem;
+  }
+  .byline .sep { color: #c4622d; margin: 0 0.6em; }
+
+  /* Floating marginalia */
+  aside.margin-note {
+    float: right;
+    width: 38%;
+    margin: 0.6rem 0 1.5rem 1.75rem;
+    padding: 1.1rem 0 1.1rem 1.25rem;
+    border-left: 1px solid #2f3a30;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: #7a9e7e;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+  aside.margin-note .label {
+    display: block;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #7a9e7e;
+    margin-bottom: 0.6rem;
+  }
+
+  /* Poem stanzas */
+  .poem-body { font-family: Georgia, serif; font-weight: 300; }
+  .stanza {
+    margin: 0 0 2rem;
+    line-height: 1.85;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    color: #f0ebe1;
+  }
+  .stanza p { margin: 0; }
+  .stanza.first::first-letter {
+    color: #7a9e7e;
+    font-size: 4.2rem;
+    float: left;
+    line-height: 1;
+    margin-right: 0.15em;
+    font-weight: 700;
+    font-family: Georgia, serif;
+  }
+
+  /* Pull quote */
+  blockquote.pull {
+    border-left: 3px solid #c4622d;
+    padding-left: 1.5rem;
+    color: #c4622d;
+    font-style: italic;
+    font-family: Georgia, serif;
+    font-weight: 300;
+    font-size: 1.45rem;
+    line-height: 1.45;
+    margin: 2.5rem 0;
+  }
+
+  /* Clear after poem before footer */
+  .poem-end { clear: both; }
+
+  /* Footer */
+  footer.site {
+    border-top: 1px solid #2a2a2a;
+    margin-top: 4rem;
+    padding: 2.25rem 0 2.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+  }
+  footer.site .row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    opacity: 0.75;
+  }
+  footer.site .accent { color: #c4622d; }
+
+  /* Pagination */
+  .pager {
+    clear: both;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #2a2a2a;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .pager a {
+    color: #f0ebe1;
+    text-decoration: none;
+  }
+  .pager a:hover { color: #c4622d; }
+  .pager .which { color: #7a9e7e; display: block; margin-bottom: 0.3rem; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site">
+      <div class="brand">Ashen Meridian <span class="dot">·</span> The Longitude of Smoke</div>
+      <nav class="primary">
+        <ul>
+          <li><a href="../collection/index.html">Collection</a></li>
+          <li><a href="../poet/index.html">Poet</a></li>
+          <li><a href="#" class="active">Single Poem</a></li>
+          <li><a href="../marginalia/index.html">Marginalia</a></li>
+          <li><a href="../correspondence/index.html">Correspondence</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div class="section-label"><span class="roman">XIV</span>From II. Foundry Light</div>
+
+      <h1 class="poem">Molten Cadastre</h1>
+      <div class="byline">Céleste Vaudreuil <span class="sep">·</span> Sorel-Tracy</div>
+
+      <aside class="margin-note">
+        <span class="label">Marginalia</span>
+        In November 1944, some 4,300 workers — many of them women from the surrounding parishes — clocked into the Sorel Industries shell plant on the south bank of the St. Lawrence. The cadastre, the old surveyor's land register, was redrawn in iron that winter; entire rangs vanished into the foundry's payroll. My grandmother kept her timecard folded inside a missal until 1981.
+      </aside>
+
+      <div class="poem-body">
+        <div class="stanza first">
+          <p>Before the river learned the name of iron<br>
+          it learned the names of women<br>
+          who walked the rang at four<br>
+          their lunch pails ticking like small barometers<br>
+          against the cold</p>
+        </div>
+
+        <div class="stanza">
+          <p>The foundry kept its own cadastre<br>
+          a ledger of parcels measured<br>
+          not in arpents but in shifts<br>
+          each acre a lung each lung a quota<br>
+          stamped beside a number</p>
+        </div>
+
+        <blockquote class="pull">
+          and what the surveyor could not chain<br>
+          the smoke inherited
+        </blockquote>
+
+        <div class="stanza">
+          <p>My grandmother's hands<br>
+          were a map of the south shore<br>
+          calloused at Saint-Joseph-de-Sorel<br>
+          scarred where the lathe at Tracy<br>
+          had taken its tithe of skin</p>
+        </div>
+
+        <div class="stanza">
+          <p>She said the shells were daughters<br>
+          she said she counted them<br>
+          the way one counts rosaries<br>
+          one for each brother sent<br>
+          one for each field gone fallow</p>
+        </div>
+
+        <div class="stanza">
+          <p>What is a cadastre but an argument<br>
+          between memory and the assessor<br>
+          between the river that will not stay<br>
+          and the survey that insists it must<br>
+          here is the lot here is the line</p>
+        </div>
+
+        <div class="stanza">
+          <p>I have inherited only the smoke<br>
+          a longitude without latitude<br>
+          a measure that drifts<br>
+          like the women drifted home at dawn<br>
+          their kerchiefs already grey with morning</p>
+        </div>
+      </div>
+
+      <div class="poem-end"></div>
+
+      <nav class="pager">
+        <a href="#"><span class="which">Previous</span>XIII. Slag Vespers</a>
+        <a href="#" style="text-align:right;"><span class="which">Next</span>XV. The Annunciation of Rust</a>
+      </nav>
+    </main>
+
+    <footer class="site">
+      <div class="row">
+        <div>Ashen Meridian <span class="accent">·</span> MMXXIV</div>
+        <div>Céleste Vaudreuil</div>
+        <div>Sorel-Tracy <span class="accent">·</span> Québec</div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact — Ink & Insomnia</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #F5F0E8;
+    color: #1C1C1C;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  header.site {
+    padding-top: 3rem;
+  }
+  .masthead {
+    text-align: center;
+  }
+  .masthead h1 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    font-size: 2rem;
+    margin: 0 0 0.25rem;
+    color: #1C1C1C;
+    letter-spacing: 0.01em;
+  }
+  .tagline {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #6B7B5E;
+    margin: 0;
+  }
+  nav.primary {
+    margin-top: 2rem;
+    text-align: center;
+    border-top: 1px solid #6B7B5E;
+    border-bottom: 1px solid #6B7B5E;
+    padding: 0.9rem 0;
+  }
+  nav.primary a {
+    color: #B5451B;
+    text-decoration: none;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin: 0 0.7rem;
+  }
+  nav.primary a:hover { text-decoration: underline; }
+  nav.primary a.active { color: #1C1C1C; }
+
+  main { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+
+  .page-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #6B7B5E;
+    margin: 0 0 0.5rem;
+  }
+  h2.page-title {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    font-size: 1.75rem;
+    margin: 0 0 1.25rem;
+    color: #B5451B;
+  }
+  p.intro {
+    margin: 0 0 2.5rem;
+  }
+
+  hr.rule {
+    border: 0;
+    border-top: 1px solid #6B7B5E;
+    margin: 2.5rem 0;
+  }
+
+  form .field {
+    margin-bottom: 1.5rem;
+  }
+  form label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #6B7B5E;
+    margin-bottom: 0.4rem;
+  }
+  form input[type="text"],
+  form input[type="email"],
+  form textarea {
+    width: 100%;
+    background: #F5F0E8;
+    border: 1px solid #6B7B5E;
+    padding: 0.6rem 0.7rem;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #1C1C1C;
+    border-radius: 0;
+    outline: none;
+  }
+  form textarea {
+    resize: vertical;
+    font-family: inherit;
+  }
+  button.send {
+    background: #1C1C1C;
+    color: #F5F0E8;
+    border: 0;
+    border-radius: 0;
+    padding: 0.6rem 1.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 0.25rem;
+  }
+
+  .closing {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: #6B7B5E;
+    margin: 0;
+    text-align: center;
+  }
+
+  footer.site {
+    border-top: 1px solid #6B7B5E;
+    margin-top: 2.5rem;
+    padding: 2rem 0 3rem;
+    text-align: center;
+  }
+  footer.site .links a {
+    color: #B5451B;
+    text-decoration: none;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin: 0 0.5rem;
+  }
+  footer.site .links a:hover { text-decoration: underline; }
+  footer.site .copy {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #6B7B5E;
+    margin-top: 0.75rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container masthead">
+    <h1>Ink &amp; Insomnia</h1>
+    <p class="tagline">The Late-Night Notebook of Maren Voss</p>
+  </div>
+  <div class="container">
+    <nav class="primary">
+      <a href="../journal/index.html">Journal</a>
+      <a href="../essays/index.html">Essays</a>
+      <a href="../reading-list/index.html">Reading List</a>
+      <a href="../about/index.html">About</a>
+      <a href="#" class="active">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <p class="page-label">Contact</p>
+    <h2 class="page-title">Send a Letter Into the Dark</h2>
+
+    <p class="intro">I read every message that arrives, slowly and with some care. Replies, when they come, are usually written between midnight and dawn, so please be patient with the silence in between.</p>
+
+    <form action="#" method="post" novalidate>
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="6"></textarea>
+      </div>
+      <button type="submit" class="send">Send Message</button>
+    </form>
+
+    <hr class="rule">
+
+    <p class="closing">No press inquiries, please.</p>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="links">
+      <a href="../journal/index.html">Journal</a>
+      <a href="../essays/index.html">Essays</a>
+      <a href="../reading-list/index.html">Reading List</a>
+      <a href="../about/index.html">About</a>
+      <a href="#">Contact</a>
+    </div>
+    <p class="copy">© Maren Voss · Reykjavík</p>
+  </div>
+</footer>
+
+</body>
+</html>

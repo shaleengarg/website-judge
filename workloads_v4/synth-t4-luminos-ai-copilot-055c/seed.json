@@ -1,0 +1,29 @@
+{
+  "id": "synth-t4-luminos-ai-copilot-055c",
+  "tier": 4,
+  "genre": "marketing-landing",
+  "pages": [
+    "hero",
+    "features",
+    "how-it-works",
+    "pricing",
+    "early-access"
+  ],
+  "palette_hint": "Deep space background #0B0E1A with primary text #E8EAF2, electric violet accent #7C3AED, and neon teal accent #00D9C0",
+  "type_style": "Headings in system-ui bold 700-900 weight with tight letter-spacing for a futuristic feel; body in -apple-system at 400 weight, 1.6 line-height, airy and readable",
+  "description": "Luminos is an AI writing copilot for product teams that turns messy Notion docs and Jira tickets into polished release notes, changelogs, and customer emails in seconds.",
+  "constraints": [
+    "Max content width 1120px centered with 24px horizontal padding on mobile and 48px on desktop",
+    "Three-level box-shadow elevation system: cards rest at '0 2px 8px rgba(124,58,237,0.15)', hover at '0 8px 32px rgba(124,58,237,0.35)', and modals/CTAs at '0 24px 64px rgba(0,217,192,0.20)'",
+    "Border-radius rhythm strictly 4px for inline chips, 12px for cards and inputs, 24px for section containers, and 999px for pill buttons and badges",
+    "Every major section uses a radial gradient spot-light: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(124,58,237,0.18) 0%, transparent 70%) layered over the #0B0E1A base",
+    "Decorative ::before pseudo-elements on section headings render a 2px-tall gradient underline spanning 48px in electric violet #7C3AED, and ::after on feature cards add a faint teal glow border on hover via box-shadow transition"
+  ],
+  "page_specs": {
+    "hero": "Full-viewport section with a large centred headline 'Ship words as fast as you ship code' in 72px bold system-ui, a 20px subtitle explaining the Notion/Jira integration, and two pill buttons: 'Start Free Trial' in a #7C3AED to #00D9C0 linear gradient and 'Watch 90-sec Demo' as a ghost outline. A decorative radial glow sits behind the headline and a floating mock UI card showing a generated changelog entry is positioned bottom-right with a 12px border-radius and the card elevation shadow.",
+    "features": "Three-column card grid (stacking to one column on mobile) showcasing 'Auto-Draft from Jira', 'Tone Calibration Sliders', and 'One-Click Confluence Publish'. Each card is #12172B background with 12px radius, a 32px violet icon glyph rendered as a Unicode symbol inside a teal-gradient circle badge, a bold 22px title, and two lines of specific body copy. Cards lift to the hover elevation shadow on focus.",
+    "how-it-works": "Numbered three-step horizontal timeline (collapses to vertical on mobile) with steps: '1. Connect your workspace', '2. Pick a doc or ticket', '3. Review and publish'. Each step node is a 48px circle with a #7C3AED to #00D9C0 conic gradient border (2px), and connecting lines are dashed teal. Below the timeline a 960px-wide glass card (backdrop-filter blur 12px, background rgba(255,255,255,0.05)) contains a realistic before/after comparison of raw Jira ticket text versus the polished release note Luminos produced.",
+    "pricing": "Two pricing tiers side-by-side \u2014 'Crew' at $29/seat/month and 'Studio' at $79/seat/month \u2014 rendered as 12px-radius cards on #12172B. Studio card gets the modal/CTA box-shadow and a 'Most Popular' pill badge in 999px radius with a violet-to-teal gradient. Each tier lists six specific feature bullets using a teal checkmark Unicode glyph. A toggle switch (CSS-only checkbox hack) switches between monthly and annual billing, updating displayed prices via adjacent-sibling CSS.",
+    "early-access": "Single-column centred form section with headline 'Join 1,400 teams already on the waitlist', a 48px radial glow behind it, and a compact form with two 12px-radius inputs (work email, company size dropdown) and a full-width 999px-radius submit button in the violet-to-teal gradient with the modal elevation shadow. Below the form, five company logo placeholders are rendered as styled text in muted #4A5168 using real-sounding fictional brand names: Stackwire, Driftlane, Covalent HQ, Pebble Labs, and Northa."
+  }
+}

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inkwell Press Co. — Letterpress Supplies</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #faf7f2;
+    color: #1c1a17;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; letter-spacing: -0.01em; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    height: 64px;
+    background: #faf7f2;
+    border-bottom: 1px solid #e6dfd2;
+    display: flex; align-items: center;
+    padding: 0 32px;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-size: 22px; font-weight: 700;
+    color: #1c1a17;
+    flex: 0 0 auto;
+  }
+  .logo .dot { color: #d4860a; }
+  .nav-links {
+    flex: 1;
+    display: flex; justify-content: center; gap: 36px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .nav-links a { padding: 6px 2px; border-bottom: 2px solid transparent; }
+  .nav-links a.active { border-bottom-color: #1a6b5a; color: #1a6b5a; font-weight: 600; }
+  .nav-links a:hover { color: #1a6b5a; }
+  .cart {
+    flex: 0 0 auto;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 600;
+  }
+  .cart .icon {
+    width: 26px; height: 26px;
+    border: 2px solid #1c1a17;
+    border-radius: 4px;
+    position: relative;
+  }
+  .cart .icon::before {
+    content: ""; position: absolute;
+    top: -7px; left: 6px;
+    width: 10px; height: 8px;
+    border: 2px solid #1c1a17;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+  }
+  .cart .badge {
+    background: #d4860a;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 11px;
+    padding: 2px 7px;
+    font-weight: 700;
+  }
+
+  /* Hero */
+  .hero {
+    background: #1a6b5a;
+    color: #faf7f2;
+    padding: 88px 32px 96px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 12% 30%, rgba(212,134,10,0.18), transparent 40%),
+      radial-gradient(circle at 88% 70%, rgba(250,247,242,0.08), transparent 45%);
+  }
+  .hero-eyebrow {
+    position: relative;
+    font-size: 12px; letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #d4860a;
+    margin-bottom: 18px;
+    font-weight: 600;
+  }
+  .hero h1 {
+    position: relative;
+    font-size: 64px;
+    line-height: 1.05;
+    margin-bottom: 18px;
+  }
+  .hero p {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    font-size: 17px;
+    color: #e6dfd2;
+  }
+  .cta {
+    position: relative;
+    display: inline-block;
+    background: #d4860a;
+    color: #1c1a17;
+    padding: 14px 36px;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border-radius: 2px;
+  }
+
+  /* Featured row */
+  .section {
+    padding: 56px 32px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .section-head h2 { font-size: 28px; }
+  .section-head a {
+    font-size: 13px;
+    color: #1a6b5a;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .featured {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #ece5d7;
+    padding: 14px;
+  }
+  .swatch {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 14px;
+  }
+  .card .name {
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .card .desc {
+    font-size: 12.5px;
+    color: #6b6457;
+    margin-bottom: 10px;
+  }
+  .card .price {
+    font-weight: 700;
+    font-size: 16px;
+    color: #d4860a;
+  }
+
+  /* Shipping banner */
+  .banner {
+    background: #1c1a17;
+    color: #faf7f2;
+    text-align: center;
+    padding: 18px 32px;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .banner strong { color: #d4860a; font-weight: 700; }
+
+  /* Editorial tiles */
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .tile {
+    aspect-ratio: 4 / 3;
+    padding: 28px;
+    color: #faf7f2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .tile h3 {
+    font-size: 36px;
+    line-height: 1;
+  }
+  .tile .num {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    opacity: 0.8;
+  }
+  .tile .more {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid currentColor;
+    align-self: flex-start;
+    padding-bottom: 2px;
+  }
+  .tile-1 { background: #1a6b5a; }
+  .tile-2 { background: #1c1a17; }
+  .tile-3 { background: #d4860a; color: #1c1a17; }
+
+  /* Footer */
+  footer {
+    background: #1c1a17;
+    color: #c9c2b3;
+    padding: 48px 32px 24px;
+    margin-top: 32px;
+  }
+  .foot-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  footer h4 {
+    font-family: Georgia, serif;
+    color: #faf7f2;
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  footer .brand-name {
+    font-size: 22px;
+    color: #faf7f2;
+    margin-bottom: 12px;
+  }
+  footer p, footer li { font-size: 13px; line-height: 1.9; }
+  footer ul { list-style: none; }
+  .copy {
+    max-width: 1280px;
+    margin: 32px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid #2e2a24;
+    font-size: 12px;
+    display: flex; justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">Inkwell Press<span class="dot">.</span></div>
+  <div class="nav-links">
+    <a href="../home/index.html" class="active">Home</a>
+    <a href="../catalog/index.html">Catalog</a>
+    <a href="../product/index.html">Product</a>
+    <a href="../cart/index.html">Cart</a>
+    <a href="../orders/index.html">Orders</a>
+  </div>
+  <div class="cart">
+    <div class="icon"></div>
+    <span>Cart</span>
+    <span class="badge">3</span>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Est. 1987 · Made in Vermont</div>
+  <h1>Every impression counts.</h1>
+  <p>Handcrafted letterpress supplies, archival oil-based inks, and custom hardwood type blocks — sourced and milled for printers who care about the margin of a millimeter.</p>
+  <a href="../catalog/index.html" class="cta">Shop the Catalog</a>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <h2>Featured this press season</h2>
+    <a href="../catalog/index.html">View all →</a>
+  </div>
+  <div class="featured">
+    <div class="card">
+      <div class="swatch" style="background:#1a6b5a;"></div>
+      <div class="name">Pine Verdigris Ink</div>
+      <div class="desc">Deep teal oil-based for crisp coverage.</div>
+      <div class="price">$28.00</div>
+    </div>
+    <div class="card">
+      <div class="swatch" style="background:#d4860a;"></div>
+      <div class="name">Amber Glow No. 7</div>
+      <div class="desc">Warm metallic-leaning hue, archival pigment grade.</div>
+      <div class="price">$32.00</div>
+    </div>
+    <div class="card">
+      <div class="swatch" style="background:#8a2a1f;"></div>
+      <div class="name">Brick Red Letterpress</div>
+      <div class="desc">Rich opaque coverage ideal for posters.</div>
+      <div class="price">$26.00</div>
+    </div>
+    <div class="card">
+      <div class="swatch" style="background:#2c2a26;"></div>
+      <div class="name">Maple Type Block Set</div>
+      <div class="desc">48pt hand-cut serif uppercase complete alphabet.</div>
+      <div class="price">$184.00</div>
+    </div>
+  </div>
+</section>
+
+<div class="banner">
+  Free domestic shipping on orders over <strong>$75</strong> — through the end of the season
+</div>
+
+<section class="section">
+  <div class="section-head">
+    <h2>The workshop, by category</h2>
+    <a href="../catalog/index.html">Browse catalog →</a>
+  </div>
+  <div class="tiles">
+    <div class="tile tile-1">
+      <div class="num">01 / Pigments</div>
+      <h3>Inks</h3>
+      <span class="more">Shop Inks</span>
+    </div>
+    <div class="tile tile-2">
+      <div class="num">02 / Hardwood</div>
+      <h3>Type Blocks</h3>
+      <span class="more">Shop Type</span>
+    </div>
+    <div class="tile tile-3">
+      <div class="num">03 / Fibers</div>
+      <h3>Paper Stock</h3>
+      <span class="more">Shop Paper</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="brand-name">Inkwell Press Co.</div>
+      <p>Specialty supplies for working letterpress studios. Mill-direct hardwood type, oil-based inks, hand-finished rollers, and archival paper since 1987.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="../catalog/index.html">All Products</a></li>
+        <li><a href="#">Inks</a></li>
+        <li><a href="#">Type Blocks</a></li>
+        <li><a href="#">Paper Stock</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Account</h4>
+      <ul>
+        <li><a href="../cart/index.html">Cart</a></li>
+        <li><a href="../orders/index.html">Orders</a></li>
+        <li><a href="#">Addresses</a></li>
+        <li><a href="#">Sign In</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Studio</h4>
+      <ul>
+        <li>112 Mill Road</li>
+        <li>Brattleboro, VT 05301</li>
+        <li>hello@inkwellpress.co</li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">
+    <span>© 2025 Inkwell Press Co. All rights reserved.</span>
+    <span>Pressed by hand · Shipped with care.</span>
+  </div>
+</footer>
+
+</body>
+</html>

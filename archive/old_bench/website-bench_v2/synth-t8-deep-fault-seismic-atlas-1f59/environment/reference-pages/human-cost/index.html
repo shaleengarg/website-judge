@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Deep Fault — Human Cost</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #F2EDE6;
+    color: #1A1208;
+    font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  a { color: #2E5E8E; text-decoration: none; }
+
+  /* ---------- HEADER BAND ---------- */
+  .masthead {
+    background: #1A1208;
+    color: #F2EDE6;
+    padding: 24px 48px;
+    border-bottom: 3px solid #C0392B;
+  }
+  .masthead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    max-width: 1184px;
+    margin: 0 auto;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+  }
+  .brand .dot { color: #C0392B; }
+  .issue {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #BFB8AE;
+  }
+  nav.primary {
+    max-width: 1184px;
+    margin: 24px auto 0;
+    display: flex;
+    gap: 32px;
+    border-top: 1px solid #2a2014;
+    padding-top: 16px;
+  }
+  nav.primary a {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #F2EDE6;
+    padding: 8px 12px;
+  }
+  nav.primary a.active {
+    background: #C0392B;
+    color: #fff;
+  }
+  .chapter-tag {
+    max-width: 1184px;
+    margin: 16px auto 0;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #BFB8AE;
+    letter-spacing: 2px;
+  }
+  .chapter-tag span { color: #C0392B; }
+
+  /* ---------- PULL-QUOTE BAND ---------- */
+  .quote-band {
+    background: #1A1208;
+    color: #fff;
+    padding: 72px 48px;
+  }
+  .quote-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .quote-mark {
+    font-family: Georgia, serif;
+    font-size: 120px;
+    color: #C0392B;
+    line-height: 0.8;
+    font-style: italic;
+  }
+  .quote-text {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.4;
+    font-weight: 400;
+    color: #fff;
+  }
+  .quote-attr {
+    margin-top: 24px;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #BFB8AE;
+    text-transform: uppercase;
+  }
+  .quote-attr .red { color: #C0392B; }
+
+  /* ---------- EDITORIAL BODY ---------- */
+  .body-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+    align-items: end;
+    margin-bottom: 48px;
+  }
+  .section-kicker {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #C0392B;
+    padding: 8px 12px;
+    border-left: 3px solid #C0392B;
+  }
+  .section-title {
+    font-family: Georgia, serif;
+    font-size: 44px;
+    font-weight: bold;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+  }
+  .section-lede {
+    grid-column: 1 / -1;
+    font-size: 17px;
+    color: #1A1208;
+    max-width: 760px;
+    margin-top: 8px;
+  }
+
+  /* Contact-sheet grid of survivor profiles */
+  .contact-sheet {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .profile {
+    background: #fff;
+    border: 1px solid #BFB8AE;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .profile .portrait {
+    height: 96px;
+    margin: -24px -24px 16px;
+    background: #2a2014;
+    color: #BFB8AE;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 8px 12px;
+  }
+  .profile.alt .portrait { background: #3a2a1a; }
+  .profile.alt2 .portrait { background: #1f3850; }
+  .profile .name {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .profile .loc {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #2E5E8E;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .profile .testimony {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1A1208;
+  }
+  .profile .age {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #BFB8AE;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #1A1208;
+    letter-spacing: 1px;
+  }
+  .profile .age strong { color: #C0392B; }
+
+  /* ---------- SECTION RULE ---------- */
+  .rule { border: none; border-top: 1px solid #BFB8AE; max-width: 1100px; margin: 0 auto; }
+  .rule-accent { border: none; border-top: 3px solid #C0392B; max-width: 1100px; margin: 0 auto; }
+  .gap48 { height: 48px; }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline-wrap {
+    background: #F2EDE6;
+    padding: 0 24px 48px;
+  }
+  .timeline-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .timeline-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 32px;
+  }
+  .timeline-title {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+  }
+  .timeline-range {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: #2E5E8E;
+    letter-spacing: 2px;
+  }
+  .timeline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-top: 1px solid #BFB8AE;
+    padding-top: 24px;
+  }
+  .event {
+    flex: 1 1 calc(25% - 16px);
+    min-width: 240px;
+    border-left: 3px solid #1A1208;
+    padding: 8px 12px;
+    background: #F2EDE6;
+  }
+  .event.red { border-left-color: #C0392B; }
+  .event.blue { border-left-color: #2E5E8E; }
+  .event .year {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #1A1208;
+    margin-bottom: 4px;
+  }
+  .event .ename {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .event .stats {
+    display: flex;
+    gap: 16px;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+  }
+  .event.red .ename { color: #C0392B; }
+  .event.blue .ename { color: #2E5E8E; }
+  .event .mag { color: #2E5E8E; }
+  .event.red .mag { color: #C0392B; }
+  .event .toll { color: #1A1208; }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    background: #1A1208;
+    color: #BFB8AE;
+    padding: 48px;
+    margin-top: 48px;
+  }
+  .foot-grid {
+    max-width: 1184px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+  }
+  .foot-grid h4 {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .foot-grid p, .foot-grid a {
+    font-size: 13px;
+    color: #BFB8AE;
+    line-height: 1.6;
+    display: block;
+  }
+  .foot-brand {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .foot-brand .dot { color: #C0392B; }
+  .colophon {
+    max-width: 1184px;
+    margin: 32px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid #2a2014;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #6a5a48;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="brand">DEEP FAULT<span class="dot">.</span></div>
+    <div class="issue">A SPECIAL REPORT &middot; VOL.01 / CH.04 &middot; MAR 2025</div>
+  </div>
+  <nav class="primary">
+    <a href="../overview/index.html">01 &nbsp;Overview</a>
+    <a href="../fault-maps/index.html">02 &nbsp;Fault Maps</a>
+    <a href="../risk-zones/index.html">03 &nbsp;Risk Zones</a>
+    <a class="active" href="#">04 &nbsp;Human Cost</a>
+    <a href="../what-next/index.html">05 &nbsp;What Next</a>
+  </nav>
+  <div class="chapter-tag">CHAPTER FOUR <span>///</span> THE HUMAN COST <span>///</span> 06 SURVIVORS &middot; 08 EVENTS &middot; 64 YEARS</div>
+</header>
+
+<!-- ============ PULL QUOTE BAND ============ -->
+<section class="quote-band">
+  <div class="quote-inner">
+    <div class="quote-mark">&ldquo;</div>
+    <div>
+      <div class="quote-text">
+        The ground did not shake. It folded. I watched the school where my children were studying collapse in eleven seconds, and afterward there was no sound at all &mdash; not even from the people still alive beneath it.
+      </div>
+      <div class="quote-attr">
+        <span class="red">&mdash;</span> RAHIMA SUTRISNO &nbsp;//&nbsp; PADANG, WEST SUMATRA &nbsp;//&nbsp; 30 SEPT 2009 &nbsp;//&nbsp; M 7.6
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EDITORIAL BODY ============ -->
+<div class="body-wrap">
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">Field Testimony &middot; 06 Profiles</div>
+    </div>
+    <h1 class="section-title">Voices the rebuild forgot.</h1>
+    <p class="section-lede">
+      Between 2009 and 2024, our reporters recorded over two hundred hours of survivor testimony across six Pacific Rim communities. Six excerpts are reproduced here verbatim, translated where necessary. Names are used with consent; ages are given as of interview.
+    </p>
+  </div>
+
+  <hr class="rule-accent">
+  <div class="gap48"></div>
+
+  <!-- ===== CONTACT SHEET ===== -->
+  <div class="contact-sheet">
+
+    <div class="profile">
+      <div class="portrait">PORTRAIT &middot; 01</div>
+      <div class="name">Rahima Sutrisno</div>
+      <div class="loc">Padang &middot; Indonesia &middot; 2009</div>
+      <p class="testimony">My husband was a mason. He had told me, only the week before, that the new school had been built on river silt. I did not understand what he meant until I was clawing at concrete with my hands and finding only my daughter&rsquo;s shoes.</p>
+      <div class="age">AGE 47 &nbsp;//&nbsp; INTERVIEW <strong>14 MIN</strong></div>
+    </div>
+
+    <div class="profile alt">
+      <div class="portrait">PORTRAIT &middot; 02</div>
+      <div class="name">Tomas Aguinaldo</div>
+      <div class="loc">Batangas &middot; Philippines &middot; 2017</div>
+      <p class="testimony">The drills at our barangay hall always ended in laughter. We thought of earthquakes as something that happened in the movies, or in Japan. When the Manila Trench finally moved beneath our boat, I had thirty seconds to remember everything I had ignored.</p>
+      <div class="age">AGE 61 &nbsp;//&nbsp; INTERVIEW <strong>22 MIN</strong></div>
+    </div>
+
+    <div class="profile alt2">
+      <div class="portrait">PORTRAIT &middot; 03</div>
+      <div class="name">Linda Vargas</div>
+      <div class="loc">Seaside &middot; Oregon, USA</div>
+      <p class="testimony">We have lived here for three generations. The tsunami evacuation sign is bolted to the side of a motel that, according to the state geologist, will be underwater in eighteen minutes. Nobody on this street has a go-bag. Nobody. I have asked.</p>
+      <div class="age">AGE 38 &nbsp;//&nbsp; INTERVIEW <strong>09 MIN</strong></div>
+    </div>
+
+    <div class="profile alt">
+      <div class="portrait">PORTRAIT &middot; 04</div>
+      <div class="name">Hemi Whaitiri</div>
+      <div class="loc">Gisborne &middot; Aotearoa NZ</div>
+      <p class="testimony">My grandfather used to say the Hikurangi was sleeping. He did not say peacefully. After the 2016 Kaik&omacr;ura event we found cracks in our marae &mdash; cracks no one could explain, two hundred kilometres from the epicentre. He stopped saying sleeping after that.</p>
+      <div class="age">AGE 54 &nbsp;//&nbsp; INTERVIEW <strong>31 MIN</strong></div>
+    </div>
+
+    <div class="profile">
+      <div class="portrait">PORTRAIT &middot; 05</div>
+      <div class="name">Farida Baloch</div>
+      <div class="loc">Gwadar &middot; Makran Coast</div>
+      <p class="testimony">The 1945 wave is in our oral histories, but not in our building codes. My uncle &mdash; an engineer &mdash; told the municipal council in 2019 that the new port terminal would not survive a repeat. They thanked him for his interest and approved the design unchanged.</p>
+      <div class="age">AGE 42 &nbsp;//&nbsp; INTERVIEW <strong>18 MIN</strong></div>
+    </div>
+
+    <div class="profile alt2">
+      <div class="portrait">PORTRAIT &middot; 06</div>
+      <div class="name">Kenji Morisawa</div>
+      <div class="loc">Sendai &middot; Japan &middot; 2011</div>
+      <p class="testimony">I survived T&omacr;hoku because of a drill I had performed forty times. Forty. I tell my colleagues in Manila and Lima this number, and I see in their faces that it sounds absurd. It is not absurd. It is the minimum. It is the cost of living near a trench.</p>
+      <div class="age">AGE 58 &nbsp;//&nbsp; INTERVIEW <strong>47 MIN</strong></div>
+    </div>
+
+  </div>
+
+  <div class="gap48"></div>
+  <hr class="rule">
+  <div class="gap48"></div>
+
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">Casualty Record &middot; 1960&ndash;2024</div>
+    </div>
+    <h1 class="section-title">Eight ruptures. Two&numero;million displaced.</h1>
+  </div>
+</div>
+
+<!-- ============ TIMELINE ============ -->
+<section class="timeline-wrap">
+  <div class="timeline-inner">
+    <div class="timeline-head">
+      <div class="timeline-title">A Seismic Timeline</div>
+      <div class="timeline-range">1960 &mdash;&mdash;&mdash; 2024 &middot; PACIFIC RIM</div>
+    </div>
+    <div class="timeline">
+
+      <div class="event red">
+        <div class="year">22 MAY 1960 &middot; CHILE</div>
+        <div class="ename">Valdivia</div>
+        <div class="stats"><span class="mag">M 9.5</span><span class="toll">&dagger; 5,700</span></div>
+      </div>
+
+      <div class="event blue">
+        <div class="year">28 MAR 1964 &middot; ALASKA</div>
+        <div class="ename">Prince William Sound</div>
+        <div class="stats"><span class="mag">M 9.2</span><span class="toll">&dagger; 139</span></div>
+      </div>
+
+      <div class="event red">
+        <div class="year">19 SEP 1985 &middot; MEXICO</div>
+        <div class="ename">Michoac&aacute;n</div>
+        <div class="stats"><span class="mag">M 8.0</span><span class="toll">&dagger; 9,500</span></div>
+      </div>
+
+      <div class="event blue">
+        <div class="year">26 DEC 2004 &middot; SUMATRA</div>
+        <div class="ename">Indian Ocean</div>
+        <div class="stats"><span class="mag">M 9.1</span><span class="toll">&dagger; 227,898</span></div>
+      </div>
+
+      <div class="event red">
+        <div class="year">30 SEP 2009 &middot; INDONESIA</div>
+        <div class="ename">Padang</div>
+        <div class="stats"><span class="mag">M 7.6</span><span class="toll">&dagger; 1,115</span></div>
+      </div>
+
+      <div class="event blue">
+        <div class="year">11 MAR 2011 &middot; JAPAN</div>
+        <div class="ename">T&omacr;hoku</div>
+        <div class="stats"><span class="mag">M 9.1</span><span class="toll">&dagger; 19,759</span></div>
+      </div>
+
+      <div class="event red">
+        <div class="year">14 NOV 2016 &middot; NEW ZEALAND</div>
+        <div class="ename">Kaik&omacr;ura</div>
+        <div class="stats"><span class="mag">M 7.8</span><span class="toll">&dagger; 2</span></div>
+      </div>
+
+      <div class="event blue">
+        <div class="year">03 APR 2024 &middot; TAIWAN</div>
+        <div class="ename">Hualien</div>
+        <div class="stats"><span class="mag">M 7.4</span><span class="toll">&dagger; 18</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-brand">DEEP FAULT<span class="dot">.</span></div>
+      <p>The earthquakes nobody is preparing for. A five-chapter investigation into the Pacific Rim&rsquo;s underreported seismic corridors, combining field data, survivor testimony, and policy analysis.</p>
+    </div>
+    <div>
+      <h4>Chapters</h4>
+      <a href="../overview/index.html">01 Overview</a>
+      <a href="../fault-maps/index.html">02 Fault Maps</a>
+      <a href="../risk-zones/index.html">03 Risk Zones</a>
+      <a href="#">04 Human Cost</a>
+      <a href="../what-next/index.html">05 What Next</a>
+    </div>
+    <div>
+      <h4>Method</h4>
+      <a href="#">Field Notes</a>
+      <a href="#">Data Sources</a>
+      <a href="#">Corrections</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <a href="#">tips@deepfault.report</a>
+      <a href="#">Signal / Secure Drop</a>
+      <a href="#">Republish Policy</a>
+    </div>
+  </div>
+  <div class="colophon">
+    <span>&copy; 2025 DEEP FAULT REPORTING COLLECTIVE</span>
+    <span>ISSN 2837&middot;1199 &nbsp;//&nbsp; PUBLISHED QUARTERLY</span>
+  </div>
+</footer>
+
+</body>
+</html>

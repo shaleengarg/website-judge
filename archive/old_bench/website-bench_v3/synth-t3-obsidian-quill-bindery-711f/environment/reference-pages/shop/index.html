@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Obsidian Quill Bindery</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #F5F0E8;
+    color: #1C1A17;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+    letter-spacing: -0.02em;
+    color: #1C1A17;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Top Nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    height: 56px;
+    background: #1C1A17;
+    color: #F5F0E8;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: #F5F0E8;
+  }
+  .wordmark .amp { color: #C0392B; }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    flex: 1;
+    justify-content: center;
+  }
+  .nav-links a {
+    color: #F5F0E8;
+    font-size: 14px;
+    padding: 4px 2px;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-links a.active { border-bottom-color: #C0392B; }
+  .nav-links a:hover { border-bottom-color: #C0392B; }
+  .cart-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #F5F0E8;
+    font-size: 14px;
+  }
+  .cart-icon .bag {
+    width: 22px; height: 22px;
+    border: 2px solid #F5F0E8;
+    border-radius: 3px;
+    position: relative;
+  }
+  .cart-icon .bag::before {
+    content: "";
+    position: absolute;
+    top: -6px; left: 4px; right: 4px;
+    height: 6px;
+    border: 2px solid #F5F0E8;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+  }
+  .badge {
+    position: absolute;
+    top: -8px; right: -10px;
+    background: #C0392B;
+    color: #F5F0E8;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+  }
+
+  /* Layout */
+  .layout {
+    display: flex;
+    min-height: calc(100vh - 56px);
+  }
+  .sidebar {
+    width: 260px;
+    flex: 0 0 260px;
+    background: #2B2925;
+    color: #F5F0E8;
+    padding: 32px 24px;
+    position: sticky;
+    top: 56px;
+    align-self: flex-start;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .sidebar h3 {
+    color: #F5F0E8;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #4a4742;
+  }
+  .filter-group { margin-bottom: 28px; }
+  .filter-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+    font-size: 14px;
+    cursor: pointer;
+    color: #E8E2D5;
+  }
+  .filter-group label:hover { color: #fff; }
+  .filter-group input[type="checkbox"] {
+    appearance: none;
+    width: 14px; height: 14px;
+    border: 1px solid #8a847b;
+    background: transparent;
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+  }
+  .filter-group input[type="checkbox"]:checked {
+    background: #C0392B;
+    border-color: #C0392B;
+  }
+  .filter-group input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: #fff;
+    font-size: 11px;
+    top: -3px; left: 1px;
+  }
+  .filter-count {
+    margin-left: auto;
+    color: #8a847b;
+    font-size: 12px;
+  }
+  .clear-filters {
+    color: #C0392B;
+    font-size: 13px;
+    display: inline-block;
+    margin-top: 4px;
+    border-bottom: 1px dotted #C0392B;
+  }
+
+  /* Main */
+  .main {
+    flex: 1;
+    padding: 40px 24px 64px;
+    max-width: calc(1200px - 0px);
+    margin: 0 auto;
+    min-width: 0;
+  }
+  .main-inner { max-width: 940px; }
+
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .page-header h1 {
+    font-size: 34px;
+    line-height: 1.1;
+  }
+  .accent-underline {
+    width: 48px;
+    height: 2px;
+    background: #C0392B;
+    margin-top: 12px;
+    margin-bottom: 24px;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 14px;
+    color: #5a554e;
+  }
+  .toolbar .count { color: #1C1A17; }
+  .sort-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sort-wrap select {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 7px 28px 7px 12px;
+    border: 1px solid #c9c1b3;
+    background: #FAF7F2;
+    color: #1C1A17;
+    border-radius: 2px;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #1C1A17 50%), linear-gradient(135deg, #1C1A17 50%, transparent 50%);
+    background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 28px 24px;
+  }
+  .card {
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+  }
+  .card .ph {
+    width: 100%;
+    aspect-ratio: 220/260;
+    border-radius: 2px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 12px;
+    color: rgba(255,255,255,0.85);
+    font-family: Georgia, serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+  }
+  .card .ph.tan { background: linear-gradient(135deg, #b8895a, #8a5a32); }
+  .card .ph.chestnut { background: linear-gradient(135deg, #6b3b22, #3e2014); }
+  .card .ph.forest { background: linear-gradient(135deg, #4A6741, #2c3f28); color: #F5F0E8;}
+  .card .ph.parchment { background: linear-gradient(135deg, #E8DFC9, #c9bd9a); color:#2B2925; }
+  .card .ph.ink { background: linear-gradient(135deg, #2B2925, #0c0b09); }
+  .card .ph.burgundy { background: linear-gradient(135deg, #6e2a2a, #3a1414); }
+  .card .ph.bone { background: linear-gradient(135deg, #f0e8d4, #d4c69d); color:#2B2925; }
+  .card .ph.vellum { background: linear-gradient(135deg, #f7f1de, #d8caa1); color:#2B2925; }
+  .card .ph.linen { background: linear-gradient(135deg, #d8cfb8, #a99a78); color:#2B2925; }
+  .card .ph.indigo { background: linear-gradient(135deg, #3a4a6e, #1c2540); }
+  .card .ph.olive { background: linear-gradient(135deg, #7a7c40, #4a4d20); }
+  .card .ph.rust { background: linear-gradient(135deg, #b85a36, #7a2f15); }
+
+  .card .ph .new {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: #C0392B;
+    color: #F5F0E8;
+    font-size: 10px;
+    padding: 3px 8px;
+    letter-spacing: 0.1em;
+    border-radius: 2px;
+  }
+
+  .card h3 {
+    font-size: 17px;
+    margin: 14px 0 4px;
+    line-height: 1.25;
+  }
+  .tag {
+    display: inline-block;
+    color: #4A6741;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .price {
+    color: #C0392B;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Georgia, serif;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 48px;
+  }
+  .pagination a {
+    width: 36px; height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #c9c1b3;
+    background: #FAF7F2;
+    font-size: 14px;
+    border-radius: 2px;
+  }
+  .pagination a.active {
+    background: #1C1A17;
+    color: #F5F0E8;
+    border-color: #1C1A17;
+  }
+
+  /* Footer */
+  footer {
+    background: #1C1A17;
+    color: #c9c1b3;
+    padding: 40px 24px 24px;
+    font-size: 13px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h4 {
+    color: #F5F0E8;
+    font-size: 14px;
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+  }
+  footer ul { list-style: none; }
+  footer ul li { padding: 3px 0; }
+  footer a { color: #c9c1b3; }
+  footer a:hover { color: #F5F0E8; }
+  .footer-brand .wordmark { font-size: 20px; color: #F5F0E8; }
+  .footer-brand p { margin-top: 10px; max-width: 320px; }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    border-top: 1px solid #2B2925;
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+    color: #8a847b;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .layout { flex-direction: column; }
+    .sidebar {
+      position: static;
+      width: 100%;
+      flex: none;
+      height: auto;
+      padding: 24px;
+    }
+    .filter-group { display: inline-block; vertical-align: top; min-width: 200px; margin-right: 24px; }
+    .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }
+    .nav-links { display: none; }
+    .page-header h1 { font-size: 26px; }
+    .filter-group { display: block; margin-right: 0; }
+  }
+  @media (max-width: 440px) {
+    .grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="nav-inner">
+    <a href="../shop/index.html" class="wordmark">Obsidian Quill <span class="amp">·</span> Bindery</a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="../shop/index.html" class="active">Shop</a></li>
+        <li><a href="../product-detail/index.html">Product</a></li>
+        <li><a href="../cart/index.html">Cart</a></li>
+        <li><a href="../about/index.html">About</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="../cart/index.html" class="cart-icon">
+      <span class="bag"></span>
+      <span>Cart</span>
+      <span class="badge">3</span>
+    </a>
+  </div>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="filter-group">
+      <h3>Material</h3>
+      <label><input type="checkbox" checked> Leather <span class="filter-count">48</span></label>
+      <label><input type="checkbox"> Cloth <span class="filter-count">22</span></label>
+      <label><input type="checkbox" checked> Paper <span class="filter-count">61</span></label>
+      <label><input type="checkbox"> Vellum <span class="filter-count">9</span></label>
+    </div>
+
+    <div class="filter-group">
+      <h3>Binding Style</h3>
+      <label><input type="checkbox"> Coptic <span class="filter-count">18</span></label>
+      <label><input type="checkbox" checked> Long-stitch <span class="filter-count">14</span></label>
+      <label><input type="checkbox"> Case-bound <span class="filter-count">27</span></label>
+    </div>
+
+    <div class="filter-group">
+      <h3>Price</h3>
+      <label><input type="checkbox"> Under $30 <span class="filter-count">42</span></label>
+      <label><input type="checkbox" checked> $30 – $80 <span class="filter-count">55</span></label>
+      <label><input type="checkbox"> Over $80 <span class="filter-count">23</span></label>
+    </div>
+
+    <div class="filter-group">
+      <h3>Color Family</h3>
+      <label><input type="checkbox"> Earth Tones <span class="filter-count">39</span></label>
+      <label><input type="checkbox"> Ink & Black <span class="filter-count">17</span></label>
+      <label><input type="checkbox"> Naturals <span class="filter-count">28</span></label>
+    </div>
+
+    <a href="#" class="clear-filters">Clear all filters</a>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+      <div class="page-header">
+        <div>
+          <h1>All Bindery Supplies</h1>
+          <div class="accent-underline"></div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="count">Showing <strong>1–12</strong> of <strong>120</strong> items</div>
+        <div class="sort-wrap">
+          <label for="sort">Sort by</label>
+          <select id="sort">
+            <option>Relevance</option>
+            <option>Price: Low to High</option>
+            <option>Price: High to Low</option>
+            <option>Newest Arrivals</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid">
+
+        <a href="../product-detail/index.html" class="card">
+          <div class="ph tan"><span class="new">NEW</span>GOATSKIN · TAN</div>
+          <h3>Tuscan Tan Full-Grain Goatskin</h3>
+          <span class="tag">Leather</span>
+          <span class="price">$64.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph chestnut">CHESTNUT CALF</div>
+          <h3>Chestnut Vegetable-Tanned Calfskin</h3>
+          <span class="tag">Leather</span>
+          <span class="price">$78.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph bone">BONE FOLDER</div>
+          <h3>Bone Folder — Tapered 9in</h3>
+          <span class="tag">Tools</span>
+          <span class="price">$22.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph forest"><span class="new">NEW</span>FOREST CLOTH</div>
+          <h3>Forest Ink Bookcloth — Half Yard</h3>
+          <span class="tag">Cloth</span>
+          <span class="price">$28.50</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph parchment">MARBLED ENDPAPER</div>
+          <h3>Florentine Marbled Endpapers (Pair)</h3>
+          <span class="tag">Paper</span>
+          <span class="price">$14.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph ink">BLACK GOATSKIN</div>
+          <h3>Obsidian Black Goatskin — Quarter Hide</h3>
+          <span class="tag">Leather</span>
+          <span class="price">$42.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph linen">LINEN THREAD</div>
+          <h3>Bookbinding Linen Thread 0.35mm — Ecru</h3>
+          <span class="tag">Thread</span>
+          <span class="price">$6.50</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph burgundy">BURGUNDY GOATSKIN</div>
+          <h3>Cordovan Burgundy Goatskin Half-Hide</h3>
+          <span class="tag">Leather</span>
+          <span class="price">$68.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph vellum">CLASSIC VELLUM</div>
+          <h3>Manuscript Vellum Sheet — A4</h3>
+          <span class="tag">Vellum</span>
+          <span class="price">$36.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph indigo"><span class="new">NEW</span>INDIGO CLOTH</div>
+          <h3>Indigo Japanese Bookcloth</h3>
+          <span class="tag">Cloth</span>
+          <span class="price">$31.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph olive">HAND-BOUND JOURNAL</div>
+          <h3>Long-Stitch Olive Journal — A5</h3>
+          <span class="tag">Journal</span>
+          <span class="price">$58.00</span>
+        </a>
+
+        <a href="#" class="card">
+          <div class="ph rust">RUST PAPER</div>
+          <h3>Hand-Dyed Rust Cover Paper (5 sheets)</h3>
+          <span class="tag">Paper</span>
+          <span class="price">$18.00</span>
+        </a>
+
+      </div>
+
+      <div class="pagination">
+        <a href="#">‹</a>
+        <a href="#" class="active">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">…</a>
+        <a href="#">10</a>
+        <a href="#">›</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="wordmark">Obsidian Quill <span style="color:#C0392B">·</span> Bindery</div>
+      <p>Artisan stationery, ethically sourced leathers, and bindery tools from a small studio in Portland, Oregon.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="../shop/index.html">All Supplies</a></li>
+        <li><a href="#">Leather Hides</a></li>
+        <li><a href="#">Endpapers</a></li>
+        <li><a href="#">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Studio</h4>
+      <ul>
+        <li><a href="../about/index.html">About</a></li>
+        <li><a href="#">Workshops</a></li>
+        <li><a href="#">Journal</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Service</h4>
+      <ul>
+        <li><a href="../contact/index.html">Contact</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Wholesale</a></li>
+        <li><a href="../cart/index.html">Cart</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Obsidian Quill Bindery. All rights reserved.</span>
+    <span>Portland, OR · Made by hand.</span>
+  </div>
+</footer>
+
+</body>
+</html>

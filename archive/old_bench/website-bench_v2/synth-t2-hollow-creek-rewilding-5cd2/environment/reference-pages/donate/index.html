@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Donate — Hollow Creek Rewilding</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #F7F3EE;
+    color: #1E3A2F;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; color: #1E3A2F; margin: 0 0 0.5em; }
+  h1 { font-size: 2.4rem; line-height: 1.2; }
+  h2 { font-size: 1.6rem; border-left: 2px solid #5C7A4E; padding-left: 12px; }
+  h3 { font-size: 1.25rem; }
+  a { color: #1E3A2F; }
+
+  /* NAV */
+  .nav-wrap {
+    background: #F7F3EE;
+    border-bottom: 1px solid #C8BFB4;
+  }
+  .nav {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #1E3A2F;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-mark {
+    width: 28px; height: 28px;
+    background: #5C7A4E;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+  }
+  .logo-mark::after {
+    content: "";
+    position: absolute;
+    left: 6px; top: 8px;
+    width: 16px; height: 12px;
+    background: #F7F3EE;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-30deg);
+  }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    text-decoration: none;
+    color: #1E3A2F;
+    font-size: 0.95rem;
+    padding-bottom: 4px;
+    border-bottom: 4px solid transparent;
+  }
+  .nav-links a.active { border-bottom: 4px solid #5C7A4E; }
+
+  /* CONTAINER */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+  section { padding: 48px 0; }
+
+  /* HERO INTRO */
+  .intro { text-align: center; }
+  .intro h1 { margin-bottom: 16px; }
+  .intro p {
+    max-width: 680px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+  }
+  .highlight { color: #5C7A4E; font-weight: 600; }
+
+  /* CARDS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .card {
+    border: 2px solid #C8BFB4;
+    border-radius: 8px;
+    padding: 16px;
+    background: #FFFDFA;
+    display: flex;
+    flex-direction: column;
+  }
+  .amount {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 2.2rem;
+    color: #1E3A2F;
+    margin-bottom: 4px;
+  }
+  .level-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    color: #5C7A4E;
+    margin-bottom: 12px;
+  }
+  .card p { margin: 0 0 16px; flex: 1; font-size: 0.95rem; }
+  .swatch {
+    height: 6px;
+    background: linear-gradient(90deg, #5C7A4E, #C47C2B);
+    border-radius: 3px;
+    margin-bottom: 14px;
+  }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: inline-block;
+    background: #C47C2B;
+    color: #FFFFFF;
+    padding: 10px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: none;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-secondary {
+    display: inline-block;
+    border: 2px solid #5C7A4E;
+    color: #1E3A2F;
+    background: transparent;
+    padding: 8px 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* FORM */
+  .donate-form-wrap {
+    border: 2px solid #C8BFB4;
+    border-radius: 8px;
+    padding: 28px;
+    background: #FFFDFA;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 20px;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+  label {
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #5C7A4E;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #C8BFB4;
+    border-radius: 6px;
+    background: #F7F3EE;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #1E3A2F;
+  }
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+  }
+  .check-row input { width: 18px; height: 18px; accent-color: #5C7A4E; }
+  .check-row label {
+    margin: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.95rem;
+    color: #1E3A2F;
+    font-weight: 400;
+  }
+  .form-actions { margin-top: 8px; }
+  .note {
+    font-size: 0.85rem;
+    color: #5C7A4E;
+    margin-top: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #1E3A2F;
+    color: #F7F3EE;
+    margin-top: 24px;
+  }
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 16px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h4 {
+    color: #F7F3EE;
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    border-left: 2px solid #C47C2B;
+    padding-left: 10px;
+  }
+  footer p, footer a, footer li { color: #DDD6CB; font-size: 0.9rem; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { margin-bottom: 6px; }
+  footer a { text-decoration: none; }
+  .footer-bottom {
+    border-top: 1px solid #2E4A3F;
+    text-align: center;
+    padding: 16px;
+    font-size: 0.8rem;
+    color: #9DAA9F;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <a href="../home/index.html" class="logo">
+      <span class="logo-mark"></span>
+      Hollow Creek Rewilding
+    </a>
+    <div class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="../our-work/index.html">Our Work</a>
+      <a href="../volunteer/index.html">Volunteer</a>
+      <a href="../stories/index.html">Stories</a>
+      <a href="#" class="active">Donate</a>
+    </div>
+  </nav>
+</div>
+
+<section class="intro container">
+  <h1>Your Gift Restores What Was Lost</h1>
+  <p>
+    Every contribution returns native life to the Ozark plateau. <span class="highlight">$35 plants 50 native seedlings</span> along eroded creek banks, and <span class="highlight">$150 funds one full acre of invasive species removal</span> in priority restoration zones.
+  </p>
+</section>
+
+<section class="container" style="padding-top:0;">
+  <div class="cards">
+    <div class="card">
+      <div class="swatch"></div>
+      <div class="level-label">Seedling Supporter</div>
+      <div class="amount">$35</div>
+      <p>Plants 50 native seedlings—little bluestem, prairie dropseed, and butterfly milkweed—along Finley Creek tributaries.</p>
+      <a href="#give" class="btn-primary">Give $35</a>
+    </div>
+    <div class="card">
+      <div class="swatch"></div>
+      <div class="level-label">Grove Guardian</div>
+      <div class="amount">$75</div>
+      <p>Stocks one shelf of the Ozark Prairie Seed Library, preserving genetic diversity for future restoration seasons.</p>
+      <a href="#give" class="btn-primary">Give $75</a>
+    </div>
+    <div class="card">
+      <div class="swatch"></div>
+      <div class="level-label">Acre Steward</div>
+      <div class="amount">$150</div>
+      <p>Funds one full acre of invasive honeysuckle and bush clover removal, opening canopy for native regeneration.</p>
+      <a href="#give" class="btn-primary">Give $150</a>
+    </div>
+  </div>
+</section>
+
+<section class="container" id="give">
+  <h2>Make a Custom Gift</h2>
+  <div class="donate-form-wrap">
+    <form>
+      <div class="form-grid">
+        <div>
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Jane Doe">
+        </div>
+        <div>
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="jane@example.com">
+        </div>
+        <div>
+          <label for="amount">Donation Amount (USD)</label>
+          <input type="number" id="amount" min="1" placeholder="50">
+        </div>
+        <div>
+          <label for="zip">ZIP Code</label>
+          <input type="text" id="zip" placeholder="65806">
+        </div>
+        <div class="full check-row">
+          <input type="checkbox" id="recurring">
+          <label for="recurring">Make this a recurring monthly gift — sustained support funds year-round stewardship.</label>
+        </div>
+        <div class="full form-actions">
+          <button type="submit" class="btn-primary">Give Today</button>
+          <p class="note">Hollow Creek Rewilding is a 501(c)(3) nonprofit. Contributions are tax-deductible to the fullest extent allowed by law.</p>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Our Mission</h4>
+      <p>Hollow Creek Rewilding restores native grasslands and riparian corridors across the Ozark plateau through volunteer stewardship, seed banking, and community science.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../home/index.html">Home</a></li>
+        <li><a href="../our-work/index.html">Our Work</a></li>
+        <li><a href="../volunteer/index.html">Volunteer</a></li>
+        <li><a href="../stories/index.html">Stories</a></li>
+        <li><a href="#">Donate</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>418 Sycamore Lane</li>
+        <li>Eureka Springs, AR 72632</li>
+        <li>hello@hollowcreek.org</li>
+        <li>(479) 555-0142</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2024 Hollow Creek Rewilding · EIN 47-3829104</div>
+</footer>
+
+</body>
+</html>

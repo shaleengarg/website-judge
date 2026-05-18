@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About — Ironclad Futures Summit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d1b2a;
+    color: #f0ece2;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; }
+
+  /* Nav */
+  .nav-wrap { background: #0d1b2a; border-bottom: 1px solid #162435; }
+  nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 22px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #f0ece2;
+    letter-spacing: 0.5px;
+  }
+  .wordmark span { color: #c8441b; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: #f0ece2;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .nav-links a.active { color: #c8441b; }
+
+  /* Hero */
+  .hero {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 20px 40px;
+  }
+  .section-label {
+    color: #4a7fa5;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-size: 46px;
+    line-height: 1.15;
+    max-width: 780px;
+  }
+  .hero h1 .accent { color: #c8441b; }
+
+  /* Origin section */
+  .origin {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .origin p { margin-bottom: 18px; color: #d9d4c5; }
+  .pull-quote {
+    border-left: 3px solid #c8441b;
+    padding: 8px 0 8px 24px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.35;
+    color: #f0ece2;
+  }
+  .pull-quote .stat {
+    display: block;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: bold;
+    color: #c8441b;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .pull-quote cite {
+    display: block;
+    margin-top: 18px;
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #4a7fa5;
+  }
+
+  /* Committee */
+  .committee-wrap { background: #0b1622; padding: 56px 0; border-top: 1px solid #162435; }
+  .committee {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .committee h2 { font-size: 30px; margin-bottom: 32px; }
+  .committee-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .member-card {
+    flex: 1 1 calc(50% - 10px);
+    background: #162435;
+    border: 1px solid #4a7fa5;
+    border-radius: 4px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #f0ece2;
+  }
+  .avatar {
+    width: 52px;
+    height: 52px;
+    background: #4a7fa5;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    color: #0d1b2a;
+  }
+  .member-card .name { font-family: Georgia, serif; font-weight: bold; font-size: 17px; }
+  .member-card .title { color: #4a7fa5; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+  /* Sponsors */
+  .sponsors-wrap { padding: 56px 0; }
+  .sponsors {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .sponsors h2 { font-size: 30px; margin-bottom: 28px; }
+  .sponsor-row {
+    display: flex;
+    gap: 18px;
+  }
+  .sponsor {
+    flex: 1;
+    height: 110px;
+    border: 1px solid #4a7fa5;
+    border-radius: 4px;
+    background: #162435;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #f0ece2;
+  }
+  .sponsor .co { font-family: Georgia, serif; font-weight: bold; font-size: 18px; }
+  .sponsor .tag { font-size: 11px; color: #4a7fa5; text-transform: uppercase; letter-spacing: 2px; margin-top: 6px; }
+
+  /* CTA strip */
+  .cta-strip {
+    max-width: 1100px;
+    margin: 24px auto 56px;
+    padding: 28px 32px;
+    background: #162435;
+    border: 1px solid #4a7fa5;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cta-strip h3 { font-size: 22px; }
+  .cta-strip p { color: #4a7fa5; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+  .btn {
+    background: #c8441b;
+    color: #f0ece2;
+    padding: 12px 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: inline-block;
+    border: none;
+  }
+
+  /* Footer */
+  footer { background: #0b1622; border-top: 1px solid #c8441b; padding: 40px 0 28px; }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+  }
+  .footer-inner h4 {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #4a7fa5;
+    margin-bottom: 14px;
+  }
+  .tagline { font-family: Georgia, serif; font-size: 20px; line-height: 1.4; max-width: 380px; }
+  .tagline .small { display:block; font-family: system-ui, sans-serif; font-size: 12px; color: #4a7fa5; text-transform: uppercase; letter-spacing: 2px; margin-top: 12px; }
+  .footer-inner ul { list-style: none; }
+  .footer-inner li { margin-bottom: 8px; font-size: 14px; }
+  .footer-inner a { color: #f0ece2; text-decoration: none; }
+  .footer-inner .contact { font-size: 14px; color: #d9d4c5; }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 28px auto 0;
+    padding: 18px 20px 0;
+    border-top: 1px solid #162435;
+    font-size: 12px;
+    color: #4a7fa5;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav>
+    <div class="wordmark">IRONCLAD<span>·</span>FUTURES</div>
+    <div class="nav-links">
+      <a href="../program/index.html">Program</a>
+      <a href="../speakers/index.html">Speakers</a>
+      <a href="../venue/index.html">Venue</a>
+      <a href="../register/index.html">Register</a>
+      <a href="#" class="active">About</a>
+    </div>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="section-label">About the Summit</div>
+  <h1>Forging the next chapter of <span class="accent">American industry</span>, one conversation at a time.</h1>
+</section>
+
+<section class="origin">
+  <div>
+    <div class="section-label">Origin &amp; Mission</div>
+    <h2 style="font-size:26px; margin-bottom:18px;">A coalition built in Pittsburgh, for the nation's makers.</h2>
+    <p>The Ironclad Futures Summit was founded in 2019 by the Pittsburgh Manufacturing Coalition — a working group of regional fabricators, university researchers, and policy advisors who believed that the future of domestic production deserved a serious, in-person forum. What began as a single-day roundtable inside a converted steelworks has, in six years, become the Northeast's most rigorous gathering for industrial technology.</p>
+    <p>Today, the Summit convenes engineers, lawmakers, and investors across two intensive days each October. Our mission is unchanged: to surface the practical investments, policy levers, and engineering breakthroughs that will keep advanced manufacturing rooted on American soil — and to do it through frank, evidence-driven dialogue rather than keynote spectacle.</p>
+  </div>
+  <aside class="pull-quote">
+    <span class="stat">43%</span>
+    of Summit attendees report a new partnership formed within 90 days.
+    <cite>— 2024 Post-Summit Survey</cite>
+  </aside>
+</section>
+
+<div class="committee-wrap">
+  <div class="committee">
+    <div class="section-label">Leadership</div>
+    <h2>Organizing Committee</h2>
+    <div class="committee-grid">
+      <div class="member-card">
+        <div class="avatar">MR</div>
+        <div><div class="name">Margaret Reilly</div><div class="title">Chair · PMC Director</div></div>
+      </div>
+      <div class="member-card">
+        <div class="avatar">DH</div>
+        <div><div class="name">Daniel Huang</div><div class="title">Program Lead · CMU Robotics</div></div>
+      </div>
+      <div class="member-card">
+        <div class="avatar">SO</div>
+        <div><div class="name">Sofia Okafor</div><div class="title">Policy Chair · Allegheny Trust</div></div>
+      </div>
+      <div class="member-card">
+        <div class="avatar">JT</div>
+        <div><div class="name">James Tomasetti</div><div class="title">Industry Liaison · USW Local 1219</div></div>
+      </div>
+      <div class="member-card">
+        <div class="avatar">PV</div>
+        <div><div class="name">Priya Venkataraman</div><div class="title">Investment Track · Steel City Capital</div></div>
+      </div>
+      <div class="member-card">
+        <div class="avatar">RB</div>
+        <div><div class="name">Robert Brennan</div><div class="title">Operations Chair · Heinz HC</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sponsors-wrap">
+  <div class="sponsors">
+    <div class="section-label">Anchor Sponsors</div>
+    <h2>2025 Supporting Partners</h2>
+    <div class="sponsor-row">
+      <div class="sponsor"><div class="co">ALLEGHENY STEELWORKS</div><div class="tag">Founding Partner</div></div>
+      <div class="sponsor"><div class="co">KEYSTONE ROBOTICS</div><div class="tag">Technology Partner</div></div>
+      <div class="sponsor"><div class="co">MONONGAHELA TRUST</div><div class="tag">Investment Partner</div></div>
+      <div class="sponsor"><div class="co">FORGE &amp; FOUNDRY CO.</div><div class="tag">Hosting Partner</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-strip">
+  <div>
+    <h3>Join us October 14–15, 2025.</h3>
+    <p>Pittsburgh, PA · Heinz History Center</p>
+  </div>
+  <a href="../register/index.html" class="btn">Register Now</a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Ironclad Futures</h4>
+      <div class="tagline">Two days. One question: what will America make next?
+        <span class="small">© 2025 Pittsburgh Manufacturing Coalition</span>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../program/index.html">Program</a></li>
+        <li><a href="../speakers/index.html">Speakers</a></li>
+        <li><a href="../venue/index.html">Venue</a></li>
+        <li><a href="../register/index.html">Register</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <div class="contact">
+        1212 Smallman St<br>
+        Pittsburgh, PA 15222<br>
+        hello@ironcladfutures.org<br>
+        +1 (412) 555-0184
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>Built in Pittsburgh</span>
+    <span>Press · Code of Conduct · Privacy</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dark-Room — Half-Life of Light</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #F5F0E8; color: #1A1612; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.6; }
+
+  /* ============ NAV / HEADER BAND ============ */
+  .header-band {
+    background: #1A1612;
+    color: #F5F0E8;
+    min-height: 320px;
+    padding: 28px 48px 48px;
+    position: relative;
+  }
+  .topnav {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #4A6741;
+    padding-bottom: 14px;
+    margin-bottom: 36px;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #F5F0E8;
+    letter-spacing: 0.5px;
+  }
+  .brand .accent { color: #C1440E; }
+  .navlinks {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+  }
+  .navlinks a {
+    color: #F5F0E8;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding-bottom: 4px;
+  }
+  .navlinks a.current { color: #C1440E; border-bottom: 1px solid #C1440E; }
+
+  .header-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    margin-bottom: 22px;
+  }
+
+  .chapter-id {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+  .chapter-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 54px;
+    color: #F5F0E8;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 28px;
+  }
+
+  /* Inset box of step titles */
+  .step-inset {
+    border: 2px solid #C1440E;
+    padding: 24px 32px;
+    max-width: 880px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 18px;
+  }
+  .step-inset .label {
+    font-family: "Courier New", monospace;
+    color: #F5F0E8;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.4;
+  }
+  .step-inset .label span {
+    display: block;
+    color: #C1440E;
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  /* ============ BODY ============ */
+  .body-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .ascii-note {
+    font-family: "Courier New", monospace;
+    color: #4A6741;
+    font-size: 11px;
+    padding: 24px 0 8px;
+    letter-spacing: 1px;
+  }
+
+  .section-rule {
+    border: none;
+    border-top: 1px solid #C1440E;
+    margin: 64px 0 32px;
+  }
+
+  .intro-strap {
+    font-family: "Courier New", monospace;
+    color: #4A6741;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .section-head {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 34px;
+    margin-bottom: 22px;
+    color: #1A1612;
+  }
+
+  /* Two-col grid */
+  .process-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    margin-top: 12px;
+  }
+  .essay p {
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  .essay p:first-of-type::first-letter {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 56px;
+    float: left;
+    line-height: 0.9;
+    padding: 6px 10px 0 0;
+    color: #C1440E;
+  }
+  .essay .marginalia {
+    font-family: "Courier New", monospace;
+    color: #4A6741;
+    font-size: 11px;
+    border-left: 1px solid #4A6741;
+    padding: 6px 0 6px 14px;
+    margin: 22px 0;
+  }
+
+  /* Right column: process steps */
+  .steps-stack { display: flex; flex-direction: column; gap: 20px; }
+  .process-step {
+    border: 1px solid #1A1612;
+    padding: 20px 24px 22px;
+    background: #F5F0E8;
+    position: relative;
+  }
+  .process-step .corner {
+    position: absolute;
+    top: 6px; right: 10px;
+    font-family: "Courier New", monospace;
+    color: #4A6741;
+    font-size: 11px;
+  }
+  .step-num {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 48px;
+    color: #C1440E;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .sage-rule {
+    border: none;
+    border-top: 1px solid #4A6741;
+    margin: 4px 0 12px;
+    width: 56px;
+  }
+  .step-name {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    color: #1A1612;
+  }
+  .step-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #1A1612;
+  }
+
+  /* Pull quote */
+  .pullquote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 28px;
+    color: #C1440E;
+    border-left: 4px solid #C1440E;
+    padding-left: 24px;
+    max-width: 520px;
+    float: right;
+    margin: 8px 0 24px 32px;
+    line-height: 1.3;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    border-top: 2px solid #1A1612;
+    margin-top: 80px;
+    padding: 22px 48px 28px;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: #1A1612;
+  }
+  .footer-row {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 3fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .footer-row h4 {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #4A6741;
+    margin-bottom: 8px;
+    font-weight: normal;
+  }
+  .compound-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px 18px;
+    font-size: 11px;
+  }
+  .compound-list span small { color: #C1440E; }
+</style>
+</head>
+<body>
+
+<header class="header-band">
+  <div class="topnav">
+    <div class="brand">Half-Life <span class="accent">of</span> Light</div>
+    <ul class="navlinks">
+      <li><a href="../threshold/index.html">Threshold</a></li>
+      <li><a href="../exposure/index.html">Exposure</a></li>
+      <li><a href="#" class="current">Dark-Room</a></li>
+      <li><a href="../grain/index.html">Grain</a></li>
+      <li><a href="../afterimage/index.html">Afterimage</a></li>
+    </ul>
+  </div>
+
+  <div class="header-meta">
+    <span>CHAPTER 03 / 05 &nbsp;//&nbsp; THE PHYSICAL ACT</span>
+    <span>RUNTIME ── 14 MIN. READ</span>
+  </div>
+
+  <div class="chapter-id">─── §.03 ─── DEVELOPING IN DARKNESS ───</div>
+  <h1 class="chapter-title">Dark-Room</h1>
+
+  <div class="step-inset">
+    <div class="label"><span>01</span>Develop</div>
+    <div class="label"><span>02</span>Stop</div>
+    <div class="label"><span>03</span>Fix</div>
+    <div class="label"><span>04</span>Wash</div>
+    <div class="label"><span>05</span>Wet&nbsp;Print</div>
+    <div class="label"><span>06</span>Dry</div>
+  </div>
+</header>
+
+<main class="body-wrap">
+
+  <div class="ascii-note">+── note: temperature held at 20.0°C ± 0.3 ───────────── agitation, 5s / 30s ──+</div>
+
+  <hr class="section-rule">
+
+  <p class="intro-strap">// PART I — THE ROOM WITHOUT WITNESSES</p>
+  <h2 class="section-head">A geometry of held breath.</h2>
+
+  <div class="process-grid">
+
+    <section class="essay">
+      <p>To enter a darkroom is to agree to a particular kind of blindness. The safelight throws an amber wash over enamel trays; one's hands learn the room by memory. A reel, a tank, a thermometer. The bottle of D-76 mixed last Tuesday and labeled with masking tape. Photography here is not optical — it is choreography.</p>
+
+      <p class="marginalia">// fig. a — the operator works from the elbows, not the eyes. muscle memory replaces sight for ~11 minutes per roll.</p>
+
+      <p>The film, exposed hours or weeks earlier, carries a latent image: a pattern of silver halide crystals reduced by photons into invisible information. Development is not creation but disclosure. The hydroquinone in the bath finds the crystals that light has touched and amplifies them by a factor of roughly ten million — turning what was hidden into what is dense and dark.</p>
+
+      <p>There is something funereal about it. The chemistry is exact, the timing is exact, but the room itself is patient in a way nothing else in modern life is patient. Twelve minutes for the developer. Thirty seconds of agitation, then rest. Pour off. Stop bath. The smell of acetic acid rising sharp as a memory.</p>
+
+      <p>What the darkroom teaches, finally, is that an image is a sequence of decisions made in the absence of any image at all. You commit to the picture before you know whether it exists. You trust the chemistry, the count, the room. You wait. And then, in the fixer, the negative clears — and the world that was already there becomes visible to you for the first time.</p>
+    </section>
+
+    <aside class="steps-stack">
+      <div class="process-step">
+        <span class="corner">step.01</span>
+        <div class="step-num">1</div>
+        <hr class="sage-rule">
+        <div class="step-name">Develop&nbsp;·&nbsp;D-76</div>
+        <p class="step-desc">Reduce exposed silver halide to metallic silver. Twelve minutes, intermittent agitation, twenty degrees.</p>
+      </div>
+      <div class="process-step">
+        <span class="corner">step.02</span>
+        <div class="step-num">2</div>
+        <hr class="sage-rule">
+        <div class="step-name">Stop&nbsp;·&nbsp;Acetic&nbsp;Acid</div>
+        <p class="step-desc">Halt development with a brief acid bath. Thirty seconds. The smell is unmistakable; it is the smell of the chapter ending.</p>
+      </div>
+      <div class="process-step">
+        <span class="corner">step.03</span>
+        <div class="step-num">3</div>
+        <hr class="sage-rule">
+        <div class="step-name">Fix&nbsp;·&nbsp;Sodium&nbsp;Thiosulfate</div>
+        <p class="step-desc">Dissolve undeveloped halides; render the image permanent. Five minutes. The negative is now safe in daylight.</p>
+      </div>
+      <div class="process-step">
+        <span class="corner">step.04</span>
+        <div class="step-num">4</div>
+        <hr class="sage-rule">
+        <div class="step-name">Wash&nbsp;·&nbsp;Running&nbsp;Water</div>
+        <p class="step-desc">Twenty minutes of slow flushing. Residual fixer left in the emulsion will yellow the image within a decade.</p>
+      </div>
+      <div class="process-step">
+        <span class="corner">step.05</span>
+        <div class="step-num">5</div>
+        <hr class="sage-rule">
+        <div class="step-name">Dry&nbsp;·&nbsp;Hanging&nbsp;Line</div>
+        <p class="step-desc">Squeegee, clip, suspend. Two hours in still air. The negative curls slightly as the gelatin contracts — its first gesture.</p>
+      </div>
+    </aside>
+
+  </div>
+
+  <hr class="section-rule">
+
+  <blockquote class="pullquote">
+    The darkroom is the only place left where a person stands still long enough for an image to find them.
+  </blockquote>
+
+  <p class="intro-strap">// PART II — TIME IN SOLUTION</p>
+  <h2 class="section-head">The bath remembers what the eye forgets.</h2>
+  <p style="max-width:560px; line-height:1.8;">Every developer formula is a slightly different theory of memory. Rodinal accentuates grain, sharpens edges, refuses to flatter. D-76 is forgiving and middle-tempered. Pyrocat-HD stains the emulsion a soft brown that prints with extraordinary tonal subtlety but corrodes the operator's fingertips over years. The chemist chooses, and in choosing, decides what the past will look like.</p>
+
+  <div style="clear:both"></div>
+
+</main>
+
+<footer>
+  <div class="footer-row">
+    <div>
+      <h4>// Citation</h4>
+      <div>Half-Life of Light<br>Chapter 03 — Dark-Room<br>Field notes, 2024</div>
+    </div>
+    <div>
+      <h4>// Chemical Compounds Referenced</h4>
+      <div class="compound-list">
+        <span>Hydroquinone <small>110.11</small></span>
+        <span>Metol <small>344.40</small></span>
+        <span>Sodium&nbsp;Sulfite <small>126.04</small></span>
+        <span>Borax <small>381.37</small></span>
+        <span>Acetic&nbsp;Acid <small>60.05</small></span>
+        <span>Sodium&nbsp;Thiosulfate <small>158.11</small></span>
+        <span>Pot.&nbsp;Bromide <small>119.00</small></span>
+        <span>Silver&nbsp;Bromide <small>187.77</small></span>
+      </div>
+    </div>
+    <div>
+      <h4>// File</h4>
+      <div>03_darkroom.html<br>rev. 04 ── F.L.<br>pp. 41–58</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

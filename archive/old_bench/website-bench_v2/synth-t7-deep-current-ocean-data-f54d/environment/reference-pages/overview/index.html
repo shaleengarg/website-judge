@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Deep Current — Overview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #0a0f2e; color: #e8edf5; font-family: Arial, Helvetica, sans-serif; letter-spacing: -0.01em; }
+  body { overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Depth ruler fixed on left margin */
+  .depth-ruler {
+    position: fixed;
+    left: 18px;
+    top: 0;
+    height: 100vh;
+    width: 60px;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  /* Top nav strip */
+  .nav-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 22px 30px 0 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: #e8edf5;
+  }
+  .brand span { color: #00d4ff; }
+  .brand small {
+    display: block;
+    font-family: Arial, sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: #6a7ba8;
+    margin-top: 2px;
+  }
+  .nav-tabs {
+    position: relative;
+    height: 44px;
+  }
+  .nav-tabs svg { display: block; }
+  .nav-tabs a {
+    position: absolute;
+    top: 0;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #e8edf5;
+    padding: 0 14px;
+    font-weight: 700;
+  }
+  .nav-tabs a.active { color: #00d4ff; }
+
+  /* Hero */
+  .hero {
+    max-width: 1100px;
+    margin: 28px auto 0;
+    padding: 0 30px 0 80px;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 36px;
+    align-items: center;
+    min-height: 460px;
+  }
+  .hero-text h1 {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 54px;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: #e8edf5;
+  }
+  .hero-text h1 em {
+    font-style: normal;
+    color: #00d4ff;
+  }
+  .kicker {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.34em;
+    color: #00d4ff;
+    margin-bottom: 18px;
+    padding: 6px 12px;
+    border: 1px solid rgba(0,212,255,0.4);
+    text-transform: uppercase;
+  }
+  .lede {
+    margin-top: 18px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #b8c2d9;
+    max-width: 480px;
+  }
+  .hero-illustration {
+    position: relative;
+  }
+
+  /* Wave divider */
+  .wave-divider {
+    width: 100%;
+    display: block;
+    margin-top: 30px;
+  }
+
+  /* Stat strip */
+  .stat-strip {
+    max-width: 1100px;
+    margin: -2px auto 0;
+    padding: 50px 30px 30px 80px;
+    background: #0d1a45;
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    clip-path: polygon(0 6%, 100% 0, 100% 94%, 0 100%);
+  }
+  .stat {
+    flex: 1;
+    transform: skewX(-8deg);
+    background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(10,15,46,0.4));
+    border: 1px solid rgba(0,212,255,0.45);
+    padding: 22px 26px;
+  }
+  .stat-inner { transform: skewX(8deg); }
+  .stat .num {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 38px;
+    color: #00d4ff;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .stat .lbl {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #e8edf5;
+    margin-top: 8px;
+  }
+  .stat .sub {
+    font-size: 11px;
+    color: #8a97ba;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* Content section */
+  .content {
+    max-width: 1100px;
+    margin: 36px auto 0;
+    padding: 0 30px 30px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+  }
+  .content h2 {
+    grid-column: 1 / -1;
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: -0.015em;
+    margin-bottom: 4px;
+  }
+  .content h2 span { color: #ff6b35; }
+
+  .hex-card {
+    position: relative;
+    height: 170px;
+  }
+  .hex-card svg.hex-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hex-card .hex-body {
+    position: absolute;
+    inset: 0;
+    padding: 28px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hex-card .icon { margin-bottom: 8px; }
+  .hex-card h3 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #00d4ff;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+  .hex-card p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #b8c2d9;
+  }
+
+  /* Footer */
+  footer {
+    max-width: 1100px;
+    margin: 30px auto 20px;
+    padding: 22px 30px 22px 80px;
+    border-top: 1px solid rgba(232,237,245,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #6a7ba8;
+  }
+  footer .links a { margin-left: 18px; }
+  footer .links a:hover { color: #00d4ff; }
+</style>
+</head>
+<body>
+
+<!-- DEPTH RULER -->
+<svg class="depth-ruler" viewBox="0 0 60 800" preserveAspectRatio="none">
+  <line x1="30" y1="20" x2="30" y2="780" stroke="#2a3a6a" stroke-width="1"/>
+  <g font-family="Arial, sans-serif" font-size="11" fill="#e8edf5" letter-spacing="0.5">
+    <line x1="22" y1="80" x2="38" y2="80" stroke="#00d4ff" stroke-width="1.5"/>
+    <text x="44" y="84">200m</text>
+    <line x1="22" y1="230" x2="38" y2="230" stroke="#00d4ff" stroke-width="1.5"/>
+    <text x="44" y="234">1000m</text>
+    <line x1="22" y1="450" x2="38" y2="450" stroke="#00d4ff" stroke-width="1.5"/>
+    <text x="44" y="454">4000m</text>
+    <line x1="22" y1="700" x2="38" y2="700" stroke="#ff6b35" stroke-width="1.5"/>
+    <text x="44" y="704" fill="#ff6b35">11000m</text>
+  </g>
+  <circle cx="30" cy="20" r="3" fill="#00d4ff"/>
+  <circle cx="30" cy="780" r="3" fill="#ff6b35"/>
+</svg>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <div class="brand">DEEP<span>·</span>CURRENT<small>OCEAN DATA · ATLAS 01</small></div>
+  <div class="nav-tabs">
+    <svg width="720" height="44" viewBox="0 0 720 44">
+      <path d="M0,8 L12,0 L708,0 L720,8 L720,36 L708,44 L12,44 L0,36 Z" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.5"/>
+      <line x1="140" y1="6" x2="140" y2="38" stroke="#2a3a6a" stroke-width="1"/>
+      <line x1="280" y1="6" x2="280" y2="38" stroke="#2a3a6a" stroke-width="1"/>
+      <line x1="430" y1="6" x2="430" y2="38" stroke="#2a3a6a" stroke-width="1"/>
+      <line x1="575" y1="6" x2="575" y2="38" stroke="#2a3a6a" stroke-width="1"/>
+      <rect x="6" y="6" width="128" height="32" fill="rgba(0,212,255,0.12)"/>
+    </svg>
+    <a class="active" href="#" style="left:0; width:140px;">Overview</a>
+    <a href="../temperature/index.html" style="left:140px; width:140px;">Temperature</a>
+    <a href="../biodiversity/index.html" style="left:280px; width:150px;">Biodiversity</a>
+    <a href="../pressure-zones/index.html" style="left:430px; width:145px;">Pressure</a>
+    <a href="../human-impact/index.html" style="left:575px; width:145px;">Human Impact</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="kicker">01 / Overview · Atlas of the Abyss</span>
+    <h1>Five layers<br>between us &amp; the <em>hadal dark</em>.</h1>
+    <p class="lede">From sunlit shallows to crushing trenches eleven kilometers deep, the ocean stacks into discrete biospheres — each colder, darker, and stranger than the one above it. Deep Current charts those layers with data, geometry, and a great deal of respect for what we still don't know.</p>
+  </div>
+
+  <!-- OCEAN CROSS SECTION -->
+  <div class="hero-illustration">
+    <svg viewBox="0 0 520 440" width="100%" height="440">
+      <defs>
+        <linearGradient id="zoneGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00d4ff"/>
+          <stop offset="25%" stop-color="#0a86b8"/>
+          <stop offset="55%" stop-color="#0a2a6a"/>
+          <stop offset="80%" stop-color="#050a28"/>
+          <stop offset="100%" stop-color="#03010a"/>
+        </linearGradient>
+      </defs>
+
+      <!-- frame -->
+      <rect x="0" y="0" width="520" height="440" fill="none"/>
+
+      <!-- Sunlight zone trapezoid -->
+      <polygon points="20,30 500,30 488,90 32,90" fill="#00d4ff" opacity="0.85"/>
+      <!-- Twilight -->
+      <polygon points="32,92 488,92 472,162 48,162" fill="#0a86b8"/>
+      <!-- Midnight -->
+      <polygon points="48,164 472,164 452,254 68,254" fill="#0a2a6a"/>
+      <!-- Abyssal -->
+      <polygon points="68,256 452,256 432,336 88,336" fill="#050a28"/>
+      <!-- Hadal -->
+      <polygon points="88,338 432,338 360,420 160,420" fill="#03010a" stroke="#ff6b35" stroke-width="0.8" opacity="0.95"/>
+
+      <!-- gradient overlay -->
+      <polygon points="20,30 500,30 488,90 472,162 452,254 432,336 360,420 160,420 88,336 68,254 48,162 32,90"
+               fill="url(#zoneGrad)" opacity="0.25"/>
+
+      <!-- depth tick lines on right -->
+      <g stroke="#e8edf5" stroke-width="0.5" opacity="0.5">
+        <line x1="490" y1="90" x2="510" y2="90"/>
+        <line x1="475" y1="162" x2="510" y2="162"/>
+        <line x1="455" y1="254" x2="510" y2="254"/>
+        <line x1="435" y1="336" x2="510" y2="336"/>
+      </g>
+
+      <!-- zone labels -->
+      <g font-family="Georgia, serif" font-weight="700" font-size="13" fill="#e8edf5">
+        <text x="40" y="65">SUNLIGHT ZONE</text>
+        <text x="40" y="130">TWILIGHT ZONE</text>
+        <text x="60" y="215">MIDNIGHT ZONE</text>
+        <text x="80" y="300">ABYSSAL ZONE</text>
+        <text x="180" y="385" fill="#ff6b35">HADAL ZONE</text>
+      </g>
+      <g font-family="Arial, sans-serif" font-size="10" fill="#e8edf5" opacity="0.85" letter-spacing="1">
+        <text x="40" y="80">0 – 200 m  ·  euphotic</text>
+        <text x="40" y="145">200 – 1000 m  ·  dysphotic</text>
+        <text x="60" y="230">1000 – 4000 m  ·  aphotic</text>
+        <text x="80" y="315">4000 – 6000 m  ·  bathypelagic</text>
+        <text x="180" y="400" fill="#ffb89a">6000 – 11000 m</text>
+      </g>
+
+      <!-- small fish icon decoration -->
+      <g transform="translate(370,55)">
+        <path d="M0,8 C6,0 18,0 24,8 C18,16 6,16 0,8 Z M24,8 L32,2 L32,14 Z M8,8 L8,8 M6,6 a1,1 0 1,0 0.1,0"
+              fill="none" stroke="#0a0f2e" stroke-width="1.5"/>
+      </g>
+
+      <!-- surface ripple -->
+      <path d="M0,30 Q40,22 80,30 T160,30 T240,30 T320,30 T400,30 T480,30 T560,30"
+            fill="none" stroke="#e8edf5" stroke-width="1" opacity="0.6"/>
+    </svg>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<svg class="wave-divider" viewBox="0 0 1280 80" preserveAspectRatio="none" height="80">
+  <path d="M0,40 C160,10 320,70 480,40 C640,10 800,70 960,40 C1120,10 1200,55 1280,30 L1280,80 L0,80 Z" fill="#0d1a45"/>
+  <path d="M0,40 C160,10 320,70 480,40 C640,10 800,70 960,40 C1120,10 1200,55 1280,30" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+</svg>
+
+<!-- STAT STRIP -->
+<section class="stat-strip">
+  <div class="stat">
+    <div class="stat-inner">
+      <div class="num">71%</div>
+      <div class="lbl">of Earth's surface</div>
+      <div class="sub">Covered by saltwater — 361 million km²</div>
+    </div>
+  </div>
+  <div class="stat">
+    <div class="stat-inner">
+      <div class="num">3.68<span style="font-size:20px;"> km</span></div>
+      <div class="lbl">Average depth</div>
+      <div class="sub">Mean ocean floor below sea level</div>
+    </div>
+  </div>
+  <div class="stat">
+    <div class="stat-inner">
+      <div class="num" style="color:#ff6b35;">95%</div>
+      <div class="lbl">Unexplored</div>
+      <div class="sub">Mapped at lower resolution than Mars</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT HEX CARDS -->
+<section class="content">
+  <h2>What you'll find in this atlas <span>·</span></h2>
+
+  <div class="hex-card">
+    <svg class="hex-bg" viewBox="0 0 340 170" preserveAspectRatio="none">
+      <polygon points="20,10 320,10 335,85 320,160 20,160 5,85"
+               fill="rgba(0,212,255,0.12)" stroke="#00d4ff" stroke-width="1.5"/>
+    </svg>
+    <div class="hex-body">
+      <div class="icon">
+        <!-- thermometer -->
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#00d4ff" stroke-width="2">
+          <rect x="20" y="6" width="8" height="26" rx="4"/>
+          <circle cx="24" cy="36" r="6" fill="#ff6b35" stroke="#ff6b35"/>
+          <line x1="24" y1="14" x2="24" y2="34" stroke="#ff6b35" stroke-width="3"/>
+          <line x1="30" y1="14" x2="34" y2="14"/>
+          <line x1="30" y1="22" x2="34" y2="22"/>
+        </svg>
+      </div>
+      <h3>Temperature</h3>
+      <p>Surface to hadal: a 26.5° drop in five layers.</p>
+    </div>
+  </div>
+
+  <div class="hex-card">
+    <svg class="hex-bg" viewBox="0 0 340 170" preserveAspectRatio="none">
+      <polygon points="20,10 320,10 335,85 320,160 20,160 5,85"
+               fill="rgba(0,212,255,0.12)" stroke="#00d4ff" stroke-width="1.5"/>
+    </svg>
+    <div class="hex-body">
+      <div class="icon">
+        <!-- coral / biodiversity -->
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#00d4ff" stroke-width="2">
+          <path d="M24,42 L24,28 M24,28 C20,24 16,22 14,16 M24,28 C28,24 32,22 34,16 M24,28 C24,22 22,18 18,14 M24,28 C24,22 26,18 30,14"/>
+          <circle cx="14" cy="16" r="2" fill="#ff6b35" stroke="none"/>
+          <circle cx="34" cy="16" r="2" fill="#ff6b35" stroke="none"/>
+          <circle cx="18" cy="14" r="1.8" fill="#00d4ff" stroke="none"/>
+          <circle cx="30" cy="14" r="1.8" fill="#00d4ff" stroke="none"/>
+        </svg>
+      </div>
+      <h3>Biodiversity</h3>
+      <p>Twelve species mapped across the depth column.</p>
+    </div>
+  </div>
+
+  <div class="hex-card">
+    <svg class="hex-bg" viewBox="0 0 340 170" preserveAspectRatio="none">
+      <polygon points="20,10 320,10 335,85 320,160 20,160 5,85"
+               fill="rgba(0,212,255,0.12)" stroke="#00d4ff" stroke-width="1.5"/>
+    </svg>
+    <div class="hex-body">
+      <div class="icon">
+        <!-- pressure gauge -->
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#00d4ff" stroke-width="2">
+          <circle cx="24" cy="24" r="16"/>
+          <path d="M24,24 L34,16" stroke="#ff6b35" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="24" cy="24" r="2" fill="#ff6b35" stroke="none"/>
+          <line x1="24" y1="10" x2="24" y2="13"/>
+          <line x1="10" y1="24" x2="13" y2="24"/>
+          <line x1="38" y1="24" x2="35" y2="24"/>
+          <line x1="14" y1="14" x2="16" y2="16"/>
+          <line x1="34" y1="14" x2="32" y2="16"/>
+        </svg>
+      </div>
+      <h3>Pressure Zones</h3>
+      <p>1 to 1086 atmospheres — the weight of the deep.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>© Deep Current Atlas · Marine Data Vol. 01</div>
+  <div class="links">
+    <a href="#">Methods</a>
+    <a href="#">Sources</a>
+    <a href="#">Credits</a>
+  </div>
+</footer>
+
+</body>
+</html>

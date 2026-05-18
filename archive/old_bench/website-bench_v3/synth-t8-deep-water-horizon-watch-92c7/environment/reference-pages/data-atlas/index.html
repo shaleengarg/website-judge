@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Atlas — Operation Phantom Net</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #F4F0E8; color: #1A1A1A; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.7; }
+
+  /* HEADER BAND */
+  .header-band {
+    width: 100%;
+    max-width: 100vw;
+    height: 80px;
+    background: #1A1A1A;
+    color: #F4F0E8;
+    display: flex;
+    align-items: center;
+    padding: 0 48px;
+    position: relative;
+  }
+  .masthead {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .masthead-dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    background: #C8392B;
+    border-radius: 50%;
+  }
+  .masthead span.tag {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #D9D3C4;
+    font-weight: 400;
+    margin-left: 8px;
+  }
+  nav.primary {
+    margin-left: auto;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  nav.primary a {
+    color: #F4F0E8;
+    text-decoration: none;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+  }
+  nav.primary a.active {
+    border-bottom: 2px solid #C8392B;
+    color: #fff;
+  }
+  nav.primary a:hover { border-bottom: 2px solid #2E5D8B; }
+
+  /* PAGE TITLE STRIP */
+  .title-strip {
+    background: #2E5D8B;
+    color: #F4F0E8;
+    padding: 56px 48px;
+  }
+  .title-strip-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .title-strip .crumb {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #D9D3C4;
+    margin-bottom: 16px;
+  }
+  .title-strip h1 {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 48px;
+    line-height: 1.1;
+  }
+  .title-strip p.lede {
+    margin-top: 16px;
+    max-width: 720px;
+    font-size: 16px;
+    color: #E8E2D6;
+  }
+  .title-anno {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #D9D3C4;
+    text-align: right;
+    line-height: 1.6;
+  }
+  .title-anno strong { color: #C8392B; font-weight: 400; }
+
+  /* MAIN CONTENT GRID */
+  .content {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 64px 48px;
+  }
+  .atlas-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+
+  /* SECTION HEADERS */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #D9D3C4;
+    padding-bottom: 12px;
+  }
+  .section-head h2 {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 28px;
+  }
+  .sublabel {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #2E5D8B;
+  }
+
+  /* LEFT PANEL — INCIDENT ZONES */
+  .zones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .zone-card {
+    border: 1px solid #D9D3C4;
+    padding: 24px;
+    background: #F4F0E8;
+    position: relative;
+  }
+  .zone-card h3 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .zone-card .coords {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #2E5D8B;
+    margin-bottom: 16px;
+  }
+  .zone-card .count {
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    margin-bottom: 16px;
+    color: #1A1A1A;
+  }
+  .zone-card .count strong {
+    font-size: 22px;
+    color: #C8392B;
+    border-bottom: 2px solid #C8392B;
+    padding-bottom: 2px;
+  }
+  .chart {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .chart-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+  }
+  .chart-row .yr {
+    width: 32px;
+    color: #1A1A1A;
+    flex-shrink: 0;
+  }
+  .chart-row .bar {
+    height: 10px;
+    background: #2E5D8B;
+  }
+  .chart-row.alert .bar { background: #C8392B; }
+  .chart-row .val {
+    margin-left: 6px;
+    color: #1A1A1A;
+  }
+
+  /* RIGHT PANEL — VESSEL TICKER */
+  .ticker-panel {
+    position: relative;
+    background: #1A1A1A;
+    color: #F4F0E8;
+    padding: 24px;
+    padding-top: 56px;
+  }
+  .ticker-label {
+    position: absolute;
+    top: 16px;
+    left: 24px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #F4F0E8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ticker-label::before {
+    content: "";
+    width: 8px; height: 8px;
+    background: #C8392B;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .vessel {
+    border-top: 1px solid #3a3a3a;
+    padding: 14px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .vessel:first-of-type { border-top: none; padding-top: 0; }
+  .vessel-name {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .vessel-flag {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #D9D3C4;
+    letter-spacing: 0.12em;
+  }
+  .vessel-meta {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #D9D3C4;
+    letter-spacing: 0.06em;
+  }
+  .vessel-meta .alert {
+    color: #C8392B;
+  }
+
+  /* DATA TABLE */
+  .table-wrap {
+    margin-top: 64px;
+  }
+  table.catch {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+  }
+  table.catch thead th {
+    text-align: left;
+    padding: 12px 16px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    background: #1A1A1A;
+    color: #F4F0E8;
+    font-weight: 400;
+    border-bottom: 2px solid #C8392B;
+  }
+  table.catch tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #D9D3C4;
+    vertical-align: top;
+  }
+  table.catch tbody tr:nth-child(odd) td { background: #F4F0E8; }
+  table.catch tbody tr:nth-child(even) td { background: #E8E2D6; }
+  table.catch td.species {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  table.catch td.flag-red {
+    color: #C8392B;
+    font-weight: 700;
+  }
+  .table-caption {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #1A1A1A;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* FOOTER */
+  footer.rail {
+    background: #1A1A1A;
+    color: #F4F0E8;
+    padding: 32px 48px;
+    margin-top: 64px;
+  }
+  .footer-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .footer-brand {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 18px;
+  }
+  .footer-brand .sub {
+    display: block;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #D9D3C4;
+    font-weight: 400;
+    margin-top: 6px;
+  }
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-nav a {
+    color: #F4F0E8;
+    text-decoration: none;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .footer-nav a:hover { color: #C8392B; }
+  .footer-meta {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #D9D3C4;
+    text-align: right;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 960px) {
+    .atlas-grid { grid-template-columns: 1fr; }
+    .title-strip h1 { font-size: 38px; }
+    .title-anno { position: static; text-align: left; margin-top: 24px; }
+  }
+  @media (max-width: 720px) {
+    .header-band { padding: 0 20px; height: auto; min-height: 80px; flex-wrap: wrap; gap: 8px; padding-top: 14px; padding-bottom: 14px;}
+    nav.primary { width: 100%; flex-wrap: wrap; gap: 12px; }
+    .title-strip { padding: 40px 20px; }
+    .title-strip h1 { font-size: 30px; }
+    .content { padding: 48px 20px; }
+    .zones { grid-template-columns: 1fr; }
+    .section-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+    table.catch thead { display: none; }
+    table.catch, table.catch tbody, table.catch tr, table.catch td { display: block; width: 100%; }
+    table.catch tbody tr { margin-bottom: 12px; border: 1px solid #D9D3C4; }
+    table.catch tbody td { border-bottom: 1px dashed #D9D3C4; padding: 8px 14px; }
+    table.catch tbody td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #2E5D8B;
+      margin-bottom: 4px;
+    }
+    footer.rail { padding: 32px 20px; }
+    .footer-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header-band">
+    <div class="masthead">
+      <span class="masthead-dot"></span>
+      Tethys Journalism Collective
+      <span class="tag">Special Report · 2024</span>
+    </div>
+    <nav class="primary">
+      <a href="../overview/index.html">Overview</a>
+      <a href="#" class="active">Data Atlas</a>
+      <a href="../field-dispatches/index.html">Field Dispatches</a>
+      <a href="../policy-matrix/index.html">Policy Matrix</a>
+      <a href="../about-the-investigation/index.html">About the Investigation</a>
+    </nav>
+  </header>
+
+  <!-- TITLE STRIP -->
+  <section class="title-strip">
+    <div class="title-strip-inner">
+      <div class="crumb">Operation Phantom Net · Chapter 02 / 05</div>
+      <h1>Data Atlas: Charting the Six Grounds of the Silent Fleet</h1>
+      <p class="lede">An incident-by-incident geography of illegal deep-sea trawling across the South Coral Sea, compiled from satellite AIS gaps, port-state inspection logs, and on-the-ground correspondent reports across five years of observation.</p>
+      <div class="title-anno">
+        Last updated<br>
+        <strong>11 NOV 2024 · 04:12 UTC</strong><br>
+        n=847 vessels tracked
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <div class="atlas-grid">
+
+      <!-- LEFT PANEL: INCIDENT ZONES -->
+      <section>
+        <div class="section-head">
+          <h2>Six Primary Incident Zones</h2>
+          <span class="sublabel">2019 – 2024 · Incident Density</span>
+        </div>
+
+        <div class="zones">
+
+          <article class="zone-card">
+            <h3>Challenger Deep Shelf</h3>
+            <div class="coords">11°22′S · 142°08′E</div>
+            <div class="count">Vessel incidents <strong>184</strong></div>
+            <div class="chart">
+              <div class="chart-row"><span class="yr">2019</span><span class="bar" style="width:22%"></span><span class="val">18</span></div>
+              <div class="chart-row"><span class="yr">2020</span><span class="bar" style="width:35%"></span><span class="val">29</span></div>
+              <div class="chart-row"><span class="yr">2021</span><span class="bar" style="width:48%"></span><span class="val">36</span></div>
+              <div class="chart-row alert"><span class="yr">2022</span><span class="bar" style="width:62%"></span><span class="val">41</span></div>
+              <div class="chart-row alert"><span class="yr">2023</span><span class="bar" style="width:76%"></span><span class="val">52</span></div>
+              <div class="chart-row"><span class="yr">2024</span><span class="bar" style="width:14%"></span><span class="val">08*</span></div>
+            </div>
+          </article>
+
+          <article class="zone-card">
+            <h3>Rowley Shoals Corridor</h3>
+            <div class="coords">17°30′S · 119°22′E</div>
+            <div class="count">Vessel incidents <strong>121</strong></div>
+            <div class="chart">
+              <div class="chart-row"><span class="yr">2019</span><span class="bar" style="width:14%"></span><span class="val">11</span></div>
+              <div class="chart-row"><span class="yr">2020</span><span class="bar" style="width:20%"></span><span class="val">16</span></div>
+              <div class="chart-row"><span class="yr">2021</span><span class="bar" style="width:30%"></span><span class="val">22</span></div>
+              <div class="chart-row"><span class="yr">2022</span><span class="bar" style="width:42%"></span><span class="val">28</span></div>
+              <div class="chart-row alert"><span class="yr">2023</span><span class="bar" style="width:55%"></span><span class="val">36</span></div>
+              <div class="chart-row"><span class="yr">2024</span><span class="bar" style="width:12%"></span><span class="val">08*</span></div>
+            </div>
+          </article>
+
+          <article class="zone-card">
+            <h3>Louisiade Plateau</h3>
+            <div class="coords">11°10′S · 153°45′E</div>
+            <div class="count">Vessel incidents <strong>207</strong></div>
+            <div class="chart">
+              <div class="chart-row"><span class="yr">2019</span><span class="bar" style="width:18%"></span><span class="val">14</span></div>
+              <div class="chart-row"><span class="yr">2020</span><span class="bar" style="width:32%"></span><span class="val">26</span></div>
+              <div class="chart-row alert"><span class="yr">2021</span><span class="bar" style="width:54%"></span><span class="val">41</span></div>
+              <div class="chart-row alert"><span class="yr">2022</span><span class="bar" style="width:70%"></span><span class="val">52</span></div>
+              <div class="chart-row alert"><span class="yr">2023</span><span class="bar" style="width:84%"></span><span class="val">61</span></div>
+              <div class="chart-row"><span class="yr">2024</span><span class="bar" style="width:16%"></span><span class="val">13*</span></div>
+            </div>
+          </article>
+
+          <article class="zone-card">
+            <h3>Marion Reef Zone</h3>
+            <div class="coords">19°10′S · 152°17′E</div>
+            <div class="count">Vessel incidents <strong>96</strong></div>
+            <div class="chart">
+              <div class="chart-row"><span class="yr">2019</span><span class="bar" style="width:08%"></span><span class="val">06</span></div>
+              <div class="chart-row"><span class="yr">2020</span><span class="bar" style="width:16%"></span><span class="val">12</span></div>
+              <div class="chart-row"><span class="yr">2021</span><span class="bar" style="width:24%"></span><span class="val">18</span></div>
+              <div class="chart-row"><span class="yr">2022</span><span class="bar" style="width:36%"></span><span class="val">24</span></div>
+              <div class="chart-row"><span class="yr">2023</span><span class="bar" style="width:42%"></span><span class="val">28</span></div>
+              <div class="chart-row"><span class="yr">2024</span><span class="bar" style="width:10%"></span><span class="val">08*</span></div>
+            </div>
+          </article>
+
+          <article class="zone-card">
+            <h3>Osprey Reef Approach</h3>
+            <div class="coords">13°54′S · 146°33′E</div>
+            <div class="count">Vessel incidents <strong>142</strong></div>
+            <div class="chart">
+              <div class="chart-row"><span class="yr">2019</span><span class="bar" style="width:12%"></span><span class="val">09</span></div>
+              <div class="chart-row"><span class="yr">2020</span><span class="bar" style="width:24%"></span><span class="val">18</span></div>
+              <div class="chart-row"><span class="yr">2021</span><span class="bar" style="width:40%"></span><span class="val">28</span></div>
+              <div class="chart-row alert"><span class="yr">2022</span><span class="bar" style="width:56%"></span><span class="val">37</span></div>
+              <div class="chart-row alert"><span class="yr">2023</span><span class="bar" style="width:62%"></span><span class="val">41</span></div>
+              <div class="chart-row"><span class="yr">2024</span><span class="bar" style="width:13%"></span><span class="val">09*</span></div>
+            </div>
+          </article>
+
+          <article class="zone-card">
+            <h3>Holmes Reef Perimeter</h3>
+            <div class="coords">16°27′S · 147°52′E</div>
+            <div class="count">Vessel incidents <strong>97</strong></div>
+            <div class="chart">
+              <div class="chart-row"><span class="yr">2019</span><span class="bar" style="width:10%"></span><span class="val">07</span></div>
+              <div class="chart-row"><span class="yr">2020</span><span class="bar" style="width:18%"></span><span class="val">14</span></div>
+              <div class="chart-row"><span class="yr">2021</span><span class="bar" style="width:26%"></span><span class="val">19</span></div>
+              <div class="chart-row"><span class="yr">2022</span><span class="bar" style="width:34%"></span><span class="val">23</span></div>
+              <div class="chart-row alert"><span class="yr">2023</span><span class="bar" style="width:44%"></span><span class="val">28</span></div>
+              <div class="chart-row"><span class="yr">2024</span><span class="bar" style="width:09%"></span><span class="val">06*</span></div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- RIGHT PANEL: VESSEL TICKER -->
+      <aside class="ticker-panel">
+        <div class="ticker-label">Live Vessel Ticker · Q4 2024</div>
+
+        <div class="vessel">
+          <div class="vessel-name">MV Shenlong 7 <span class="vessel-flag">[FLG · CN]</span></div>
+          <div class="vessel-meta">3,420 GT · Last port: Zhoushan</div>
+          <div class="vessel-meta"><span class="alert">AIS dark 14 d</span> · seen Louisiade</div>
+        </div>
+
+        <div class="vessel">
+          <div class="vessel-name">FV Maris Stella II <span class="vessel-flag">[FLG · PH]</span></div>
+          <div class="vessel-meta">1,180 GT · Last port: General Santos</div>
+          <div class="vessel-meta">Transshipment flagged · 09 NOV</div>
+        </div>
+
+        <div class="vessel">
+          <div class="vessel-name">MV Hai Feng 308 <span class="vessel-flag">[FLG · CN]</span></div>
+          <div class="vessel-meta">2,890 GT · Last port: Fuzhou</div>
+          <div class="vessel-meta"><span class="alert">No inspection 4 yr</span></div>
+        </div>
+
+        <div class="vessel">
+          <div class="vessel-name">FV Bonito del Sur <span class="vessel-flag">[FLG · PA]</span></div>
+          <div class="vessel-meta">960 GT · Last port: Balboa</div>
+          <div class="vessel-meta">Beneficial owner: undisclosed</div>
+        </div>
+
+        <div class="vessel">
+          <div class="vessel-name">MV Kanagawa Maru <span class="vessel-flag">[FLG · JP]</span></div>
+          <div class="vessel-meta">2,140 GT · Last port: Yaizu</div>
+          <div class="vessel-meta">Observer onboard · compliant</div>
+        </div>
+
+        <div class="vessel">
+          <div class="vessel-name">FV Astrid Nørgaard <span class="vessel-flag">[FLG · LR]</span></div>
+          <div class="vessel-meta">1,540 GT · Last port: Monrovia</div>
+          <div class="vessel-meta"><span class="alert">AIS dark 22 d</span> · seen Marion</div>
+        </div>
+
+        <div class="vessel">
+          <div class="vessel-name">MV Long Xing 619 <span class="vessel-flag">[FLG · CN]</span></div>
+          <div class="vessel-meta">3,860 GT · Last port: Dalian</div>
+          <div class="vessel-meta">Net gear modification flagged</div>
+        </div>
+
+        <div class="vessel">
+          <div class="vessel-name">FV Tasmanian Drift <span class="vessel-flag">[FLG · AU]</span></div>
+          <div class="vessel-meta">780 GT · Last port: Cairns</div>
+          <div class="vessel-meta">License revoked · 17 OCT 24</div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- DATA TABLE -->
+    <section class="table-wrap">
+      <div class="section-head">
+        <h2>Annual Catch Estimates by Species Group</h2>
+        <span class="sublabel">Tonnes · 2019 – 2024 · Reconstructed</span>
+      </div>
+
+      <table class="catch">
+        <thead>
+          <tr>
+            <th>Species Group</th>
+            <th>2019</th>
+            <th>2020</th>
+            <th>2021</th>
+            <th>2022</th>
+            <th>2023</th>
+            <th>2024*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="species" data-label="Species">Deep-sea grenadier</td>
+            <td data-label="2019">2,140</td><td data-label="2020">2,860</td><td data-label="2021">3,420</td>
+            <td data-label="2022">4,180</td><td data-label="2023" class="flag-red">5,620</td><td data-label="2024">1,140</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Orange roughy</td>
+            <td data-label="2019">1,820</td><td data-label="2020">2,210</td><td data-label="2021">2,940</td>
+            <td data-label="2022">3,610</td><td data-label="2023" class="flag-red">4,880</td><td data-label="2024">980</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Patagonian toothfish</td>
+            <td data-label="2019">640</td><td data-label="2020">820</td><td data-label="2021">1,150</td>
+            <td data-label="2022">1,640</td><td data-label="2023">2,210</td><td data-label="2024">410</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Bigeye tuna (bycatch)</td>
+            <td data-label="2019">3,240</td><td data-label="2020">3,860</td><td data-label="2021">4,520</td>
+            <td data-label="2022" class="flag-red">5,940</td><td data-label="2023" class="flag-red">6,820</td><td data-label="2024">1,340</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Yellowfin tuna (bycatch)</td>
+            <td data-label="2019">2,860</td><td data-label="2020">3,140</td><td data-label="2021">3,720</td>
+            <td data-label="2022">4,410</td><td data-label="2023">5,180</td><td data-label="2024">1,060</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Deep-sea shark (assorted)</td>
+            <td data-label="2019">1,420</td><td data-label="2020">1,860</td><td data-label="2021">2,310</td>
+            <td data-label="2022">2,940</td><td data-label="2023" class="flag-red">3,720</td><td data-label="2024">740</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Squid (Nototodarus spp.)</td>
+            <td data-label="2019">4,180</td><td data-label="2020">4,920</td><td data-label="2021">5,640</td>
+            <td data-label="2022">6,280</td><td data-label="2023">7,140</td><td data-label="2024">1,520</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Coral trout</td>
+            <td data-label="2019">320</td><td data-label="2020">410</td><td data-label="2021">540</td>
+            <td data-label="2022">720</td><td data-label="2023">940</td><td data-label="2024">180</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Sea cucumber</td>
+            <td data-label="2019">180</td><td data-label="2020">240</td><td data-label="2021">360</td>
+            <td data-label="2022">510</td><td data-label="2023">680</td><td data-label="2024">120</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Reef shark (bycatch)</td>
+            <td data-label="2019">410</td><td data-label="2020">540</td><td data-label="2021">720</td>
+            <td data-label="2022">980</td><td data-label="2023" class="flag-red">1,320</td><td data-label="2024">240</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Marine turtle (bycatch)</td>
+            <td data-label="2019">42</td><td data-label="2020">58</td><td data-label="2021">71</td>
+            <td data-label="2022" class="flag-red">96</td><td data-label="2023" class="flag-red">128</td><td data-label="2024">24</td>
+          </tr>
+          <tr>
+            <td class="species" data-label="Species">Unclassified deep-water</td>
+            <td data-label="2019">820</td><td data-label="2020">1,140</td><td data-label="2021">1,520</td>
+            <td data-label="2022">2,040</td><td data-label="2023">2,720</td><td data-label="2024">560</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-caption">
+        <span>Source: Tethys reconstructed estimates · port-state landings · NGO observer data</span>
+        <span>*2024 figures partial through Q3</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="rail">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        Tethys Journalism Collective
+        <span class="sub">Operation Phantom Net · Special Report 2024</span>
+      </div>
+      <div class="footer-nav">
+        <a href="../overview/index.html">Overview</a>
+        <a href="#">Data Atlas</a>
+        <a href="../field-dispatches/index.html">Field Dispatches</a>
+        <a href="../policy-matrix/index.html">Policy Matrix</a>
+        <a href="../about-the-investigation/index.html">About</a>
+      </div>
+      <div class="footer-meta">
+        © 2024 Tethys Collective<br>
+        Editorial independence guaranteed<br>
+        ISSN 2814-0091
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

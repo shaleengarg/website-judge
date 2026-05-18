@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact — Inkwell</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f7f5f0;
+    color: #2c3240;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  /* Nav */
+  .nav {
+    border-bottom: 1px solid #e4e0d6;
+    background: #f7f5f0;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 24px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 24px;
+    color: #2c3240;
+    letter-spacing: -0.5px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+  }
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #2c3240;
+    text-decoration: none;
+    font-variant: small-caps;
+  }
+  .nav-links a.active { color: #e8a020; }
+  .btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .btn-amber {
+    background: #e8a020;
+    color: #2c3240;
+  }
+  /* Page header */
+  .page-head {
+    padding: 56px 0 32px;
+    text-align: center;
+  }
+  .page-head h1 {
+    font-family: Georgia, serif;
+    font-size: 44px;
+    font-weight: bold;
+    color: #2c3240;
+    margin-bottom: 12px;
+  }
+  .page-head p {
+    max-width: 620px;
+    margin: 0 auto;
+    color: #555a68;
+  }
+  /* Two column */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 48px;
+    padding-bottom: 72px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .card h2 {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+  /* Form */
+  form .field {
+    margin-bottom: 16px;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #2c3240;
+    letter-spacing: 0.3px;
+  }
+  input[type="text"], input[type="email"], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f7f5f0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #2c3240;
+  }
+  textarea { resize: vertical; min-height: 110px; }
+  .btn-submit {
+    width: 100%;
+    padding: 12px 18px;
+    margin-top: 4px;
+  }
+  /* Info column */
+  .info-list { list-style: none; }
+  .info-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid #eee5d5;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .info-list li:last-child { border-bottom: none; }
+  .info-list .icon {
+    font-size: 20px;
+    width: 28px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+  .info-list .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #2a7d6f;
+    font-weight: bold;
+  }
+  .info-list .value {
+    font-size: 15px;
+    color: #2c3240;
+    margin-top: 2px;
+  }
+  .map-block {
+    margin-top: 20px;
+    height: 140px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2a7d6f 0%, #1f5e54 100%);
+    color: #f7f5f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-size: 16px;
+    font-style: italic;
+  }
+  /* Footer */
+  footer {
+    border-top: 2px solid #2a7d6f;
+    padding: 40px 0;
+    background: #f7f5f0;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h4 {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  footer p, footer a {
+    font-size: 14px;
+    color: #555a68;
+    text-decoration: none;
+    line-height: 1.8;
+  }
+  footer ul { list-style: none; }
+  footer a:hover { color: #2a7d6f; }
+  .brand-blurb {
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: #555a68;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="wordmark">Inkwell</div>
+    <div class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="../features/index.html">Features</a>
+      <a href="../pricing/index.html">Pricing</a>
+      <a href="../integrations/index.html">Integrations</a>
+      <a href="#" class="active">Contact</a>
+    </div>
+    <a href="#" class="btn btn-amber">Start Free Trial</a>
+  </div>
+</nav>
+
+<div class="container">
+  <section class="page-head">
+    <h1>Get in Touch</h1>
+    <p>Questions about pricing, onboarding, or whether Inkwell fits your team? Drop us a note — a real engineer will reply within one business day.</p>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h2>Send us a message</h2>
+      <form>
+        <div class="field">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Ada Lovelace">
+        </div>
+        <div class="field">
+          <label for="email">Work Email</label>
+          <input type="email" id="email" placeholder="ada@yourcompany.com">
+        </div>
+        <div class="field">
+          <label for="team">Team Size</label>
+          <select id="team">
+            <option>1–10</option>
+            <option>11–50</option>
+            <option>51–200</option>
+            <option>200+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" placeholder="Tell us about your current docs setup..."></textarea>
+        </div>
+        <button type="button" class="btn btn-amber btn-submit">Send Message</button>
+      </form>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Other ways to reach us</h2>
+        <ul class="info-list">
+          <li>
+            <span class="icon">✉️</span>
+            <div>
+              <div class="label">Support Email</div>
+              <div class="value">support@inkwell.io</div>
+            </div>
+          </li>
+          <li>
+            <span class="icon">📞</span>
+            <div>
+              <div class="label">Phone</div>
+              <div class="value">+1 (503) 555-0142</div>
+            </div>
+          </li>
+          <li>
+            <span class="icon">📍</span>
+            <div>
+              <div class="label">Office</div>
+              <div class="value">214 NW Couch St, Portland, OR 97209</div>
+            </div>
+          </li>
+          <li>
+            <span class="icon">⏱️</span>
+            <div>
+              <div class="label">Avg. Response Time</div>
+              <div class="value">Under 4 hours, Mon–Fri</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="map-block">Portland, Oregon</div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Inkwell</h4>
+        <p class="brand-blurb">Turning messy internal knowledge bases into clean, searchable, auto-organized documentation hubs for engineering teams.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="../home/index.html">Home</a></li>
+          <li><a href="../features/index.html">Features</a></li>
+          <li><a href="../pricing/index.html">Pricing</a></li>
+          <li><a href="../integrations/index.html">Integrations</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>support@inkwell.io<br>+1 (503) 555-0142<br>Portland, OR</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

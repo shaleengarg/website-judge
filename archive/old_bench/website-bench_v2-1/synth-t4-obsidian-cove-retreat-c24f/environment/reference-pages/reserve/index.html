@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reserve — Obsidian Cove Retreat</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1a2e;
+    color: #f5f0e8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    min-height: 100%;
+  }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; letter-spacing: 0.02em; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Page background with radial gradients */
+  body {
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07), transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(78,159,163,0.06), transparent 55%),
+      radial-gradient(circle at 50% 40%, #1a1a2e, #0d1b2a 80%);
+    background-attachment: fixed;
+  }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+  /* Nav */
+  header.site {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(13,27,42,0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.18);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0;
+  }
+  .brand {
+    font-family: Georgia, serif; font-weight: 700;
+    color: #c9a84c; font-size: 20px; letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .brand span { color: #f5f0e8; }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav a {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.22em;
+    color: #f5f0e8; opacity: 0.78; transition: opacity .2s, color .2s;
+  }
+  nav a:hover { color: #c9a84c; opacity: 1; }
+  nav a.active { color: #c9a84c; opacity: 1; }
+
+  /* Page intro */
+  .intro { text-align: center; padding: 80px 0 40px; }
+  .intro .eyebrow {
+    font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: #4e9fa3; margin-bottom: 20px;
+  }
+  .intro h1 {
+    font-size: 56px; color: #c9a84c; line-height: 1.05;
+    position: relative; padding-top: 28px;
+  }
+  .intro h1::before {
+    content: ""; position: absolute; left: 50%; top: 0;
+    transform: translateX(-50%);
+    width: 48px; height: 2px; background: #c9a84c;
+    margin-bottom: 12px;
+  }
+  .intro p {
+    max-width: 560px; margin: 22px auto 0;
+    color: rgba(245,240,232,0.78); font-size: 15px;
+  }
+
+  /* Form panel - glass morphism */
+  .form-panel {
+    max-width: 640px; margin: 20px auto 0;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    padding: 48px 44px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  }
+  .form-panel h2 {
+    font-size: 26px; color: #f5f0e8; margin-bottom: 4px;
+  }
+  .form-panel .subhead {
+    font-size: 12px; color: #4e9fa3; letter-spacing: 0.3em;
+    text-transform: uppercase; margin-bottom: 32px;
+  }
+
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block;
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #c9a84c; margin-bottom: 8px; font-weight: 600;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: rgba(13,27,42,0.55);
+    border: 1px solid rgba(201,168,76,0.22);
+    border-radius: 6px;
+    padding: 12px 14px;
+    color: #f5f0e8;
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    outline: none;
+  }
+  .field textarea { resize: vertical; min-height: 90px; font-family: inherit; }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(245,240,232,0.4); }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  .submit {
+    width: 100%;
+    margin-top: 12px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #c9a84c, #a8863a);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  /* Trust indicators */
+  .trust {
+    max-width: 900px; margin: 56px auto 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    padding: 0 16px;
+  }
+  .trust-item {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: rgba(245,240,232,0.85);
+  }
+  .check {
+    display: inline-block;
+    color: #4e9fa3;
+    font-size: 18px;
+    margin-right: 10px;
+    font-weight: 700;
+    transform: translateY(1px);
+  }
+
+  /* Footer */
+  footer.site {
+    margin-top: 100px;
+    background: #0d1b2a;
+    border-top: 1px solid rgba(201,168,76,0.18);
+    padding: 48px 0 32px;
+  }
+  .foot-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+    margin-bottom: 36px;
+  }
+  .foot-brand .brand { font-size: 18px; }
+  .foot-brand p {
+    margin-top: 14px; font-size: 13px; color: rgba(245,240,232,0.6);
+    max-width: 320px;
+  }
+  .foot-col h4 {
+    font-family: Georgia, serif; color: #c9a84c; font-size: 13px;
+    letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .foot-col a, .foot-col p {
+    display: block; font-size: 13px; color: rgba(245,240,232,0.7);
+    margin-bottom: 8px; letter-spacing: 0.05em;
+  }
+  .copy {
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding-top: 20px;
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    display: flex; justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <div class="brand">Obsidian <span>Cove</span></div>
+    <nav>
+      <ul>
+        <li><a href="../arrival/index.html">Arrival</a></li>
+        <li><a href="../suites/index.html">Suites</a></li>
+        <li><a href="../sanctuary-spa/index.html">Sanctuary Spa</a></li>
+        <li><a href="../dining/index.html">Dining</a></li>
+        <li><a href="#" class="active">Reserve</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="intro">
+    <div class="eyebrow">Begin Your Journey</div>
+    <h1>Request Your Stay</h1>
+    <p>Each arrival at Obsidian Cove is curated by hand. Share your preferences below and our concierge will respond within twelve hours to confirm your private sanctuary.</p>
+  </section>
+
+  <section class="form-panel">
+    <h2>Reservation Inquiry</h2>
+    <div class="subhead">Concierge Booking</div>
+
+    <form>
+      <div class="field">
+        <label for="name">Guest Name</label>
+        <input type="text" id="name" placeholder="Full name as it appears on passport">
+      </div>
+
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="you@domain.com">
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="arrive">Arrival Date</label>
+          <input type="date" id="arrive">
+        </div>
+        <div class="field">
+          <label for="depart">Departure Date</label>
+          <input type="date" id="depart">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="suite">Suite Selection</label>
+        <select id="suite">
+          <option>Obsidian Suite</option>
+          <option>Lava Stone Villa</option>
+          <option>Tide Pool Bungalow</option>
+          <option>Cliff Edge Penthouse</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="guests">Number of Guests</label>
+        <select id="guests">
+          <option>1 Guest</option>
+          <option>2 Guests</option>
+          <option>3 Guests</option>
+          <option>4 Guests</option>
+          <option>5+ Guests</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="requests">Special Requests</label>
+        <textarea id="requests" placeholder="Dietary preferences, anniversary arrangements, private transfers..."></textarea>
+      </div>
+
+      <button type="button" class="submit">Request Your Stay</button>
+    </form>
+  </section>
+
+  <section class="trust">
+    <div class="trust-item"><span class="check">✓</span>Complimentary Airport Transfer</div>
+    <div class="trust-item"><span class="check">✓</span>Flexible Cancellation 48h</div>
+    <div class="trust-item"><span class="check">✓</span>Best Rate Guarantee</div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">Obsidian <span>Cove</span></div>
+        <p>A secluded volcanic-island retreat where black sand meets molten gold. Reserved exclusively for those who seek the rarest quiet.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="../arrival/index.html">Arrival</a>
+        <a href="../suites/index.html">Suites</a>
+        <a href="../sanctuary-spa/index.html">Sanctuary Spa</a>
+        <a href="../dining/index.html">Dining</a>
+        <a href="#">Reserve</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <p>+1 808 555 0142</p>
+        <p>concierge@obsidiancove.com</p>
+        <p>Charter inquiries 24h</p>
+      </div>
+      <div class="foot-col">
+        <h4>Location</h4>
+        <p>Halema'uma Archipelago</p>
+        <p>North Pacific</p>
+        <p>Private transfer only</p>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© Obsidian Cove Retreat</span>
+      <span>Leading Hotels of the World</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

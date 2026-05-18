@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stewardship — Hollow Creek Land Trust</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F5F2EC;
+    color: #2B2B2B;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; color: #2B2B2B; }
+  h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+  h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+  h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+  p { margin-bottom: 1rem; }
+
+  /* Nav */
+  .nav-wrap { background: #3A6B45; }
+  .nav {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .logo {
+    color: #F5F2EC;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.15rem;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .nav-links a {
+    color: #F5F2EC;
+    text-decoration: none;
+    font-size: 0.98rem;
+  }
+  .nav-links a.active { text-decoration: underline; }
+
+  /* Container */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  .lede {
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Monitor banner */
+  .monitor-banner {
+    background: #3A6B45;
+    color: #F5F2EC;
+    padding: 32px 24px;
+    border-radius: 4px;
+    margin-bottom: 2.5rem;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .monitor-banner .icon {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #5b8a64, #2e553a);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F5F2EC;
+    font-family: Georgia, serif;
+    font-weight: bold;
+  }
+  .monitor-banner .text { flex: 1; min-width: 220px; }
+  .monitor-banner h2 { color: #F5F2EC; }
+  .monitor-banner p { margin-bottom: 0; }
+
+  /* Principles grid */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 2.5rem;
+  }
+  .principle {
+    background: #fff;
+    border-left: 4px solid #3A6B45;
+    padding: 18px 20px;
+    border-radius: 4px;
+  }
+  .principle h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+  .principle p { font-size: 0.95rem; margin-bottom: 0; }
+
+  /* Protocols list */
+  .protocols {
+    background: #ECE6D8;
+    padding: 24px 28px;
+    border-radius: 4px;
+    margin-bottom: 2.5rem;
+  }
+  .protocols h2 { margin-bottom: 0.75rem; }
+  .protocols ul {
+    padding-left: 22px;
+  }
+  .protocols li {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Partnership */
+  .partnership {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .partnership .img {
+    height: 180px;
+    background: linear-gradient(135deg, #3A6B45, #C47D2E);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F5F2EC;
+    font-family: Georgia, serif;
+    font-weight: bold;
+  }
+
+  /* Footer */
+  footer {
+    background: #2B2B2B;
+    color: #F5F2EC;
+    margin-top: 32px;
+  }
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    min-height: 160px;
+  }
+  .footer-col { flex: 1; min-width: 200px; }
+  .footer-col h4 {
+    font-family: Georgia, serif;
+    font-size: 1.1rem;
+    color: #F5F2EC;
+    margin-bottom: 0.75rem;
+  }
+  .footer-col a {
+    color: #F5F2EC;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.95rem;
+  }
+  .footer-col p { font-size: 0.95rem; margin-bottom: 0.35rem; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav { flex-direction: column; align-items: flex-start; }
+    .nav-links { justify-content: flex-start; gap: 14px; }
+    .principles { grid-template-columns: 1fr; }
+    .partnership { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 32px 24px; }
+    h1, h2 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <a href="../home/index.html" class="logo">Hollow Creek Land Trust</a>
+    <div class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="../our-land/index.html">Our Land</a>
+      <a href="../get-involved/index.html">Get Involved</a>
+      <a href="#" class="active">Stewardship</a>
+      <a href="../contact/index.html">Contact</a>
+    </div>
+  </nav>
+</div>
+
+<main class="container">
+  <h1>Stewardship &amp; Annual Monitoring</h1>
+  <p class="lede">Conservation does not end when an easement is signed. Each year, every one of our 38 protected properties is visited by a trained land monitor who documents current conditions, walks key boundaries, and compares findings against the original baseline documentation report. This careful, repeating cycle is how we keep our promises to landowners, donors, and the land itself.</p>
+
+  <div class="monitor-banner">
+    <div class="icon">HCLT</div>
+    <div class="text">
+      <h2>One Property. One Visit. Every Year.</h2>
+      <p>Our monitoring program ensures the terms of every conservation easement are upheld in perpetuity — across forest ridges, creek bottoms, and working farms.</p>
+    </div>
+  </div>
+
+  <h2>Our Eight Stewardship Principles</h2>
+  <div class="principles">
+    <div class="principle">
+      <h3>1. Perpetual Commitment</h3>
+      <p>Every easement is held forever. Our stewardship practices are designed for the next century, not the next budget cycle.</p>
+    </div>
+    <div class="principle">
+      <h3>2. Landowner Partnership</h3>
+      <p>Monitoring is collaborative. We schedule visits in advance, walk with landowners when possible, and share findings transparently.</p>
+    </div>
+    <div class="principle">
+      <h3>3. Baseline Integrity</h3>
+      <p>Each property has a detailed baseline report. All monitoring observations are evaluated against this fixed reference document.</p>
+    </div>
+    <div class="principle">
+      <h3>4. Ecological Sensitivity</h3>
+      <p>Monitors are trained to identify invasive species, erosion, hydrologic shifts, and changes in canopy cover before they become irreversible.</p>
+    </div>
+    <div class="principle">
+      <h3>5. Cultural Respect</h3>
+      <p>Many of our properties have multigenerational family or community histories. We honor those stories alongside ecological values.</p>
+    </div>
+    <div class="principle">
+      <h3>6. Defensible Documentation</h3>
+      <p>Field notes, GPS tracks, and photographs are archived in duplicate to support legal defense of easement terms if ever required.</p>
+    </div>
+    <div class="principle">
+      <h3>7. Adaptive Management</h3>
+      <p>Climate, fire regimes, and species ranges are shifting. Our protocols are reviewed every three years to remain scientifically current.</p>
+    </div>
+    <div class="principle">
+      <h3>8. Community Stewardship</h3>
+      <p>Trained volunteers participate in workdays, citizen science, and trail care, extending our reach and rooting stewardship locally.</p>
+    </div>
+  </div>
+
+  <div class="protocols">
+    <h2>Monitoring Equipment &amp; Protocols</h2>
+    <ul>
+      <li>Handheld GPS units used to walk and verify all easement boundaries against recorded survey coordinates.</li>
+      <li>Digital cameras with timestamp metadata, used to document conditions at 12 fixed photo points established in the baseline report.</li>
+      <li>Standardized field observation forms covering forest health, water quality indicators, structures, signage, and any new disturbance.</li>
+      <li>Invasive species field guides and flagging tape for in-the-field identification and follow-up mapping.</li>
+      <li>Soil moisture probes and basic water quality kits for properties with riparian or wetland features.</li>
+      <li>Written landowner communication issued within 30 days of each visit, summarizing observations and any recommended actions.</li>
+      <li>Annual aggregate monitoring report delivered to the Board of Directors each January.</li>
+    </ul>
+  </div>
+
+  <h2>Research Partnership with Appalachian State University</h2>
+  <div class="partnership">
+    <div class="img">ASU &times; HCLT</div>
+    <p>Since 2016, Hollow Creek Land Trust has partnered with the Department of Biology and Ecology at Appalachian State University on long-term soil chemistry and canopy structure research across six of our protected properties. Graduate students contribute fieldwork each season, and the resulting datasets help us understand how Appalachian forests are responding to drought, pest pressure, and shifting precipitation patterns. The partnership transforms our easements into living laboratories — strengthening both regional science and the case for permanent land protection.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>Our Mission</h4>
+      <p>Hollow Creek Land Trust protects 14,000 acres of Appalachian forest, wetland, and farmland through voluntary conservation easements and community stewardship.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="../home/index.html">Home</a>
+      <a href="../our-land/index.html">Our Land</a>
+      <a href="../get-involved/index.html">Get Involved</a>
+      <a href="#">Stewardship</a>
+      <a href="../contact/index.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Mailing Address</h4>
+      <p>Hollow Creek Land Trust</p>
+      <p>214 Ridgeline Road</p>
+      <p>Boone, NC 28607</p>
+      <p>828-555-0174</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

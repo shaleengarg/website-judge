@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Services — Ironveil</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #111114; color: #edeae3; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.5; }
+
+  /* Top Nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    height: 60px; background: #111114;
+    border-bottom: 1px solid #2a2a30;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+  }
+  .brand {
+    font-family: Georgia, serif; font-weight: bold;
+    font-size: 20px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #edeae3;
+  }
+  .brand .dot { color: #f5a623; }
+  .navlinks { display: flex; gap: 28px; }
+  .navlinks a {
+    color: #edeae3; text-decoration: none;
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 6px 2px; border-bottom: 1px solid transparent;
+  }
+  .navlinks a.active { color: #f5a623; border-bottom-color: #f5a623; }
+  .navlinks a:hover { color: #f5a623; }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 60px); }
+  .sidebar {
+    position: fixed; top: 60px; left: 0; bottom: 0;
+    width: 220px;
+    background: #0d0d10;
+    border-right: 1px solid #2a2a30;
+    padding: 32px 24px;
+    overflow-y: auto;
+  }
+  .sidebar h4 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #6d6d75; margin-bottom: 18px; font-weight: 700;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li { margin-bottom: 4px; }
+  .sidebar a {
+    display: block; padding: 8px 10px;
+    color: #edeae3; text-decoration: none;
+    font-size: 13px;
+    border-left: 2px solid transparent;
+  }
+  .sidebar a.active { border-left-color: #f5a623; color: #f5a623; background: rgba(245,166,35,0.05); }
+  .sidebar a:hover { color: #f5a623; }
+  .sidebar .meta {
+    margin-top: 40px; padding-top: 24px;
+    border-top: 1px solid #2a2a30;
+    font-size: 11px; color: #6d6d75; line-height: 1.7;
+  }
+  .sidebar .meta strong { color: #edeae3; display: block; margin-bottom: 6px; letter-spacing: 0.1em; }
+
+  .main {
+    margin-left: 220px; flex: 1;
+    padding: 48px 64px 80px;
+    max-width: 1060px;
+  }
+
+  /* Page header */
+  .page-hd { margin-bottom: 56px; }
+  .page-hd .eyebrow {
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #f5a623; margin-bottom: 14px;
+  }
+  .page-hd h1 {
+    font-family: Georgia, serif; font-weight: bold;
+    font-size: 56px; line-height: 1.05; letter-spacing: -0.01em;
+    margin-bottom: 18px;
+  }
+  .page-hd p.lede {
+    font-family: Georgia, serif; font-size: 17px; line-height: 1.6;
+    color: #c9c5bd; max-width: 720px;
+  }
+
+  /* Service section */
+  .service { padding: 36px 0; }
+  .service:first-of-type { padding-top: 8px; }
+  .service-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 24px; gap: 24px;
+  }
+  .service-head h2 {
+    font-family: Georgia, serif; font-weight: bold;
+    font-size: 36px; letter-spacing: -0.005em;
+  }
+  .service-head .num {
+    font-family: Georgia, serif;
+    color: #6d6d75; font-size: 13px; letter-spacing: 0.2em;
+  }
+
+  .tags { display: flex; gap: 8px; margin-bottom: 18px; }
+  .tag {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 2px; font-weight: 700;
+  }
+  .tag.brand   { background: #f5a623; color: #111114; }
+  .tag.digital { background: #4a7fa5; color: #edeae3; }
+  .tag.print   { background: #5a5a60; color: #edeae3; }
+
+  .grid2 {
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px;
+    align-items: start;
+  }
+  .desc p {
+    font-size: 15px; line-height: 1.7; color: #d4d0c8;
+  }
+  .desc p + p { margin-top: 12px; }
+
+  .details {
+    background: #18181c; border: 1px solid #2a2a30; padding: 22px 24px;
+  }
+  .details h5 {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #6d6d75; margin-bottom: 14px; font-weight: 700;
+  }
+  .details ul { list-style: none; margin-bottom: 20px; }
+  .details li {
+    font-size: 13px; padding: 7px 0;
+    border-bottom: 1px dashed #2a2a30;
+    display: flex; justify-content: space-between;
+  }
+  .details li:last-child { border-bottom: none; }
+  .details li span.dot { color: #f5a623; margin-right: 8px; }
+  .price {
+    padding-top: 16px; border-top: 1px solid #2a2a30;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .price .label {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #6d6d75;
+  }
+  .price .value {
+    font-family: Georgia, serif; font-size: 22px; color: #f5a623; font-weight: bold;
+  }
+
+  hr.sep {
+    border: none; border-top: 1px solid #2a2a30; margin: 0;
+  }
+
+  /* Footer */
+  footer {
+    margin-left: 220px;
+    padding: 32px 64px;
+    border-top: 1px solid #2a2a30;
+    background: #0d0d10;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; color: #6d6d75; letter-spacing: 0.12em;
+  }
+  footer .fbrand { font-family: Georgia, serif; color: #edeae3; letter-spacing: 0.2em; }
+  footer a { color: #6d6d75; text-decoration: none; margin-left: 20px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">IRONVEIL<span class="dot">.</span></div>
+  <div class="navlinks">
+    <a href="../work/index.html">Work</a>
+    <a href="#" class="active">Services</a>
+    <a href="../studio/index.html">Studio</a>
+    <a href="../process/index.html">Process</a>
+    <a href="../contact/index.html">Contact</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4>Services / Index</h4>
+    <ul>
+      <li><a href="#strategy" class="active">01 — Strategy</a></li>
+      <li><a href="#identity">02 — Identity</a></li>
+      <li><a href="#digital">03 — Digital</a></li>
+      <li><a href="#campaigns">04 — Campaigns</a></li>
+      <li><a href="#print">05 — Print</a></li>
+    </ul>
+    <div class="meta">
+      <strong>ENGAGE</strong>
+      Project inquiries reviewed weekly. Typical scope: 6–14 weeks. Retainers available for select partners.
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="page-hd">
+      <div class="eyebrow">Capabilities — 05 disciplines</div>
+      <h1>Services built<br>for challenger brands.</h1>
+      <p class="lede">We work in tight, senior-only teams across five interlocking disciplines. Engagements are scoped to outcome, not headcount — every project leaves with the strategy, the system, and the assets to operate it.</p>
+    </header>
+
+    <section class="service" id="strategy">
+      <div class="service-head">
+        <h2>Strategy</h2>
+        <span class="num">/ 01</span>
+      </div>
+      <div class="tags">
+        <span class="tag brand">Brand</span>
+        <span class="tag print">Research</span>
+      </div>
+      <div class="grid2">
+        <div class="desc">
+          <p>We start with the uncomfortable questions — about category, customer, and conviction. Workshops, audits, and ethnographic interviews surface the tension your brand is uniquely positioned to resolve. The output is a strategic platform that gives every downstream decision a single source of truth.</p>
+          <p>Typical engagements pair a Strategy Director with one researcher and run six to ten weeks, ending in a positioning territory, a narrative spine, and a measurable brand thesis.</p>
+        </div>
+        <aside class="details">
+          <h5>Deliverables</h5>
+          <ul>
+            <li><span><span class="dot">+</span>Brand Positioning Platform</span><span>PDF</span></li>
+            <li><span><span class="dot">+</span>Audience &amp; Category Audit</span><span>40pp</span></li>
+            <li><span><span class="dot">+</span>Messaging Architecture</span><span>v1</span></li>
+            <li><span><span class="dot">+</span>Narrative &amp; Tone Spine</span><span>Doc</span></li>
+            <li><span><span class="dot">+</span>Naming &amp; Verbal System</span><span>Opt.</span></li>
+          </ul>
+          <div class="price">
+            <span class="label">Starting at</span>
+            <span class="value">$48,000</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <hr class="sep">
+
+    <section class="service" id="identity">
+      <div class="service-head">
+        <h2>Identity</h2>
+        <span class="num">/ 02</span>
+      </div>
+      <div class="tags">
+        <span class="tag brand">Brand</span>
+        <span class="tag print">Print</span>
+      </div>
+      <div class="grid2">
+        <div class="desc">
+          <p>An identity system is the operating logic of a brand made visible. We design logotypes, marks, type pairings, and grids that survive contact with real-world applications — from a 16-pixel favicon to a 40-foot facade. Every system ships with the rules required to extend it without us.</p>
+          <p>We build identities in parallel with strategy so visual decisions never outrun the argument, and we prototype in context — packaging, social, environmental — before locking the system.</p>
+        </div>
+        <aside class="details">
+          <h5>Deliverables</h5>
+          <ul>
+            <li><span><span class="dot">+</span>Logotype &amp; Symbol Suite</span><span>Vector</span></li>
+            <li><span><span class="dot">+</span>Typography &amp; Color System</span><span>Spec</span></li>
+            <li><span><span class="dot">+</span>Brand Guidelines</span><span>120pp</span></li>
+            <li><span><span class="dot">+</span>Asset Library</span><span>Figma</span></li>
+            <li><span><span class="dot">+</span>Application Mockups</span><span>×12</span></li>
+          </ul>
+          <div class="price">
+            <span class="label">Starting at</span>
+            <span class="value">$65,000</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <hr class="sep">
+
+    <section class="service" id="digital">
+      <div class="service-head">
+        <h2>Digital</h2>
+        <span class="num">/ 03</span>
+      </div>
+      <div class="tags">
+        <span class="tag digital">Digital</span>
+        <span class="tag brand">Brand</span>
+      </div>
+      <div class="grid2">
+        <div class="desc">
+          <p>Websites, product surfaces, and brand-led interface systems built to feel inevitable. We design responsive design systems, prototype core flows, and partner closely with engineering to ship without dilution. Performance, accessibility, and editorial flexibility are non-negotiable.</p>
+          <p>Engagements range from a single marketing site to a multi-surface product redesign with documented component libraries.</p>
+        </div>
+        <aside class="details">
+          <h5>Deliverables</h5>
+          <ul>
+            <li><span><span class="dot">+</span>UX Architecture &amp; Flows</span><span>Doc</span></li>
+            <li><span><span class="dot">+</span>Responsive Design System</span><span>Figma</span></li>
+            <li><span><span class="dot">+</span>Marketing Site Build</span><span>Code</span></li>
+            <li><span><span class="dot">+</span>CMS Integration</span><span>Headless</span></li>
+            <li><span><span class="dot">+</span>Motion &amp; Interaction Spec</span><span>Lottie</span></li>
+          </ul>
+          <div class="price">
+            <span class="label">Starting at</span>
+            <span class="value">$82,000</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <hr class="sep">
+
+    <section class="service" id="campaigns">
+      <div class="service-head">
+        <h2>Campaigns</h2>
+        <span class="num">/ 04</span>
+      </div>
+      <div class="tags">
+        <span class="tag brand">Brand</span>
+        <span class="tag digital">Digital</span>
+      </div>
+      <div class="grid2">
+        <div class="desc">
+          <p>Launch and seasonal campaigns that translate strategy into culture. We develop the concept, key visuals, and rollout architecture — then partner with production to extend the work across paid, owned, and earned channels. Every campaign is built to be remembered, not just measured.</p>
+          <p>Senior creative directors lead, with art directors and writers embedded for the duration.</p>
+        </div>
+        <aside class="details">
+          <h5>Deliverables</h5>
+          <ul>
+            <li><span><span class="dot">+</span>Campaign Platform</span><span>Concept</span></li>
+            <li><span><span class="dot">+</span>Key Visual System</span><span>Suite</span></li>
+            <li><span><span class="dot">+</span>Channel Toolkit</span><span>Multi</span></li>
+            <li><span><span class="dot">+</span>Production Oversight</span><span>4–8 wk</span></li>
+            <li><span><span class="dot">+</span>Measurement Framework</span><span>Doc</span></li>
+          </ul>
+          <div class="price">
+            <span class="label">Starting at</span>
+            <span class="value">$54,000</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <hr class="sep">
+
+    <section class="service" id="print">
+      <div class="service-head">
+        <h2>Print &amp; Packaging</h2>
+        <span class="num">/ 05</span>
+      </div>
+      <div class="tags">
+        <span class="tag print">Print</span>
+        <span class="tag brand">Brand</span>
+      </div>
+      <div class="grid2">
+        <div class="desc">
+          <p>We design tactile artifacts — packaging, books, reports, environmental graphics — with the same rigor as digital systems. Specifications are drawn for production, and we work directly with paper mills, printers, and fabricators to keep the work honest from screen to shelf.</p>
+          <p>This practice is led by our Print Director, with twenty years of small-run and CPG production experience.</p>
+        </div>
+        <aside class="details">
+          <h5>Deliverables</h5>
+          <ul>
+            <li><span><span class="dot">+</span>Packaging System</span><span>SKU set</span></li>
+            <li><span><span class="dot">+</span>Editorial Layouts</span><span>Books</span></li>
+            <li><span><span class="dot">+</span>Print Production Files</span><span>Spec</span></li>
+            <li><span><span class="dot">+</span>Substrate &amp; Finish Spec</span><span>Doc</span></li>
+            <li><span><span class="dot">+</span>Press Approval</span><span>On-site</span></li>
+          </ul>
+          <div class="price">
+            <span class="label">Starting at</span>
+            <span class="value">$36,000</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div class="fbrand">IRONVEIL — BROOKLYN, NY</div>
+  <div>
+    <a href="#">© 2024</a>
+    <a href="#">Instagram</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">hello@ironveil.co</a>
+  </div>
+</footer>
+
+</body>
+</html>

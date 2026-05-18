@@ -1,0 +1,29 @@
+{
+  "id": "synth-t3-ferroflux-api-docs-2d81",
+  "tier": 3,
+  "genre": "documentation",
+  "pages": [
+    "getting-started",
+    "api-reference",
+    "data-types",
+    "changelog",
+    "status"
+  ],
+  "palette_hint": "Background #0f1117 (near-black), body text #c9d1d9 (soft grey), primary accent #58a6ff (electric blue), secondary accent #3fb950 (terminal green).",
+  "type_style": "Headings in system-ui bold (700), body in 'Courier New' monospace at 14px for code and 15px for prose, overall feel is a professional dark-mode developer reference.",
+  "description": "FerroFlux is a fictional real-time magnetic-field sensor API platform, and this documentation site covers authentication, endpoints, data schemas, versioned changelog, and live service status in a multi-column dark-mode layout.",
+  "constraints": [
+    "Fixed left sidebar exactly 260px wide with its own scroll, background #161b22, listing all sections with active-page highlighted in #58a6ff and a 3px left border; main content area fills remaining viewport width up to a max-width of 900px centered in its column.",
+    "Top navigation bar is sticky at 0, height 56px, background #161b22, border-bottom 1px solid #30363d, containing the FerroFlux logo (text-only, color #58a6ff), a breadcrumb trail, and a plain-text version badge (v2.4.1).",
+    "All code blocks use background #0d1117, border 1px solid #30363d, padding 16px, color #3fb950, border-radius 6px, and must be full-width within the content column.",
+    "The API Reference page uses a two-column split inside the main area: left 55% for endpoint descriptions and parameters table, right 45% for code examples; both columns scroll independently within a max-height of 600px container.",
+    "The Status page includes a dense data table with 1px solid #30363d borders on all cells, alternating row backgrounds (#161b22 and #0f1117), and colored status badges (green #3fb950, yellow #d29922, red #f85149) using inline spans with 4px 10px padding and border-radius 12px."
+  ],
+  "page_specs": {
+    "getting-started": "Introduces FerroFlux with a three-step onboarding flow: Install the SDK via npm, authenticate with an API key, and send a first sensor-poll request. Each step is in a numbered card (border 1px solid #30363d, padding 24px, margin-bottom 16px) containing prose explanation, a curl code block, and an expected JSON response block. A callout box (background #1c2128, border-left 4px solid #58a6ff) warns about rate limits on the free tier (100 requests/minute).",
+    "api-reference": "Lists all 14 FerroFlux REST endpoints grouped into three sections \u2014 Sensors, Streams, and Webhooks \u2014 each with a sticky section header (background #0f1117, padding 8px 0, font-size 11px uppercase letter-spacing 0.1em color #8b949e). Each endpoint row shows the HTTP method badge, path, and a short description, then expands into the two-column detail view with a parameters table (columns: Name, Type, Required, Description) and a live example code block on the right. The sidebar highlights the current section as the user scrolls.",
+    "data-types": "Documents the six core FerroFlux data objects \u2014 SensorReading, FieldVector, CalibrationProfile, StreamSession, WebhookPayload, and ErrorEnvelope \u2014 in a three-column reference grid (each card 30% wide, gap 16px, border 1px solid #30363d, padding 20px). Each card lists the object name as heading, a one-line description, and a compact table of fields with their TypeScript-style type annotations. At the bottom of the page, a full-width JSON Schema block shows the canonical SensorReading schema.",
+    "changelog": "Presents version history from v2.4.1 down to v1.0.0 in a vertical timeline layout using a 2px solid #30363d left border with circular markers (12px diameter, background #58a6ff) at each version entry. Each entry has the version number, release date in ISO format, and a bulleted list of changes tagged with colored inline badges: Added (#3fb950), Changed (#d29922), Deprecated (#8b949e), Removed (#f85149). Versions v1.x entries are collapsed under a faded 'Show older versions' plain-text toggle rendered as a styled anchor with no JavaScript \u2014 it links to an anchor further down the same page.",
+    "status": "Displays current operational status for eight FerroFlux services \u2014 API Gateway, Sensor Polling, Stream Broker, Webhook Dispatcher, Auth Service, Dashboard, SDKs CDN, and Developer Portal \u2014 in a dense table with columns: Service, Region (US-East, EU-West, AP-South), Status, Uptime (30d), and Last Incident. Below the table, an incident history section lists the five most recent incidents with timestamps, affected services, and resolution notes in a compact definition-list layout (dt in #c9d1d9 bold, dd in #8b949e regular). A sticky banner at the top of the page content area shows overall system status in green with the last-checked timestamp."
+  }
+}

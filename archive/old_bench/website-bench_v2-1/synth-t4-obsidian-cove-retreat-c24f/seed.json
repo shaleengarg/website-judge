@@ -1,0 +1,29 @@
+{
+  "id": "synth-t4-obsidian-cove-retreat-c24f",
+  "tier": 4,
+  "genre": "hotel-resort",
+  "pages": [
+    "arrival",
+    "suites",
+    "sanctuary-spa",
+    "dining",
+    "reserve"
+  ],
+  "palette_hint": "Deep charcoal #1a1a2e background with warm off-white #f5f0e8 text, accented by molten gold #c9a84c and soft teal #4e9fa3",
+  "type_style": "Headings in Georgia serif at 700 weight for gravitas, body in system-ui at 400 with generous letter-spacing for an airy, editorial feel",
+  "description": "Obsidian Cove Retreat is a secluded volcanic-island luxury resort website that uses layered gradients, glass-morphism cards, and a dark-gold visual language to evoke exclusivity and natural drama.",
+  "constraints": [
+    "Max content width is 1100px centered; full-bleed section backgrounds extend edge-to-edge with radial gradients mixing #1a1a2e and #0d1b2a",
+    "A consistent elevation system: cards at box-shadow 0 4px 16px rgba(0,0,0,0.4), modals/featured panels at 0 12px 40px rgba(0,0,0,0.6), and hover states lifting to 0 20px 60px rgba(201,168,76,0.25)",
+    "Border-radius rhythm: buttons use 999px pill shape, cards use 12px, inner image frames use 4px; never mix these on the same element type",
+    "Decorative ::before pseudo-elements on section headings render a 48px wide 2px tall gold #c9a84c bar centered above the text, spaced 12px below it",
+    "Glass-morphism panels use background rgba(255,255,255,0.06), backdrop-filter blur(12px), and a 1px solid rgba(201,168,76,0.3) border with 12px border-radius"
+  ],
+  "page_specs": {
+    "arrival": "The homepage opens with a full-viewport hero section using a linear-gradient from #0d1b2a to #1a1a2e overlaid with a subtle radial warm glow at center, containing the resort name in 72px Georgia gold and a pill-shaped 'Discover the Cove' CTA button in #c9a84c. Below the hero, three glass-morphism feature cards highlight 'Private Cove Access', 'Volcanic Hot Springs', and 'Stargazing Terrace' each with a teal icon character, short two-line description, and the elevation hover shadow system. A final full-bleed band in #0d1b2a carries a centered pull-quote from Cond\u00e9 Nast Traveler in italic Georgia 28px off-white.",
+    "suites": "A grid of four suite categories \u2014 Obsidian Suite, Lava Stone Villa, Tide Pool Bungalow, and Cliff Edge Penthouse \u2014 displayed in 2\u00d72 layout with 12px-radius cards on a dark charcoal background. Each card contains a decorative placeholder rectangle in a gradient from #1a1a2e to #2a2a4e at 280px tall representing the room image, a gold room name heading, a bullet list of three specific amenities (e.g. 'Heated onyx soaking tub', 'Butler service 24h', 'Private lava-rock terrace'), a nightly rate in #c9a84c bold, and a pill CTA 'Reserve This Suite'. Section heading uses the gold bar ::before pseudo-element and reads 'Your Private Sanctuary'.",
+    "sanctuary-spa": "A single-column editorial layout on a near-black #0d1b2a background describing the Sanctuary Spa's seven signature treatments: Volcanic Ash Exfoliation, Black Pearl Facial, Deep Tide Massage, Obsidian Stone Therapy, Sea Kelp Wrap, Sulphur Spring Soak, and Midnight Ritual Package. Each treatment is presented in a glass-morphism panel with treatment name in 24px Georgia gold, duration and price in teal #4e9fa3, and a two-sentence description in off-white body text. A radial gradient accent in rgba(201,168,76,0.08) blooms from the center of the page behind the panels.",
+    "dining": "Two restaurant concepts are presented side-by-side in equal-width panels with 12px radius and the full elevation shadow: 'Caldera' \u2014 a fine-dining room serving contemporary Pacific Rim cuisine \u2014 and 'The Tideline' \u2014 an open-air seafood grill on the beach. Each panel includes the restaurant name in 36px Georgia, a short three-sentence description, hours of operation, a sample dish list of five items with prices in #c9a84c, and a pill reservation link. A decorative horizontal rule between sections uses a linear-gradient from transparent through #c9a84c to transparent at 1px height and full width.",
+    "reserve": "A centered reservation form panel at max-width 640px using the glass-morphism style \u2014 rgba(255,255,255,0.06) background, blur(12px), gold border \u2014 containing labeled fields for guest name, email, arrival date, departure date, suite selection dropdown (all four suite types), number of guests, and special requests textarea. The submit button is full-width, pill-shaped, with a linear-gradient background from #c9a84c to #a8863a and bold white text 'Request Your Stay'. Below the form, three trust indicators in a row display 'Complimentary Airport Transfer', 'Flexible Cancellation 48h', and 'Best Rate Guarantee' each preceded by a teal #4e9fa3 checkmark character."
+  }
+}

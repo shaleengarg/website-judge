@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Conservation — Hollow Creek Land Trust</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F5F0E8;
+    color: #2C2416;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; color: #2C2416; }
+
+  /* Nav */
+  .nav-wrap { background: #2C2416; }
+  .nav {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    color: #F5F0E8;
+    font-size: 20px;
+    letter-spacing: 0.3px;
+  }
+  .logo span { color: #C4622D; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: #F5F0E8;
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    padding-bottom: 2px;
+  }
+  .nav-links a.active {
+    text-decoration: underline;
+    text-decoration-color: #C4622D;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+
+  /* Container */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Page header */
+  .page-header {
+    padding: 56px 0 32px;
+  }
+  .page-header h1 {
+    font-size: 42px;
+    border-left: 2px solid #4A7C59;
+    padding-left: 12px;
+    line-height: 1.15;
+  }
+  .page-header .lede {
+    margin-top: 14px;
+    padding-left: 14px;
+    max-width: 680px;
+    color: #2C2416;
+    font-size: 17px;
+  }
+
+  /* Section heading style */
+  .sec-h {
+    font-size: 24px;
+    border-left: 2px solid #4A7C59;
+    padding-left: 12px;
+    margin-bottom: 16px;
+  }
+
+  /* Two-column layout */
+  .two-col {
+    display: flex;
+    gap: 40px;
+    padding: 16px 0 56px;
+    align-items: flex-start;
+  }
+  .col-main { flex: 1 1 0; min-width: 0; }
+  .col-side { flex: 0 0 280px; }
+
+  .col-main p {
+    margin-bottom: 16px;
+  }
+  .col-main h3 {
+    font-size: 20px;
+    margin: 22px 0 8px;
+    border-left: 2px solid #4A7C59;
+    padding-left: 12px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: #FFFFFF;
+    border: 1px solid #E2D9C7;
+    border-top: 4px solid #4A7C59;
+    padding: 22px 22px 24px;
+  }
+  .sidebar h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+    color: #2C2416;
+  }
+  .program {
+    padding: 12px 0;
+    border-bottom: 1px solid #EFE7D6;
+  }
+  .program:last-child { border-bottom: none; padding-bottom: 0; }
+  .program .ptag {
+    display: inline-block;
+    width: 10px; height: 10px;
+    background: #C4622D;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .program-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 15px;
+    color: #2C2416;
+  }
+  .program-desc {
+    font-size: 13px;
+    color: #5C5142;
+    margin-top: 4px;
+    padding-left: 18px;
+  }
+
+  /* Stats bar */
+  .stats {
+    background: #2C2416;
+    padding: 48px 0;
+  }
+  .stats-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    gap: 32px;
+  }
+  .stat { flex: 1; }
+  .stat .num {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 64px;
+    color: #C4622D;
+    line-height: 1;
+  }
+  .stat .label {
+    color: #F5F0E8;
+    margin-top: 10px;
+    font-size: 14px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  /* CTA inline */
+  .cta-row {
+    padding: 40px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .cta-row .cta-txt {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    color: #2C2416;
+  }
+  .btn {
+    display: inline-block;
+    background: #C4622D;
+    color: #FFFFFF;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  /* Footer */
+  footer {
+    background: #4A7C59;
+    color: #F5F0E8;
+    padding: 40px 0;
+  }
+  .foot {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 36px;
+  }
+  .foot h4 {
+    font-family: Georgia, serif;
+    color: #F5F0E8;
+    font-size: 16px;
+    margin-bottom: 12px;
+    letter-spacing: 0.4px;
+  }
+  .foot p, .foot a, .foot li {
+    color: #F5F0E8;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .foot ul { list-style: none; }
+  .foot a { text-decoration: none; }
+  .foot a:hover { text-decoration: underline; }
+  .foot-bottom {
+    max-width: 960px;
+    margin: 28px auto 0;
+    padding: 16px 24px 0;
+    border-top: 1px solid rgba(245,240,232,0.25);
+    font-size: 12px;
+    color: #F5F0E8;
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+
+  <div class="nav-wrap">
+    <nav class="nav">
+      <div class="logo">Hollow Creek<span> ◆ </span>Land Trust</div>
+      <div class="nav-links">
+        <a href="../our-land/index.html">Our Land</a>
+        <a href="#" class="active">Conservation</a>
+        <a href="../volunteer/index.html">Volunteer</a>
+        <a href="../donate/index.html">Donate</a>
+        <a href="../about-us/index.html">About Us</a>
+      </div>
+    </nav>
+  </div>
+
+  <header class="container page-header">
+    <h1>Conservation in Practice</h1>
+    <p class="lede">From ridgeline headwaters to creek-bottom hardwoods, our work protects the connected fabric of Southern Appalachian habitat — one easement, one prescribed burn, one water sample at a time.</p>
+  </header>
+
+  <main class="container">
+    <div class="two-col">
+      <section class="col-main">
+        <h2 class="sec-h">How We Protect Land</h2>
+        <p>Hollow Creek Land Trust safeguards forested ridgeline and creek-bottom habitat across five Appalachian counties. We work directly with families, farmers, and forest owners who want to keep their land intact for the generations to come — not as museum pieces, but as living, working landscapes.</p>
+
+        <h3>Conservation Easements</h3>
+        <p>A conservation easement is a voluntary, permanent legal agreement between a landowner and the Trust that limits certain types of development while keeping the land in private ownership. Owners may continue to farm, sustainably harvest timber, hunt, hike, and pass the land to their heirs. We currently hold 47 easements covering more than 12,400 acres, and we monitor every protected parcel on the ground each year.</p>
+
+        <h3>Forest Management Plans</h3>
+        <p>Working with state foresters and consulting biologists, we help landowners draft management plans tailored to oak-hickory and cove hardwood systems. Plans address invasive species control, native regeneration, snag retention for wildlife, and selective harvest practices that maintain canopy structure and soil health across multi-decade horizons.</p>
+
+        <h3>Water Quality Monitoring</h3>
+        <p>Volunteers and staff sample 22 stream reaches across the Hollow Creek watershed four times a year, tracking macroinvertebrate diversity, turbidity, temperature, and dissolved oxygen. The data feeds a public dataset shared with the regional watershed authority and informs where we prioritize riparian buffer restoration on partner properties.</p>
+      </section>
+
+      <aside class="col-side">
+        <div class="sidebar">
+          <h2>Active Programs</h2>
+          <div class="program">
+            <div><span class="ptag"></span><span class="program-title">Riparian Buffer Restoration</span></div>
+            <div class="program-desc">Native plantings along 14 miles of creek frontage.</div>
+          </div>
+          <div class="program">
+            <div><span class="ptag"></span><span class="program-title">Prescribed Fire Partnership</span></div>
+            <div class="program-desc">Cooperative burns restoring oak-pine ridges.</div>
+          </div>
+          <div class="program">
+            <div><span class="ptag"></span><span class="program-title">Salamander Monitoring Network</span></div>
+            <div class="program-desc">Long-term surveys of plethodontid populations.</div>
+          </div>
+          <div class="program">
+            <div><span class="ptag"></span><span class="program-title">Working Forest Easements</span></div>
+            <div class="program-desc">Sustainable timber alongside permanent protection.</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <section class="stats">
+    <div class="stats-inner">
+      <div class="stat">
+        <div class="num">47</div>
+        <div class="label">Easements Held</div>
+      </div>
+      <div class="stat">
+        <div class="num">12,400</div>
+        <div class="label">Acres Protected</div>
+      </div>
+      <div class="stat">
+        <div class="num">18</div>
+        <div class="label">Partner Landowners</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="cta-row">
+      <div class="cta-txt">Own land you'd like to protect? Let's talk.</div>
+      <a href="#" class="btn">Start a Conversation</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot">
+      <div>
+        <h4>Our Mission</h4>
+        <p>Hollow Creek Land Trust preserves over 12,000 acres of forested ridgeline and creek-bottom habitat through conservation easements, community partnerships, and volunteer stewardship programs.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../our-land/index.html">Our Land</a></li>
+          <li><a href="#">Conservation</a></li>
+          <li><a href="../volunteer/index.html">Volunteer</a></li>
+          <li><a href="../donate/index.html">Donate</a></li>
+          <li><a href="../about-us/index.html">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>418 Sycamore Road<br>Hayesville, NC 28904<br><br>(828) 555-0142<br>info@hollowcreeklt.org</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      © 2024 Hollow Creek Land Trust · A 501(c)(3) nonprofit organization
+    </div>
+  </footer>
+
+</body>
+</html>

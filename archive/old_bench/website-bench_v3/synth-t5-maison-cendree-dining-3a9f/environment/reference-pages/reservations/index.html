@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservations — Maison Cendrée</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #1a1814;
+    color: #f0ebe1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 0 24px; }
+  }
+
+  /* Header / Nav */
+  header.site {
+    padding: 40px 0 24px;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 0.18em;
+    text-align: center;
+    color: #f0ebe1;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+  }
+  .brand-sub {
+    text-align: center;
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    margin: 0 0 28px;
+  }
+  nav.primary ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 32px;
+  }
+  nav.primary a {
+    color: #f0ebe1;
+    text-decoration: none;
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 400;
+    padding: 6px 0;
+  }
+  nav.primary a.active { color: #c9a84c; border-bottom: 1px solid #c9a84c; }
+  nav.primary a:hover { color: #c9a84c; }
+
+  /* Hero */
+  .hero {
+    padding: 96px 0 32px;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    margin: 0 0 24px;
+  }
+  h1.display {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 4.5rem;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    margin: 0;
+    color: #f0ebe1;
+  }
+  @media (max-width: 640px) {
+    h1.display { font-size: 2.75rem; }
+    .hero { padding: 56px 0 24px; }
+  }
+
+  .intro {
+    text-align: center;
+    max-width: 620px;
+    margin: 32px auto 0;
+    color: #f0ebe1;
+    font-weight: 300;
+  }
+
+  /* Rule */
+  hr.rule {
+    border: 0;
+    border-top: 1px solid rgba(201, 168, 76, 0.4);
+    margin: 48px 0;
+  }
+
+  /* Sections */
+  h2.section {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 2.75rem;
+    letter-spacing: 0.18em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0 0 32px;
+    color: #f0ebe1;
+  }
+  @media (max-width: 640px) {
+    h2.section { font-size: 1.875rem; }
+  }
+  h3.sub {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    color: #f0ebe1;
+  }
+
+  /* Detail blocks */
+  .details {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .detail .label {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin: 0 0 8px;
+  }
+  .detail p { margin: 0; }
+  .detail .value-lg {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: #f0ebe1;
+    line-height: 1.4;
+    margin: 0 0 8px;
+  }
+
+  /* Pull quote */
+  blockquote.pull {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: #c9a84c;
+    border-left: 2px solid #c9a84c;
+    padding-left: 24px;
+    margin: 0;
+  }
+
+  /* Private dining */
+  .private {
+    text-align: left;
+  }
+  .private p { margin: 0 0 16px; }
+  a.gold {
+    color: #c9a84c;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+  }
+  a.gold:hover { border-bottom-color: #c9a84c; }
+
+  /* Caption */
+  .caption {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+  }
+
+  /* Footer */
+  footer.site {
+    margin-top: 96px;
+    padding: 48px 0 56px;
+    border-top: 1px solid rgba(201, 168, 76, 0.4);
+    text-align: center;
+  }
+  footer .mark {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    margin: 0 0 16px;
+  }
+  footer .meta {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    margin: 0 0 8px;
+  }
+  footer .fine {
+    font-size: 0.875rem;
+    color: rgba(240, 235, 225, 0.5);
+    letter-spacing: 0.08em;
+    margin: 24px 0 0;
+  }
+
+  .stack > * + * { margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <p class="brand">Maison Cendrée</p>
+    <p class="brand-sub">Asheville · est. in the old mill</p>
+    <nav class="primary" aria-label="Primary">
+      <ul>
+        <li><a href="../philosophy/index.html">Philosophy</a></li>
+        <li><a href="../menu/index.html">Menu</a></li>
+        <li><a href="../cellar/index.html">Cellar</a></li>
+        <li><a href="#" class="active">Reservations</a></li>
+        <li><a href="../find-us/index.html">Find Us</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Reservations</p>
+      <h1 class="display">Reserve Your Evening</h1>
+      <p class="intro">A single seating welcomes sixty guests each night to the hearth. We hold the room for you from the moment you arrive until the last pour of the evening — there is no rush, and there is no second turn.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <hr class="rule">
+
+    <section>
+      <h2 class="section">Service</h2>
+      <div class="details">
+        <div class="detail">
+          <p class="label">Evenings</p>
+          <p class="value-lg">Wednesday through Sunday</p>
+          <p>The dining room is closed Monday and Tuesday so the kitchen may rest, develop, and forage. We do not serve lunch.</p>
+        </div>
+        <div class="detail">
+          <p class="label">Seating</p>
+          <p class="value-lg">A single seating at 7:00 PM</p>
+          <p>Guests are encouraged to arrive between 6:30 and 6:45 PM for an aperitif at the hearth. The six-course progression begins promptly at seven.</p>
+        </div>
+        <div class="detail">
+          <p class="label">Party Size</p>
+          <p class="value-lg">Two to eight guests</p>
+          <p>Parties of five or more are seated at our communal oak table, milled from a single felled chestnut. Larger gatherings may inquire about the Hearth Room — see private dining below.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section>
+      <h2 class="section">Policies</h2>
+      <div class="details">
+        <div class="detail">
+          <p class="label">Deposit</p>
+          <p class="value-lg">$50 per guest at the time of booking</p>
+          <p>The deposit is credited in full toward your final bill on the evening of your reservation. We accept all major cards.</p>
+        </div>
+        <div class="detail">
+          <p class="label">Cancellation</p>
+          <p class="value-lg">Forty-eight hours, with our thanks</p>
+          <p>Cancellations or reductions in party size made within 48 hours of the seating forfeit the deposit. We extend this courtesy because the menu is composed, plated, and paced for the precise count we hold for you.</p>
+        </div>
+        <div class="detail">
+          <p class="label">Dietary Accommodations</p>
+          <p class="value-lg">Kindly notify us 72 hours in advance</p>
+          <p>Allergies, intolerances, and abstentions can almost always be honored with proper notice. The menu is wood-fire driven and grain-forward; pescatarian and vegetarian progressions are available.</p>
+        </div>
+        <div class="detail">
+          <p class="label">Attire</p>
+          <p class="value-lg">Considered and unhurried</p>
+          <p>There is no formal dress code. The mill is warm in winter and cool in summer; a jacket or shawl is often welcome.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section>
+      <h2 class="section">Private Dining</h2>
+      <div class="private stack">
+        <p>The Hearth Room, situated above the original millstone foundation, accommodates seated parties of ten to twenty-two for a bespoke menu developed in conversation with the chef. Buyouts of the full dining room are considered for select dates each season.</p>
+        <p>For inquiries regarding rehearsal dinners, milestone gatherings, vintner evenings, and corporate hosting, please write to us directly. We typically respond within two business days.</p>
+        <p class="label" style="margin-top:24px;">Private Events &amp; Buyouts</p>
+        <p style="font-family:Georgia, serif; font-size:1.5rem; font-style:italic;"><a class="gold" href="#">events@maisoncendree.com</a></p>
+        <p class="caption">Or by telephone — (828) 554-0917</p>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section>
+      <blockquote class="pull">
+        We set aside sixty seats each evening — each one matters to us.
+      </blockquote>
+    </section>
+
+    <hr class="rule">
+
+    <section>
+      <h3 class="sub">Booking</h3>
+      <p>Reservations open on the first day of each calendar month for the month following. To hold a table, please call the host desk between 2:00 and 10:00 PM, Tuesday through Sunday, at <a class="gold" href="#">(828) 554-0917</a>. A confirmation, the deposit receipt, and arrival instructions for the unmarked gravel entrance will follow by post or by email at your preference.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p class="mark">Maison Cendrée</p>
+    <p class="meta">412 Riverside Mill Road · Asheville, NC 28801</p>
+    <p class="meta">(828) 554-0917 · Wed–Sun, 7:00 PM Seating</p>
+    <p class="fine">© 2024 Maison Cendrée. A six-course tasting in a converted mill.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Alerts — Ironclad Logistics</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #0f1623;
+    color: #e8eaf0;
+    font-size: 13px;
+    line-height: 1.4;
+    display: flex;
+    overflow: hidden;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: #1e2a3b;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #0a0f18;
+  }
+  .logo {
+    padding: 20px 18px;
+    border-bottom: 1px solid #0f1623;
+  }
+  .logo-mark {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #e8eaf0;
+  }
+  .logo-mark .accent { color: #00c9a7; }
+  .logo-sub {
+    font-size: 10px;
+    color: #6b7a91;
+    margin-top: 3px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .nav {
+    padding: 12px 0;
+    flex: 1;
+  }
+  .nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    color: #b8c0d0;
+    text-decoration: none;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+  }
+  .nav a:hover { background: #162030; color: #e8eaf0; }
+  .nav a.active {
+    background: #162030;
+    color: #00c9a7;
+    border-left-color: #00c9a7;
+  }
+  .nav-icon {
+    width: 16px; height: 16px;
+    background: #2b3a52;
+    border-radius: 3px;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .nav a.active .nav-icon { background: #00c9a7; }
+  .sidebar-foot {
+    padding: 14px 18px;
+    font-size: 11px;
+    color: #5a6478;
+    border-top: 1px solid #0f1623;
+  }
+
+  /* Main */
+  .main {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #0f1623;
+    border-bottom: 1px solid #1e2a3b;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topbar h1 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .topbar h1 small {
+    color: #6b7a91;
+    font-weight: 400;
+    margin-left: 10px;
+    font-size: 12px;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .clock {
+    font-size: 12px;
+    color: #b8c0d0;
+  }
+  .clock .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: #00c9a7;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .bell {
+    position: relative;
+    font-size: 16px;
+  }
+  .bell .badge {
+    position: absolute;
+    top: -4px; right: -8px;
+    background: #e53a3a;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 8px;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+
+  /* Filter bar */
+  .filterbar {
+    position: sticky;
+    top: 51px;
+    z-index: 9;
+    background: #162030;
+    border-bottom: 1px solid #1e2a3b;
+    padding: 12px 24px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-group label {
+    font-size: 11px;
+    color: #6b7a91;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .filter-select {
+    background: #0f1623;
+    color: #e8eaf0;
+    border: 1px solid #2b3a52;
+    padding: 6px 24px 6px 10px;
+    font-size: 12px;
+    border-radius: 3px;
+    font-family: inherit;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #6b7a91 50%),
+                      linear-gradient(135deg, #6b7a91 50%, transparent 50%);
+    background-position: calc(100% - 13px) 50%, calc(100% - 8px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    min-width: 130px;
+  }
+  .clear-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #00c9a7;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: inherit;
+  }
+
+  /* Content */
+  .content {
+    padding: 20px 24px 32px;
+  }
+
+  /* Table */
+  .table-wrap {
+    background: #162030;
+    border: 1px solid #1e2a3b;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    text-align: left;
+    background: #1e2a3b;
+    color: #6b7a91;
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #0f1623;
+  }
+  td {
+    padding: 10px 14px;
+    font-size: 12.5px;
+    border-bottom: 1px solid #0f1623;
+    vertical-align: middle;
+  }
+  tbody tr:nth-child(odd) td { background: #1e2a3b; }
+  tbody tr:nth-child(even) td { background: #162030; }
+  tbody tr.selected td:first-child { border-left: 3px solid #00c9a7; padding-left: 11px; }
+
+  .chip {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #0f1623;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+  .chip.critical { background: #e53a3a; color: #fff; }
+  .chip.warning  { background: #e5a23a; }
+  .chip.info     { background: #00c9a7; }
+
+  .resolve {
+    color: #00c9a7;
+    text-decoration: none;
+    font-size: 12px;
+    border-bottom: 1px dotted #00c9a7;
+  }
+
+  .num-mono {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    color: #e8eaf0;
+  }
+  .muted { color: #6b7a91; }
+
+  /* Footer summary row */
+  tfoot td {
+    background: #0f1623 !important;
+    border-top: 1px solid #2b3a52;
+    padding: 12px 14px;
+    font-size: 11px;
+    color: #b8c0d0;
+  }
+  .severity-counts {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+  .sev-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+  .sev-swatch {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .sev-swatch.c { background: #e53a3a; }
+  .sev-swatch.w { background: #e5a23a; }
+  .sev-swatch.i { background: #00c9a7; }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #6b7a91;
+  }
+  .pages { display: flex; gap: 4px; }
+  .pages a {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #1e2a3b;
+    color: #b8c0d0;
+    text-decoration: none;
+    border-radius: 3px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+  }
+  .pages a.current { background: #00c9a7; color: #0f1623; font-weight: 700; }
+  .pages a:hover { background: #2b3a52; }
+  .pages a.current:hover { background: #00c9a7; }
+
+  .footer-strip {
+    padding: 14px 24px;
+    border-top: 1px solid #1e2a3b;
+    color: #5a6478;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">IRONCLAD<span class="accent">.</span></div>
+      <div class="logo-sub">Fleet Ops v3.2</div>
+    </div>
+    <nav class="nav">
+      <a href="../overview/index.html"><span class="nav-icon"></span>Overview</a>
+      <a href="../vehicles/index.html"><span class="nav-icon"></span>Vehicles</a>
+      <a href="#" class="active"><span class="nav-icon"></span>Alerts</a>
+      <a href="../reports/index.html"><span class="nav-icon"></span>Reports</a>
+      <a href="../settings/index.html"><span class="nav-icon"></span>Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      Dispatch Node 04<br>
+      <span style="color:#00c9a7;">● online</span> · 142 units
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div class="topbar">
+      <h1>Alerts <small>Active incident queue · all regions</small></h1>
+      <div class="topbar-right">
+        <span class="clock mono"><span class="dot"></span>14:27:08 CST · Mon, Mar 04</span>
+        <span class="bell">🔔<span class="badge">7</span></span>
+      </div>
+    </div>
+
+    <div class="filterbar">
+      <div class="filter-group">
+        <label>Severity</label>
+        <select class="filter-select">
+          <option>All severities</option>
+          <option>Critical</option>
+          <option>Warning</option>
+          <option>Info</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Vehicle</label>
+        <select class="filter-select">
+          <option>All vehicles</option>
+          <option>ILC-047</option>
+          <option>ILC-112</option>
+          <option>ILC-208</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Date Range</label>
+        <select class="filter-select">
+          <option>Last 24 hours</option>
+          <option>Last 7 days</option>
+          <option>Last 30 days</option>
+          <option>Custom…</option>
+        </select>
+      </div>
+      <button class="clear-btn">Clear Filters</button>
+    </div>
+
+    <div class="content">
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:140px;">Timestamp</th>
+              <th style="width:90px;">Severity</th>
+              <th style="width:90px;">Unit ID</th>
+              <th>Driver</th>
+              <th>Alert Type</th>
+              <th>Location</th>
+              <th style="width:90px;text-align:right;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="selected">
+              <td class="num-mono">14:22:41</td>
+              <td><span class="chip critical">Critical</span></td>
+              <td class="num-mono">ILC-047</td>
+              <td>R. Caldwell</td>
+              <td>Engine Overheat</td>
+              <td>I-80 W, mile 142 · NE</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">14:18:09</td>
+              <td><span class="chip warning">Warning</span></td>
+              <td class="num-mono">ILC-112</td>
+              <td>M. Okafor</td>
+              <td>Excessive Idle (28m)</td>
+              <td>Rest Area 14 · KS</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">14:11:55</td>
+              <td><span class="chip critical">Critical</span></td>
+              <td class="num-mono">ILC-208</td>
+              <td>J. Petrov</td>
+              <td>Hard Brake Event</td>
+              <td>US-50 E, mile 89 · CO</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">13:54:30</td>
+              <td><span class="chip info">Info</span></td>
+              <td class="num-mono">ILC-061</td>
+              <td>A. Sandoval</td>
+              <td>Route Deviation</td>
+              <td>Bypass 35 · TX</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">13:47:12</td>
+              <td><span class="chip warning">Warning</span></td>
+              <td class="num-mono">ILC-019</td>
+              <td>D. Lin</td>
+              <td>Tire Pressure Low</td>
+              <td>Truck Stop 22 · OK</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">13:31:48</td>
+              <td><span class="chip critical">Critical</span></td>
+              <td class="num-mono">ILC-184</td>
+              <td>S. Whitfield</td>
+              <td>Speeding 78 mph (65 zone)</td>
+              <td>I-70 W, mile 211 · MO</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">13:22:05</td>
+              <td><span class="chip info">Info</span></td>
+              <td class="num-mono">ILC-073</td>
+              <td>P. Nakamura</td>
+              <td>Geofence Entry · DC-3</td>
+              <td>Hub Denver · CO</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">13:09:39</td>
+              <td><span class="chip warning">Warning</span></td>
+              <td class="num-mono">ILC-141</td>
+              <td>K. Brennan</td>
+              <td>Fuel Level &lt; 15%</td>
+              <td>Route 287 · WY</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">12:58:22</td>
+              <td><span class="chip warning">Warning</span></td>
+              <td class="num-mono">ILC-094</td>
+              <td>L. Hernández</td>
+              <td>HOS Limit Approaching</td>
+              <td>I-29 N, mile 56 · IA</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">12:44:17</td>
+              <td><span class="chip info">Info</span></td>
+              <td class="num-mono">ILC-220</td>
+              <td>T. Voss</td>
+              <td>Delivery Confirmed · #88412</td>
+              <td>Warehouse 7 · IL</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">12:31:01</td>
+              <td><span class="chip critical">Critical</span></td>
+              <td class="num-mono">ILC-156</td>
+              <td>E. Marchetti</td>
+              <td>Door Sensor Open (in-motion)</td>
+              <td>I-90 E, mile 304 · SD</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+            <tr>
+              <td class="num-mono">12:17:44</td>
+              <td><span class="chip info">Info</span></td>
+              <td class="num-mono">ILC-038</td>
+              <td>C. Rasheed</td>
+              <td>Maintenance Reminder · 90d</td>
+              <td>Depot Kansas City · MO</td>
+              <td style="text-align:right;"><a href="#" class="resolve">Resolve</a></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7">
+                <div class="severity-counts">
+                  <span style="color:#6b7a91;text-transform:uppercase;letter-spacing:1.2px;font-size:10px;">Showing 12 of 47 alerts &nbsp;·&nbsp; severity totals (24h):</span>
+                  <span class="sev-count"><span class="sev-swatch c"></span>Critical <strong style="color:#e8eaf0;">04</strong></span>
+                  <span class="sev-count"><span class="sev-swatch w"></span>Warning <strong style="color:#e8eaf0;">04</strong></span>
+                  <span class="sev-count"><span class="sev-swatch i"></span>Info <strong style="color:#e8eaf0;">04</strong></span>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <span>Page 1 of 4 · 47 results</span>
+        <div class="pages">
+          <a href="#">‹ Prev</a>
+          <a href="#" class="current">1</a>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">Next ›</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-strip">
+      <span>© 2025 Ironclad Logistics LLC · Internal Use Only</span>
+      <span class="mono">build 3.2.118 · node-04</span>
+    </div>
+
+  </main>
+
+</body>
+</html>

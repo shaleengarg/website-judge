@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>API Reference — FerroFlux</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #0f1117; color: #c9d1d9; font-family: 'Courier New', monospace; font-size: 15px; line-height: 1.55; }
+  h1, h2, h3, h4 { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight: 700; color: #c9d1d9; }
+  a { color: #58a6ff; text-decoration: none; }
+
+  /* Top nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    height: 56px; background: #161b22; border-bottom: 1px solid #30363d;
+    display: flex; align-items: center; padding: 0 24px; gap: 24px;
+  }
+  .logo { font-family: system-ui, sans-serif; font-weight: 700; font-size: 18px; color: #58a6ff; letter-spacing: -0.02em; }
+  .logo::before { content: "◈ "; }
+  .breadcrumb { color: #8b949e; font-size: 13px; flex: 1; }
+  .breadcrumb span { color: #c9d1d9; }
+  .breadcrumb .sep { margin: 0 8px; color: #30363d; }
+  .version { font-size: 12px; color: #8b949e; padding: 4px 10px; border: 1px solid #30363d; border-radius: 12px; }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 56px); }
+  .sidebar {
+    width: 260px; flex-shrink: 0; background: #161b22;
+    border-right: 1px solid #30363d;
+    height: calc(100vh - 56px); overflow-y: auto;
+    position: sticky; top: 56px;
+    padding: 24px 0;
+  }
+  .sidebar h4 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: #8b949e; padding: 0 24px; margin-bottom: 8px; margin-top: 16px; font-weight: 700;
+  }
+  .sidebar h4:first-child { margin-top: 0; }
+  .sidebar ul { list-style: none; }
+  .sidebar li a {
+    display: block; padding: 6px 24px; font-size: 14px; color: #c9d1d9;
+    border-left: 3px solid transparent;
+  }
+  .sidebar li a:hover { background: #1c2128; }
+  .sidebar li a.active { background: #1c2128; border-left-color: #58a6ff; color: #58a6ff; font-weight: 700; }
+  .sidebar .sub { padding-left: 12px; font-size: 13px; color: #8b949e; }
+  .sidebar .sub.active-sub { color: #58a6ff; }
+
+  /* Main */
+  .main-wrap { flex: 1; display: flex; justify-content: center; padding: 32px 40px; }
+  .main { width: 100%; max-width: 900px; }
+  .page-title { font-size: 28px; margin-bottom: 8px; }
+  .page-lede { color: #8b949e; font-size: 14px; margin-bottom: 28px; }
+
+  /* Section header */
+  .section-header {
+    position: sticky; top: 56px; background: #0f1117;
+    padding: 12px 0 8px; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.1em; color: #8b949e;
+    border-bottom: 1px solid #30363d; margin-bottom: 16px;
+    font-family: system-ui, sans-serif; font-weight: 700;
+    z-index: 10;
+  }
+  .section-header .count { color: #58a6ff; margin-left: 8px; }
+
+  /* Endpoint */
+  .endpoint {
+    border: 1px solid #30363d; border-radius: 6px; margin-bottom: 16px;
+    background: #161b22;
+  }
+  .endpoint-head {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    border-bottom: 1px solid #30363d;
+  }
+  .method {
+    font-family: system-ui, sans-serif; font-weight: 700; font-size: 11px;
+    padding: 3px 8px; border-radius: 4px; letter-spacing: 0.05em;
+    min-width: 56px; text-align: center;
+  }
+  .m-get { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid #3fb950; }
+  .m-post { background: rgba(88,166,255,0.15); color: #58a6ff; border: 1px solid #58a6ff; }
+  .m-put { background: rgba(210,153,34,0.15); color: #d29922; border: 1px solid #d29922; }
+  .m-del { background: rgba(248,81,73,0.15); color: #f85149; border: 1px solid #f85149; }
+  .path { font-family: 'Courier New', monospace; color: #c9d1d9; font-size: 14px; }
+  .path .var { color: #d29922; }
+  .desc { color: #8b949e; font-size: 13px; margin-left: auto; }
+
+  /* Split */
+  .split {
+    display: flex; gap: 0;
+    max-height: 600px;
+  }
+  .split .col-left {
+    flex: 0 0 55%;
+    overflow-y: auto;
+    padding: 16px;
+    border-right: 1px solid #30363d;
+  }
+  .split .col-right {
+    flex: 0 0 45%;
+    overflow-y: auto;
+    padding: 16px;
+    background: #0d1117;
+  }
+  .col-left h4 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: #8b949e; margin-bottom: 8px; font-weight: 700;
+  }
+  .col-left p.note { font-size: 13px; color: #8b949e; margin-bottom: 12px; }
+
+  /* Params table */
+  table.params {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    margin-bottom: 8px;
+  }
+  table.params th, table.params td {
+    text-align: left; padding: 6px 8px; border-bottom: 1px solid #30363d;
+    vertical-align: top;
+  }
+  table.params th {
+    font-family: system-ui, sans-serif; font-weight: 700;
+    color: #8b949e; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  table.params td.name { color: #58a6ff; font-family: 'Courier New', monospace; }
+  table.params td.type { color: #d29922; font-family: 'Courier New', monospace; font-size: 12px; }
+  table.params td.req { color: #f85149; font-size: 11px; font-family: system-ui, sans-serif; }
+  table.params td.req.opt { color: #8b949e; }
+  table.params td.descc { color: #c9d1d9; font-size: 13px; }
+
+  /* Code */
+  pre.code, .code-block {
+    background: #0d1117; border: 1px solid #30363d; padding: 16px;
+    color: #3fb950; border-radius: 6px; font-family: 'Courier New', monospace;
+    font-size: 13px; line-height: 1.6; overflow-x: auto;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .code-block + .code-block { margin-top: 12px; }
+  .code-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #8b949e; margin-bottom: 6px; font-family: system-ui, sans-serif; font-weight: 700;
+  }
+  .c-key { color: #58a6ff; }
+  .c-str { color: #a5d6ff; }
+  .c-num { color: #d29922; }
+  .c-com { color: #8b949e; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #30363d; padding: 20px 40px;
+    color: #8b949e; font-size: 12px;
+    display: flex; justify-content: space-between;
+    background: #0f1117;
+  }
+  footer a { color: #8b949e; margin-left: 16px; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="logo">FerroFlux</div>
+  <div class="breadcrumb">Docs <span class="sep">/</span> <span>API Reference</span></div>
+  <div class="version">v2.4.1</div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <h4>Documentation</h4>
+    <ul>
+      <li><a href="../getting-started/index.html">Getting Started</a></li>
+      <li><a href="#" class="active">API Reference</a></li>
+      <li class="sub active-sub"><a href="#sensors" class="sub active-sub" style="color:#58a6ff;">↳ Sensors</a></li>
+      <li class="sub"><a href="#streams" class="sub">↳ Streams</a></li>
+      <li class="sub"><a href="#webhooks" class="sub">↳ Webhooks</a></li>
+      <li><a href="../data-types/index.html">Data Types</a></li>
+      <li><a href="../changelog/index.html">Changelog</a></li>
+      <li><a href="../status/index.html">Status</a></li>
+    </ul>
+    <h4>Resources</h4>
+    <ul>
+      <li><a href="#">SDK Downloads</a></li>
+      <li><a href="#">Postman Collection</a></li>
+      <li><a href="#">OpenAPI Spec</a></li>
+      <li><a href="#">Rate Limits</a></li>
+      <li><a href="#">Error Codes</a></li>
+    </ul>
+    <h4>Support</h4>
+    <ul>
+      <li><a href="#">Community</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </aside>
+
+  <div class="main-wrap">
+    <div class="main">
+      <h1 class="page-title">API Reference</h1>
+      <p class="page-lede">Complete reference for the FerroFlux REST API. All endpoints are rooted at <a href="#">https://api.ferroflux.io/v2</a> and require a bearer token in the <code style="color:#58a6ff">Authorization</code> header.</p>
+
+      <!-- SENSORS -->
+      <div class="section-header" id="sensors">Sensors <span class="count">5 endpoints</span></div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-get">GET</span>
+          <span class="path">/sensors</span>
+          <span class="desc">List all registered magnetic-field sensors</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <h4>Description</h4>
+            <p class="note">Returns a paginated list of sensors visible to the current API key. Use query filters to narrow the result set by region, calibration state, or firmware version.</p>
+            <h4>Query Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">limit</td><td class="type">integer</td><td class="req opt">optional</td><td class="descc">Max items per page (1–200, default 50)</td></tr>
+                <tr><td class="name">cursor</td><td class="type">string</td><td class="req opt">optional</td><td class="descc">Opaque pagination cursor from prior response</td></tr>
+                <tr><td class="name">region</td><td class="type">enum</td><td class="req opt">optional</td><td class="descc">One of us-east, eu-west, ap-south</td></tr>
+                <tr><td class="name">calibrated</td><td class="type">boolean</td><td class="req opt">optional</td><td class="descc">Filter by calibration completion state</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl https://api.ferroflux.io/v2/sensors \
+  -H "Authorization: Bearer $FF_KEY" \
+  -G --data-urlencode "limit=25" \
+     --data-urlencode "region=eu-west"</pre>
+            <div class="code-label" style="margin-top:12px;">Response 200</div>
+<pre class="code-block">{
+  <span class="c-key">"data"</span>: [
+    {
+      <span class="c-key">"id"</span>: <span class="c-str">"snr_8f2c1a"</span>,
+      <span class="c-key">"region"</span>: <span class="c-str">"eu-west"</span>,
+      <span class="c-key">"calibrated"</span>: <span class="c-num">true</span>,
+      <span class="c-key">"firmware"</span>: <span class="c-str">"3.1.0"</span>
+    }
+  ],
+  <span class="c-key">"cursor"</span>: <span class="c-str">"eyJvIjoyNX0="</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-get">GET</span>
+          <span class="path">/sensors/<span class="var">{id}</span></span>
+          <span class="desc">Retrieve a single sensor by ID</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <h4>Description</h4>
+            <p class="note">Returns full metadata for the specified sensor including hardware revision, last sync time, and active calibration profile.</p>
+            <h4>Path Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">id</td><td class="type">string</td><td class="req">required</td><td class="descc">Sensor identifier (snr_*)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl https://api.ferroflux.io/v2/sensors/snr_8f2c1a \
+  -H "Authorization: Bearer $FF_KEY"</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-post">POST</span>
+          <span class="path">/sensors</span>
+          <span class="desc">Register a new sensor on the network</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <h4>Body Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">serial</td><td class="type">string</td><td class="req">required</td><td class="descc">Hardware serial number</td></tr>
+                <tr><td class="name">region</td><td class="type">enum</td><td class="req">required</td><td class="descc">Target deployment region</td></tr>
+                <tr><td class="name">label</td><td class="type">string</td><td class="req opt">optional</td><td class="descc">Human-readable name (≤64 chars)</td></tr>
+                <tr><td class="name">profile_id</td><td class="type">string</td><td class="req opt">optional</td><td class="descc">CalibrationProfile to bind on register</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl -X POST https://api.ferroflux.io/v2/sensors \
+  -H "Authorization: Bearer $FF_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "serial": "FF-22A-91041",
+    "region": "us-east",
+    "label": "Lab Bench North"
+  }'</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-put">PUT</span>
+          <span class="path">/sensors/<span class="var">{id}</span>/calibrate</span>
+          <span class="desc">Trigger a calibration cycle</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <h4>Description</h4>
+            <p class="note">Initiates an asynchronous calibration. The response includes a job handle that can be polled via the same endpoint with GET.</p>
+            <h4>Body Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">profile_id</td><td class="type">string</td><td class="req">required</td><td class="descc">CalibrationProfile reference</td></tr>
+                <tr><td class="name">samples</td><td class="type">integer</td><td class="req opt">optional</td><td class="descc">Sample count override (default 1024)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Response 202</div>
+<pre class="code-block">{
+  <span class="c-key">"job_id"</span>: <span class="c-str">"job_a1b2c3"</span>,
+  <span class="c-key">"status"</span>: <span class="c-str">"queued"</span>,
+  <span class="c-key">"eta_seconds"</span>: <span class="c-num">42</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-del">DELETE</span>
+          <span class="path">/sensors/<span class="var">{id}</span></span>
+          <span class="desc">Permanently decommission a sensor</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <p class="note">Marks the sensor as <code style="color:#f85149">decommissioned</code>. Historical readings are retained for 90 days, after which they are purged.</p>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl -X DELETE \
+  https://api.ferroflux.io/v2/sensors/snr_8f2c1a \
+  -H "Authorization: Bearer $FF_KEY"</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- STREAMS -->
+      <div class="section-header" id="streams">Streams <span class="count">5 endpoints</span></div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-get">GET</span>
+          <span class="path">/streams</span>
+          <span class="desc">List active stream sessions</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <h4>Query Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">sensor_id</td><td class="type">string</td><td class="req opt">optional</td><td class="descc">Filter by source sensor</td></tr>
+                <tr><td class="name">state</td><td class="type">enum</td><td class="req opt">optional</td><td class="descc">open, paused, or closed</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Response 200</div>
+<pre class="code-block">{
+  <span class="c-key">"streams"</span>: [
+    {
+      <span class="c-key">"id"</span>: <span class="c-str">"str_77ee01"</span>,
+      <span class="c-key">"sensor_id"</span>: <span class="c-str">"snr_8f2c1a"</span>,
+      <span class="c-key">"state"</span>: <span class="c-str">"open"</span>,
+      <span class="c-key">"hz"</span>: <span class="c-num">200</span>
+    }
+  ]
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-post">POST</span>
+          <span class="path">/streams</span>
+          <span class="desc">Open a new real-time stream session</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <h4>Body Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">sensor_id</td><td class="type">string</td><td class="req">required</td><td class="descc">Source sensor for the stream</td></tr>
+                <tr><td class="name">hz</td><td class="type">integer</td><td class="req">required</td><td class="descc">Sample rate (1–1000 Hz)</td></tr>
+                <tr><td class="name">transport</td><td class="type">enum</td><td class="req opt">optional</td><td class="descc">ws (default) or sse</td></tr>
+                <tr><td class="name">compression</td><td class="type">enum</td><td class="req opt">optional</td><td class="descc">none, gzip, or zstd</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl -X POST https://api.ferroflux.io/v2/streams \
+  -H "Authorization: Bearer $FF_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sensor_id": "snr_8f2c1a",
+    "hz": 200,
+    "transport": "ws"
+  }'</pre>
+            <div class="code-label" style="margin-top:12px;">Response 201</div>
+<pre class="code-block">{
+  <span class="c-key">"id"</span>: <span class="c-str">"str_77ee01"</span>,
+  <span class="c-key">"ws_url"</span>: <span class="c-str">"wss://stream.ferroflux.io/v2/str_77ee01"</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-get">GET</span>
+          <span class="path">/streams/<span class="var">{id}</span></span>
+          <span class="desc">Retrieve stream session metadata</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <p class="note">Returns the current configuration, frame counters, and last error (if any) for the specified stream session.</p>
+            <h4>Path Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">id</td><td class="type">string</td><td class="req">required</td><td class="descc">Stream session id (str_*)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl https://api.ferroflux.io/v2/streams/str_77ee01 \
+  -H "Authorization: Bearer $FF_KEY"</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-put">PUT</span>
+          <span class="path">/streams/<span class="var">{id}</span>/pause</span>
+          <span class="desc">Pause an open stream without closing it</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <p class="note">Pausing preserves the session token and resumes within 60 seconds. After 60 seconds the stream auto-closes and must be re-opened.</p>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl -X PUT \
+  https://api.ferroflux.io/v2/streams/str_77ee01/pause \
+  -H "Authorization: Bearer $FF_KEY"</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-del">DELETE</span>
+          <span class="path">/streams/<span class="var">{id}</span></span>
+          <span class="desc">Close a stream session</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <p class="note">Idempotent. Closing an already-closed stream returns 204 No Content.</p>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Response 204</div>
+<pre class="code-block"><span class="c-com">// No content</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEBHOOKS -->
+      <div class="section-header" id="webhooks">Webhooks <span class="count">4 endpoints</span></div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-get">GET</span>
+          <span class="path">/webhooks</span>
+          <span class="desc">List configured webhook subscriptions</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <h4>Query Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">event</td><td class="type">string</td><td class="req opt">optional</td><td class="descc">Filter by event type pattern</td></tr>
+                <tr><td class="name">active</td><td class="type">boolean</td><td class="req opt">optional</td><td class="descc">Only enabled subscriptions</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Response 200</div>
+<pre class="code-block">{
+  <span class="c-key">"webhooks"</span>: [
+    {
+      <span class="c-key">"id"</span>: <span class="c-str">"whk_5e80aa"</span>,
+      <span class="c-key">"url"</span>: <span class="c-str">"https://hooks.acme.io/ff"</span>,
+      <span class="c-key">"events"</span>: [<span class="c-str">"sensor.alert"</span>],
+      <span class="c-key">"active"</span>: <span class="c-num">true</span>
+    }
+  ]
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-post">POST</span>
+          <span class="path">/webhooks</span>
+          <span class="desc">Create a new webhook subscription</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <h4>Body Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">url</td><td class="type">string</td><td class="req">required</td><td class="descc">HTTPS endpoint to receive payloads</td></tr>
+                <tr><td class="name">events</td><td class="type">string[]</td><td class="req">required</td><td class="descc">Array of event patterns to subscribe</td></tr>
+                <tr><td class="name">secret</td><td class="type">string</td><td class="req opt">optional</td><td class="descc">HMAC signing secret (32–128 bytes)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl -X POST https://api.ferroflux.io/v2/webhooks \
+  -H "Authorization: Bearer $FF_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://hooks.acme.io/ff",
+    "events": ["sensor.alert","stream.error"],
+    "secret": "whsec_9d2f..."
+  }'</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-put">PUT</span>
+          <span class="path">/webhooks/<span class="var">{id}</span></span>
+          <span class="desc">Update an existing subscription</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <p class="note">Partial updates supported. Only fields present in the request body are modified; omitted fields preserve their existing values.</p>
+            <h4>Path Parameters</h4>
+            <table class="params">
+              <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="name">id</td><td class="type">string</td><td class="req">required</td><td class="descc">Webhook id (whk_*)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Request</div>
+<pre class="code-block">curl -X PUT \
+  https://api.ferroflux.io/v2/webhooks/whk_5e80aa \
+  -H "Authorization: Bearer $FF_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "active": false }'</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head">
+          <span class="method m-del">DELETE</span>
+          <span class="path">/webhooks/<span class="var">{id}</span></span>
+          <span class="desc">Remove a webhook subscription</span>
+        </div>
+        <div class="split">
+          <div class="col-left">
+            <p class="note">Removes the subscription immediately. Pending deliveries already in the dispatch queue may still fire for up to 30 seconds.</p>
+          </div>
+          <div class="col-right">
+            <div class="code-label">Response 204</div>
+<pre class="code-block"><span class="c-com">// No content</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <footer style="margin-top:32px; padding: 20px 0; border-top: 1px solid #30363d; display:flex; justify-content:space-between; color:#8b949e; font-size:12px;">
+        <div>© 2025 FerroFlux Systems · Magnetic-field telemetry for builders</div>
+        <div>
+          <a href="../getting-started/index.html">Getting Started</a>
+          <a href="../data-types/index.html">Data Types</a>
+          <a href="../changelog/index.html">Changelog</a>
+          <a href="../status/index.html">Status</a>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

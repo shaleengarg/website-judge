@@ -1,0 +1,29 @@
+{
+  "id": "synth-t4-obsidian-cove-retreat-6f74",
+  "tier": 4,
+  "genre": "hotel-resort",
+  "pages": [
+    "sanctuary",
+    "suites",
+    "dining",
+    "experiences",
+    "reserve"
+  ],
+  "palette_hint": "Deep charcoal background #1a1a2e with warm off-white text #f5f0e8, accented by burnished gold #c9a84c and deep teal #2a6b7c",
+  "type_style": "Headings in Georgia serif at 300\u2013700 weight for an editorial luxury feel; body in system-ui at 400 weight, generous letter-spacing on labels and nav items",
+  "description": "Obsidian Cove Retreat is a fictional clifftop resort on the Aegean coast offering 24 private suites, a sea-cave dining grotto, and curated coastal experiences \u2014 presented through a visually rich dark-luxury website.",
+  "constraints": [
+    "Max content width 1200px centered; hero sections span full viewport width with no horizontal padding",
+    "Elevation system: cards use box-shadow 0 2px 8px rgba(0,0,0,0.4) at rest and 0 8px 32px rgba(0,0,0,0.7) on hover; modals/overlays use 0 24px 64px rgba(0,0,0,0.9)",
+    "Border-radius rhythm: buttons and tags use 999px pill shape; cards use 12px; image frames use 4px; decorative rule dividers use 0px",
+    "Every section separator uses a ::before or ::after pseudo-element \u2014 either a centered gold #c9a84c horizontal rule 60px wide and 1px tall, or a radial gradient halo 120px wide fading from #c9a84c22 to transparent",
+    "Section backgrounds alternate between #1a1a2e flat, a linear-gradient from #1a1a2e to #0d1b2a, and a radial-gradient centered highlight from #2a6b7c18 to #1a1a2e; no two adjacent sections share the same treatment"
+  ],
+  "page_specs": {
+    "sanctuary": "Full-viewport hero with a radial gradient sky effect (deep teal center fading to charcoal) overlaid with the resort name 'Obsidian Cove' in 96px Georgia and a gold pill-button 'Discover the Retreat'. Below the hero: a 3-column icon-and-text grid highlighting Clifftop Location, Private Plunge Pools, and Sea-Cave Dining, each card with 12px border-radius and the card elevation shadow system. A testimonial strip at the bottom uses backdrop-filter blur(8px) over a teal-tinted glass panel with a guest quote from 'Elena Vasquez, Athens 2023'.",
+    "suites": "Page header with a linear-gradient banner from #0d1b2a to #1a1a2e and a centered gold pseudo-element rule below the title 'Our 24 Suites'. A 2-column masonry-style grid (using CSS grid with grid-auto-rows) presents six suite categories: Cliff Edge King, Sea Grotto Suite, Panorama Loft, Garden Plunge Double, Obsidian Pool Villa, and Lighthouse Penthouse \u2014 each card shows suite name, square footage, nightly rate in euros, and a 999px pill badge reading 'From \u20ac480/night' in teal. Card hover lifts to the deep elevation shadow.",
+    "dining": "Opens with a full-width section using a radial gradient halo centered at #2a6b7c22 introducing 'Petra Grotto Restaurant' \u2014 carved into the sea cliff, serving Aegean mezze and wood-fired whole fish. A horizontal scrolling menu preview (CSS overflow-x scroll, no JS) lists five signature dishes with name, ingredients, and price. A second section presents 'Sunrise Terrace Breakfast' with a 3-column layout of coffee, pastry, and view descriptions, separated from the first section by the gold pseudo-element rule. Wine cellar callout box uses glass panel styling with backdrop-filter blur.",
+    "experiences": "Alternating two-column rows (image placeholder using CSS gradient fill on the left, text on the right, then reversed) for five curated experiences: Aegean Kayak at Dawn, Clifftop Yoga with Ioannis, Octopus Ink Pottery Workshop, Private Sailing to Naxos, and Dusk Spearfishing Lesson. Each row is separated by the radial gradient halo pseudo-element divider. A booking-nudge strip at the bottom uses a linear-gradient from teal #2a6b7c to charcoal with white text and a gold pill-button 'Add to Your Stay'.",
+    "reserve": "Two-column layout: left column contains a step-by-step reservation summary with styled fieldset groups (Check-in / Check-out date fields, Suite Category dropdown, Guest count, Special Requests textarea) all with 4px border-radius inputs, gold focus outlines, and dark background #0d1b2a. Right column is a sticky summary card at 12px border-radius showing pricing breakdown with teal accent labels for Base Rate, Experiences, Resort Fee, and Total in large gold text. Submit button is full-width, 999px pill, gold background #c9a84c with charcoal text, and deep elevation shadow on hover. A trust-signal strip below uses three inline badges: 'Best Rate Guaranteed', 'Free Cancellation 14 Days', 'Concierge On Call 24h'."
+  }
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nous Trouver — Maison Corvidae</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #F5F0E8;
+    color: #1A1612;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 56px 48px 80px;
+  }
+  nav.top {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+    padding-bottom: 40px;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  nav.top a {
+    color: #1A1612;
+    text-decoration: none;
+    font-weight: 300;
+  }
+  nav.top a.current { color: #B8963E; }
+  .brand {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    font-size: 22px;
+    padding-bottom: 8px;
+  }
+  .tagline {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #1A1612;
+    opacity: 0.7;
+    padding-bottom: 28px;
+  }
+  hr.rule {
+    border: 0;
+    height: 1px;
+    width: 60px;
+    background: #B8963E;
+    margin: 40px auto;
+  }
+  h1.section {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 36px;
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 16px 0 8px;
+  }
+  h2.sub {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    padding-bottom: 14px;
+  }
+  p { padding-bottom: 18px; }
+  .address {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    padding: 8px 0 4px;
+  }
+  .city {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #B8963E;
+    padding-bottom: 8px;
+  }
+  .map {
+    height: 180px;
+    background: linear-gradient(135deg, #E8E0D0 0%, #D8CDB6 50%, #C9BFA6 100%);
+    margin: 28px 0 8px;
+    position: relative;
+    border: 1px solid rgba(184,150,62,0.25);
+  }
+  .map::after {
+    content: "418 NW KEARNEY";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: #1A1612;
+    opacity: 0.55;
+  }
+  .map-cap {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1A1612;
+    opacity: 0.6;
+    padding-bottom: 8px;
+  }
+  table.hours {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+  }
+  table.hours td {
+    padding: 10px 0;
+    vertical-align: baseline;
+    border-bottom: 1px solid rgba(26,22,18,0.08);
+  }
+  table.hours td.day {
+    width: 40%;
+    font-size: 13px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #B8963E;
+    font-weight: 400;
+  }
+  table.hours td.time {
+    font-size: 17px;
+    font-weight: 300;
+  }
+  table.hours tr:last-child td { border-bottom: 0; }
+  .note {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #1A1612;
+    opacity: 0.75;
+    padding: 24px 24px 0;
+    letter-spacing: 0.02em;
+  }
+  footer {
+    text-align: center;
+    padding: 48px 48px 56px;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #1A1612;
+    opacity: 0.7;
+  }
+  footer .foot-rule {
+    border: 0;
+    height: 1px;
+    width: 60px;
+    background: #B8963E;
+    margin: 0 auto 28px;
+  }
+  footer .lines { line-height: 2; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">Maison Corvidae</div>
+    <div class="tagline">Where the crow dines, ceremony begins</div>
+    <nav class="top">
+      <a href="../philosophy/index.html">Philosophy</a>
+      <a href="../menu/index.html">Menu</a>
+      <a href="../cellar/index.html">Cellar</a>
+      <a href="../reservations/index.html">Reservations</a>
+      <a href="#" class="current">Find Us</a>
+    </nav>
+
+    <hr class="rule">
+
+    <h1 class="section">Nous Trouver</h1>
+
+    <div class="address">418 NW Kearney Street</div>
+    <div class="city">Portland · Oregon · 97209</div>
+
+    <div class="map"></div>
+    <div class="map-cap">Pearl District — between 13th &amp; 14th</div>
+
+    <hr class="rule">
+
+    <p>The townhouse stands midway down the block, set back from its neighbors behind a wrought-iron gate and a single brass door. There is no plate, no awning, no menu in the window — only a numbered transom and the soft amber of the vestibule beyond.</p>
+    <p>Ring the bell once, firmly, and wait. A member of the house will receive you in the interior vestibule, where coats are taken and the evening begins. We ask that arrivals be made between 7:15 and 7:30; the dining room is sealed at the first course.</p>
+
+    <hr class="rule">
+
+    <h2 class="sub">Parking &amp; Transit</h2>
+    <p>Valet service is not offered. The Pearl District public garage at NW 13th &amp; Everett is a three-minute walk from our door and accommodates evening guests at a flat rate after 6 PM. For those arriving by TriMet, the NW 11th &amp; Glisan streetcar stop lies one block south, and the MAX Blue and Red lines serve Galleria/SW 10th, a short cab fare away.</p>
+
+    <hr class="rule">
+
+    <h2 class="sub" style="text-align:center;">Hours of Service</h2>
+    <table class="hours">
+      <tr><td class="day">Wednesday</td><td class="time">Seating at 7:30 PM</td></tr>
+      <tr><td class="day">Thursday</td><td class="time">Seating at 7:30 PM</td></tr>
+      <tr><td class="day">Friday</td><td class="time">Seating at 7:30 PM</td></tr>
+      <tr><td class="day">Saturday</td><td class="time">Seating at 7:30 PM</td></tr>
+      <tr><td class="day">Sunday</td><td class="time">Seating at 7:30 PM</td></tr>
+      <tr><td class="day">Monday &amp; Tuesday</td><td class="time">Closed to the public</td></tr>
+    </table>
+
+    <p class="note">The entrance intentionally bears no exterior signage. Should you find yourself uncertain at the threshold, you have almost certainly arrived.</p>
+  </div>
+
+  <footer>
+    <hr class="foot-rule">
+    <div class="lines">
+      Maison Corvidae &nbsp;·&nbsp; 418 NW Kearney St &nbsp;·&nbsp; Portland<br>
+      (503) 214&#8209;0987 &nbsp;·&nbsp; reservations@maisoncorv.com
+    </div>
+  </footer>
+</body>
+</html>

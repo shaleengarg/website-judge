@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Program — Ironclad Futures Summit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d1b2a;
+    color: #f0ece2;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Nav */
+  .nav-wrap { background: #0d1b2a; border-bottom: 1px solid #162435; }
+  .nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 22px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+  }
+  .wordmark span { color: #c8441b; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #f0ece2;
+    padding-bottom: 4px;
+  }
+  .nav-links a.active { border-bottom: 2px solid #c8441b; }
+
+  /* Hero */
+  .hero {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+  .label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #4a7fa5;
+    margin-bottom: 10px;
+  }
+  .hero h1 { font-size: 42px; line-height: 1.15; }
+  .hero p { margin-top: 14px; color: #f0ece2; max-width: 700px; opacity: 0.85; }
+
+  /* Schedule section */
+  .schedule-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 24px 64px;
+    position: relative;
+  }
+  .schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #4a7fa5;
+  }
+  .schedule-header h2 { font-size: 28px; }
+  .btn-cta {
+    background: #c8441b;
+    color: #f0ece2;
+    padding: 12px 28px;
+    border-radius: 4px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .days {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  .day-col h3 {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .day-date {
+    font-size: 12px;
+    color: #4a7fa5;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .divider {
+    background: #4a7fa5;
+    color: #0d1b2a;
+    padding: 6px 12px;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 4px;
+    margin: 18px 0 12px;
+  }
+
+  .session-card {
+    background: #162435;
+    border: 1px solid #4a7fa5;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 10px;
+    color: #f0ece2;
+  }
+  .session-time {
+    font-size: 12px;
+    color: #c8441b;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .session-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .session-meta {
+    font-size: 12px;
+    opacity: 0.85;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .session-meta .room { color: #4a7fa5; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #c8441b;
+    background: #0d1b2a;
+    margin-top: 20px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 32px;
+  }
+  .footer-inner h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #4a7fa5;
+    margin-bottom: 14px;
+    font-family: system-ui, sans-serif;
+  }
+  .footer-tag {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .footer-tag span { color: #c8441b; }
+  .footer-inner ul { list-style: none; }
+  .footer-inner li { font-size: 13px; margin-bottom: 8px; opacity: 0.85; }
+  .copyright {
+    border-top: 1px solid #162435;
+    text-align: center;
+    padding: 18px;
+    font-size: 12px;
+    color: #4a7fa5;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="wordmark">IRONCLAD<span>·</span>FUTURES</div>
+    <div class="nav-links">
+      <a href="#" class="active">Program</a>
+      <a href="../speakers/index.html">Speakers</a>
+      <a href="../venue/index.html">Venue</a>
+      <a href="../register/index.html">Register</a>
+      <a href="../about/index.html">About</a>
+    </div>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="label">Conference Schedule</div>
+  <h1>Two Days. One Industrial Renaissance.</h1>
+  <p>October 14–15, 2025 · Pittsburgh, PA. Forty-eight sessions across two tracks covering reshoring strategy, automation, materials science, and the policy levers reshaping American manufacturing.</p>
+</section>
+
+<section class="schedule-section">
+  <div class="schedule-header">
+    <div>
+      <div class="label">The Full Agenda</div>
+      <h2>Sessions, Keynotes &amp; Workshops</h2>
+    </div>
+    <a href="../register/index.html" class="btn-cta">Register Now</a>
+  </div>
+
+  <div class="days">
+    <!-- Day 1 -->
+    <div class="day-col">
+      <h3>Day One</h3>
+      <div class="day-date">Tuesday · October 14, 2025</div>
+
+      <div class="divider">Morning Sessions</div>
+
+      <div class="session-card">
+        <div class="session-time">08:30 — 09:15</div>
+        <div class="session-title">Opening Keynote: The Reshoring Decade</div>
+        <div class="session-meta"><span>Margaret Chen, CEO · Forge Industries</span><span class="room">Grand Hall</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">09:30 — 10:30</div>
+        <div class="session-title">Capital Flows Into Heavy Industry</div>
+        <div class="session-meta"><span>David Okafor · Allegheny Capital</span><span class="room">Room 2A</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">10:45 — 11:45</div>
+        <div class="session-title">Robotics on the Shop Floor: A Case Study</div>
+        <div class="session-meta"><span>Priya Raman · Steelworks Robotics</span><span class="room">Room 2B</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">12:00 — 13:00</div>
+        <div class="session-title">Lunch &amp; Roundtable: Workforce Pipelines</div>
+        <div class="session-meta"><span>Hosted by PMC</span><span class="room">Atrium</span></div>
+      </div>
+
+      <div class="divider">Afternoon Sessions</div>
+
+      <div class="session-card">
+        <div class="session-time">13:15 — 14:15</div>
+        <div class="session-title">Policy Panel: CHIPS, IRA &amp; What Comes Next</div>
+        <div class="session-meta"><span>Senator R. Kowalski et al.</span><span class="room">Grand Hall</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">14:30 — 15:30</div>
+        <div class="session-title">Additive Manufacturing at Industrial Scale</div>
+        <div class="session-meta"><span>Dr. Lin Yuan · MIT</span><span class="room">Room 3A</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">15:45 — 17:00</div>
+        <div class="session-title">Closing Fireside: A Founder's Path</div>
+        <div class="session-meta"><span>Theo Marlowe · Crucible Co.</span><span class="room">Grand Hall</span></div>
+      </div>
+    </div>
+
+    <!-- Day 2 -->
+    <div class="day-col">
+      <h3>Day Two</h3>
+      <div class="day-date">Wednesday · October 15, 2025</div>
+
+      <div class="divider">Morning Sessions</div>
+
+      <div class="session-card">
+        <div class="session-time">08:45 — 09:30</div>
+        <div class="session-title">Keynote: Materials of the Next Century</div>
+        <div class="session-meta"><span>Dr. Anika Sørensen · CMU</span><span class="room">Grand Hall</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">09:45 — 10:45</div>
+        <div class="session-title">Supply Chain Resilience Workshop</div>
+        <div class="session-meta"><span>Marcus Pell · Bedrock Logistics</span><span class="room">Room 2A</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">11:00 — 12:00</div>
+        <div class="session-title">Energy &amp; the Electrified Factory</div>
+        <div class="session-meta"><span>Elena Vasquez · Duquesne Light</span><span class="room">Room 2B</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">12:00 — 13:00</div>
+        <div class="session-title">Networking Lunch</div>
+        <div class="session-meta"><span>Open seating</span><span class="room">Atrium</span></div>
+      </div>
+
+      <div class="divider">Afternoon Sessions</div>
+
+      <div class="session-card">
+        <div class="session-time">13:15 — 14:15</div>
+        <div class="session-title">Investor Showcase: Six Startups in 60 Minutes</div>
+        <div class="session-meta"><span>Curated by Ironclad Ventures</span><span class="room">Grand Hall</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">14:30 — 15:30</div>
+        <div class="session-title">Defense Manufacturing &amp; Dual-Use Tech</div>
+        <div class="session-meta"><span>Col. James Hartley (ret.)</span><span class="room">Room 3A</span></div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-time">15:45 — 17:30</div>
+        <div class="session-title">Summit Close &amp; Reception</div>
+        <div class="session-meta"><span>All attendees welcome</span><span class="room">Grand Hall</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Ironclad Futures Summit</h4>
+      <div class="footer-tag">Forging the next era of <span>American manufacturing</span> — one conversation at a time.</div>
+      <div style="font-size:12px; opacity:0.7;">October 14–15, 2025 · Pittsburgh, PA</div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Program</a></li>
+        <li><a href="#">Speakers</a></li>
+        <li><a href="#">Venue</a></li>
+        <li><a href="#">Register</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>info@ironcladfutures.org</li>
+        <li>+1 (412) 555-0188</li>
+        <li>1212 Smallman St.<br>Pittsburgh, PA 15222</li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">© 2025 IRONCLAD FUTURES SUMMIT · PITTSBURGH MANUFACTURING COALITION</div>
+</footer>
+
+</body>
+</html>

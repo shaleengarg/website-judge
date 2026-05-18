@@ -1,0 +1,29 @@
+{
+  "id": "synth-t2-ironclad-futures-summit-b169",
+  "tier": 2,
+  "genre": "conference",
+  "pages": [
+    "schedule",
+    "speakers",
+    "venue",
+    "register",
+    "about"
+  ],
+  "palette_hint": "Background #F4F1EC (warm parchment), body text #1C1C1C, primary accent #C0392B (brick red), secondary accent #2C3E50 (slate navy)",
+  "type_style": "Headings use Georgia serif at font-weight 700 for gravitas, body uses system-ui sans-serif at weight 400, creating a formal-yet-modern editorial feel",
+  "description": "Ironclad Futures Summit is a two-day industrial policy and infrastructure conference held in Pittsburgh, PA, bringing together engineers, legislators, and economists to debate the next decade of American manufacturing.",
+  "constraints": [
+    "Max content width is 1100px centered with auto margins; all pages use 40px top/bottom section padding and 20px left/right page padding",
+    "Nav bar has #2C3E50 background, white links at 15px system-ui, logo text in Georgia bold at 20px, displayed as a flexbox row with space-between alignment",
+    "Footer is #1C1C1C background with #F4F1EC text, two-column flex layout listing contact info on the left and conference hashtag #IroncladFS25 on the right, 30px padding",
+    "Accent buttons use #C0392B background with white text, 10px 24px padding, 4px border-radius, no shadows or gradients",
+    "Cards (speaker cards, session cards) use a 2px solid #2C3E50 border, 16px padding, 8px border-radius, and white #FFFFFF background against the parchment page"
+  ],
+  "page_specs": {
+    "schedule": "Displays the full two-day agenda (October 14\u201315, 2025) as a CSS grid with two columns, one per day, each listing time-block rows with session title, speaker name, and room location. A sticky day-label header in #2C3E50 white text separates Day 1 and Day 2 sections. Keynote sessions are visually distinguished with a left border in #C0392B and bold session title text.",
+    "speakers": "A 3-column CSS grid of speaker cards, each card showing a placeholder initial-avatar div (60x60px circle in #2C3E50 with white initials), speaker name in Georgia bold, title, organization, and a one-sentence talk abstract. Includes 18 speakers total with names, titles, and real-sounding affiliations like 'Director of Infrastructure Policy, Brookings Institution' and 'VP of Operations, Nucor Steel'.",
+    "venue": "Presents the conference venue \u2014 the August Wilson Cultural Center, 980 Liberty Ave, Pittsburgh, PA \u2014 with a text-based map placeholder (a bordered #2C3E50 div labeled 'Map: 980 Liberty Ave, Pittsburgh PA 15222'), a two-column flex layout describing the two main halls (Carnegie Hall and Monongahela Room), hotel partner information for the Omni William Penn Hotel two blocks away, and parking garage details.",
+    "register": "A centered registration form (max-width 600px) with labeled fields for full name, organization, job title, email, ticket type (radio buttons: General Admission $395, Academic $195, Government $295), and a dietary restrictions textarea. The submit button uses the standard #C0392B accent button style. A notice above the form states 'Early-bird pricing ends September 1, 2025' in italic #C0392B text.",
+    "about": "Explains the mission of the Ironclad Futures Summit, founded in 2019 by the Rivers & Rails Policy Institute, with a paragraph on why Pittsburgh was chosen as a permanent host city. Includes a two-column flex section listing the five organizing committee members with name and institutional affiliation, followed by a sponsor tier grid (Founding Partners: Alcoa, U.S. Steel; Supporting Partners: Caterpillar, Siemens USA) displayed as bordered logo-name pills in a wrapping flex row."
+  }
+}

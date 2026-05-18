@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register — Ironclad Futures Summit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d1b2a;
+    color: #f0ece2;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; }
+
+  /* Nav */
+  .nav-wrap { background: #0d1b2a; border-bottom: 1px solid #162435; }
+  .nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 22px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #f0ece2;
+    letter-spacing: 0.5px;
+  }
+  .wordmark span { color: #c8441b; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: #f0ece2;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .nav-links a.active { color: #c8441b; }
+
+  /* Hero / section header */
+  .container { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
+  .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #4a7fa5;
+    margin-bottom: 10px;
+  }
+  .heading { font-size: 40px; color: #f0ece2; margin-bottom: 16px; }
+  .lede { color: #f0ece2; max-width: 720px; opacity: 0.85; font-size: 16px; }
+
+  /* Tier grid */
+  .tiers {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 36px;
+  }
+  .card {
+    padding: 16px;
+    border-radius: 4px;
+    border: 1px solid #4a7fa5;
+    background: #162435;
+    color: #f0ece2;
+    display: flex;
+    flex-direction: column;
+  }
+  .card.featured {
+    border-top: 4px solid #c8441b;
+    padding-top: 13px;
+  }
+  .popular {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: #4a7fa5;
+    margin-bottom: 8px;
+  }
+  .tier-name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .tier-price {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    color: #c8441b;
+    margin: 12px 0 6px;
+    font-weight: bold;
+  }
+  .tier-price small {
+    font-size: 13px;
+    color: #f0ece2;
+    opacity: 0.7;
+    font-weight: normal;
+  }
+  .tier-divider {
+    height: 1px;
+    background: #4a7fa5;
+    opacity: 0.4;
+    margin: 14px 0;
+  }
+  .benefits { list-style: none; }
+  .benefits li {
+    padding: 7px 0 7px 18px;
+    position: relative;
+    font-size: 14px;
+    border-bottom: 1px dashed rgba(74,127,165,0.25);
+  }
+  .benefits li:last-child { border-bottom: none; }
+  .benefits li::before {
+    content: "▪";
+    color: #c8441b;
+    position: absolute;
+    left: 0;
+    top: 7px;
+  }
+
+  .btn {
+    display: inline-block;
+    background: #c8441b;
+    color: #f0ece2;
+    padding: 12px 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Form */
+  .form-section { margin-top: 56px; }
+  form {
+    margin-top: 28px;
+    background: #162435;
+    border: 1px solid #4a7fa5;
+    border-radius: 4px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
+  }
+  .field { display: flex; flex-direction: column; }
+  .field.full { grid-column: 1 / -1; }
+  label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #4a7fa5;
+    margin-bottom: 8px;
+  }
+  input, select {
+    background: #0d1b2a;
+    border: 1px solid #4a7fa5;
+    border-radius: 4px;
+    padding: 12px 14px;
+    color: #f0ece2;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  .submit-row { grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center; gap: 16px; }
+  .submit-note { font-size: 12px; color: #f0ece2; opacity: 0.6; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #c8441b;
+    margin-top: 64px;
+    background: #0d1b2a;
+  }
+  .foot {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 32px;
+  }
+  .foot h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #4a7fa5;
+    margin-bottom: 14px;
+    font-family: system-ui, sans-serif;
+  }
+  .foot .tagline {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    color: #f0ece2;
+    line-height: 1.4;
+    max-width: 380px;
+  }
+  .foot .tagline small { display: block; font-family: system-ui, sans-serif; font-size: 12px; opacity: 0.6; margin-top: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .foot ul { list-style: none; }
+  .foot ul li { margin-bottom: 8px; font-size: 14px; }
+  .foot a { color: #f0ece2; text-decoration: none; opacity: 0.85; }
+  .foot p { font-size: 14px; opacity: 0.85; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <div class="nav">
+    <div class="wordmark">IRONCLAD<span>·</span>FUTURES SUMMIT</div>
+    <div class="nav-links">
+      <a href="../program/index.html">Program</a>
+      <a href="../speakers/index.html">Speakers</a>
+      <a href="../venue/index.html">Venue</a>
+      <a href="#" class="active">Register</a>
+      <a href="../about/index.html">About</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="label">Reserve Your Seat · Oct 14–15, 2025</div>
+  <h1 class="heading">Registration &amp; Tiers</h1>
+  <p class="lede">Two days of keynotes, working sessions, and floor tours across the future of American manufacturing. Choose the pass that fits your role—individuals, decision-makers, and full corporate delegations all welcome.</p>
+
+  <div class="tiers">
+    <div class="card">
+      <div class="tier-name">General Admission</div>
+      <div style="font-size:13px; color:#4a7fa5;">Open to all attendees</div>
+      <div class="tier-price">$495<small> / attendee</small></div>
+      <div class="tier-divider"></div>
+      <ul class="benefits">
+        <li>Full access to both conference days</li>
+        <li>All keynote and panel sessions</li>
+        <li>Expo floor &amp; sponsor showcase</li>
+        <li>Continental breakfast &amp; coffee service</li>
+        <li>Digital session recordings (30 days)</li>
+      </ul>
+    </div>
+
+    <div class="card featured">
+      <div class="popular">★ Most Popular</div>
+      <div class="tier-name">Industry Professional</div>
+      <div style="font-size:13px; color:#4a7fa5;">Engineers · Operators · Policy</div>
+      <div class="tier-price">$795<small> / attendee</small></div>
+      <div class="tier-divider"></div>
+      <ul class="benefits">
+        <li>Everything in General Admission</li>
+        <li>Reserved seating at all keynotes</li>
+        <li>Invitation to evening networking reception</li>
+        <li>Hands-on workshop track access</li>
+        <li>One-on-one investor matchmaking slot</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="tier-name">Corporate Table</div>
+      <div style="font-size:13px; color:#4a7fa5;">Teams of 8 · Companies &amp; firms</div>
+      <div class="tier-price">$2,800<small> / table of 8</small></div>
+      <div class="tier-divider"></div>
+      <ul class="benefits">
+        <li>Eight Industry Professional passes</li>
+        <li>Branded reserved table at gala dinner</li>
+        <li>Logo placement in printed program</li>
+        <li>Private 30-minute briefing room booking</li>
+        <li>Priority access to factory tour shuttles</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="label">Step 2 · Your Details</div>
+    <h2 class="heading" style="font-size: 30px;">Complete Your Registration</h2>
+
+    <form>
+      <div class="field">
+        <label for="name">Full Name</label>
+        <input id="name" type="text" placeholder="Avery McAllister">
+      </div>
+      <div class="field">
+        <label for="org">Organization</label>
+        <input id="org" type="text" placeholder="Allegheny Steelworks Co.">
+      </div>
+      <div class="field">
+        <label for="email">Work Email</label>
+        <input id="email" type="email" placeholder="you@company.com">
+      </div>
+      <div class="field">
+        <label for="tier">Ticket Tier</label>
+        <select id="tier">
+          <option>General Admission — $495</option>
+          <option selected>Industry Professional — $795</option>
+          <option>Corporate Table — $2,800</option>
+        </select>
+      </div>
+      <div class="submit-row">
+        <span class="submit-note">Invoicing &amp; PO available for corporate tables.</span>
+        <button type="submit" class="btn">Confirm Registration</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="foot">
+    <div>
+      <h4>Ironclad Futures Summit</h4>
+      <div class="tagline">Where engineers, policy makers, and investors shape the next decade of domestic production.
+        <small>Pittsburgh, PA · October 14–15, 2025</small>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../program/index.html">Program</a></li>
+        <li><a href="../speakers/index.html">Speakers</a></li>
+        <li><a href="../venue/index.html">Venue</a></li>
+        <li><a href="../about/index.html">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p>hello@ironcladfutures.org</p>
+      <p>+1 (412) 555-0142</p>
+      <p>1212 Smallman St<br>Pittsburgh, PA 15222</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

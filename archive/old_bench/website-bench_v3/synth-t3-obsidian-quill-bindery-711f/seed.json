@@ -1,0 +1,29 @@
+{
+  "id": "synth-t3-obsidian-quill-bindery-711f",
+  "tier": 3,
+  "genre": "ecommerce",
+  "pages": [
+    "shop",
+    "product-detail",
+    "cart",
+    "about",
+    "contact"
+  ],
+  "palette_hint": "Background #F5F0E8 (aged parchment), body text #1C1A17 (near-black), accent #C0392B (deep vermilion) and #4A6741 (forest ink green).",
+  "type_style": "Headings in Georgia serif, bold weight, letter-spacing -0.02em for a letterpress feel; body in system-ui at 15px/1.6, normal weight, refined and legible.",
+  "description": "Obsidian Quill Bindery is an artisan stationery and bookbinding supply shop selling hand-bound journals, custom endpapers, bone folders, and leather hides to bookbinders and paper artists.",
+  "constraints": [
+    "Shop page uses a 260px fixed left sidebar for filters (material, binding style, price range as checkboxes) with a 3-column product grid (minmax 220px) in the scrollable main area; sidebar background is #2B2925, sidebar text #F5F0E8.",
+    "Product detail page uses a two-column layout: left column 480px wide showing a large product image placeholder (solid #D6CFC3 rectangle, 480x520px) and thumbnail strip of 4 smaller 80x80px swatches; right column fills remaining space with title, SKU, price in #C0392B, quantity selector, add-to-cart button, and a tabbed specs/care/shipping section.",
+    "Cart page features a dense data table (border-collapse, alternating row fills #FAF7F2 / #EFE9DC) showing item name, unit price, quantity input, line total, and a remove link; a sticky order-summary panel (position: sticky, top: 24px) sits in a 300px right column showing subtotal, estimated shipping, and a checkout button.",
+    "All pages share a sticky top nav (height 56px, background #1C1A17, text #F5F0E8) with the wordmark on the left, nav links centered, and a cart icon with item count badge on the right.",
+    "Max content width is 1200px centered with auto margins; base page padding is 0 24px; section headings use a 2px solid #C0392B underline accent spanning 48px."
+  ],
+  "page_specs": {
+    "shop": "A three-panel layout: sticky 56px top nav, fixed 260px dark sidebar on the left with filter groups (Material: leather/cloth/paper/vellum; Binding Style: Coptic/long-stitch/case-bound; Price: under $30/$30-$80/over $80), and a scrollable main area containing a page heading 'All Bindery Supplies', a sort dropdown (relevance/price/newest), and a 3-column product card grid. Each product card shows a 220x260px solid-color image placeholder, product name, material tag in forest green, and price in vermilion.",
+    "product-detail": "Detailed view for a specific product, e.g. 'Tuscan Tan Full-Grain Goatskin \u2014 Half-Hide' (SKU: OQB-LTH-042), priced at $64.00. The left column shows the large image placeholder and four swatch thumbnails in shades of tan, chestnut, black, and burgundy. The right column lists description copy about tannage and grain character, a hide-size dropdown (quarter/half/full), a numeric quantity field, the vermilion add-to-cart button at full column width, and three tabs (Specifications, Care Instructions, Shipping Info) with tabbed content panels styled using checkbox hack or pure CSS focus states.",
+    "cart": "Cart page titled 'Your Bindery Cart' showing a sample order of three items: Tuscan Tan Goatskin Half-Hide, Bookbinding Linen Thread 0.35mm (Ecru, qty 3), and Bone Folder \u2014 Tapered 9in. The main table uses dense rows with editable quantity inputs and a red remove '\u00d7' link. The sticky 300px right-column summary shows subtotal $116.50, flat shipping $8.00, order total $124.50, a promo-code input field, and a full-width dark checkout button (#1C1A17 background, #F5F0E8 text).",
+    "about": "Two-column layout (60/40 split) below the nav. Left column contains the brand story: founded in Portland, OR in 2011 by bookbinder Saoirse Nakamura; paragraphs covering their commitment to ethically sourced leathers, traditional sewing frame techniques, and a workshop-studio open by appointment. Right column holds a 400x500px parchment-colored image placeholder representing the studio, plus a small inset stat block (three items in a bordered grid: '2,400+ products', '12 years in craft', 'ships to 34 countries').",
+    "contact": "Single-column centered layout (max-width 640px) with a 'Get in Touch' heading, a brief paragraph directing wholesale inquiries and custom commission requests. Below that, a two-column form grid: Name, Email, Subject (full-width), Message textarea (6 rows), and a submit button in vermilion. Below the form, a small table listing three contact methods: Workshop Visits (by appointment, Tue\u2013Sat), Wholesale Orders (wholesale@obsidianquill.com), and Press Inquiries (press@obsidianquill.com), with a 1px #C0392B left border on the table."
+  }
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Réservations — Maison Corvidae</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #F5F0E8;
+    color: #1A1612;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 56px 48px 80px;
+  }
+  nav.primary {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(26,22,18,0.08);
+  }
+  nav.primary a {
+    color: #1A1612;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+  nav.primary a.active {
+    color: #B8963E;
+  }
+  .brand {
+    text-align: center;
+    margin: 56px 0 12px;
+    font-family: Georgia, serif;
+    font-weight: 300;
+    font-size: 22px;
+    letter-spacing: 0.18em;
+  }
+  .tagline {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #1A1612;
+    opacity: 0.75;
+    margin-bottom: 56px;
+  }
+  hr.gold {
+    border: none;
+    height: 1px;
+    width: 60px;
+    background: #B8963E;
+    margin: 48px auto;
+  }
+  h1.section {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 36px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .eyebrow {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #B8963E;
+    margin-bottom: 40px;
+  }
+  p.body {
+    margin-bottom: 22px;
+    text-align: justify;
+  }
+  .contact {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+  }
+  .contact .label {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #B8963E;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+  .contact .block + .block { margin-top: 24px; }
+  .caption {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    font-style: italic;
+    color: #1A1612;
+    opacity: 0.7;
+    line-height: 1.7;
+  }
+  footer {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 48px 48px;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #1A1612;
+    opacity: 0.6;
+  }
+  footer .rule {
+    border: none;
+    height: 1px;
+    width: 60px;
+    background: #B8963E;
+    margin: 0 auto 32px;
+  }
+  footer p + p { margin-top: 10px; letter-spacing: 0.1em; text-transform: none; font-style: italic; opacity: 0.7; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="primary">
+      <a href="../philosophy/index.html">Philosophy</a>
+      <a href="../menu/index.html">Menu</a>
+      <a href="../cellar/index.html">Cellar</a>
+      <a href="#" class="active">Reservations</a>
+      <a href="../find-us/index.html">Find Us</a>
+    </nav>
+
+    <div class="brand">MAISON CORVIDAE</div>
+    <div class="tagline">Where the crow dines, ceremony begins.</div>
+
+    <hr class="gold">
+
+    <div class="eyebrow">An Invitation</div>
+    <h1 class="section">Réservations</h1>
+
+    <hr class="gold">
+
+    <p class="body">Maison Corvidae seats one turn each evening, at half past seven, Wednesday through Sunday. The dining room holds twenty-eight guests, and the kitchen begins service for all tables simultaneously; we therefore ask that you arrive no earlier than seven fifteen, and no later than seven twenty-five, so that the first course may reach every seat at its intended temperature.</p>
+
+    <p class="body">Parties are limited to six guests. Larger gatherings cannot be accommodated within the contours of our menu or the architecture of our small townhouse; we trust you will understand. A per-person deposit of seventy-five dollars is collected at the time of booking and applied in full to your final bill. Cancellations made more than seventy-two hours in advance are refunded without question; thereafter, the deposit is retained.</p>
+
+    <p class="body">Reservations open on the first day of each month for the month that follows. We answer the telephone personally between two and five in the afternoon, Tuesday through Saturday; the inbox is read each morning. Should both lines be quiet, leave a name and a number, and we will return your call before the evening's first pour.</p>
+
+    <hr class="gold">
+
+    <div class="contact">
+      <div class="block">
+        <span class="label">By Telephone</span>
+        (503) 214&middot;0987
+      </div>
+      <div class="block">
+        <span class="label">By Correspondence</span>
+        reservations@maisoncorv.com
+      </div>
+    </div>
+
+    <hr class="gold">
+
+    <p class="caption">Walk-ins are never accommodated. The door remains closed to guests without a confirmed booking.</p>
+  </div>
+
+  <footer>
+    <hr class="rule">
+    <p>Maison Corvidae &middot; 418 NW Kearney Street &middot; Portland</p>
+    <p>Established 2014 &middot; By reservation only</p>
+  </footer>
+</body>
+</html>

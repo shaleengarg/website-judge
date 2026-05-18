@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started — FerroFlux Systems</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0f1117;
+    color: #c9d1d9;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code, pre, .mono { font-family: "Courier New", monospace; font-size: 14px; }
+
+  /* Header */
+  header.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: 56px;
+    background: #0f1117;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 20px;
+  }
+  .logo {
+    color: #58a6ff;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.2px;
+  }
+  .breadcrumbs {
+    color: #8b949e;
+    font-size: 13px;
+  }
+  .breadcrumbs span.sep { margin: 0 8px; color: #484f58; }
+  .breadcrumbs .here { color: #c9d1d9; }
+
+  /* Layout */
+  .layout {
+    display: flex;
+    min-height: calc(100vh - 56px);
+  }
+  aside.sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    padding: 24px 0;
+    position: sticky;
+    top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .nav-section { margin-bottom: 18px; }
+  .nav-section > .nav-title {
+    display: block;
+    padding: 6px 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8b949e;
+  }
+  .nav-section ul { list-style: none; }
+  .nav-section li a {
+    display: block;
+    padding: 6px 20px 6px 28px;
+    color: #c9d1d9;
+    font-size: 14px;
+    border-left: 2px solid transparent;
+  }
+  .nav-section li a.active {
+    color: #58a6ff;
+    background: #0f1117;
+    border-left-color: #58a6ff;
+    font-weight: 600;
+  }
+  .nav-section li a:hover { background: #1c2128; text-decoration: none; }
+
+  main {
+    flex: 1;
+    min-width: 0;
+  }
+  .content {
+    max-width: 860px;
+    padding: 40px 48px;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    color: #f0f6fc;
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #f0f6fc;
+    margin: 36px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #21262d;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f0f6fc;
+    margin: 22px 0 10px;
+  }
+  p { margin-bottom: 14px; }
+  .lede { color: #8b949e; font-size: 17px; margin-bottom: 8px; }
+
+  /* Code blocks */
+  pre {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 14px 0;
+    line-height: 1.55;
+  }
+  pre .k { color: #58a6ff; }
+  pre .s { color: #3fb950; }
+  pre .c { color: #8b949e; font-style: italic; }
+  pre .n { color: #d2a8ff; }
+  pre .v { color: #c9d1d9; }
+  code.inline {
+    background: #21262d;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #c9d1d9;
+  }
+
+  /* Steps */
+  .step {
+    margin: 22px 0 28px;
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #58a6ff;
+    color: #0f1117;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .step-head h2 {
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 20px;
+  }
+
+  /* Callout */
+  .callout {
+    background: #21262d;
+    border-left: 4px solid #58a6ff;
+    padding: 16px 20px;
+    border-radius: 0 6px 6px 0;
+    margin: 24px 0;
+  }
+  .callout h3 {
+    margin-top: 0;
+    color: #58a6ff;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .callout ul { list-style: none; margin-top: 8px; }
+  .callout li {
+    padding: 4px 0;
+    color: #c9d1d9;
+    font-size: 14px;
+  }
+  .callout li::before {
+    content: "✓";
+    color: #3fb950;
+    margin-right: 10px;
+    font-weight: 700;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  table th {
+    background: #21262d;
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 700;
+    color: #f0f6fc;
+    border: 1px solid #30363d;
+  }
+  table td {
+    padding: 8px 12px;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+  }
+  table tbody tr:nth-child(odd) td { background: #161b22; }
+  table tbody tr:nth-child(even) td { background: #0f1117; }
+  table td.param { font-family: "Courier New", monospace; color: #58a6ff; }
+
+  /* Diagram placeholder */
+  .diagram {
+    background: linear-gradient(135deg, #161b22 0%, #21262d 100%);
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8b949e;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    margin: 14px 0 8px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Next links */
+  .next-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .next-card {
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 16px;
+    background: #161b22;
+  }
+  .next-card .label { color: #8b949e; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .next-card .title { color: #58a6ff; font-weight: 700; margin-top: 4px; }
+  .next-card p { font-size: 13px; color: #8b949e; margin-top: 6px; margin-bottom: 0; }
+
+  /* Footer */
+  footer.docfoot {
+    border-top: 1px solid #30363d;
+    margin-top: 48px;
+    padding: 24px 48px;
+    color: #8b949e;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    max-width: 860px;
+  }
+  footer.docfoot a { color: #8b949e; margin-right: 16px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    aside.sidebar {
+      width: 100%;
+      height: auto;
+      position: static;
+      border-right: none;
+      border-bottom: 1px solid #30363d;
+      padding: 12px 0;
+    }
+    aside.sidebar { max-height: none; overflow: visible; }
+    .content { padding: 32px 28px; }
+    footer.docfoot { padding: 20px 28px; }
+    h1 { font-size: 28px; }
+    .next-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    header.topbar { padding: 0 14px; gap: 12px; }
+    .breadcrumbs { font-size: 12px; }
+    .breadcrumbs span.sep { margin: 0 5px; }
+    .content { padding: 24px 18px; }
+    h1 { font-size: 24px; }
+    pre { font-size: 12.5px; padding: 12px; }
+    .step-head h2 { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">FerroFlux</div>
+  <nav class="breadcrumbs">
+    <a href="#">Docs</a><span class="sep">/</span>
+    <span class="here">Getting Started</span>
+  </nav>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="nav-section">
+      <span class="nav-title">Installation</span>
+      <ul>
+        <li><a href="../getting-started/index.html" class="active">Getting Started</a></li>
+        <li><a href="#">System Requirements</a></li>
+        <li><a href="#">Upgrade Guide</a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <span class="nav-title">Core Concepts</span>
+      <ul>
+        <li><a href="#">Pipelines &amp; Streams</a></li>
+        <li><a href="#">Sensor Lifecycle</a></li>
+        <li><a href="#">Calibration Model</a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <span class="nav-title">SDK Methods</span>
+      <ul>
+        <li><a href="../api-reference/index.html">API Reference</a></li>
+        <li><a href="#">WebSocket Streams</a></li>
+        <li><a href="#">Auth Tokens</a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <span class="nav-title">Config Schema</span>
+      <ul>
+        <li><a href="../configuration/index.html">Configuration</a></li>
+        <li><a href="../changelog/index.html">Changelog</a></li>
+        <li><a href="../troubleshooting/index.html">Troubleshooting</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <article class="content">
+      <p class="lede">A real-time magnetic sensor data pipeline SDK.</p>
+      <h1>Getting Started</h1>
+      <p>Welcome to <strong>FerroFlux Systems</strong>. This guide walks you through installing the SDK, initializing your first sensor pipeline, and streaming a live magnetic flux reading in under five minutes. By the end, you'll have a working <code class="inline">ferroflux-sdk</code> instance emitting calibrated tesla readings from a connected USB-HID or SPI sensor.</p>
+
+      <div class="callout">
+        <h3>Minimum System Requirements</h3>
+        <ul>
+          <li><strong>Node.js</strong> 18.0 or newer (LTS recommended)</li>
+          <li><strong>Linux kernel</strong> 5.15+ with <code class="inline">hidraw</code> module loaded</li>
+          <li><strong>USB-HID</strong> or <strong>SPI</strong> hardware interface</li>
+          <li>~120&nbsp;MB free RAM for the streaming buffer</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <span class="step-num">1</span>
+          <h2>Install via npm</h2>
+        </div>
+        <p>FerroFlux ships as a single npm package with native bindings prebuilt for x64 and arm64 Linux targets. Install it into your project with your preferred package manager:</p>
+<pre><span class="c"># install the SDK and its peer types</span>
+<span class="k">npm</span> install ferroflux-sdk
+
+<span class="c"># or with pnpm / yarn</span>
+<span class="k">pnpm</span> add ferroflux-sdk
+<span class="k">yarn</span> add ferroflux-sdk</pre>
+        <p>The post-install step probes <code class="inline">/dev/hidraw*</code> and verifies kernel compatibility. If detection fails, see <a href="../troubleshooting/index.html">Troubleshooting → Hardware</a>.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <span class="step-num">2</span>
+          <h2>Initialize a sensor pipeline</h2>
+        </div>
+        <p>Create a <code class="inline">ferroflux.yaml</code> manifest at the root of your project. The minimum schema declares one sensor source and one output stream:</p>
+<pre><span class="n">pipeline</span>:
+  <span class="n">name</span>: <span class="s">"primary-flux"</span>
+  <span class="n">bufferSize</span>: <span class="v">4096</span>
+  <span class="n">sampleRateHz</span>: <span class="v">1000</span>
+
+<span class="n">sensors</span>:
+  - <span class="n">id</span>: <span class="s">"mag-01"</span>
+    <span class="n">interface</span>: <span class="s">"usb-hid"</span>
+    <span class="n">vendorId</span>: <span class="s">"0x2341"</span>
+    <span class="n">calibrationProfile</span>: <span class="s">"default-3axis"</span>
+
+<span class="n">streams</span>:
+  - <span class="n">name</span>: <span class="s">"live"</span>
+    <span class="n">format</span>: <span class="s">"json"</span>
+    <span class="n">transport</span>: <span class="s">"websocket"</span>
+    <span class="n">port</span>: <span class="v">8787</span></pre>
+
+        <h3>Key fields</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param">pipeline.bufferSize</td>
+              <td>integer</td>
+              <td>Ring-buffer depth in samples. Power-of-two recommended.</td>
+            </tr>
+            <tr>
+              <td class="param">pipeline.sampleRateHz</td>
+              <td>integer</td>
+              <td>Target acquisition rate; clamped to sensor capability.</td>
+            </tr>
+            <tr>
+              <td class="param">sensors[].interface</td>
+              <td>enum</td>
+              <td>One of <code class="inline">usb-hid</code>, <code class="inline">spi</code>, <code class="inline">mock</code>.</td>
+            </tr>
+            <tr>
+              <td class="param">streams[].transport</td>
+              <td>enum</td>
+              <td><code class="inline">websocket</code>, <code class="inline">tcp</code>, or <code class="inline">stdout</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <span class="step-num">3</span>
+          <h2>Stream the first reading</h2>
+        </div>
+        <p>The snippet below loads your manifest, attaches an event listener, and prints the first ten calibrated samples to stdout. Save it as <code class="inline">index.js</code> and run with <code class="inline">node index.js</code>.</p>
+<pre><span class="k">import</span> { FerroFlux } <span class="k">from</span> <span class="s">"ferroflux-sdk"</span>;
+
+<span class="k">const</span> <span class="v">ff</span> = <span class="k">await</span> FerroFlux.fromConfig(<span class="s">"./ferroflux.yaml"</span>);
+
+<span class="k">await</span> ff.connect();
+<span class="k">await</span> ff.calibrate({ <span class="n">profile</span>: <span class="s">"default-3axis"</span> });
+
+<span class="k">let</span> count = <span class="v">0</span>;
+ff.streams.live.on(<span class="s">"sample"</span>, (sample) =&gt; {
+  console.log(<span class="s">`[${sample.t}] x=${sample.x}µT y=${sample.y}µT z=${sample.z}µT`</span>);
+  <span class="k">if</span> (++count &gt;= <span class="v">10</span>) ff.stop();
+});
+
+<span class="k">await</span> ff.start();</pre>
+        <p>A successful run will log ten lines of three-axis flux density readings in microtesla, sampled at the rate declared in your manifest.</p>
+
+        <div class="diagram">[ sensor ] ──hidraw──&gt; [ pipeline ] ──websocket──&gt; [ client ]</div>
+      </div>
+
+      <h2>Next steps</h2>
+      <div class="next-grid">
+        <a class="next-card" href="../api-reference/index.html">
+          <div class="label">Reference</div>
+          <div class="title">API Reference →</div>
+          <p>Browse all 14 REST and WebSocket endpoints across Sensors, Streams, Calibration, and Auth.</p>
+        </a>
+        <a class="next-card" href="../configuration/index.html">
+          <div class="label">Schema</div>
+          <div class="title">Configuration →</div>
+          <p>Full <code class="inline">ferroflux.yaml</code> reference and <code class="inline">FERROFLUX_*</code> env overrides.</p>
+        </a>
+        <a class="next-card" href="../changelog/index.html">
+          <div class="label">Releases</div>
+          <div class="title">Changelog →</div>
+          <p>Eighteen months of release notes from v0.1.0 through v1.4.2.</p>
+        </a>
+        <a class="next-card" href="../troubleshooting/index.html">
+          <div class="label">Support</div>
+          <div class="title">Troubleshooting →</div>
+          <p>Twelve known issues with symptoms, causes, and resolutions.</p>
+        </a>
+      </div>
+    </article>
+
+    <footer class="docfoot">
+      <div>© 2025 FerroFlux Systems · SDK v1.4.2</div>
+      <div>
+        <a href="#">Docs</a>
+        <a href="#">GitHub</a>
+        <a href="#">License</a>
+      </div>
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>

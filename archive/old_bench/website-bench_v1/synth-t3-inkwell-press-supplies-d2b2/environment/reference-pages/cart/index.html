@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cart — Inkwell Press Co.</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #faf7f2;
+  color: #1c1a17;
+  font-size: 14px;
+  line-height: 1.5;
+  font-stretch: condensed;
+}
+h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: normal; }
+
+/* Nav */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  height: 64px;
+  background: #faf7f2;
+  border-bottom: 1px solid #e6dfd2;
+  display: flex; align-items: center;
+  padding: 0 32px;
+}
+.logo {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1c1a17;
+  letter-spacing: -0.3px;
+}
+.logo .dot { color: #d4860a; }
+.nav-links {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 36px;
+}
+.nav-links a {
+  color: #1c1a17;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.nav-links a.active { color: #1a6b5a; border-bottom: 2px solid #1a6b5a; padding-bottom: 4px; }
+.cart-icon {
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1c1a17;
+  text-decoration: none;
+  padding: 8px 14px;
+  border: 1px solid #1c1a17;
+  border-radius: 2px;
+}
+.cart-badge {
+  position: absolute;
+  top: -8px; right: -8px;
+  background: #d4860a;
+  color: #faf7f2;
+  font-size: 11px;
+  font-weight: bold;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Page header */
+.page-head {
+  padding: 36px 48px 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.page-head h1 { font-size: 36px; letter-spacing: -0.5px; }
+.crumbs { font-size: 12px; color: #7a736a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Layout */
+.container {
+  display: flex;
+  gap: 32px;
+  padding: 16px 48px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+.items-col { flex: 0 0 65%; }
+.summary-col { flex: 0 0 calc(35% - 32px); position: sticky; top: 88px; }
+
+/* Line items */
+.items-head {
+  display: grid;
+  grid-template-columns: 88px 1fr 130px 90px 70px;
+  gap: 16px;
+  padding: 0 16px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #7a736a;
+  border-bottom: 2px solid #1c1a17;
+  font-weight: 600;
+}
+.item {
+  display: grid;
+  grid-template-columns: 88px 1fr 130px 90px 70px;
+  gap: 16px;
+  padding: 20px 16px;
+  border-bottom: 1px solid #e6dfd2;
+  align-items: center;
+}
+.swatch {
+  width: 72px; height: 72px;
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.item-info .name {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+.item-info .variant {
+  font-size: 12px;
+  color: #7a736a;
+  margin-bottom: 8px;
+}
+.item-info .sku {
+  font-size: 11px;
+  color: #a09587;
+  letter-spacing: 0.5px;
+}
+.qty {
+  display: inline-flex;
+  border: 1px solid #d4ccba;
+  border-radius: 2px;
+  width: 110px;
+}
+.qty button, .qty .q {
+  background: transparent;
+  border: none;
+  padding: 6px 0;
+  flex: 1;
+  text-align: center;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1a17;
+}
+.qty .q { border-left: 1px solid #d4ccba; border-right: 1px solid #d4ccba; }
+.price {
+  font-weight: bold;
+  font-size: 15px;
+  text-align: right;
+}
+.remove {
+  text-align: right;
+  font-size: 12px;
+  color: #1a6b5a;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.subtotal-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 16px;
+  font-size: 15px;
+  border-bottom: 2px solid #1c1a17;
+}
+.subtotal-line .label { color: #7a736a; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; font-weight: 600; }
+.subtotal-line .val { font-weight: bold; }
+
+.continue {
+  margin-top: 20px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+.continue a { color: #1a6b5a; text-decoration: none; font-weight: 600; }
+
+/* Summary */
+.summary {
+  background: #fff;
+  border: 1px solid #e6dfd2;
+  border-radius: 3px;
+  padding: 28px;
+}
+.summary h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e6dfd2;
+}
+.sum-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+}
+.sum-row .lbl { color: #45413c; }
+.sum-row .val { font-weight: 600; }
+.sum-row.muted .val { color: #7a736a; font-weight: 500; font-size: 13px; }
+
+.promo {
+  margin: 16px 0;
+  padding: 16px 0;
+  border-top: 1px solid #e6dfd2;
+  border-bottom: 1px solid #e6dfd2;
+}
+.promo label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #7a736a;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.promo-input {
+  display: flex;
+  gap: 0;
+}
+.promo-input input {
+  flex: 1;
+  padding: 9px 10px;
+  border: 1px solid #d4ccba;
+  background: #faf7f2;
+  font-family: inherit;
+  font-size: 13px;
+  border-right: none;
+}
+.promo-input button {
+  background: #1c1a17;
+  color: #faf7f2;
+  border: none;
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0 20px;
+}
+.total-row .lbl {
+  font-family: Georgia, serif;
+  font-size: 18px;
+}
+.total-row .val {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: bold;
+  color: #d4860a;
+}
+
+.checkout-btn {
+  display: block;
+  width: 100%;
+  background: #1a6b5a;
+  color: #faf7f2;
+  text-align: center;
+  padding: 14px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.pay-icons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.pay-icons span {
+  border: 1px solid #d4ccba;
+  padding: 5px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #45413c;
+  border-radius: 2px;
+}
+
+.guarantee {
+  margin-top: 16px;
+  font-size: 11px;
+  color: #7a736a;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* Footer */
+footer {
+  background: #1c1a17;
+  color: #c9c2b6;
+  padding: 32px 48px;
+  margin-top: 40px;
+  font-size: 12px;
+}
+.foot-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.foot-inner .brand { font-family: Georgia, serif; color: #faf7f2; font-size: 16px; }
+.foot-links a { color: #c9c2b6; text-decoration: none; margin-left: 20px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">Inkwell Press<span class="dot">.</span></div>
+  <div class="nav-links">
+    <a href="../home/index.html">Home</a>
+    <a href="../catalog/index.html">Catalog</a>
+    <a href="../product/index.html">Product</a>
+    <a href="#" class="active">Cart</a>
+    <a href="../orders/index.html">Orders</a>
+  </div>
+  <a href="#" class="cart-icon">CART
+    <span class="cart-badge">4</span>
+  </a>
+</nav>
+
+<div class="page-head">
+  <div class="crumbs">Shop / Your Cart</div>
+  <h1>Your Cart</h1>
+</div>
+
+<div class="container">
+
+  <div class="items-col">
+    <div class="items-head">
+      <div>Item</div>
+      <div></div>
+      <div>Quantity</div>
+      <div style="text-align:right;">Price</div>
+      <div></div>
+    </div>
+
+    <div class="item">
+      <div class="swatch" style="background:#1a6b5a;">TEAL</div>
+      <div class="item-info">
+        <div class="name">Oil-Based Letterpress Ink</div>
+        <div class="variant">Color: Deep Teal · 1 lb can</div>
+        <div class="sku">SKU INK-DT-016</div>
+      </div>
+      <div class="qty"><button>−</button><div class="q">2</div><button>+</button></div>
+      <div class="price">$48.00</div>
+      <div class="remove">Remove</div>
+    </div>
+
+    <div class="item">
+      <div class="swatch" style="background:#d4860a;">AMBR</div>
+      <div class="item-info">
+        <div class="name">Hand-Cut Wood Type Set</div>
+        <div class="variant">Bodoni Bold · 72pt · A–Z</div>
+        <div class="sku">SKU TYP-BB-072</div>
+      </div>
+      <div class="qty"><button>−</button><div class="q">1</div><button>+</button></div>
+      <div class="price">$185.00</div>
+      <div class="remove">Remove</div>
+    </div>
+
+    <div class="item">
+      <div class="swatch" style="background:#8b2a2a;">CRMS</div>
+      <div class="item-info">
+        <div class="name">Rubber Brayer Roller</div>
+        <div class="variant">4-inch · Hardwood Handle</div>
+        <div class="sku">SKU ROL-4IN-HW</div>
+      </div>
+      <div class="qty"><button>−</button><div class="q">1</div><button>+</button></div>
+      <div class="price">$32.50</div>
+      <div class="remove">Remove</div>
+    </div>
+
+    <div class="item">
+      <div class="swatch" style="background:#e8dcc4; color:#7a6a4a;">CRM</div>
+      <div class="item-info">
+        <div class="name">Cotton Cover Paper Stock</div>
+        <div class="variant">Natural Cream · 110lb · 50 sheets</div>
+        <div class="sku">SKU PPR-CC-110</div>
+      </div>
+      <div class="qty"><button>−</button><div class="q">3</div><button>+</button></div>
+      <div class="price">$72.00</div>
+      <div class="remove">Remove</div>
+    </div>
+
+    <div class="subtotal-line">
+      <div class="label">Subtotal (7 items)</div>
+      <div class="val">$337.50</div>
+    </div>
+
+    <div class="continue">
+      <a href="../catalog/index.html">← Continue Shopping</a>
+    </div>
+  </div>
+
+  <div class="summary-col">
+    <div class="summary">
+      <h2>Order Summary</h2>
+
+      <div class="sum-row">
+        <div class="lbl">Subtotal</div>
+        <div class="val">$337.50</div>
+      </div>
+      <div class="sum-row">
+        <div class="lbl">Shipping (est.)</div>
+        <div class="val">$0.00</div>
+      </div>
+      <div class="sum-row muted">
+        <div class="lbl">Standard · 3–5 days</div>
+        <div class="val">FREE over $75</div>
+      </div>
+      <div class="sum-row">
+        <div class="lbl">Estimated Tax</div>
+        <div class="val">$22.45</div>
+      </div>
+
+      <div class="promo">
+        <label>Promo Code</label>
+        <div class="promo-input">
+          <input type="text" placeholder="Enter code">
+          <button>Apply</button>
+        </div>
+      </div>
+
+      <div class="total-row">
+        <div class="lbl">Order Total</div>
+        <div class="val">$359.95</div>
+      </div>
+
+      <button class="checkout-btn">Proceed to Checkout</button>
+
+      <div class="pay-icons">
+        <span>VISA</span>
+        <span>MC</span>
+        <span>AMEX</span>
+        <span>PAYPAL</span>
+      </div>
+
+      <div class="guarantee">
+        Secure checkout · 30-day returns on unopened supplies
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="brand">Inkwell Press Co.</div>
+    <div class="foot-links">
+      <a href="#">Shipping</a>
+      <a href="#">Returns</a>
+      <a href="#">Wholesale</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>© 2024 Inkwell Press Co.</div>
+  </div>
+</footer>
+
+</body>
+</html>

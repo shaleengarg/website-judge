@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/synth-t6-northvault-banking-onboard-809d"
+description = "NorthVault Credit Union's five-step digital account-opening flow for new members, featuring dense multi-column forms, custom-styled inputs with validation states, and a final review table."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "signup-flow", "tier-6"]
+
+[metadata]
+difficulty_explanation = "Tier 6 (signup-flow): NorthVault Credit Union's five-step digital account-opening flow for new members, featuring dense multi-column forms, custom-styled inputs with validation states, and a final review table."
+category = "frontend"
+tier = 6
+genre = "signup-flow"
+
+[verifier]
+timeout_sec = 420.0
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

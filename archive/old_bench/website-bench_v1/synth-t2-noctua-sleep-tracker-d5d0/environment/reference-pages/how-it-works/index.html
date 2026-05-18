@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How It Works — Noctua</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: Arial, Helvetica, sans-serif; background: #1a1a2e; color: #eef0f7; line-height: 1.5; }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(26,26,46,0.95);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    border-bottom: 1px solid rgba(238,240,247,0.06);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+  }
+  .logo { font-weight: 800; font-size: 20px; color: #eef0f7; text-decoration: none; }
+  .logo span { margin-right: 8px; font-size: 22px; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { color: #eef0f7; text-decoration: none; font-size: 15px; opacity: 0.85; }
+  .nav-links a.active { opacity: 1; color: #f59e0b; font-weight: 700; }
+  .nav-links a:hover { opacity: 1; }
+  .btn {
+    display: inline-block; border: none; border-radius: 10px;
+    padding: 11px 20px; font-weight: 700; font-size: 15px;
+    text-decoration: none; cursor: pointer; font-family: inherit;
+  }
+  .btn-amber { background: #f59e0b; color: #1a1a2e; }
+  .btn-violet { background: #7c3aed; color: #eef0f7; }
+
+  /* Hero */
+  .hero { padding: 130px 0 60px; background: #1a1a2e; text-align: center; }
+  .hero h1 { font-size: 56px; font-weight: 800; letter-spacing: -1px; margin-bottom: 18px; }
+  .hero p { font-size: 19px; color: #c8cbe0; max-width: 640px; margin: 0 auto; }
+
+  /* Steps */
+  .steps-section { background: #16213e; padding: 80px 0; }
+  .steps {
+    display: flex; gap: 28px; justify-content: space-between;
+  }
+  .step {
+    flex: 1;
+    background: #1a1a2e;
+    border-radius: 14px;
+    padding: 36px 28px;
+    position: relative;
+  }
+  .step-num {
+    font-size: 64px; font-weight: 800; color: #f59e0b; line-height: 1;
+    margin-bottom: 16px;
+  }
+  .step h3 { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
+  .step p { font-size: 15px; color: #c8cbe0; }
+  .step-arrow {
+    display: inline-block; color: #7c3aed; font-weight: 800;
+    align-self: center; font-size: 28px;
+  }
+
+  /* Callout */
+  .callout-section { background: #1a1a2e; padding: 80px 0 100px; }
+  .callout-section h2 {
+    font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 36px;
+  }
+  .callout-section h2 .accent { color: #7c3aed; }
+  .callout {
+    background: #16213e;
+    border-left: 6px solid #7c3aed;
+    border-radius: 14px;
+    padding: 40px 44px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 36px;
+    align-items: start;
+  }
+  .callout-visual {
+    background: #1a1a2e;
+    border-radius: 12px;
+    height: 160px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 56px;
+  }
+  .callout-text p { font-size: 15.5px; color: #d4d6e6; margin-bottom: 16px; }
+  .callout-text p:last-child { margin-bottom: 0; }
+  .callout-text strong { color: #f59e0b; font-weight: 700; }
+
+  /* Footer */
+  footer { background: #16213e; padding: 56px 0 24px; border-top: 1px solid rgba(238,240,247,0.05); }
+  .footer-cols { display: flex; gap: 60px; }
+  .footer-col { flex: 1; }
+  .footer-col h4 { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #f59e0b; margin-bottom: 16px; }
+  .footer-col p, .footer-col a { font-size: 14px; color: #c8cbe0; text-decoration: none; line-height: 1.9; display: block; }
+  .footer-col a:hover { color: #eef0f7; }
+  .footer-brand { font-size: 18px; font-weight: 800; color: #eef0f7; margin-bottom: 12px; }
+  .copyright { text-align: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(238,240,247,0.06); font-size: 13px; color: #8a8ea8; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../home/index.html" class="logo"><span>🦉</span>Noctua</a>
+    <div class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="../features/index.html">Features</a>
+      <a href="#" class="active">How It Works</a>
+      <a href="../pricing/index.html">Pricing</a>
+      <a href="../download/index.html">Download</a>
+      <a href="../download/index.html" class="btn btn-amber">Get the App</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>How Noctua Works</h1>
+    <p>Three simple steps between you and the most detailed sleep report you've ever read. No wearables, no straps — just your phone and our sonar engine.</p>
+  </div>
+</section>
+
+<section class="steps-section">
+  <div class="container">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Place Your Phone</h3>
+        <p>Set your phone face-down on the nightstand within arm's reach of the bed. Plug it in, open Noctua, and tap "Start Night."</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Noctua Listens</h3>
+        <p>Inaudible sonar pulses measure your movement and breathing through the night. Your microphone never records audible sound or speech.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Wake to Insights</h3>
+        <p>A smart alarm rouses you in light sleep within your chosen window. Your full sleep report, cycle breakdown, and coaching tips load instantly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="callout-section">
+  <div class="container">
+    <h2>The science behind <span class="accent">sonar sleep tracking</span></h2>
+    <div class="callout">
+      <div class="callout-visual">📡</div>
+      <div class="callout-text">
+        <p><strong>How sonar motion detection works.</strong> Noctua emits ultra-high-frequency tones — far above human hearing — through your phone's speaker. The microphone captures how those tones bounce off your chest as you breathe and shift. By analyzing tiny shifts in the returning waveform (a technique called Doppler analysis), Noctua maps your respiratory rate and gross body movement with millimeter precision, all without touching you.</p>
+        <p>Every minute of that signal is processed locally on your device and translated into sleep stages: awake, light, deep, and REM. We never upload raw audio, and your nightly report is built from movement signatures alone. The result is wearable-grade accuracy from a device you already own — and a tracker that disappears the moment you wake up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-cols">
+      <div class="footer-col">
+        <div class="footer-brand">🦉 Noctua</div>
+        <p>AI-driven sleep analysis and personalized bedtime coaching. Built for people who take rest seriously.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="../home/index.html">Home</a>
+        <a href="../features/index.html">Features</a>
+        <a href="#">How It Works</a>
+        <a href="../pricing/index.html">Pricing</a>
+        <a href="../download/index.html">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Social</h4>
+        <a href="#">@noctua.sleep</a>
+        <a href="#">@noctua_app</a>
+        <a href="#">/noctuaofficial</a>
+        <a href="#">hello@noctua.app</a>
+      </div>
+    </div>
+    <div class="copyright">© 2025 Noctua Labs, Inc. All rights reserved. Sleep well.</div>
+  </div>
+</footer>
+
+</body>
+</html>

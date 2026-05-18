@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Volunteer — Hollow Creek Rewilding</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #F7F3EE;
+    color: #1E3A2F;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  h1, h2, h3 { font-family: Georgia, serif; font-weight: bold; color: #1E3A2F; margin: 0 0 0.6em; }
+  h1 { font-size: 2.4rem; line-height: 1.15; }
+  h2 { font-size: 1.6rem; border-left: 2px solid #5C7A4E; padding-left: 12px; }
+  h3 { font-size: 1.15rem; }
+  p { margin: 0 0 1em; }
+  a { color: #1E3A2F; text-decoration: none; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  .nav {
+    background: #F7F3EE;
+    border-bottom: 1px solid #C8BFB4;
+  }
+  .nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #1E3A2F;
+  }
+  .logo span { color: #5C7A4E; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: #1E3A2F;
+    font-size: 0.95rem;
+    padding-bottom: 4px;
+    border-bottom: 4px solid transparent;
+  }
+  .nav-links a.active { border-bottom: 4px solid #5C7A4E; }
+
+  /* Sections */
+  section { padding: 48px 0; }
+
+  .intro p { font-size: 1.05rem; max-width: 760px; }
+  .intro .lead {
+    font-family: Georgia, serif;
+    font-size: 1.15rem;
+    color: #1E3A2F;
+  }
+
+  /* Cards grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    width: 100%;
+  }
+  .card {
+    border: 2px solid #C8BFB4;
+    border-radius: 8px;
+    padding: 16px;
+    background: #FBF8F3;
+  }
+  .card .swatch {
+    height: 70px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #5C7A4E, #1E3A2F);
+    color: #F7F3EE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-size: 1.6rem;
+  }
+  .card h3 { margin-bottom: 6px; }
+  .card p { font-size: 0.92rem; margin-bottom: 10px; }
+  .commitment {
+    font-size: 0.82rem;
+    color: #5C7A4E;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: bold;
+  }
+
+  /* Form */
+  .form-section { background: #EFE9E0; }
+  form {
+    background: #FBF8F3;
+    border: 2px solid #C8BFB4;
+    border-radius: 8px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 20px;
+    margin-top: 8px;
+  }
+  .field { display: flex; flex-direction: column; }
+  .field.full { grid-column: 1 / -1; }
+  label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #1E3A2F;
+  }
+  input, select {
+    padding: 10px 12px;
+    border: 1px solid #C8BFB4;
+    border-radius: 6px;
+    background: #F7F3EE;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #1E3A2F;
+  }
+  .btn-primary {
+    background: #C47C2B;
+    color: #FFFFFF;
+    padding: 10px 24px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Footer */
+  footer {
+    background: #1E3A2F;
+    color: #F7F3EE;
+    margin-top: 24px;
+  }
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h4 {
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    margin: 0 0 12px;
+    color: #FFFFFF;
+  }
+  footer p, footer li { font-size: 0.9rem; color: #D7CEC2; }
+  footer ul { list-style: none; margin: 0; padding: 0; }
+  footer li { margin-bottom: 6px; }
+  footer a { color: #D7CEC2; }
+  .footer-bottom {
+    border-top: 1px solid #2E4F40;
+    text-align: center;
+    padding: 14px;
+    font-size: 0.8rem;
+    color: #9FAEA0;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Hollow Creek <span>Rewilding</span></div>
+    <div class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="../our-work/index.html">Our Work</a>
+      <a href="#" class="active">Volunteer</a>
+      <a href="../stories/index.html">Stories</a>
+      <a href="../donate/index.html">Donate</a>
+    </div>
+  </div>
+</nav>
+
+<section class="intro">
+  <div class="container">
+    <h1>Volunteer with Hollow Creek</h1>
+    <p class="lead">Every restored acre begins with someone pulling on boots before dawn. Volunteers are the steady hands behind our work.</p>
+    <p>Our volunteers contribute roughly <strong>4,800 hours annually</strong> across seasonal events from March through November — sowing prairie seed, monitoring stream chemistry, mentoring schoolyard naturalists, and clearing miles of trail along the Ozark plateau. Whether you can give a single Saturday or a standing weekly commitment, there is a crew that fits your schedule and skills.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Recurring Volunteer Roles</h2>
+    <div class="cards" style="margin-top:24px;">
+      <div class="card">
+        <div class="swatch">⛰</div>
+        <h3>Trail Clearing Crew</h3>
+        <p>Maintain access paths through restoration sites using hand tools and light brush gear. Crews work in small teams led by an experienced steward.</p>
+        <div class="commitment">2nd Saturday, Mar–Nov</div>
+      </div>
+      <div class="card">
+        <div class="swatch">❀</div>
+        <h3>Seed Harvest Team</h3>
+        <p>Collect, clean, and catalog seed from prairie remnants for the Ozark Prairie Seed Library. Training provided; gentle pace, lots of bending.</p>
+        <div class="commitment">Weekly, Aug–Oct</div>
+      </div>
+      <div class="card">
+        <div class="swatch">≈</div>
+        <h3>Water Quality Monitors</h3>
+        <p>Sample tributaries of Finley Creek for turbidity, nitrates, and macroinvertebrates. Data feeds our community science dashboard.</p>
+        <div class="commitment">Monthly, year-round</div>
+      </div>
+      <div class="card">
+        <div class="swatch">✕</div>
+        <h3>Invasive Species Patrol</h3>
+        <p>Identify and remove bush honeysuckle, sericea lespedeza, and callery pear. Physical work; gloves and loppers supplied at each event.</p>
+        <div class="commitment">1st Sunday, Apr–Nov</div>
+      </div>
+      <div class="card">
+        <div class="swatch">✎</div>
+        <h3>School Program Mentors</h3>
+        <p>Co-lead outdoor learning sessions at partner schools through the Schoolyard Habitat Grants program. Background check required.</p>
+        <div class="commitment">2–4 hrs / month, school year</div>
+      </div>
+      <div class="card">
+        <div class="swatch">⚘</div>
+        <h3>Native Plant Nursery Helpers</h3>
+        <p>Transplant seedlings, water trays, and prep plugs for spring distribution at our greenhouse outside Eureka Springs. Indoor-friendly role.</p>
+        <div class="commitment">Wednesdays, Feb–May</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="form-section">
+  <div class="container">
+    <h2>Sign Up to Volunteer</h2>
+    <p style="margin-top:14px;">Tell us a little about yourself and we'll match you with the next crew gathering in your area.</p>
+    <form>
+      <div class="field">
+        <label for="name">Full Name</label>
+        <input id="name" type="text" placeholder="Jane Doe">
+      </div>
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input id="email" type="email" placeholder="jane@example.org">
+      </div>
+      <div class="field">
+        <label for="zip">ZIP Code</label>
+        <input id="zip" type="text" placeholder="72632">
+      </div>
+      <div class="field">
+        <label for="role">Preferred Role</label>
+        <select id="role">
+          <option>No preference — surprise me</option>
+          <option>Trail Clearing Crew</option>
+          <option>Seed Harvest Team</option>
+          <option>Water Quality Monitors</option>
+          <option>Invasive Species Patrol</option>
+          <option>School Program Mentors</option>
+          <option>Native Plant Nursery Helpers</option>
+        </select>
+      </div>
+      <div class="field full">
+        <button type="submit" class="btn-primary">Join a Crew</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Hollow Creek Rewilding</h4>
+      <p>A regional nonprofit restoring native grasslands and riparian corridors across the Ozark plateau through volunteer stewardship, seed banking, and community science.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../home/index.html">Home</a></li>
+        <li><a href="../our-work/index.html">Our Work</a></li>
+        <li><a href="#">Volunteer</a></li>
+        <li><a href="../stories/index.html">Stories</a></li>
+        <li><a href="../donate/index.html">Donate</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>418 River Bluff Road</li>
+        <li>Eureka Springs, AR 72632</li>
+        <li>(479) 555-0142</li>
+        <li>hello@hollowcreek.org</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© Hollow Creek Rewilding — 501(c)(3) nonprofit</div>
+</footer>
+
+</body>
+</html>

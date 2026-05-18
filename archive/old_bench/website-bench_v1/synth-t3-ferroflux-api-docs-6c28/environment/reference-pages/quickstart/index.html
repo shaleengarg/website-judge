@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quickstart — FerroFlux API</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #1a1a2e;
+    background: #f8f9fb;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  code, pre { font-family: ui-monospace, Consolas, monospace; }
+
+  /* Top bar */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 48px;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 15px;
+    color: #1a1a2e;
+    letter-spacing: -0.2px;
+  }
+  .logo .dot { color: #0d9488; }
+  .version-badge {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  .topbar-links {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+  }
+  .topbar-links a {
+    color: #1a1a2e;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .topbar-links a:hover { color: #0d9488; }
+  .status-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #0d9488;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    top: 48px; left: 0; bottom: 0;
+    width: 260px;
+    background: #0f172a;
+    color: #cbd5e1;
+    padding: 24px 0;
+    overflow-y: auto;
+  }
+  .sidebar .group {
+    margin-bottom: 18px;
+  }
+  .sidebar .group-label {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #64748b;
+    padding: 0 24px 8px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sidebar .group-label::after {
+    content: "▾";
+    font-size: 10px;
+  }
+  .sidebar a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 6px 24px;
+    font-size: 13.5px;
+  }
+  .sidebar a:hover { color: #ffffff; background: #1e293b; }
+  .sidebar a.active {
+    color: #ffffff;
+    background: #1e293b;
+    border-left: 3px solid #0d9488;
+    padding-left: 21px;
+    font-weight: 600;
+  }
+
+  /* Main */
+  .main-wrap {
+    margin-left: 260px;
+    padding-top: 48px;
+    min-height: 100vh;
+  }
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 48px 80px;
+  }
+  .breadcrumb {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .breadcrumb .sep { margin: 0 6px; }
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  .lede {
+    font-size: 15px;
+    color: #475569;
+    margin-bottom: 36px;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  /* Steps */
+  .step {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #0d9488;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; min-width: 0; }
+  .step h2 {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+  .step p {
+    color: #334155;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .step p code {
+    background: #eef2f6;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12.5px;
+    color: #0f172a;
+  }
+
+  /* Code blocks */
+  .code {
+    position: relative;
+    background: #1e293b;
+    color: #e2e8f0;
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 1.55;
+    overflow-x: auto;
+  }
+  .code .lang {
+    position: absolute;
+    top: 8px; right: 12px;
+    font-size: 10.5px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+  }
+  .code .k { color: #5eead4; }
+  .code .s { color: #fbbf24; }
+  .code .c { color: #64748b; }
+  .code .p { color: #94a3b8; }
+  .code .n { color: #f9a8d4; }
+
+  /* Callout */
+  .callout {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin: -8px 0 32px 56px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .callout-icon {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  .callout-body { flex: 1; }
+  .callout-title {
+    font-weight: 700;
+    color: #92400e;
+    font-size: 13.5px;
+    margin-bottom: 4px;
+  }
+  .callout-text {
+    color: #78350f;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .callout-text code {
+    background: #fde68a;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+
+  /* Footer note */
+  .next-up {
+    margin-top: 48px;
+    padding: 20px 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .next-up .label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .next-up .title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-top: 2px;
+  }
+  .next-up a {
+    color: #0d9488;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="logo">Ferro<span class="dot">●</span>Flux</div>
+    <div class="version-badge">v2.4.0</div>
+    <nav class="topbar-links">
+      <a href="#"><span class="status-dot"></span>API Status</a>
+      <a href="#">GitHub</a>
+    </nav>
+  </header>
+
+  <aside class="sidebar">
+    <div class="group">
+      <div class="group-label">Getting Started</div>
+      <a href="../overview/index.html">Overview</a>
+      <a href="#" class="active">Quickstart</a>
+    </div>
+    <div class="group">
+      <div class="group-label">API Reference</div>
+      <a href="../endpoints/index.html">Endpoints</a>
+      <a href="#">Authentication</a>
+      <a href="#">Rate Limits</a>
+      <a href="#">Webhooks</a>
+    </div>
+    <div class="group">
+      <div class="group-label">SDKs &amp; Tools</div>
+      <a href="../sdk-reference/index.html">SDK Reference</a>
+      <a href="#">CLI</a>
+      <a href="#">Postman Collection</a>
+    </div>
+    <div class="group">
+      <div class="group-label">Resources</div>
+      <a href="../changelog/index.html">Changelog</a>
+      <a href="#">Migration Guide</a>
+      <a href="#">Support</a>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <main class="main">
+      <div class="breadcrumb">Docs <span class="sep">/</span> Getting Started <span class="sep">/</span> Quickstart</div>
+      <h1>Quickstart</h1>
+      <p class="lede">Get from zero to your first real-time sensor stream in under five minutes. This guide walks through installation, authentication, and publishing your first event to FerroFlux.</p>
+
+      <!-- Step 1 -->
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h2>Install the FerroFlux CLI</h2>
+          <p>The CLI is the fastest way to provision streams and inspect data locally. Install it with your package manager of choice — Node.js 18+ is required.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="c"># Install via npm</span>
+<span class="k">npm</span> install -g <span class="s">@ferroflux/cli</span>
+
+<span class="c"># Verify the installation</span>
+<span class="k">ferroflux</span> --version
+<span class="p">=&gt;</span> ferroflux/2.4.0 darwin-arm64 node-v20.11.0</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h2>Generate an API key</h2>
+          <p>Authenticate the CLI against your workspace. This opens a browser session and writes a scoped key to <code>~/.ferroflux/credentials</code>.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="k">ferroflux</span> auth login --workspace <span class="s">"acme-prod"</span>
+<span class="p">→</span> Opening https://app.ferroflux.io/auth/cli ...
+<span class="p">✓</span> Authenticated as <span class="n">jordan@acme.io</span>
+<span class="p">✓</span> Wrote key <span class="n">fx_live_a1b2...e9f4</span> to credentials file</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Amber callout -->
+      <div class="callout">
+        <div class="callout-icon">⚠</div>
+        <div class="callout-body">
+          <div class="callout-title">Keep your API key secret</div>
+          <div class="callout-text">Keys prefixed with <code>fx_live_</code> grant full read/write access to your workspace. Never commit them to source control or embed them in client-side code. Use <code>fx_test_</code> keys for development and rotate live keys every 90 days from the dashboard.</div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h2>Create your first stream</h2>
+          <p>Streams are typed channels of timestamped sensor readings. Create one for vibration data with a sampling hint of 200Hz.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="k">curl</span> -X POST https://api.ferroflux.io/v2/streams \
+  -H <span class="s">"Authorization: Bearer $FERROFLUX_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{ "name": "press-3-vibration", "unit": "g", "hz": 200 }'</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h2>Publish a sample reading</h2>
+          <p>Push a single data point to confirm the pipeline is live. Production workloads should batch points and use the SDK's streaming client instead.</p>
+          <div class="code">
+            <span class="lang">json</span>
+<pre><span class="p">{</span>
+  <span class="k">"stream_id"</span><span class="p">:</span> <span class="s">"strm_7QkPz2"</span><span class="p">,</span>
+  <span class="k">"ts"</span><span class="p">:</span> <span class="s">"2025-01-14T09:24:11.482Z"</span><span class="p">,</span>
+  <span class="k">"value"</span><span class="p">:</span> <span class="n">0.0184</span><span class="p">,</span>
+  <span class="k">"tags"</span><span class="p">:</span> <span class="p">{</span> <span class="k">"axis"</span><span class="p">:</span> <span class="s">"z"</span><span class="p">,</span> <span class="k">"line"</span><span class="p">:</span> <span class="s">"A"</span> <span class="p">}</span>
+<span class="p">}</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h2>Tail the live feed</h2>
+          <p>Subscribe to your stream and watch readings arrive in real time. The CLI uses Server-Sent Events under the hood, so it works behind most corporate proxies.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="k">ferroflux</span> streams tail strm_7QkPz2 --format compact
+<span class="p">[</span>09:24:11.482<span class="p">]</span> <span class="n">0.0184g</span>  axis=z line=A
+<span class="p">[</span>09:24:11.487<span class="p">]</span> <span class="n">0.0192g</span>  axis=z line=A
+<span class="p">[</span>09:24:11.492<span class="p">]</span> <span class="n">0.0179g</span>  axis=z line=A
+<span class="c"># Press Ctrl+C to disconnect</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="next-up">
+        <div>
+          <div class="label">Next up</div>
+          <div class="title">Explore the full Endpoints reference →</div>
+        </div>
+        <a href="../endpoints/index.html">Read more</a>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

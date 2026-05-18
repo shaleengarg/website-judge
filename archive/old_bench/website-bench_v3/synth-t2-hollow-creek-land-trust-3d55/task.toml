@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/synth-t2-hollow-creek-land-trust-3d55"
+description = "Hollow Creek Land Trust is a regional nonprofit protecting 14,000 acres of Appalachian forest, wetland, and farmland through voluntary conservation easements and community stewardship programs."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "nonprofit", "tier-2"]
+
+[metadata]
+difficulty_explanation = "Tier 2 (nonprofit): Hollow Creek Land Trust is a regional nonprofit protecting 14,000 acres of Appalachian forest, wetland, and farmland through voluntary conservation easements and community stewardship programs."
+category = "frontend"
+tier = 2
+genre = "nonprofit"
+
+[verifier]
+timeout_sec = 1200.0
+
+[agent]
+timeout_sec = 1500.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

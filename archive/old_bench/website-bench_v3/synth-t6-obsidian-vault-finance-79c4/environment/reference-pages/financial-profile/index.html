@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Profile — Obsidian Vault</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #0f1117;
+    color: #e8eaf0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 15px;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    min-height: 100vh;
+  }
+
+  .shell {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 32px;
+  }
+
+  /* ----- Header / Brand ----- */
+  .brand {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #c9a84c;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .brand span { color: #e8eaf0; letter-spacing: 0.25em; }
+
+  /* ----- Nav ----- */
+  nav.steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    border-top: 1px solid #2e3348;
+    border-bottom: 1px solid #2e3348;
+    padding: 14px 0;
+    margin-bottom: 32px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  nav.steps a {
+    color: #8a90a8;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  nav.steps a .num {
+    color: #2e3348;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+  }
+  nav.steps a.current {
+    color: #c9a84c;
+    background: #1c1f2b;
+  }
+  nav.steps a.current .num { color: #c9a84c; }
+  nav.steps a.done { color: #4caf7a; }
+  nav.steps a.done .num { color: #4caf7a; }
+
+  /* ----- Progress meta ----- */
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #8a90a8;
+  }
+  .progress-meta .pct {
+    font-family: 'Courier New', monospace;
+    color: #c9a84c;
+  }
+
+  h1.page-title {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  p.lede {
+    color: #8a90a8;
+    font-size: 14px;
+    margin-bottom: 32px;
+    max-width: 540px;
+  }
+
+  /* ----- Question group ----- */
+  .group {
+    margin-bottom: 36px;
+  }
+  .group h2 {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #e8eaf0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #2e3348;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .group h2 .hint {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    color: #8a90a8;
+    letter-spacing: 0.05em;
+    text-transform: none;
+  }
+
+  /* ----- Form base ----- */
+  input, select, textarea {
+    background: #1c1f2b;
+    border: 1px solid #2e3348;
+    border-radius: 4px;
+    padding: 10px 14px;
+    color: #e8eaf0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #c9a84c;
+  }
+  textarea:not(:placeholder-shown):invalid { border-color: #e05c5c; }
+  textarea:not(:placeholder-shown):valid { border-color: #4caf7a; }
+
+  /* ----- Custom Radios (vertical list) ----- */
+  .radio-list { display: flex; flex-direction: column; gap: 8px; }
+  .radio-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: #1c1f2b;
+    border: 1px solid #2e3348;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .radio-row:hover { border-color: #3d4360; }
+  .radio-row input[type="radio"],
+  .radio-row input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+    pointer-events: none;
+  }
+  .radio-row .control {
+    position: relative;
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+  }
+  .radio-row .control::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid #2e3348;
+    background: #0f1117;
+    border-radius: 50%;
+  }
+  .radio-row input[type="radio"]:checked + .control::before {
+    background: #c9a84c;
+    border-color: #c9a84c;
+    box-shadow: inset 0 0 0 3px #1c1f2b;
+  }
+  .radio-row input[type="radio"]:checked ~ .label { color: #e8eaf0; }
+  .radio-row:has(input:checked) {
+    border-color: #c9a84c;
+    background: #20232f;
+  }
+  .radio-row .label {
+    flex: 1;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    color: #c1c5d4;
+  }
+  .radio-row .amount {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: #8a90a8;
+    letter-spacing: 0.02em;
+  }
+  .radio-row:has(input:checked) .amount { color: #c9a84c; }
+
+  /* ----- Pill radios (horizontal) ----- */
+  .pills {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .pill {
+    position: relative;
+    background: #1c1f2b;
+    border: 1px solid #2e3348;
+    border-radius: 4px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .pill input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .pill .pill-label {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #c1c5d4;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .pill .pill-sub {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #8a90a8;
+    letter-spacing: 0.05em;
+  }
+  .pill:has(input:checked) {
+    border-color: #c9a84c;
+    background: #20232f;
+  }
+  .pill:has(input:checked) .pill-label { color: #c9a84c; }
+
+  /* ----- Checkbox grid ----- */
+  .check-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #1c1f2b;
+    border: 1px solid #2e3348;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .check-row .cbox {
+    position: relative;
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+  }
+  .check-row .cbox::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid #2e3348;
+    background: #0f1117;
+    border-radius: 3px;
+  }
+  .check-row input:checked + .cbox::before {
+    background: #c9a84c;
+    border-color: #c9a84c;
+  }
+  .check-row input:checked + .cbox::after {
+    content: "";
+    position: absolute;
+    left: 5px; top: 1px;
+    width: 6px; height: 11px;
+    border: solid #0f1117;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .check-row:has(input:checked) {
+    border-color: #c9a84c;
+    background: #20232f;
+  }
+  .check-row .ctitle {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    color: #c1c5d4;
+    flex: 1;
+  }
+  .check-row .ccode {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #8a90a8;
+  }
+
+  /* ----- Textarea group ----- */
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+  }
+  .field-row { position: relative; }
+  .field-row .char-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #8a90a8;
+    letter-spacing: 0.05em;
+  }
+
+  /* ----- Footer action bar ----- */
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    border-top: 1px solid #2e3348;
+    margin-top: 8px;
+  }
+  .back-link {
+    color: #8a90a8;
+    text-decoration: none;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .back-link:hover { color: #c9a84c; }
+  .btn {
+    background: #c9a84c;
+    color: #0f1117;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 4px;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .btn:hover { background: #d8b85e; }
+
+  /* ----- Footer ----- */
+  footer.site {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid #2e3348;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    color: #5a607a;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  footer.site a { color: #8a90a8; text-decoration: none; margin-left: 14px; }
+
+  /* ----- Responsive ----- */
+  @media (max-width: 640px) {
+    .shell { padding: 32px 20px; }
+    .pills { grid-template-columns: repeat(2, 1fr); }
+    .check-grid { grid-template-columns: 1fr; }
+    nav.steps { font-size: 10px; }
+    nav.steps a { padding: 5px 7px; }
+    h1.page-title { font-size: 22px; }
+    .group h2 { flex-direction: column; align-items: flex-start; gap: 4px; }
+  }
+  @media (max-width: 420px) {
+    .radio-row { padding: 10px 12px; gap: 10px; }
+    .radio-row .label { font-size: 13px; }
+    .radio-row .amount { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+
+    <div class="brand">OBSIDIAN <span>VAULT</span></div>
+
+    <nav class="steps" aria-label="Signup progress">
+      <a href="../account-type/index.html" class="done"><span class="num">01</span> Account Type</a>
+      <a href="../personal-details/index.html" class="done"><span class="num">02</span> Personal Details</a>
+      <a href="#" class="current"><span class="num">03</span> Financial Profile</a>
+      <a href="../plan-selection/index.html"><span class="num">04</span> Plan Selection</a>
+      <a href="../review-submit/index.html"><span class="num">05</span> Review &amp; Submit</a>
+    </nav>
+
+    <div class="progress-meta">
+      <span>Step 03 of 05</span>
+      <span class="pct">60%</span>
+    </div>
+
+    <h1 class="page-title">Financial Profile</h1>
+    <p class="lede">Regulatory requirements (FINRA Rule 2111) require us to verify your financial standing and investment knowledge before opening a self-directed brokerage account.</p>
+
+    <!-- Group 1: Annual Income -->
+    <section class="group">
+      <h2>Annual Income Range <span class="hint">SELECT ONE</span></h2>
+      <div class="radio-list">
+        <label class="radio-row">
+          <input type="radio" name="income" value="1">
+          <span class="control"></span>
+          <span class="label">Under $100,000</span>
+          <span class="amount">&lt; $100K</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="income" value="2">
+          <span class="control"></span>
+          <span class="label">$100,000 – $250,000</span>
+          <span class="amount">$100K–$250K</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="income" value="3" checked>
+          <span class="control"></span>
+          <span class="label">$250,000 – $500,000</span>
+          <span class="amount">$250K–$500K</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="income" value="4">
+          <span class="control"></span>
+          <span class="label">$500,000 – $1,000,000</span>
+          <span class="amount">$500K–$1M</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="income" value="5">
+          <span class="control"></span>
+          <span class="label">Over $1,000,000</span>
+          <span class="amount">&gt; $1M</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Group 2: Net Worth -->
+    <section class="group">
+      <h2>Net Worth Bracket <span class="hint">EXCL. PRIMARY RESIDENCE</span></h2>
+      <div class="radio-list">
+        <label class="radio-row">
+          <input type="radio" name="networth" value="1">
+          <span class="control"></span>
+          <span class="label">Under $500,000</span>
+          <span class="amount">&lt; $500K</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="networth" value="2">
+          <span class="control"></span>
+          <span class="label">$500,000 – $1,000,000</span>
+          <span class="amount">$500K–$1M</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="networth" value="3">
+          <span class="control"></span>
+          <span class="label">$1,000,000 – $5,000,000</span>
+          <span class="amount">$1M–$5M</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="networth" value="4" checked>
+          <span class="control"></span>
+          <span class="label">$5,000,000 – $25,000,000</span>
+          <span class="amount">$5M–$25M</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="networth" value="5">
+          <span class="control"></span>
+          <span class="label">Over $25,000,000</span>
+          <span class="amount">&gt; $25M</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Group 3: Investment Experience -->
+    <section class="group">
+      <h2>Investment Experience <span class="hint">SELF-ASSESSED</span></h2>
+      <div class="pills">
+        <label class="pill">
+          <input type="radio" name="experience" value="beginner">
+          <span class="pill-label">Beginner</span>
+          <span class="pill-sub">0–2 YRS</span>
+        </label>
+        <label class="pill">
+          <input type="radio" name="experience" value="intermediate" checked>
+          <span class="pill-label">Intermediate</span>
+          <span class="pill-sub">3–7 YRS</span>
+        </label>
+        <label class="pill">
+          <input type="radio" name="experience" value="advanced">
+          <span class="pill-label">Advanced</span>
+          <span class="pill-sub">8–15 YRS</span>
+        </label>
+        <label class="pill">
+          <input type="radio" name="experience" value="professional">
+          <span class="pill-label">Professional</span>
+          <span class="pill-sub">LICENSED</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Group 4: Investment Objectives -->
+    <section class="group">
+      <h2>Primary Investment Objective <span class="hint">SELECT ALL</span></h2>
+      <div class="check-grid">
+        <label class="check-row">
+          <input type="checkbox" name="obj" value="growth" checked hidden>
+          <span class="cbox"></span>
+          <span class="ctitle">Growth</span>
+          <span class="ccode">G01</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="obj" value="income" hidden>
+          <span class="cbox"></span>
+          <span class="ctitle">Income</span>
+          <span class="ccode">I02</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="obj" value="preservation" checked hidden>
+          <span class="cbox"></span>
+          <span class="ctitle">Preservation</span>
+          <span class="ccode">P03</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="obj" value="speculation" hidden>
+          <span class="cbox"></span>
+          <span class="ctitle">Speculation</span>
+          <span class="ccode">S04</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="obj" value="retirement" checked hidden>
+          <span class="cbox"></span>
+          <span class="ctitle">Retirement</span>
+          <span class="ccode">R05</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="obj" value="education" hidden>
+          <span class="cbox"></span>
+          <span class="ctitle">Education</span>
+          <span class="ccode">E06</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Group 5: Additional Disclosures -->
+    <section class="group">
+      <h2>Additional Financial Disclosures <span class="hint">OPTIONAL</span></h2>
+      <div class="field-row">
+        <textarea rows="4" placeholder="Disclose any material relationships, ownership of restricted securities, control person status, or other relevant financial circumstances..."></textarea>
+        <div class="char-meta">
+          <span>FINRA-2090 / 17 CFR 240.17a-3</span>
+          <span>0 / 2000</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <a class="back-link" href="../personal-details/index.html">← Back</a>
+      <button type="button" class="btn">Save &amp; Continue →</button>
+    </div>
+
+    <footer class="site">
+      <div>© 2025 OBSIDIAN VAULT LLC</div>
+      <div>
+        <a href="#">SIPC</a>
+        <a href="#">FINRA</a>
+        <a href="#">PRIVACY</a>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

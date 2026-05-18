@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hollow Creek Rewilding — Home</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F7F3EE;
+    color: #1E3A2F;
+    line-height: 1.6;
+  }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; color: #1E3A2F; }
+  a { color: #1E3A2F; text-decoration: none; }
+
+  /* Nav */
+  .nav-wrap {
+    background: #F7F3EE;
+    border-bottom: 1px solid #C8BFB4;
+  }
+  .nav {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #1E3A2F;
+  }
+  .logo span { color: #5C7A4E; }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: #1E3A2F;
+    padding-bottom: 6px;
+    font-size: 0.95rem;
+  }
+  .nav-links a.active {
+    border-bottom: 4px solid #5C7A4E;
+  }
+
+  /* Container & Sections */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 48px 0; }
+  h2.section-title {
+    border-left: 2px solid #5C7A4E;
+    padding-left: 12px;
+    font-size: 1.7rem;
+    margin-bottom: 28px;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1E3A2F 0%, #2c5544 60%, #5C7A4E 100%);
+    color: #F7F3EE;
+    padding: 72px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .hero h1 {
+    color: #F7F3EE;
+    font-size: 2.8rem;
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+  .hero p {
+    font-size: 1.05rem;
+    margin-bottom: 28px;
+    opacity: 0.95;
+  }
+  .hero-img {
+    height: 240px;
+    border-radius: 8px;
+    background:
+      radial-gradient(circle at 30% 70%, #C47C2B 0 18px, transparent 19px),
+      radial-gradient(circle at 70% 40%, #F7F3EE 0 10px, transparent 11px),
+      linear-gradient(180deg, #5C7A4E 0%, #1E3A2F 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 14px;
+    color: #F7F3EE;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    display: inline-block;
+    background: #C47C2B;
+    color: #FFFFFF;
+    padding: 10px 24px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-secondary {
+    display: inline-block;
+    background: transparent;
+    color: #1E3A2F;
+    border: 2px solid #5C7A4E;
+    padding: 8px 22px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+  }
+
+  /* Cards Grid */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .card {
+    padding: 16px;
+    border: 2px solid #C8BFB4;
+    border-radius: 8px;
+    background: #FFFDF9;
+  }
+  .stat .num {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    color: #5C7A4E;
+    font-size: 2.4rem;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat .label {
+    font-size: 0.95rem;
+    color: #1E3A2F;
+  }
+
+  /* Stories */
+  .stories-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .story-card {
+    padding: 16px;
+    border: 2px solid #C8BFB4;
+    border-radius: 8px;
+    background: #FFFDF9;
+  }
+  .story-thumb {
+    height: 110px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F7F3EE;
+    font-family: Georgia, serif;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+  }
+  .thumb-a { background: linear-gradient(120deg, #5C7A4E, #1E3A2F); }
+  .thumb-b { background: linear-gradient(120deg, #C47C2B, #8a5320); }
+  .story-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
+  .story-card p {
+    font-size: 0.92rem;
+    margin-bottom: 12px;
+  }
+  .read-more {
+    color: #1E3A2F;
+    border-bottom: 2px solid #5C7A4E;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding-bottom: 2px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1E3A2F;
+    color: #F7F3EE;
+    margin-top: 24px;
+  }
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+  }
+  footer h4 {
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    margin-bottom: 14px;
+    color: #F7F3EE;
+  }
+  footer p, footer li, footer a { color: #d9d1c4; font-size: 0.9rem; }
+  footer ul { list-style: none; }
+  footer ul li { margin-bottom: 8px; }
+  footer a:hover { color: #C47C2B; }
+  .footer-bottom {
+    border-top: 1px solid #2c5544;
+    text-align: center;
+    padding: 16px;
+    font-size: 0.8rem;
+    color: #a39a8c;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="logo">Hollow Creek <span>Rewilding</span></div>
+    <ul class="nav-links">
+      <li><a href="#" class="active">home</a></li>
+      <li><a href="../our-work/index.html">our-work</a></li>
+      <li><a href="../volunteer/index.html">volunteer</a></li>
+      <li><a href="../stories/index.html">stories</a></li>
+      <li><a href="../donate/index.html">donate</a></li>
+    </ul>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <h1>Bring the Creek Back to Life</h1>
+      <p>Hollow Creek Rewilding restores native grasslands and riparian corridors across the Ozark plateau. We work alongside volunteers, seed savers, and community scientists to return wildness to land long forgotten.</p>
+      <a href="../donate/index.html" class="btn">Support Our Work</a>
+    </div>
+    <div class="hero-img">— Finley Creek, spring restoration —</div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2 class="section-title">Our Impact, In Numbers</h2>
+    <div class="grid-3">
+      <div class="card stat">
+        <div class="num">1,240</div>
+        <div class="label">acres of grassland and riparian corridor actively under restoration</div>
+      </div>
+      <div class="card stat">
+        <div class="num">38</div>
+        <div class="label">native plant species reintroduced to historic Ozark range</div>
+      </div>
+      <div class="card stat">
+        <div class="num">620</div>
+        <div class="label">active volunteers stewarding land each season</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2 class="section-title">Recent Impact Stories</h2>
+    <div class="stories-grid">
+      <article class="story-card">
+        <div class="story-thumb thumb-a">MILLER'S BEND</div>
+        <h3>Sedge Grass Returns to Miller's Bend</h3>
+        <p>After three seasons of careful seeding and the removal of stubborn fescue mats, native carex once again lines the lower bend of Finley Creek. Volunteers from the Seed Harvest Team report watching young sandpipers nesting in cover that didn't exist two summers ago — a small but unmistakable signal of returning balance.</p>
+        <a href="../stories/index.html" class="read-more">Read More →</a>
+      </article>
+      <article class="story-card">
+        <div class="story-thumb thumb-b">SCHOOLYARD</div>
+        <h3>A Prairie Grows Behind Rockbridge Elementary</h3>
+        <p>Last fall, fifty-six fourth graders planted little bluestem and butterfly milkweed in a quarter-acre patch that had been mowed turf since 1998. By June, monarchs were laying eggs on the new stems. The Schoolyard Habitat Grants program now supports twelve partner schools across three counties.</p>
+        <a href="../stories/index.html" class="read-more">Read More →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Our Mission</h4>
+      <p>Hollow Creek Rewilding restores native grasslands and riparian corridors across the Ozark plateau through volunteer stewardship, seed banking, and community science.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="../our-work/index.html">Our Work</a></li>
+        <li><a href="../volunteer/index.html">Volunteer</a></li>
+        <li><a href="../stories/index.html">Stories</a></li>
+        <li><a href="../donate/index.html">Donate</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>412 Sycamore Road</li>
+        <li>Eureka Springs, AR 72632</li>
+        <li>(479) 555-0148</li>
+        <li>hello@hollowcreek.org</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2024 Hollow Creek Rewilding · A 501(c)(3) nonprofit</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "id": "synth-t7-obsidian-fold-studio-487f",
+  "tier": 7,
+  "genre": "brand-identity",
+  "pages": [
+    "manifesto",
+    "work",
+    "process",
+    "studio",
+    "contact"
+  ],
+  "palette_hint": "Deep charcoal background #1a1a1f, off-white text #f0ede8, with electric amber #f5a623 and slate violet #6c63ff as accents",
+  "type_style": "Headings in Georgia serif, heavy weight, uppercase tracking; body in system-ui sans-serif at 400 weight; editorial and architectural feel",
+  "description": "Obsidian Fold is a boutique brand-identity studio that crafts visual systems for cultural institutions and independent luxury labels, presenting its own identity through angular SVG geometry and clipped compositions.",
+  "constraints": [
+    "Every page uses at least one full-bleed inline SVG hero element with custom polygon or path shapes that bleed to viewport edges, min-height 60vh",
+    "Navigation is a fixed 64px-tall horizontal bar with a logo mark built entirely from SVG paths (no raster images); nav links use clip-path:polygon hover states revealing amber #f5a623 fill beneath",
+    "Section dividers between content blocks must be non-rectangular: SVG diagonal cuts or clip-path skewed edges at a consistent 6-degree angle (transform: skewY(-6deg) with compensating inner padding)",
+    "Maximum content column width is 960px centered; all body text columns are capped at 640px with 48px horizontal padding on each side",
+    "Accent shapes \u2014 floating SVG rhombuses, rotated rectangles, and masked circular vignettes \u2014 are used as decorative elements with opacity 0.15\u20130.35 and must not obscure readable text"
+  ],
+  "page_specs": {
+    "manifesto": "A full-bleed opening page featuring the studio's core philosophy rendered as large typographic stanzas overlaid on an intricate inline SVG background of interlocking polygons in charcoal and violet. Three belief statements ('Form is argument.', 'Silence earns attention.', 'Identity is posture.') each occupy their own skewed section block with diagonal clip-path dividers. An SVG-drawn folded-paper sigil mark sits centered at 320\u00d7320px above the headline.",
+    "work": "A project grid showcasing six named case studies: Crater Ceramics, Vellum & Volta Publishing, Nachtfalke Spirits, Parallax Architecture Bureau, Sable Thread Atelier, and Meridian Sound Festival. Each card is a non-rectangular clipped panel (clip-path: polygon with one angled corner) displaying the project name, a flat SVG illustration of the brand mark, and a one-line descriptor; cards alternate between amber-accented and violet-accented borders at 2px.",
+    "process": "A linear four-phase process explanation \u2014 Excavation, Architecture, Voice, and Release \u2014 presented as a vertical timeline where each phase node is an SVG diamond icon connected by dashed SVG path lines. Each phase block is skewed with skewY(-6deg) and contains a 120-word description of the methodology. A masked SVG pattern of overlapping circles at 0.2 opacity tiles the background of this page only.",
+    "studio": "An about page introducing the three principals: Maren Scholz (Strategy), Dae-Jung Yoo (Visual Systems), and Ines Varela (Type & Motion). Each portrait zone uses a hexagonal SVG clip-path mask at 200\u00d7200px in place of a rectangular photo, filled with a flat geometric placeholder in the studio palette. The studio's founding year (2017), city (Vienna), and a 60-word ethos paragraph appear alongside an inline SVG map fragment showing the 7th district outline as a decorative path.",
+    "contact": "A minimal contact page anchored by a large rotated SVG ampersand glyph (constructed from two cubic bezier paths, 400px tall, filled #6c63ff at 0.25 opacity) as a background element. A centered 480px-wide block contains a mailing address (Zieglergasse 14, 1070 Wien), a new-inquiry email (fold@obsidianfold.at), and a call-to-action paragraph inviting project inquiries. Three SVG-icon social handles (Are.na, Instagram, LinkedIn) are drawn from path data at 24\u00d724px each."
+  }
+}

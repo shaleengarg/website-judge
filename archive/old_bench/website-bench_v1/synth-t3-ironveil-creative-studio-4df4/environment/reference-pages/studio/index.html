@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Studio — Ironveil</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #111114; color: #edeae3; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.5; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    height: 60px; background: #111114;
+    border-bottom: 1px solid #2a2a30;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+  }
+  .nav .brand {
+    font-family: Georgia, serif; font-weight: bold; font-size: 20px;
+    letter-spacing: 0.18em;
+  }
+  .nav .brand span { color: #f5a623; }
+  .nav ul { display: flex; gap: 28px; list-style: none; }
+  .nav ul a {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 6px 0; border-bottom: 1px solid transparent;
+  }
+  .nav ul a.active { border-bottom-color: #f5a623; color: #f5a623; }
+  .nav ul a:hover { color: #f5a623; }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 60px); }
+  .sidebar {
+    width: 220px; flex: 0 0 220px;
+    border-right: 1px solid #2a2a30;
+    padding: 36px 24px;
+    position: fixed; top: 60px; bottom: 0; left: 0;
+    background: #111114;
+    overflow-y: auto;
+  }
+  .sidebar h4 {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #6e6e75; margin-bottom: 18px;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li { margin-bottom: 12px; }
+  .sidebar li a {
+    font-size: 13px; color: #edeae3; display: block;
+    padding: 6px 0; border-left: 2px solid transparent; padding-left: 12px;
+    margin-left: -12px;
+  }
+  .sidebar li a.current { border-left-color: #f5a623; color: #f5a623; }
+  .sidebar li a:hover { color: #f5a623; }
+  .sidebar .meta {
+    margin-top: 40px; font-size: 11px; color: #6e6e75; line-height: 1.7;
+  }
+  .sidebar .meta strong { color: #edeae3; display: block; font-weight: normal; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  .main {
+    margin-left: 220px; flex: 1;
+    padding: 48px 56px 80px;
+    max-width: 1060px;
+  }
+
+  /* Hero / Manifesto */
+  .eyebrow {
+    font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: #f5a623; margin-bottom: 18px;
+  }
+  h1.page-title {
+    font-family: Georgia, serif; font-weight: bold; font-size: 56px;
+    letter-spacing: 0.02em; line-height: 1.05; margin-bottom: 36px;
+  }
+  h1.page-title em { font-style: italic; color: #4a7fa5; }
+
+  .manifesto {
+    font-family: Georgia, serif; font-size: 19px; line-height: 1.55;
+    color: #edeae3; max-width: 880px;
+    border-top: 1px solid #2a2a30; padding-top: 28px;
+  }
+  .manifesto p { margin-bottom: 20px; }
+  .manifesto p:first-letter { color: #f5a623; }
+
+  /* Section heading */
+  .section { margin-top: 72px; }
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 1px solid #2a2a30; padding-bottom: 14px; margin-bottom: 28px;
+  }
+  .section-head h2 {
+    font-family: Georgia, serif; font-size: 28px; font-weight: bold;
+    letter-spacing: 0.04em;
+  }
+  .section-head .count {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #6e6e75;
+  }
+
+  /* Team */
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 24px; }
+  .member .avatar {
+    width: 100%; height: 180px;
+    display: flex; align-items: flex-end; padding: 14px;
+    font-size: 10px; letter-spacing: 0.2em; color: rgba(17,17,20,0.6);
+    text-transform: uppercase;
+  }
+  .member .name {
+    font-family: Georgia, serif; font-size: 18px; font-weight: bold;
+    margin-top: 12px;
+  }
+  .member .title {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: #4a7fa5; margin-top: 4px;
+  }
+  .a1 { background: #f5a623; }
+  .a2 { background: #4a7fa5; }
+  .a3 { background: #d6cfc1; }
+  .a4 { background: #2a2a30; color: #edeae3 !important; }
+  .a5 { background: #8a4b2c; }
+  .a6 { background: #c8a878; }
+
+  /* Clients */
+  .client-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border-top: 1px solid #2a2a30; border-left: 1px solid #2a2a30;
+  }
+  .client {
+    border-right: 1px solid #2a2a30; border-bottom: 1px solid #2a2a30;
+    height: 90px; display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif; font-style: italic; font-size: 15px;
+    color: #6e6e75; letter-spacing: 0.05em;
+  }
+  .client:hover { color: #f5a623; }
+
+  /* Awards */
+  .awards { width: 100%; border-collapse: collapse; }
+  .awards th, .awards td {
+    text-align: left; padding: 14px 12px; border-bottom: 1px solid #2a2a30;
+    font-size: 13px;
+  }
+  .awards th {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #6e6e75; font-weight: normal;
+  }
+  .awards td.year {
+    font-family: Georgia, serif; font-size: 16px; color: #f5a623;
+    width: 80px;
+  }
+  .awards td.org {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #6e6e75; width: 200px;
+  }
+  .awards tr:hover td { color: #edeae3; }
+
+  /* Tag legend */
+  .legend { display: flex; gap: 14px; margin-top: 8px; }
+  .tag {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 3px 8px; color: #111114; font-weight: bold;
+  }
+  .tag.brand { background: #f5a623; }
+  .tag.digital { background: #4a7fa5; color: #edeae3; }
+  .tag.print { background: #6e6e75; color: #edeae3; }
+
+  /* Footer */
+  .footer {
+    margin-left: 220px;
+    border-top: 1px solid #2a2a30;
+    padding: 28px 56px;
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: #6e6e75; letter-spacing: 0.1em;
+  }
+  .footer a:hover { color: #f5a623; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">IRONVEIL<span>.</span></div>
+  <ul>
+    <li><a href="../work/index.html">Work</a></li>
+    <li><a href="../services/index.html">Services</a></li>
+    <li><a href="#" class="active">Studio</a></li>
+    <li><a href="../process/index.html">Process</a></li>
+    <li><a href="../contact/index.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4>On This Page</h4>
+    <ul>
+      <li><a href="#manifesto" class="current">Manifesto</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#clients">Clients</a></li>
+      <li><a href="#awards">Awards</a></li>
+    </ul>
+    <div class="meta">
+      <strong>Studio</strong>
+      Established 2014<br>
+      Brooklyn, NY 11201<br>
+      14 staff · 3 partners
+      <div style="margin-top:18px;">
+        <strong>Disciplines</strong>
+        <div class="legend" style="flex-direction:column; gap:6px;">
+          <span class="tag brand">Brand</span>
+          <span class="tag digital">Digital</span>
+          <span class="tag print">Print</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="eyebrow">§ 03 — The Studio</div>
+    <h1 class="page-title">We build brands<br>for the <em>unreasonable</em>.</h1>
+
+    <section id="manifesto" class="manifesto">
+      <p>Ironveil is a fourteen-person studio in Brooklyn working with founders and operators who have decided the category they're entering deserves better than its current vocabulary. We don't service incumbents. We sharpen challengers — the second-act companies, the spinouts, the people building the thing that was supposed to be impossible.</p>
+      <p>Our practice is split across strategy, identity, and digital, but the seam between them is intentionally thin. A naming exercise leaks into a typography decision; a positioning sprint sets the tone for a launch film. We believe the worst brand work is the work that respects departmental boundaries more than it respects the audience.</p>
+      <p>We are deliberately small, deliberately senior, and deliberately picky. Eleven years in, we still take fewer than a dozen engagements a year, and we still answer our own email. If that sounds like a constraint, it is — and it's the one we're least willing to negotiate.</p>
+    </section>
+
+    <section id="team" class="section">
+      <div class="section-head">
+        <h2>Team</h2>
+        <span class="count">06 Principals & Leads</span>
+      </div>
+      <div class="team-grid">
+        <div class="member">
+          <div class="avatar a1">IV — 01</div>
+          <div class="name">Mira Halvorsen</div>
+          <div class="title">Founding Partner · Strategy</div>
+        </div>
+        <div class="member">
+          <div class="avatar a2">IV — 02</div>
+          <div class="name">Daniel Okafor</div>
+          <div class="title">Partner · Creative Director</div>
+        </div>
+        <div class="member">
+          <div class="avatar a3">IV — 03</div>
+          <div class="name">Saoirse Lin</div>
+          <div class="title">Partner · Design Director</div>
+        </div>
+        <div class="member">
+          <div class="avatar a4">IV — 04</div>
+          <div class="name">Theo Marchetti</div>
+          <div class="title">Head of Digital</div>
+        </div>
+        <div class="member">
+          <div class="avatar a5">IV — 05</div>
+          <div class="name">Priya Ramaswamy</div>
+          <div class="title">Lead Brand Strategist</div>
+        </div>
+        <div class="member">
+          <div class="avatar a6">IV — 06</div>
+          <div class="name">Jonas Berg</div>
+          <div class="title">Senior Identity Designer</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="clients" class="section">
+      <div class="section-head">
+        <h2>Selected Clients</h2>
+        <span class="count">Since 2014 · 19 Industries</span>
+      </div>
+      <div class="client-grid">
+        <div class="client">Halden &amp; Co.</div>
+        <div class="client">Northbound</div>
+        <div class="client">Lumen Field</div>
+        <div class="client">Cassiar</div>
+        <div class="client">Verge Health</div>
+        <div class="client">Saltwater</div>
+        <div class="client">Folio Press</div>
+        <div class="client">Kessel Robotics</div>
+        <div class="client">Mercer Labs</div>
+        <div class="client">Anvil Coffee</div>
+        <div class="client">Otto &amp; Marsh</div>
+        <div class="client">Quartermast</div>
+        <div class="client">Brightline AI</div>
+        <div class="client">Pale Sun</div>
+        <div class="client">Studio Kara</div>
+        <div class="client">Ironworks Bank</div>
+      </div>
+    </section>
+
+    <section id="awards" class="section">
+      <div class="section-head">
+        <h2>Awards &amp; Recognition</h2>
+        <span class="count">2018 — 2024</span>
+      </div>
+      <table class="awards">
+        <thead>
+          <tr><th style="width:80px;">Year</th><th>Recognition</th><th>Organization</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="year">2024</td><td>Brand of the Year — Cassiar Outdoor Identity System</td><td class="org">Brand New Awards</td></tr>
+          <tr><td class="year">2024</td><td>Gold · Typography in Identity — "Halden &amp; Co."</td><td class="org">TDC NY</td></tr>
+          <tr><td class="year">2023</td><td>Silver · Editorial Design — Folio Press Monograph</td><td class="org">D&amp;AD</td></tr>
+          <tr><td class="year">2023</td><td>Agency to Watch — Boutique Category</td><td class="org">AdAge Small</td></tr>
+          <tr><td class="year">2022</td><td>Best Rebrand · Financial — Ironworks Bank</td><td class="org">Transform Awards</td></tr>
+          <tr><td class="year">2021</td><td>Site of the Day — Verge Health Platform Launch</td><td class="org">Awwwards</td></tr>
+          <tr><td class="year">2020</td><td>Communication Design Distinction — Pale Sun Wines</td><td class="org">Red Dot</td></tr>
+          <tr><td class="year">2019</td><td>Bronze · Packaging System — Anvil Coffee Co.</td><td class="org">Dieline</td></tr>
+          <tr><td class="year">2018</td><td>Emerging Studio of the Year</td><td class="org">Print Magazine</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <div>© 2024 IRONVEIL STUDIO · BROOKLYN, NY</div>
+  <div>STUDIO / 04 OF 09 SECTIONS</div>
+  <div>HELLO@IRONVEIL.STUDIO</div>
+</footer>
+
+</body>
+</html>

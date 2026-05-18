@@ -1,0 +1,29 @@
+{
+  "id": "synth-t2-strata-data-summit-d040",
+  "tier": 2,
+  "genre": "conference",
+  "pages": [
+    "home",
+    "schedule",
+    "speakers",
+    "venue",
+    "register"
+  ],
+  "palette_hint": "Deep navy background #0D1B2A, off-white text #F0EDE8, teal accent #2EC4B6, amber highlight #F4A261",
+  "type_style": "Headings in Georgia serif bold for gravitas, body in system-ui at 400 weight, clean and editorial feel",
+  "description": "Strata Data Summit is a two-day annual conference for data engineers and analytics leaders held in Pittsburgh, featuring keynotes, workshops, and networking sessions.",
+  "constraints": [
+    "Global max-width of 1100px centered with auto margins; all pages use 40px top/bottom section padding",
+    "Nav is a flex row with logo left and five links right, background #0D1B2A, link color #F0EDE8, active link underlined with #2EC4B6",
+    "Footer is a two-column flex row: left has conference name and tagline, right has quick links; background #0D1B2A, 24px padding",
+    "Buttons use background #2EC4B6, color #0D1B2A, font-weight 700, border-radius 4px, padding 12px 28px, no hover effects",
+    "Cards (speaker, session) use border 1px solid #2EC4B6, border-radius 6px, padding 20px, background #132236"
+  ],
+  "page_specs": {
+    "home": "Hero section with conference name in 56px Georgia bold, date and location (October 9-10 2025, Pittsburgh Convention Center), and a Register Now button. Below the hero, a 3-column CSS grid highlights three reasons to attend: Industry Keynotes, Hands-On Workshops, and Networking Lounge, each in a card with a short two-sentence description. A final section lists two featured sponsors with names and a one-line description each.",
+    "schedule": "Full two-day agenda displayed as two side-by-side columns (one per day) using CSS grid with two equal columns. Each day lists 6 time-blocked sessions with session title, speaker name, and room assignment. A sticky-style header row labels each column Day 1 and Day 2 in teal #2EC4B6.",
+    "speakers": "Introductory paragraph naming 8 confirmed speakers. Below, a 4-column CSS grid of speaker cards each containing the speaker name in bold, job title, company, and a two-sentence bio. Cards use the standard border and background defined in constraints.",
+    "venue": "A text-heavy section describing the Pittsburgh Convention Center: address (1000 Fort Duquesne Blvd, Pittsburgh PA 15222), accessible transit options, and nearby hotel partners listed as a simple unordered list. A second section describes on-site amenities including catering, AV setup, and breakout rooms. No images; all content is typographic.",
+    "register": "A centered registration form section with a bold heading Register for Strata Data Summit 2025. Below it, a 2-column CSS grid presents two ticket tiers: General Admission at 349 USD and VIP Pass at 749 USD, each in a card listing 4 included benefits. A simple HTML form below collects name, email, organization, and ticket type via a select dropdown, ending with a Submit Registration button."
+  }
+}

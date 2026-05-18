@@ -1,0 +1,29 @@
+{
+  "id": "synth-t2-hollow-creek-rewilding-5cd2",
+  "tier": 2,
+  "genre": "nonprofit",
+  "pages": [
+    "home",
+    "our-work",
+    "volunteer",
+    "stories",
+    "donate"
+  ],
+  "palette_hint": "Warm off-white background (#F7F3EE), deep forest-green text (#1E3A2F), with moss accent (#5C7A4E) and amber call-to-action (#C47C2B)",
+  "type_style": "Headings in Georgia serif at bold weight, body in system-ui at regular weight, conveying grounded and trustworthy editorial feel",
+  "description": "Hollow Creek Rewilding is a regional nonprofit restoring native grasslands and riparian corridors across the Ozark plateau through volunteer stewardship, seed banking, and community science.",
+  "constraints": [
+    "Max content width of 960px centered with auto margins; all pages share identical nav (logo left, links right as flex row) and footer (3-column grid: mission blurb, quick links, contact details)",
+    "Navigation links in #1E3A2F with 4px bottom border in #5C7A4E on the active page; nav background #F7F3EE with 1px solid #C8BFB4 bottom border",
+    "Cards (volunteer roles, impact stats, story previews) use CSS grid with 3 columns at full width, 1rem gap, 16px padding, 8px border-radius, and a 2px solid #C8BFB4 border",
+    "All primary CTA buttons are background #C47C2B, color #FFFFFF, padding 10px 24px, border-radius 6px, no box-shadow; secondary buttons are outlined with 2px solid #5C7A4E and color #1E3A2F",
+    "Section vertical padding is consistently 48px top and bottom; headings use a 2px solid #5C7A4E left border with 12px left padding for all h2 section titles"
+  ],
+  "page_specs": {
+    "home": "Full-width hero section with a bold heading ('Bring the Creek Back to Life'), a two-sentence mission statement, and a primary CTA button linking to the donate page. Below the hero, a 3-column stats grid highlights '1,240 acres restored', '38 native species reintroduced', and '620 active volunteers'. A final section previews two recent impact stories as cards with a title, 60-word excerpt, and a secondary 'Read More' link.",
+    "our-work": "Page opens with a 400-word narrative describing Hollow Creek's three core programs: Riparian Buffer Planting along Finley Creek tributaries, the Ozark Prairie Seed Library storing 94 native species, and the Schoolyard Habitat Grants program partnering with 12 local schools. Each program is presented in its own card within a 3-column grid with a short title, icon character (unicode leaf/water/seedling), and 60-word description. A secondary CTA section at the bottom links to the volunteer sign-up page.",
+    "volunteer": "Intro paragraph explains that volunteers contribute 4,800 hours annually across seasonal events from March through November. A 3-column grid lists six recurring volunteer roles\u2014Trail Clearing Crew, Seed Harvest Team, Water Quality Monitors, Invasive Species Patrol, School Program Mentors, and Native Plant Nursery Helpers\u2014each as a card with role name, a two-sentence description, and time commitment. A simple HTML form at the bottom collects name, email, zip code, and preferred role via a dropdown, submitted with a primary CTA button labeled 'Join a Crew'.",
+    "stories": "Page heading 'From the Field' introduces first-person stewardship accounts. Six story preview cards arranged in a 3-column grid each show a headline (e.g., 'How Sedge Grass Returned to Miller's Bend'), a byline with volunteer name and season/year, and a 70-word excerpt. A text-only pull quote from longtime steward Darla Hutchins\u2014'I watched the fireflies come back to land I'd written off'\u2014is displayed in large Georgia italic at 1.4rem in a full-width centered block between rows of cards.",
+    "donate": "Page opens with a centered heading 'Your Gift Restores What Was Lost' and a two-sentence explanation that $35 plants 50 native seedlings and $150 funds one acre of invasive species removal. Three giving-level cards in a 3-column grid display amounts $35, $75, and $150 with a label, impact description, and a primary CTA button for each. Below the cards, a simple HTML donation form collects donor name, email, donation amount (number input), and a checkbox for recurring monthly giving, submitted via a primary button labeled 'Give Today'."
+  }
+}

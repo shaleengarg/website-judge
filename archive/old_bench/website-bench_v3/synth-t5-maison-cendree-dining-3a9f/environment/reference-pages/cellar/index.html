@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cellar — Maison Cendrée</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    background: #1a1814;
+    color: #f0ebe1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 0 24px; }
+  }
+
+  /* Header / Nav */
+  header.site {
+    padding: 40px 0 24px;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    text-align: center;
+    color: #f0ebe1;
+    text-transform: uppercase;
+  }
+  .brand span { color: #c9a84c; }
+  nav.primary {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+  }
+  nav.primary a {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    text-decoration: none;
+    font-weight: 400;
+    padding: 4px 0;
+    border-bottom: 1px solid transparent;
+  }
+  nav.primary a.active {
+    color: #c9a84c;
+    border-bottom-color: #c9a84c;
+  }
+  nav.primary a:hover { color: #c9a84c; }
+
+  /* Hero */
+  .hero {
+    padding: 96px 0 48px;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
+  h1.display {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 4.5rem;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    color: #f0ebe1;
+  }
+  @media (max-width: 640px) {
+    h1.display { font-size: 3rem; }
+    .hero { padding: 56px 0 32px; }
+  }
+
+  /* Section headings */
+  h2.section {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 2.75rem;
+    letter-spacing: 0.18em;
+    line-height: 1.1;
+    color: #f0ebe1;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+  @media (max-width: 640px) {
+    h2.section { font-size: 1.85rem; }
+  }
+
+  h3.sub {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    color: #f0ebe1;
+    margin: 32px 0 12px;
+  }
+
+  /* Paragraph and drop cap */
+  p { margin-bottom: 1.2rem; }
+  p.lede::first-letter {
+    font-family: Georgia, serif;
+    font-size: 4.5rem;
+    float: left;
+    font-weight: 700;
+    color: #c9a84c;
+    line-height: 0.85;
+    margin-right: 8px;
+    margin-top: 4px;
+  }
+
+  /* Pull quote */
+  blockquote {
+    font-size: 1.5rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: #c9a84c;
+    border-left: 2px solid #c9a84c;
+    padding-left: 24px;
+    margin: 40px 0;
+    font-family: Georgia, serif;
+    font-weight: 400;
+  }
+  blockquote cite {
+    display: block;
+    margin-top: 16px;
+    font-size: 0.875rem;
+    font-style: normal;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+  }
+
+  /* HR */
+  hr.rule {
+    border: 0;
+    border-top: 1px solid rgba(201, 168, 76, 0.4);
+    margin: 48px 0;
+  }
+
+  /* Caption */
+  .caption {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    font-weight: 400;
+  }
+
+  /* Closing note */
+  .closing {
+    text-align: center;
+    padding: 16px 0 0;
+  }
+  .closing p {
+    color: #f0ebe1;
+    font-style: italic;
+    font-family: Georgia, serif;
+  }
+
+  /* Footer */
+  footer.site {
+    margin-top: 96px;
+    padding: 48px 0 56px;
+    border-top: 1px solid rgba(201, 168, 76, 0.4);
+    text-align: center;
+  }
+  footer .foot-brand {
+    font-family: Georgia, serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.18em;
+    color: #c9a84c;
+    font-weight: 400;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  footer .foot-meta {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    line-height: 2;
+  }
+  footer .foot-links {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  footer .foot-links a {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    color: #f0ebe1;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  footer .foot-links a:hover { color: #c9a84c; }
+  footer .copyright {
+    margin-top: 32px;
+    font-size: 0.875rem;
+    color: #f0ebe1;
+    opacity: 0.55;
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="brand">Maison <span>Cendrée</span></div>
+    <nav class="primary">
+      <a href="../philosophy/index.html">Philosophy</a>
+      <a href="../menu/index.html">Menu</a>
+      <a href="#" class="active">Cellar</a>
+      <a href="../reservations/index.html">Reservations</a>
+      <a href="../find-us/index.html">Find Us</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">The Wine &amp; Spirits Program</div>
+      <h1 class="display">The Cellar</h1>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="lede">Beneath the mill's east wing, where the river cools the stone year-round, sommelier Théo Vaillant has assembled a list that reads less like inventory and more like a private correspondence. Théo arrived from Anjou by way of New York, and his approach is patient, almost contrarian: he buys what he believes in, holds it longer than is fashionable, and pours it without ceremony. The cellar is not a showroom. It is a working room, and its temperament — quiet, lean, faintly austere — mirrors the kitchen above it.</p>
+
+      <p>What follows is a brief account of the three currents that shape the list. We do not publish a vintage-by-vintage register; the room changes too often, and Théo would rather you ask.</p>
+
+      <hr class="rule">
+
+      <h2 class="section">The Loire Obsession</h2>
+      <p>If Maison Cendrée has a homeland on the wine list, it is the long, cool ribbon of the Loire — from the slate of Savennières to the tuffeau of Chinon, the flint of Sancerre to the granite of Muscadet. Théo grew up an hour from the river, and he speaks of these growers the way a farmer speaks of weather: with familiarity, foreboding, and unshakeable affection.</p>
+
+      <p>The list leans hard into Chenin Blanc, with depth in Savennières and Vouvray across two decades of vintages, and a deliberate run of farmer-made Muscadet on lees. Reds favor Cabernet Franc grown on limestone — Bourgueil, Saumur-Champigny, the smaller lieux-dits of Chinon — bottles that reward a second glass more than a first impression.</p>
+
+      <blockquote>
+        A great Muscadet doesn't ask to be noticed — it asks to belong.
+        <cite>— Théo Vaillant, Sommelier</cite>
+      </blockquote>
+
+      <p>Several growers appear in quiet quantity: Domaine de la Pépière, Clos Rougeard, Catherine &amp; Pierre Breton, Thierry Germain. We pour them by the glass when stock allows, which is more often than the market would suggest is prudent.</p>
+
+      <hr class="rule">
+
+      <h2 class="section">Appalachian Spirits</h2>
+      <p>The spirits cabinet is shorter than the wine list, and intentionally so. Théo and chef Aubert chose to anchor it in distillers working within a four-hour drive of the mill — a handful of Western North Carolina and East Tennessee houses producing apple brandy, sorghum whiskey, malted rye, and clear corn from heirloom varieties.</p>
+
+      <h3 class="sub">Apple &amp; Stone Fruit Brandies</h3>
+      <p>Three single-orchard apple brandies sit at the heart of the program, each from a producer working with pre-Prohibition cultivars — Black Twig, Limbertwig, Arkansas Black. They are served neat in small footed glasses at cellar temperature, never iced.</p>
+
+      <h3 class="sub">Grain Whiskies</h3>
+      <p>A short flight of regional ryes and sorghum-grain whiskies, including a four-year barrel from a distillery in Madison County aged in spent Cognac casks. The pour is generous; the recommendation is to take it slowly, after the cheese course or before the walk to the car.</p>
+
+      <hr class="rule">
+
+      <h2 class="section">Zero-Proof Pairings</h2>
+      <p>Half of any given evening's guests drink no alcohol with at least one course, and we have stopped pretending this is unusual. The zero-proof pairing is built course by course alongside the wine pairing, using verjus from a vineyard in Polk County, lacto-fermented fruit shrubs, smoked teas, herbal tisanes drawn from the kitchen garden, and a house-made roasted barley infusion that pairs with the wood-fired courses as well as any red on the list.</p>
+
+      <p>The pairing is offered at the same length and rhythm as its alcoholic counterpart. There is no asterisk and no apology — only a different set of bottles, prepared with the same attention.</p>
+
+      <hr class="rule">
+
+      <div class="closing">
+        <p>The cellar holds approximately two hundred and eighty labels. Private selections and library bottles are available for table-side consultation; please ask Théo, or any member of the floor, and we will bring the list to your seat.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-brand">Maison Cendrée</div>
+    <div class="foot-meta">
+      412 Riverside Mill Road<br>
+      Asheville, North Carolina 28801<br>
+      Wednesday – Sunday · Single Seating 7:00 PM
+    </div>
+    <div class="foot-links">
+      <a href="../philosophy/index.html">Philosophy</a>
+      <a href="../menu/index.html">Menu</a>
+      <a href="#">Cellar</a>
+      <a href="../reservations/index.html">Reservations</a>
+      <a href="../find-us/index.html">Find Us</a>
+    </div>
+    <div class="copyright">© 2024 Maison Cendrée · A converted mill on the French Broad</div>
+  </div>
+</footer>
+
+</body>
+</html>

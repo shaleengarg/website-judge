@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Process — Lumina Glass Studio</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0B1220;
+    color: #F0EDE6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    color: #F0EDE6;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+  /* NAV */
+  .nav-bleed {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(11,18,32,0.85);
+    position: relative;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .brand span { color: #E8A020; }
+  .nav ul {
+    list-style: none;
+    display: flex;
+    gap: 36px;
+  }
+  .nav ul a {
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #F0EDE6;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  .nav ul a.active {
+    border-bottom-color: #E8A020;
+    color: #E8A020;
+  }
+
+  /* SECTION BASE */
+  section {
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* HERO / INTRO */
+  .intro {
+    background: linear-gradient(180deg, #0B1220 0%, #0E1830 100%);
+    text-align: center;
+  }
+  .intro::before {
+    content: "";
+    position: absolute;
+    width: 520px; height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,160,32,0.28) 0%, rgba(232,160,32,0) 65%);
+    top: -180px; left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #1ECFC4;
+    font-weight: 500;
+  }
+  .intro h1 {
+    font-size: 56px;
+    font-style: italic;
+    line-height: 1.05;
+    margin: 18px 0 18px;
+  }
+  .intro p.lede {
+    max-width: 640px;
+    margin: 0 auto;
+    color: rgba(240,237,230,0.78);
+    font-size: 17px;
+  }
+
+  /* TIMELINE */
+  .timeline-section {
+    background: linear-gradient(180deg, #0E1830 0%, #0A1430 50%, #0B1220 100%);
+  }
+  .timeline-section::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #E8A020 50%, transparent);
+    opacity: 0.45;
+  }
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 56px;
+    gap: 40px;
+  }
+  .section-head h2 {
+    font-size: 38px;
+    font-weight: 700;
+  }
+  .section-head .kicker {
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #1ECFC4;
+    margin-bottom: 10px;
+  }
+  .section-head p {
+    max-width: 380px;
+    color: rgba(240,237,230,0.7);
+    font-size: 15px;
+  }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    position: relative;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 70px;
+    left: 6%;
+    right: 6%;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, rgba(30,207,196,0.5) 0 8px, transparent 8px 16px);
+    z-index: 0;
+  }
+
+  .step {
+    position: relative;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 28px 24px 26px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: box-shadow .3s, transform .3s;
+    overflow: hidden;
+  }
+  .step:hover {
+    box-shadow: 0 8px 32px rgba(232,160,32,0.35);
+    transform: translateY(-4px);
+  }
+  .step::before {
+    content: "";
+    position: absolute;
+    top: 18px; right: -34px;
+    width: 110px; height: 2px;
+    background: #1ECFC4;
+    transform: rotate(-32deg);
+    opacity: 0.55;
+    z-index: 0;
+  }
+  .step-num {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 80px;
+    line-height: 1;
+    color: #E8A020;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .step-tag {
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(30,207,196,0.9);
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .step h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .step p {
+    font-size: 14px;
+    color: rgba(240,237,230,0.75);
+    line-height: 1.55;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* QUOTE */
+  .quote-section {
+    background: #0B1220;
+    text-align: center;
+    padding: 80px 0;
+  }
+  .quote-section::before {
+    content: "";
+    position: absolute;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,207,196,0.18) 0%, rgba(30,207,196,0) 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .quote-section::after {
+    content: "";
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: #E8A020;
+  }
+  blockquote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.4;
+    color: #F0EDE6;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .quote-meta {
+    margin-top: 18px;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(240,237,230,0.55);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* CTA ROW */
+  .cta-section {
+    background: linear-gradient(180deg, #0B1220 0%, #101828 100%);
+    padding: 80px 0;
+  }
+  .cta-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,160,32,0.6), transparent);
+  }
+  .cta-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .cta-row h2 {
+    font-size: 36px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .cta-row p {
+    color: rgba(240,237,230,0.72);
+    font-size: 15px;
+    max-width: 480px;
+  }
+  .btn-group { display: flex; gap: 14px; justify-content: flex-end; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-amber {
+    background: #E8A020;
+    color: #0B1220;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .btn-amber:hover { box-shadow: 0 8px 32px rgba(232,160,32,0.35); }
+  .btn-ghost {
+    border: 1px solid rgba(240,237,230,0.35);
+    color: #F0EDE6;
+  }
+  .btn-ghost:hover { border-color: #1ECFC4; color: #1ECFC4; }
+
+  /* FOOTER */
+  footer {
+    background: #080E1A;
+    padding: 56px 0 40px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+  footer::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 80px; height: 2px;
+    background: #E8A020;
+  }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .foot-grid h4 {
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #1ECFC4;
+    margin-bottom: 14px;
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+  }
+  .foot-grid p, .foot-grid a {
+    font-size: 14px;
+    color: rgba(240,237,230,0.7);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .foot-grid .foot-brand {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #F0EDE6;
+    margin-bottom: 12px;
+  }
+  .foot-brand span { color: #E8A020; }
+  .foot-bottom {
+    margin-top: 40px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(240,237,230,0.4);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-bleed">
+  <div class="wrap nav">
+    <div class="brand">Lumina<span>·</span>Glass</div>
+    <ul>
+      <li><a href="../showcase/index.html">Showcase</a></li>
+      <li><a href="#" class="active">Process</a></li>
+      <li><a href="../collections/index.html">Collections</a></li>
+      <li><a href="../studio/index.html">Studio</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+  </div>
+</div>
+
+<section class="intro">
+  <div class="wrap">
+    <div class="eyebrow">The Lumina Method</div>
+    <h1>From Sketch to Suspended Light</h1>
+    <p class="lede">Four deliberate stages shape every commission — a months-long conversation between intention, material, and the architecture that will hold the finished work.</p>
+  </div>
+</section>
+
+<section class="timeline-section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="kicker">A Four-Step Practice</div>
+        <h2>How a Commission Comes to Light</h2>
+      </div>
+      <p>Each project moves through the same four chapters, scaled to the ambition of the space — from a single foyer pendant to a 40-foot atrium screen.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-tag">Discovery</div>
+        <h3>Concept &amp; Sketch</h3>
+        <p>We visit the site, study the light, and meet the people who will live with the work. Charcoal sketches and small watercolor studies establish form, scale, and the emotional register of the piece.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-tag">Specification</div>
+        <h3>Material Trials</h3>
+        <p>Small test pulls are produced in the studio to lock in color temperature, opacity, and the precise way each panel will refract afternoon sun. Samples are couriered for in-room approval.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-tag">Fabrication</div>
+        <h3>Hot Shop &amp; Cold Work</h3>
+        <p>Pieces are blown, cast, or kiln-formed at our Foundry Lane studio, then cold-worked over weeks of grinding, polishing, and edge-finishing. Every component is signed and catalogued.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-tag">Delivery</div>
+        <h3>Install &amp; Steward</h3>
+        <p>Our team crates, transports, and installs on-site alongside your architect and trades. A ten-year stewardship program covers cleaning protocols, re-tensioning, and panel replacement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote-section">
+  <div class="wrap">
+    <blockquote>"Every commission begins with listening — to the room, to the light, and to the client who will spend a decade beneath it."</blockquote>
+    <div class="quote-meta">— Mara Holvenstot, Founder</div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="wrap cta-row">
+    <div>
+      <h2>Bring a project to the studio.</h2>
+      <p>We accept a limited number of new commissions each year. Conversations typically begin twelve to eighteen months before installation.</p>
+    </div>
+    <div class="btn-group">
+      <a href="../collections/index.html" class="btn btn-ghost">View Collections</a>
+      <a href="../contact/index.html" class="btn btn-amber">Begin an Inquiry</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Lumina<span>·</span>Glass</div>
+        <p>Architectural glass art and signature blown-glass collections, designed and fabricated in Portland, Oregon since 1997.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <a href="../showcase/index.html">Showcase</a>
+        <a href="#">Process</a>
+        <a href="../collections/index.html">Collections</a>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <a href="../studio/index.html">About Mara</a>
+        <a href="../studio/index.html">Awards</a>
+        <a href="../contact/index.html">Visit</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="mailto:commissions@luminaglass.studio">commissions@luminaglass.studio</a>
+        <p>14 Foundry Lane<br>Portland, OR</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 1997–2025 Lumina Glass Studio</span>
+      <span>Light Made Permanent</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

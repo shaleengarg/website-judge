@@ -1,0 +1,29 @@
+{
+  "id": "synth-t3-ferroflux-systems-docs-712d",
+  "tier": 3,
+  "genre": "documentation",
+  "pages": [
+    "getting-started",
+    "api-reference",
+    "configuration",
+    "changelog",
+    "troubleshooting"
+  ],
+  "palette_hint": "Background #0f1117 (near-black), primary text #e2e8f0 (cool off-white), accent #38bdf8 (sky blue) for links and highlights, secondary accent #f472b6 (rose pink) for warnings and deprecated markers.",
+  "type_style": "Headings in system-ui bold (700) at tight letter-spacing for a technical feel; body in monospace (Consolas, Monaco, 'Courier New') at 14px for code-heavy content; prose sections use system-ui regular (400) at 15px line-height 1.7.",
+  "description": "FerroFlux Systems is a fictional industrial IoT middleware platform; this documentation site covers its Rust-based SDK, REST API, configuration DSL, and troubleshooting workflows for embedded sensor networks.",
+  "constraints": [
+    "Fixed left sidebar 260px wide, background #161b22, containing collapsible nav sections; main content area starts at 260px left offset and is independently scrollable with max-width 860px centered within remaining space.",
+    "A sticky right-side 'On This Page' anchor list (220px wide) appears on all pages with long content, positioned at top: 64px to clear the sticky top header bar (height 64px, background #0f1117, border-bottom 1px solid #30363d).",
+    "Code blocks use background #1e2433, border 1px solid #30363d, border-radius 6px, padding 16px, with a small language label badge top-right in #38bdf8 text on #1a2333 background.",
+    "API reference page uses a three-column layout: left sidebar (shared), center content 560px max, right parameters panel 240px fixed showing endpoint details in a dense table with alternating row colors #161b22 and #1a2029.",
+    "Deprecated items across all pages are marked with a rose-pink #f472b6 'DEPRECATED' pill badge (font-size 11px, padding 2px 6px, border-radius 10px, background #2d1a24) and the surrounding row or section gets a left border 3px solid #f472b6."
+  ],
+  "page_specs": {
+    "getting-started": "Introduces FerroFlux SDK v2.4 with a two-column layout: left sidebar navigation and main content area containing a vertical stepper (5 steps: Install, Configure Broker, Register Device, Push First Reading, Verify Dashboard). Each step has a numbered circle in #38bdf8, a prose explanation, and an inline code block showing the exact CLI command or Rust snippet required. A sticky 'On This Page' panel lists all five steps as anchor links.",
+    "api-reference": "Full REST API reference for the FerroFlux Gateway API (18 endpoints across 4 resource groups: /devices, /streams, /alerts, /auth). Uses three-column layout with left sidebar, center endpoint descriptions (method badge in colored pill: GET=#2d6a4f green, POST=#1a4a7a blue, DELETE=#7a1a1a red), and right panel showing request/response parameter tables. Three endpoints marked DEPRECATED with rose-pink badges.",
+    "configuration": "Documents the FerroFlux .flux configuration DSL with a two-column layout. Left sidebar, main content split into sections: Global Settings, Broker Profiles, Device Schemas, Retention Policies. Each section has a prose description followed by a complete annotated code block. A filterable reference table lists all 47 configuration keys with columns: Key, Type, Default, Required, Description; alternating row backgrounds #161b22 and #1a2029.",
+    "changelog": "Version history from v1.0 to v2.4 displayed in a two-column layout with left sidebar and a timeline-style main area. Each version (v2.4, v2.3, v2.2, v2.1, v2.0, v1.x series) has a sticky version heading, release date in muted #64748b, and categorized bullet lists under Added, Changed, Fixed, Deprecated \u2014 'Deprecated' items use the rose-pink pill badge. v1.x entries are collapsed under a summary disclosure element.",
+    "troubleshooting": "Diagnostic guide organized into four problem categories: Connection Failures, Schema Validation Errors, High Latency Readings, and Authentication Rejections. Two-column layout with left sidebar and main content. Each category opens with a symptom description table (Symptom, Likely Cause, Severity with color-coded cells), followed by numbered resolution steps with inline code. A sticky 'On This Page' anchor list links to all four categories and a final 'Collecting Diagnostic Logs' section."
+  }
+}

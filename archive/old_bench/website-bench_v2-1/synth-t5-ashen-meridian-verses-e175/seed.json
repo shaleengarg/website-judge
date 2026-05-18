@@ -1,0 +1,29 @@
+{
+  "id": "synth-t5-ashen-meridian-verses-e175",
+  "tier": 5,
+  "genre": "poetry-collection",
+  "pages": [
+    "collection",
+    "poet",
+    "single-poem",
+    "marginalia",
+    "correspondence"
+  ],
+  "palette_hint": "Deep charcoal background #1a1a1a, warm off-white text #f0ebe1, accent rust-amber #c4622d, secondary muted sage #7a9e7e for drop caps and pull quotes.",
+  "type_style": "Headings in Georgia serif at weights 300 and 700 with wide letter-spacing; body in system-ui at weight 400 with generous line-height 1.85; pull quotes in italic Georgia weight 300 at 1.35\u00d7 body size.",
+  "description": "Ashen Meridian is the online home of poet C\u00e9leste Vaudreuil's debut collection 'The Longitude of Smoke', presenting 23 poems about industrial grief, inherited memory, and the St. Lawrence River delta.",
+  "constraints": [
+    "Max content width 680px centered on all pages; outer margins filled with #1a1a1a, never content.",
+    "Modular type scale: 0.75rem (marginalia captions), 1rem (body), 1.45rem (pull quotes / section intros), 2.1rem (poem titles), 3.4rem (page hero titles); no other font sizes permitted.",
+    "Drop caps on the first stanza of every poem: ::first-letter styled in #7a9e7e, font-size 4.2rem, float left, line-height 1, margin-right 0.15em, font-weight 700.",
+    "Pull quotes must appear in a left-bordered block: border-left 3px solid #c4622d, padding-left 1.5rem, color #c4622d, font-style italic, margin 2.5rem 0.",
+    "Letter-spacing: hero titles -0.02em, poem titles 0.04em, all-caps section labels 0.18em, body text 0.01em; line-height 1.15 for titles, 1.85 for body stanzas."
+  ],
+  "page_specs": {
+    "collection": "Displays all 23 poem titles in a single scrolling index, grouped into three numbered sections: 'I. Silt', 'II. Foundry Light', 'III. Estuary'. Each poem title is a link rendered at 2.1rem with letter-spacing 0.04em, preceded by a small rust-amber numeral in 0.75rem all-caps. A hero title 'The Longitude of Smoke' at 3.4rem anchors the top above a two-sentence collection epigraph in pull-quote style.",
+    "poet": "A single-column biographical page about C\u00e9leste Vaudreuil, born in Sorel-Tracy, Qu\u00e9bec, opening with a drop-cap paragraph describing her apprenticeship in a now-shuttered steel mill archive. A pull quote drawn from a Paris Review interview ('Every poem is a tide gauge recording an absence') appears midpage in rust-amber. The page closes with a short list of honours including the 2022 Griffin Poetry Prize shortlist, styled in 0.75rem all-caps sage with 0.18em letter-spacing.",
+    "single-poem": "Presents the full text of 'Molten Cadastre' (poem XIV from section II), with the first stanza receiving a sage green drop cap on the letter 'B'. Stanza breaks use 2rem vertical space; no punctuation other than what the poem contains. A sidebar-style marginalia note in 0.75rem italic #7a9e7e floats right at 38% width on wide viewports, collapsing to a block below the poem on narrow screens, explaining the historical reference to the 1944 Sorel munitions workers.",
+    "marginalia": "An annotated glossary page titled 'Notes Toward the Smoke' listing 14 contextual entries \u2014 geographical, industrial, and Qu\u00e9b\u00e9cois vernacular terms \u2014 that appear throughout the collection. Each entry label is set in 0.75rem all-caps sage with 0.18em letter-spacing; the definition body is 1rem with line-height 1.85. Two pull quotes from the poems themselves interrupt the list at entries 5 and 11, styled with the rust-amber left border treatment.",
+    "correspondence": "A static letters page presenting three fictional epistolary exchanges between C\u00e9leste and her late grandmother, formatted as indented block letters with datelines in 0.75rem all-caps (#c4622d) and salutations in italic Georgia weight 300. The page title 'Letters Never Sent Downriver' appears at 3.4rem hero scale. A closing note in 1rem body text explains these letters form the prose skeleton from which the collection's third section, 'Estuary', was distilled."
+  }
+}

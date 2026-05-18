@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Currents — Abyssal Atlas</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a1628;
+    color: #f0f4ff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .nav {
+    background: #0d2040;
+    height: 60px;
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: #00d4b8;
+  }
+  .brand span { color: #f0f4ff; }
+  .nav ul { list-style: none; display: flex; gap: 32px; }
+  .nav a {
+    color: #f0f4ff;
+    text-decoration: none;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    padding-bottom: 4px;
+  }
+  .nav a.active { color: #f5a623; border-bottom: 2px solid #00d4b8; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px 60px; }
+  .page-header { margin-bottom: 30px; }
+  .eyebrow {
+    color: #00d4b8;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  h1 em { font-style: normal; color: #00d4b8; }
+  .lede {
+    max-width: 720px;
+    color: #c8d2e6;
+    font-size: 17px;
+  }
+  .divider {
+    height: 24px;
+    background: #00d4b8;
+    opacity: 0.4;
+    transform: skewY(-3deg);
+    margin: 30px 0 40px;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 36px;
+    align-items: start;
+  }
+  .map-card {
+    background: #0d2040;
+    border: 1px solid #1a3a5c;
+    border-radius: 4px;
+    padding: 20px;
+  }
+  .map-title {
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #00d4b8;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .map-sub {
+    font-size: 13px;
+    color: #8aa0c2;
+    margin-bottom: 14px;
+  }
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #c8d2e6;
+    letter-spacing: 1px;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .swatch { width: 26px; height: 3px; display: inline-block; }
+  .sw-warm { background: #f5a623; }
+  .sw-cold { background: #00d4b8; }
+  .sw-deep { background: #4a6fa5; }
+
+  .sidebar h2 {
+    font-size: 14px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #f5a623;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .current-card {
+    background: #0d2040;
+    border-left: 3px solid #00d4b8;
+    padding: 14px 14px 14px 14px;
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .current-card:nth-child(even) { border-left-color: #f5a623; }
+  .current-card .icon {
+    background: #0a1628;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .current-name {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .current-meta { font-size: 11px; color: #8aa0c2; letter-spacing: 1px; text-transform: uppercase; }
+
+  .footer {
+    border-top: 1px solid #1a3a5c;
+    margin-top: 60px;
+    padding: 30px 20px;
+    color: #8aa0c2;
+    font-size: 13px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer .brand { font-size: 14px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">ABYSSAL<span>·ATLAS</span></div>
+    <ul>
+      <li><a href="../overview/index.html">Overview</a></li>
+      <li><a href="#" class="active">Currents</a></li>
+      <li><a href="../depth-zones/index.html">Depth Zones</a></li>
+      <li><a href="../biodiversity/index.html">Biodiversity</a></li>
+      <li><a href="../threats/index.html">Threats</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="page-header">
+    <div class="eyebrow">Chapter 02 · Thermohaline Circulation</div>
+    <h1>The Global <em>Conveyor Belt</em></h1>
+    <p class="lede">Warm surface currents and cold deep-water returns move heat, salt, and nutrients around the planet on a thousand-year cycle. Six named flows do most of the work.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="layout">
+
+    <div class="map-card">
+      <div class="map-title">Thermohaline Circulation Map</div>
+      <div class="map-sub">Simplified Mercator projection · arrows indicate dominant surface and deep flows</div>
+
+      <svg viewBox="0 0 720 460" width="100%" height="460" xmlns="http://www.w3.org/2000/svg" aria-label="Global currents diagram">
+        <defs>
+          <radialGradient id="oceanBg" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stop-color="#0d2040"/>
+            <stop offset="100%" stop-color="#0a1628"/>
+          </radialGradient>
+          <marker id="arrowTeal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#00d4b8"/>
+          </marker>
+          <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#f5a623"/>
+          </marker>
+        </defs>
+
+        <!-- Ocean background -->
+        <rect x="0" y="0" width="720" height="460" fill="url(#oceanBg)"/>
+
+        <!-- Grid lines (latitude) -->
+        <g stroke="#1a3a5c" stroke-width="0.5" opacity="0.5">
+          <line x1="0" y1="92" x2="720" y2="92"/>
+          <line x1="0" y1="184" x2="720" y2="184"/>
+          <line x1="0" y1="230" x2="720" y2="230"/>
+          <line x1="0" y1="276" x2="720" y2="276"/>
+          <line x1="0" y1="368" x2="720" y2="368"/>
+        </g>
+
+        <!-- Continent silhouettes (custom paths) -->
+        <!-- North America -->
+        <path d="M 60,80 L 130,70 L 175,90 L 200,130 L 195,170 L 170,200 L 140,215 L 120,205 L 95,180 L 80,150 L 70,120 Z" fill="#1a3a5c" stroke="#2a4a7c" stroke-width="1"/>
+        <!-- South America -->
+        <path d="M 175,230 L 210,225 L 225,260 L 220,300 L 200,340 L 180,370 L 165,360 L 160,320 L 165,280 Z" fill="#1a3a5c" stroke="#2a4a7c" stroke-width="1"/>
+        <!-- Europe/Africa -->
+        <path d="M 340,90 L 395,85 L 420,110 L 410,140 L 405,180 L 425,220 L 430,270 L 410,320 L 380,355 L 360,340 L 345,295 L 340,240 L 335,180 L 332,130 Z" fill="#1a3a5c" stroke="#2a4a7c" stroke-width="1"/>
+        <!-- Asia -->
+        <path d="M 420,75 L 540,65 L 600,90 L 620,130 L 600,165 L 565,180 L 530,170 L 490,160 L 450,140 L 425,115 Z" fill="#1a3a5c" stroke="#2a4a7c" stroke-width="1"/>
+        <!-- Australia -->
+        <path d="M 560,265 L 615,260 L 640,280 L 635,305 L 600,315 L 565,305 L 555,285 Z" fill="#1a3a5c" stroke="#2a4a7c" stroke-width="1"/>
+        <!-- Antarctica strip -->
+        <path d="M 0,420 L 720,420 L 720,460 L 0,460 Z" fill="#1a3a5c"/>
+        <path d="M 0,420 Q 100,400 200,418 T 400,415 T 600,420 T 720,418 L 720,460 L 0,460 Z" fill="#1a3a5c"/>
+
+        <!-- Globe outline ellipse for diagrammatic feel -->
+        <ellipse cx="360" cy="230" rx="350" ry="215" fill="none" stroke="#2a4a7c" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/>
+
+        <!-- Warm surface currents (amber) - Gulf Stream -->
+        <path d="M 210,260 Q 250,230 290,200 Q 320,170 340,140 Q 350,110 335,90" fill="none" stroke="#f5a623" stroke-width="3" stroke-dasharray="8 5" marker-end="url(#arrowAmber)" stroke-linecap="round"/>
+        <!-- Kuroshio -->
+        <path d="M 530,200 Q 555,170 575,130 Q 590,100 605,85" fill="none" stroke="#f5a623" stroke-width="3" stroke-dasharray="8 5" marker-end="url(#arrowAmber)" stroke-linecap="round"/>
+        <!-- Agulhas (warm down africa east) -->
+        <path d="M 425,230 Q 430,280 415,320 Q 405,345 395,360" fill="none" stroke="#f5a623" stroke-width="3" stroke-dasharray="8 5" marker-end="url(#arrowAmber)" stroke-linecap="round"/>
+
+        <!-- Cold currents (teal) - Humboldt -->
+        <path d="M 175,395 Q 162,360 158,320 Q 155,280 165,250" fill="none" stroke="#00d4b8" stroke-width="3" stroke-dasharray="8 5" marker-end="url(#arrowTeal)" stroke-linecap="round"/>
+        <!-- Labrador -->
+        <path d="M 180,90 Q 175,140 195,180 Q 210,210 215,235" fill="none" stroke="#00d4b8" stroke-width="3" stroke-dasharray="8 5" marker-end="url(#arrowTeal)" stroke-linecap="round"/>
+        <!-- Antarctic Circumpolar (long band) -->
+        <path d="M 30,385 Q 180,365 360,375 T 690,380" fill="none" stroke="#00d4b8" stroke-width="3.5" stroke-dasharray="10 6" marker-end="url(#arrowTeal)" stroke-linecap="round"/>
+        <path d="M 690,395 Q 540,415 360,408 T 30,400" fill="none" stroke="#00d4b8" stroke-width="2.5" stroke-dasharray="6 4" stroke-linecap="round" opacity="0.7"/>
+
+        <!-- Deep return flow (lighter teal, dashed faint) -->
+        <path d="M 240,90 Q 180,150 200,250 Q 230,340 350,380 Q 480,395 600,360 Q 660,310 620,200 Q 580,130 540,110" fill="none" stroke="#4a6fa5" stroke-width="2" stroke-dasharray="3 6" opacity="0.8"/>
+
+        <!-- Hexagon badge: Conveyor cycle duration -->
+        <g transform="translate(110,360)">
+          <polygon points="0,-28 24,-14 24,14 0,28 -24,14 -24,-14" fill="#f5a623" stroke="#0a1628" stroke-width="1.5"/>
+          <text x="0" y="-2" text-anchor="middle" font-family="Arial" font-weight="700" font-size="13" fill="#0a1628">1,000</text>
+          <text x="0" y="13" text-anchor="middle" font-family="Arial" font-weight="700" font-size="8" fill="#0a1628">YEAR CYCLE</text>
+        </g>
+
+        <!-- Hexagon badge: Heat transport -->
+        <g transform="translate(620,210)">
+          <polygon points="0,-28 24,-14 24,14 0,28 -24,14 -24,-14" fill="#f5a623" stroke="#0a1628" stroke-width="1.5"/>
+          <text x="0" y="-2" text-anchor="middle" font-family="Arial" font-weight="700" font-size="13" fill="#0a1628">1.3 PW</text>
+          <text x="0" y="13" text-anchor="middle" font-family="Arial" font-weight="700" font-size="7" fill="#0a1628">HEAT FLUX</text>
+        </g>
+
+        <!-- Hexagon badge: Flow volume -->
+        <g transform="translate(360,440)" style="display:none">
+          <polygon points="0,-22 19,-11 19,11 0,22 -19,11 -19,-11" fill="#f5a623"/>
+        </g>
+
+        <!-- Ocean labels -->
+        <text x="270" y="270" font-family="Arial" font-size="10" font-weight="700" fill="#5a7ab5" letter-spacing="2">ATLANTIC</text>
+        <text x="480" y="270" font-family="Arial" font-size="10" font-weight="700" fill="#5a7ab5" letter-spacing="2">INDIAN</text>
+        <text x="80" y="270" font-family="Arial" font-size="10" font-weight="700" fill="#5a7ab5" letter-spacing="2">PACIFIC</text>
+        <text x="640" y="270" font-family="Arial" font-size="10" font-weight="700" fill="#5a7ab5" letter-spacing="2">PACIFIC</text>
+      </svg>
+
+      <div class="legend">
+        <span><i class="swatch sw-warm"></i> Warm surface flow</span>
+        <span><i class="swatch sw-cold"></i> Cold surface flow</span>
+        <span><i class="swatch sw-deep"></i> Deep return current</span>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <h2>Six Named Currents</h2>
+
+      <div class="current-card">
+        <div class="icon">
+          <svg width="28" height="28" viewBox="0 0 28 28"><path d="M3 18 Q 8 10, 14 14 T 25 10" fill="none" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round"/><path d="M22 7 L25 10 L22 13" fill="none" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="current-name">Gulf Stream</div>
+          <div class="current-meta">30 Sv · Atlantic · Warm</div>
+        </div>
+      </div>
+
+      <div class="current-card">
+        <div class="icon">
+          <svg width="28" height="28" viewBox="0 0 28 28"><path d="M5 6 Q 10 14, 8 22 Q 14 18, 22 24" fill="none" stroke="#00d4b8" stroke-width="2.2" stroke-linecap="round"/><path d="M19 21 L22 24 L19 27" fill="none" stroke="#00d4b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="current-name">Humboldt</div>
+          <div class="current-meta">18 Sv · S. Pacific · Cold</div>
+        </div>
+      </div>
+
+      <div class="current-card">
+        <div class="icon">
+          <svg width="28" height="28" viewBox="0 0 28 28"><path d="M4 20 Q 9 8, 16 12 Q 22 16, 24 6" fill="none" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round"/><path d="M21 8 L24 6 L25 10" fill="none" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="current-name">Kuroshio</div>
+          <div class="current-meta">65 Sv · N. Pacific · Warm</div>
+        </div>
+      </div>
+
+      <div class="current-card">
+        <div class="icon">
+          <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 4 Q 14 10, 10 18 Q 6 24, 22 24" fill="none" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round"/><path d="M19 21 L22 24 L19 27" fill="none" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="current-name">Agulhas</div>
+          <div class="current-meta">70 Sv · Indian · Warm</div>
+        </div>
+      </div>
+
+      <div class="current-card">
+        <div class="icon">
+          <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="9" fill="none" stroke="#00d4b8" stroke-width="2" stroke-dasharray="3 2"/><path d="M5 14 H23" stroke="#00d4b8" stroke-width="2" stroke-linecap="round"/><path d="M20 11 L23 14 L20 17" fill="none" stroke="#00d4b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="current-name">Antarctic Circumpolar</div>
+          <div class="current-meta">137 Sv · Global · Cold</div>
+        </div>
+      </div>
+
+      <div class="current-card">
+        <div class="icon">
+          <svg width="28" height="28" viewBox="0 0 28 28"><path d="M22 4 Q 16 12, 18 20 Q 20 26, 6 24" fill="none" stroke="#00d4b8" stroke-width="2.2" stroke-linecap="round"/><path d="M9 21 L6 24 L9 27" fill="none" stroke="#00d4b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="current-name">Labrador</div>
+          <div class="current-meta">5 Sv · N. Atlantic · Cold</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="brand">ABYSSAL<span style="color:#f0f4ff">·ATLAS</span></div>
+    <div>Data sourced from NOAA &amp; WOCE · A data-driven visual essay series</div>
+    <div>02 / 05 — Currents</div>
+  </div>
+</footer>
+
+</body>
+</html>

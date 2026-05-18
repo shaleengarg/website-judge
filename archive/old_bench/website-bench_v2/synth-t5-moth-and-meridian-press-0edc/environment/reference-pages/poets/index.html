@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Poets — Moth &amp; Meridian Press</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1814;
+    color: #f0ebe0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  header.site {
+    padding: 3rem 0 1.5rem;
+    border-bottom: 1px solid rgba(200, 148, 58, 0.25);
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.375rem;
+    letter-spacing: 0.03em;
+    color: #f0ebe0;
+  }
+  .brand .amp { color: #c8943a; font-style: italic; font-weight: 400; }
+  .tagline {
+    font-size: 0.75rem;
+    color: #7a9e7e;
+    letter-spacing: 0.01em;
+    margin-top: 0.35rem;
+  }
+  nav.primary {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+  }
+  nav.primary a {
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    color: #f0ebe0;
+    text-decoration: none;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid transparent;
+  }
+  nav.primary a.active {
+    color: #c8943a;
+    border-bottom-color: #c8943a;
+  }
+  main {
+    padding: 4rem 0 5rem;
+  }
+  h1.page-title {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 3.25rem;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    color: #f0ebe0;
+    margin-bottom: 1.25rem;
+  }
+  .meta {
+    font-size: 0.75rem;
+    color: #c8943a;
+    letter-spacing: 0.01em;
+    margin-bottom: 2.5rem;
+  }
+  .intro {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: #f0ebe0;
+    opacity: 0.9;
+    margin-bottom: 3rem;
+    max-width: 600px;
+  }
+  .poets {
+    list-style: none;
+  }
+  .poet {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #7a9e7e;
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .poet:first-child { padding-top: 0; }
+  .avatar {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #2a2620 0%, #3a342a 100%);
+    border: 1px solid rgba(200, 148, 58, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.375rem;
+    color: #c8943a;
+  }
+  .poet.sage .avatar {
+    background: linear-gradient(135deg, #232a25 0%, #2f3a32 100%);
+    color: #7a9e7e;
+  }
+  .info .name {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 1.375rem;
+    letter-spacing: 0.03em;
+    color: #f0ebe0;
+    margin-bottom: 0.35rem;
+  }
+  .info .where {
+    font-size: 0.75rem;
+    color: #c8943a;
+    letter-spacing: 0.01em;
+    font-style: italic;
+    margin-bottom: 0.5rem;
+  }
+  .info .bio {
+    font-size: 0.75rem;
+    color: #f0ebe0;
+    opacity: 0.78;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+  .count {
+    font-size: 0.75rem;
+    color: #7a9e7e;
+    letter-spacing: 0.01em;
+    text-align: right;
+    white-space: nowrap;
+    padding-top: 0.4rem;
+    font-family: Georgia, serif;
+    font-style: italic;
+  }
+  .count strong {
+    font-style: normal;
+    font-weight: 700;
+    color: #c8943a;
+    font-size: 1.375rem;
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.15rem;
+  }
+  footer.site {
+    border-top: 1px solid rgba(200, 148, 58, 0.25);
+    padding: 2.5rem 0 3rem;
+    font-size: 0.75rem;
+    color: #f0ebe0;
+    opacity: 0.7;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    letter-spacing: 0.01em;
+  }
+  footer.site .links a {
+    color: #f0ebe0;
+    text-decoration: none;
+    margin-left: 1.25rem;
+    opacity: 0.85;
+  }
+  footer.site .mark {
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: #7a9e7e;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site">
+      <div class="brand">Moth <span class="amp">&amp;</span> Meridian Press</div>
+      <div class="tagline">Three seasonal anthologies. Grief, cartography, natural wonder.</div>
+      <nav class="primary">
+        <a href="../collection/index.html">Collection</a>
+        <a href="#" class="active">Poets</a>
+        <a href="../single-poem/index.html">Single Poem</a>
+        <a href="../about/index.html">About</a>
+        <a href="../submissions/index.html">Submissions</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1 class="page-title">The Poets</h1>
+      <div class="meta">Winter 2024 &middot; The Cartographer's Elegy &middot; Twelve contributors</div>
+
+      <p class="intro">The voices gathered for our Winter Elegy anthology write from twelve different shorelines, valleys, and weather-worn rooms. What follows is a brief directory — hometowns, a single sentence each, and the count of poems included in this issue.</p>
+
+      <ul class="poets">
+        <li class="poet">
+          <div class="avatar">MO</div>
+          <div class="info">
+            <div class="name">Mirela Okonkwo</div>
+            <div class="where">Lagos, Nigeria &middot; Reykjavík, Iceland</div>
+            <div class="bio">A hydrologist by training whose poems chart the unstable border between memory and floodwater.</div>
+          </div>
+          <div class="count"><strong>3</strong>poems</div>
+        </li>
+
+        <li class="poet sage">
+          <div class="avatar">JH</div>
+          <div class="info">
+            <div class="name">Joaquín Heras-Vidal</div>
+            <div class="where">Valparaíso, Chile</div>
+            <div class="bio">Writes elegies from the deck of a decommissioned ferry he restored with his late father.</div>
+          </div>
+          <div class="count"><strong>2</strong>poems</div>
+        </li>
+
+        <li class="poet">
+          <div class="avatar">SR</div>
+          <div class="info">
+            <div class="name">Saoirse Ruadhán</div>
+            <div class="where">Galway, Ireland</div>
+            <div class="bio">Translates between bog-Latin and the dialect of her grandmother, a midwife on the Aran Islands.</div>
+          </div>
+          <div class="count"><strong>1</strong>poem</div>
+        </li>
+
+        <li class="poet sage">
+          <div class="avatar">TK</div>
+          <div class="info">
+            <div class="name">Tomiko Karasawa</div>
+            <div class="where">Sapporo, Japan</div>
+            <div class="bio">Composes brief, snow-haunted sequences alongside her practice as a cartographer of disappearing trails.</div>
+          </div>
+          <div class="count"><strong>2</strong>poems</div>
+        </li>
+
+        <li class="poet">
+          <div class="avatar">AB</div>
+          <div class="info">
+            <div class="name">Adelaide Brockman</div>
+            <div class="where">Asheville, North Carolina</div>
+            <div class="bio">Her work follows the slow grief of Appalachian streambeds rerouted by twentieth-century engineers.</div>
+          </div>
+          <div class="count"><strong>1</strong>poem</div>
+        </li>
+
+        <li class="poet sage">
+          <div class="avatar">NE</div>
+          <div class="info">
+            <div class="name">Nessa El-Khoury</div>
+            <div class="where">Beirut, Lebanon</div>
+            <div class="bio">Writes from the threshold of her family's olive grove, returned to after fifteen years away.</div>
+          </div>
+          <div class="count"><strong>2</strong>poems</div>
+        </li>
+
+        <li class="poet">
+          <div class="avatar">DV</div>
+          <div class="info">
+            <div class="name">Dovid Volynsky</div>
+            <div class="where">Kraków, Poland</div>
+            <div class="bio">A retired archivist whose late poems read like marginalia recovered from a flooded library.</div>
+          </div>
+          <div class="count"><strong>1</strong>poem</div>
+        </li>
+
+        <li class="poet sage">
+          <div class="avatar">PA</div>
+          <div class="info">
+            <div class="name">Pareesa Ahmadi</div>
+            <div class="where">Isfahan, Iran &middot; Toronto, Canada</div>
+            <div class="bio">Her debut sequence maps the migratory routes of cranes alongside those of her own diasporic family.</div>
+          </div>
+          <div class="count"><strong>2</strong>poems</div>
+        </li>
+
+        <li class="poet">
+          <div class="avatar">RM</div>
+          <div class="info">
+            <div class="name">Rónán McAuliffe</div>
+            <div class="where">Cape Breton, Nova Scotia</div>
+            <div class="bio">Lighthouse keeper turned linguist; writes the cold light of the North Atlantic into every line.</div>
+          </div>
+          <div class="count"><strong>1</strong>poem</div>
+        </li>
+
+        <li class="poet sage">
+          <div class="avatar">YO</div>
+          <div class="info">
+            <div class="name">Yael Oduya</div>
+            <div class="where">Nairobi, Kenya</div>
+            <div class="bio">A botanist whose poems catalogue the small extinctions occurring at the edges of the Great Rift.</div>
+          </div>
+          <div class="count"><strong>2</strong>poems</div>
+        </li>
+
+        <li class="poet">
+          <div class="avatar">EL</div>
+          <div class="info">
+            <div class="name">Elspeth Lindqvist</div>
+            <div class="where">Gotland, Sweden</div>
+            <div class="bio">Writes terse, mineral poems composed mostly during the long blue hours between November and March.</div>
+          </div>
+          <div class="count"><strong>1</strong>poem</div>
+        </li>
+
+        <li class="poet sage">
+          <div class="avatar">CB</div>
+          <div class="info">
+            <div class="name">Cassian Bélanger</div>
+            <div class="where">Montréal, Québec</div>
+            <div class="bio">Their work braids river-survey notebooks with letters to a brother who never returned from the boreal forest.</div>
+          </div>
+          <div class="count"><strong>2</strong>poems</div>
+        </li>
+      </ul>
+    </main>
+
+    <footer class="site">
+      <div>&copy; 2024 Moth &amp; Meridian Press &middot; <span class="mark">Winter Elegy</span></div>
+      <div class="links">
+        <a href="../about/index.html">About</a>
+        <a href="../submissions/index.html">Submit</a>
+        <a href="#">Archive</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

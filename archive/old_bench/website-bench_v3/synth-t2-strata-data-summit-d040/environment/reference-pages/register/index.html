@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — Strata Data Summit 2025</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #0D1B2A;
+    color: #F0EDE8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; margin: 0 0 0.5em; }
+  a { color: #F0EDE8; text-decoration: none; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  .nav {
+    background: #0D1B2A;
+    border-bottom: 1px solid #1a2a3d;
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #F0EDE8;
+  }
+  .logo span { color: #2EC4B6; }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .nav-links a { font-size: 15px; }
+  .nav-links a.active {
+    text-decoration: underline;
+    text-decoration-color: #2EC4B6;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+
+  /* Sections */
+  section { padding: 40px 0; }
+  .intro { text-align: center; }
+  .intro h1 { font-size: 44px; line-height: 1.15; }
+  .intro p { max-width: 680px; margin: 0 auto; color: #cfcbc4; font-size: 17px; }
+
+  /* Tiers */
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .card {
+    border: 1px solid #2EC4B6;
+    border-radius: 6px;
+    padding: 20px;
+    background: #132236;
+  }
+  .tier h2 { font-size: 26px; }
+  .tier .price {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    color: #F4A261;
+    margin: 8px 0 14px;
+    font-weight: bold;
+  }
+  .tier ul { list-style: none; padding: 0; margin: 0; }
+  .tier li {
+    padding: 8px 0 8px 24px;
+    position: relative;
+    border-bottom: 1px solid #1f3148;
+  }
+  .tier li:last-child { border-bottom: none; }
+  .tier li::before {
+    content: "▸";
+    color: #2EC4B6;
+    position: absolute;
+    left: 0;
+    top: 8px;
+  }
+  .vip { border-color: #F4A261; }
+  .vip h2 .badge {
+    display: inline-block;
+    background: #F4A261;
+    color: #0D1B2A;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.5px;
+  }
+
+  /* Form */
+  .form-wrap {
+    margin-top: 16px;
+  }
+  .form-wrap h2 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .form-wrap > p.sub {
+    text-align: center;
+    color: #cfcbc4;
+    margin: 0 0 28px;
+  }
+  form {
+    background: #132236;
+    border: 1px solid #2EC4B6;
+    border-radius: 6px;
+    padding: 32px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .field { margin-bottom: 18px; }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: #F0EDE8;
+  }
+  input, select {
+    width: 100%;
+    padding: 12px 14px;
+    background: #0D1B2A;
+    border: 1px solid #2a3f57;
+    border-radius: 4px;
+    color: #F0EDE8;
+    font-family: inherit;
+    font-size: 15px;
+  }
+  input:focus, select:focus { outline: 2px solid #2EC4B6; outline-offset: 0; border-color: #2EC4B6; }
+
+  .btn {
+    background: #2EC4B6;
+    color: #0D1B2A;
+    font-weight: 700;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 28px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .submit-row { text-align: center; margin-top: 8px; }
+
+  /* Footer */
+  footer {
+    background: #0D1B2A;
+    border-top: 1px solid #1a2a3d;
+    margin-top: 24px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .foot-left .name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  .foot-left .tag { color: #cfcbc4; font-size: 14px; }
+  .foot-right { display: flex; flex-direction: column; gap: 6px; }
+  .foot-right a { font-size: 14px; color: #cfcbc4; }
+  .foot-right .heading { color: #2EC4B6; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+
+  @media (max-width: 768px) {
+    .tiers { grid-template-columns: 1fr; }
+    .intro h1 { font-size: 32px; }
+    .nav-inner { padding: 16px 20px; }
+    .nav-links { gap: 18px; }
+    form { padding: 22px; }
+    .footer-inner { flex-direction: column; }
+  }
+  @media (max-width: 480px) {
+    .nav-links { gap: 14px; font-size: 14px; }
+    .intro h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Strata<span>.</span>Data Summit</div>
+    <div class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="../schedule/index.html">Schedule</a>
+      <a href="../speakers/index.html">Speakers</a>
+      <a href="../venue/index.html">Venue</a>
+      <a href="#" class="active">Register</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+
+  <section class="intro">
+    <h1>Register for Strata Data Summit 2025</h1>
+    <p>Join 800+ data engineers and analytics leaders in Pittsburgh on October 9–10, 2025. Choose the pass that fits your goals and complete the form below to secure your seat.</p>
+  </section>
+
+  <section>
+    <div class="tiers">
+      <div class="card tier">
+        <h2>General Admission</h2>
+        <div class="price">$349 USD</div>
+        <ul>
+          <li>Full access to all keynote sessions across both days</li>
+          <li>Entry to 12+ technical workshops and breakout tracks</li>
+          <li>Conference tote with printed program and swag</li>
+          <li>Lunch, coffee service, and access to the Networking Lounge</li>
+        </ul>
+      </div>
+      <div class="card tier vip">
+        <h2>VIP Pass <span class="badge">BEST VALUE</span></h2>
+        <div class="price">$749 USD</div>
+        <ul>
+          <li>Everything in General Admission, plus priority seating</li>
+          <li>Invitation to the speaker reception on October 9</li>
+          <li>Private roundtable with two featured keynote speakers</li>
+          <li>One-on-one career consult with an analytics leader</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-wrap">
+    <h2>Complete Your Registration</h2>
+    <p class="sub">All fields are required. A confirmation email will follow.</p>
+    <form action="#" method="post">
+      <div class="field">
+        <label for="name">Full Name</label>
+        <input id="name" name="name" type="text" placeholder="Jane Engineer">
+      </div>
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input id="email" name="email" type="email" placeholder="jane@company.com">
+      </div>
+      <div class="field">
+        <label for="org">Organization</label>
+        <input id="org" name="organization" type="text" placeholder="Company or Institution">
+      </div>
+      <div class="field">
+        <label for="ticket">Ticket Type</label>
+        <select id="ticket" name="ticket">
+          <option>General Admission — $349</option>
+          <option>VIP Pass — $749</option>
+        </select>
+      </div>
+      <div class="submit-row">
+        <button type="submit" class="btn">Submit Registration</button>
+      </div>
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="foot-left">
+      <div class="name">Strata Data Summit</div>
+      <div class="tag">Two days. One signal. Where data engineers and analytics leaders meet.</div>
+    </div>
+    <div class="foot-right">
+      <div class="heading">Quick Links</div>
+      <a href="../home/index.html">Home</a>
+      <a href="../schedule/index.html">Schedule</a>
+      <a href="../speakers/index.html">Speakers</a>
+      <a href="../venue/index.html">Venue</a>
+      <a href="#">Register</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

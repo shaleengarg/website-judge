@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-inkwell-and-insomnia-blog-78b5",
+  "tier": 1,
+  "genre": "personal-blog",
+  "pages": [
+    "journal",
+    "essays",
+    "reading-log",
+    "about",
+    "contact"
+  ],
+  "palette_hint": "deep charcoal background (#1c1c1c), warm off-white text (#f0ece4), rust-orange accent (#c95f2e)",
+  "type_style": "system serif (Georgia) for headings and post titles, system sans-serif for body and nav, normal weight, generous line-height of 1.8",
+  "description": "A personal blog by a night-owl writer named Vera Osei, covering late-night reflections, long-form essays, and annotated reading lists.",
+  "constraints": [
+    "single centered column with max-width of 620px, generous left/right padding",
+    "dark background throughout all pages \u2014 no light mode switching",
+    "rust-orange (#c95f2e) used only for hyperlinks, post dates, and section headings \u2014 nowhere else",
+    "thin 1px horizontal rules (#3a3a3a) used between every section and between every list entry",
+    "navigation is a plain horizontal row of text links at the top, no borders or boxes, active page shown in rust-orange"
+  ],
+  "page_specs": {
+    "journal": "The homepage lists the 6 most recent journal entries by title, date in rust-orange, and a single sentence teaser, each separated by a thin rule. A short italic site tagline ('Written between midnight and 4 a.m.') sits below the blog name at the top.",
+    "essays": "A vertical list of 7 long-form essay titles, each with a publication date and a two-line description of the argument or theme. Entries are separated by thin horizontal rules. A brief header note explains these are pieces Vera spent more than a week writing.",
+    "reading-log": "A running annotated list of 10 books Vera has read this year, each with author, title in italic, a one-sentence verdict, and a personal rating out of 5 written as plain text (e.g. '4 out of 5'). A short paragraph at the top explains her reading habits and why she logs publicly.",
+    "about": "Three paragraphs: who Vera is, why she started writing at night, and what the blog is not about. Ends with her city (Accra, Ghana) and a line about her day job as a secondary school literature teacher.",
+    "contact": "A short paragraph inviting readers to reach out for essay feedback or book recommendations. Displays Vera's email address in large rust-orange text, followed by two social handles (Mastodon and a newsletter link) as plain text lines."
+  }
+}

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Biodiversity — Abyssal Atlas</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0a1628;
+    color: #f0f4ff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .page-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    position: relative;
+  }
+  /* Nav */
+  nav.topnav {
+    background: #0d2040;
+    height: 60px;
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
+    margin-bottom: 0;
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 18px;
+    color: #f0f4ff;
+  }
+  .brand span { color: #00d4b8; }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: #f0f4ff;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-links a.active { color: #00d4b8; border-bottom-color: #f5a623; }
+
+  /* Hero */
+  .hero {
+    padding: 60px 0 30px;
+    position: relative;
+  }
+  .eyebrow {
+    color: #00d4b8;
+    font-size: 12px;
+    letter-spacing: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 56px;
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 18px;
+  }
+  h1 em { font-style: normal; color: #f5a623; }
+  .lede {
+    max-width: 720px;
+    color: #c5cfe0;
+    font-size: 17px;
+  }
+
+  /* Divider */
+  .divider {
+    height: 28px;
+    background: #00d4b8;
+    opacity: 0.4;
+    transform: skewY(-3deg);
+    margin: 40px 0;
+  }
+
+  /* Wheel section */
+  .wheel-section {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 40px;
+    align-items: center;
+  }
+  .wheel-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    letter-spacing: -0.3px;
+  }
+  h2::before {
+    content: "";
+    display: inline-block;
+    width: 28px; height: 3px;
+    background: #f5a623;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+  .legend p { color: #c5cfe0; font-size: 14px; margin-bottom: 18px; }
+  .legend ul { list-style: none; }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #1a2a44;
+    font-size: 14px;
+  }
+  .swatch { width: 14px; height: 14px; }
+  .sw-teal { background: #00d4b8; }
+  .sw-amber { background: #f5a623; }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 10px;
+  }
+  .stat-card {
+    background: #0d2040;
+    padding: 22px 18px;
+    border-left: 3px solid #00d4b8;
+  }
+  .stat-card:nth-child(even) { border-left-color: #f5a623; }
+  .stat-card .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: #f0f4ff;
+    letter-spacing: -0.5px;
+  }
+  .stat-card .lbl {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #00d4b8;
+    margin-top: 4px;
+  }
+  .stat-card:nth-child(even) .lbl { color: #f5a623; }
+
+  /* Honeycomb bg */
+  .bg-pattern {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .content { position: relative; z-index: 1; }
+
+  footer {
+    margin-top: 60px;
+    border-top: 1px solid #1a2a44;
+    padding: 28px 0 0;
+    display: flex;
+    justify-content: space-between;
+    color: #6b7a93;
+    font-size: 13px;
+  }
+  footer .f-brand { color: #f0f4ff; font-weight: 700; letter-spacing: 2px; }
+  footer .f-links a { color: #6b7a93; text-decoration: none; margin-left: 18px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-inner">
+    <div class="brand">ABYSSAL <span>ATLAS</span></div>
+    <ul class="nav-links">
+      <li><a href="../overview/index.html">Overview</a></li>
+      <li><a href="../currents/index.html">Currents</a></li>
+      <li><a href="../depth-zones/index.html">Depth Zones</a></li>
+      <li><a href="#" class="active">Biodiversity</a></li>
+      <li><a href="../threats/index.html">Threats</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <!-- Honeycomb background pattern -->
+  <svg class="bg-pattern" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <pattern id="hex" width="28" height="32" patternUnits="userSpaceOnUse">
+        <path d="M14 0 L28 8 L28 24 L14 32 L0 24 L0 8 Z" fill="none" stroke="#00d4b8" stroke-width="0.6" opacity="0.08"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#hex)"/>
+  </svg>
+
+  <div class="content">
+    <section class="hero">
+      <div class="eyebrow">Chapter IV — Phylogenetic Wheel</div>
+      <h1>The Marine <em>Tree of Life</em></h1>
+      <p class="lede">The oceans host an estimated 240,000 described species — and perhaps ten times that many awaiting discovery. This radial taxonomy traces the six great branches of marine life, from the photosynthetic plankton that anchor every food web to the cetaceans that range from pole to pole.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="wheel-section">
+      <div class="wheel-wrap">
+        <svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#1a3a5c"/>
+              <stop offset="100%" stop-color="#0a1628"/>
+            </radialGradient>
+            <!-- Leaf shape -->
+            <symbol id="leafTeal" viewBox="-90 -40 180 80">
+              <path d="M-85,0 C-70,-38 70,-38 85,0 C70,38 -70,38 -85,0 Z" fill="#00d4b8" stroke="#0a1628" stroke-width="1.5"/>
+            </symbol>
+            <symbol id="leafAmber" viewBox="-90 -40 180 80">
+              <path d="M-85,0 C-70,-38 70,-38 85,0 C70,38 -70,38 -85,0 Z" fill="#f5a623" stroke="#0a1628" stroke-width="1.5"/>
+            </symbol>
+          </defs>
+
+          <!-- Outer ring guide -->
+          <circle cx="300" cy="300" r="270" fill="none" stroke="#1a2a44" stroke-width="1" stroke-dasharray="2 6"/>
+          <circle cx="300" cy="300" r="180" fill="none" stroke="#1a2a44" stroke-width="1" stroke-dasharray="2 6"/>
+          <circle cx="300" cy="300" r="90" fill="url(#coreGlow)" stroke="#00d4b8" stroke-width="1.5"/>
+
+          <!-- Central label -->
+          <text x="300" y="295" text-anchor="middle" fill="#f0f4ff" font-size="16" font-weight="700" letter-spacing="2">MARINE</text>
+          <text x="300" y="315" text-anchor="middle" fill="#00d4b8" font-size="14" font-weight="700" letter-spacing="2">LIFE</text>
+
+          <!-- 6 branches — curved paths from core to leaf positions -->
+          <!-- angles: 0(right), 60, 120, 180, 240, 300 -->
+          <!-- Branch 1: Fish — right (0°) -->
+          <path d="M390,300 Q450,300 510,300" fill="none" stroke="#00d4b8" stroke-width="2"/>
+          <circle cx="390" cy="300" r="4" fill="#00d4b8"/>
+
+          <!-- Branch 2: Cephalopods — upper right (300° = -60) -->
+          <path d="M345,222 Q380,170 405,135" fill="none" stroke="#f5a623" stroke-width="2"/>
+          <circle cx="345" cy="222" r="4" fill="#f5a623"/>
+
+          <!-- Branch 3: Cnidarians — upper left (240° = -120) -->
+          <path d="M255,222 Q220,170 195,135" fill="none" stroke="#00d4b8" stroke-width="2"/>
+          <circle cx="255" cy="222" r="4" fill="#00d4b8"/>
+
+          <!-- Branch 4: Echinoderms — left (180°) -->
+          <path d="M210,300 Q150,300 90,300" fill="none" stroke="#f5a623" stroke-width="2"/>
+          <circle cx="210" cy="300" r="4" fill="#f5a623"/>
+
+          <!-- Branch 5: Marine Mammals — lower left (120°) -->
+          <path d="M255,378 Q220,430 195,465" fill="none" stroke="#00d4b8" stroke-width="2"/>
+          <circle cx="255" cy="378" r="4" fill="#00d4b8"/>
+
+          <!-- Branch 6: Microbes — lower right (60°) -->
+          <path d="M345,378 Q380,430 405,465" fill="none" stroke="#f5a623" stroke-width="2"/>
+          <circle cx="345" cy="378" r="4" fill="#f5a623"/>
+
+          <!-- Leaves with labels -->
+          <!-- Fish, right -->
+          <use href="#leafTeal" x="510" y="300" width="160" height="64" transform="translate(-80,-32)"/>
+          <text x="510" y="294" text-anchor="middle" fill="#0a1628" font-size="13" font-weight="700">FISH</text>
+          <text x="510" y="312" text-anchor="middle" fill="#0a1628" font-size="11" font-weight="700">34,000 species</text>
+
+          <!-- Cephalopods, upper right -->
+          <use href="#leafAmber" x="405" y="135" width="160" height="64" transform="translate(-80,-32)"/>
+          <text x="405" y="129" text-anchor="middle" fill="#0a1628" font-size="13" font-weight="700">CEPHALOPODS</text>
+          <text x="405" y="147" text-anchor="middle" fill="#0a1628" font-size="11" font-weight="700">800 species</text>
+
+          <!-- Cnidarians, upper left -->
+          <use href="#leafTeal" x="195" y="135" width="160" height="64" transform="translate(-80,-32)"/>
+          <text x="195" y="129" text-anchor="middle" fill="#0a1628" font-size="13" font-weight="700">CNIDARIANS</text>
+          <text x="195" y="147" text-anchor="middle" fill="#0a1628" font-size="11" font-weight="700">11,000 species</text>
+
+          <!-- Echinoderms, left -->
+          <use href="#leafAmber" x="90" y="300" width="160" height="64" transform="translate(-80,-32)"/>
+          <text x="90" y="294" text-anchor="middle" fill="#0a1628" font-size="13" font-weight="700">ECHINODERMS</text>
+          <text x="90" y="312" text-anchor="middle" fill="#0a1628" font-size="11" font-weight="700">7,000 species</text>
+
+          <!-- Marine Mammals, lower left -->
+          <use href="#leafTeal" x="195" y="465" width="160" height="64" transform="translate(-80,-32)"/>
+          <text x="195" y="459" text-anchor="middle" fill="#0a1628" font-size="13" font-weight="700">MARINE MAMMALS</text>
+          <text x="195" y="477" text-anchor="middle" fill="#0a1628" font-size="11" font-weight="700">130 species</text>
+
+          <!-- Microbes, lower right -->
+          <use href="#leafAmber" x="405" y="465" width="160" height="64" transform="translate(-80,-32)"/>
+          <text x="405" y="459" text-anchor="middle" fill="#0a1628" font-size="13" font-weight="700">MICROBES</text>
+          <text x="405" y="477" text-anchor="middle" fill="#0a1628" font-size="11" font-weight="700">~1M+ species</text>
+
+          <!-- Tick marks on ring -->
+          <g stroke="#00d4b8" stroke-width="1" opacity="0.5">
+            <line x1="300" y1="20" x2="300" y2="30"/>
+            <line x1="300" y1="570" x2="300" y2="580"/>
+            <line x1="20" y1="300" x2="30" y2="300"/>
+            <line x1="570" y1="300" x2="580" y2="300"/>
+          </g>
+        </svg>
+      </div>
+
+      <aside class="legend">
+        <h2>Reading the wheel</h2>
+        <p>Six taxonomic branches radiate from a central node. Leaf color alternates to aid scanning; the displayed counts reflect formally described extant species as catalogued by WoRMS, 2023.</p>
+        <ul>
+          <li><span class="swatch sw-teal"></span> Vertebrates &amp; Cnidaria clade</li>
+          <li><span class="swatch sw-amber"></span> Invertebrate &amp; microbial clade</li>
+          <li><span class="swatch" style="background:#1a3a5c;"></span> Undescribed estimate</li>
+        </ul>
+      </aside>
+    </section>
+
+    <div class="divider"></div>
+
+    <section>
+      <h2>By the numbers</h2>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="num">240K</div>
+          <div class="lbl">Described species</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">2.2M</div>
+          <div class="lbl">Estimated total</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">91%</div>
+          <div class="lbl">Yet to be classified</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">2,000</div>
+          <div class="lbl">New species / year</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="f-brand">ABYSSAL ATLAS · MMXXIV</div>
+      <div class="f-links">
+        <a href="../overview/index.html">Overview</a>
+        <a href="../currents/index.html">Currents</a>
+        <a href="../depth-zones/index.html">Depth Zones</a>
+        <a href="#">Biodiversity</a>
+        <a href="../threats/index.html">Threats</a>
+      </div>
+    </footer>
+  </div>
+</div>
+
+</body>
+</html>

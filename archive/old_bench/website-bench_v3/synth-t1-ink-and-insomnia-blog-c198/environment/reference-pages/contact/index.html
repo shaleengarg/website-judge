@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Ink & Insomnia</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #F5F0E8;
+    color: #1C1C1C;
+  }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+  nav.site-nav {
+    text-align: center;
+    padding-top: 8px;
+    margin-bottom: 40px;
+  }
+  nav.site-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+  }
+  nav.site-nav a {
+    color: #B5451B;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  nav.site-nav a:hover { text-decoration: underline; }
+
+  .site-title {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: bold;
+    font-size: 28px;
+    color: #B5451B;
+    text-align: center;
+    margin: 0 0 8px;
+  }
+  .site-sub {
+    text-align: center;
+    color: #6B7A5E;
+    font-size: 15px;
+    margin: 0 0 32px;
+    font-style: italic;
+  }
+
+  h1.page-header {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: bold;
+    font-size: 26px;
+    color: #B5451B;
+    margin: 0 0 16px;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #6B7A5E;
+    margin: 32px 0;
+  }
+
+  p { margin: 0 0 16px; }
+
+  form {
+    margin: 24px 0 0;
+  }
+  .field {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: #1C1C1C;
+  }
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    width: 100%;
+    background-color: #F5F0E8;
+    border: 1px solid #1C1C1C;
+    padding: 10px 12px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    color: #1C1C1C;
+    border-radius: 0;
+    outline: none;
+  }
+  textarea {
+    resize: vertical;
+    line-height: 1.5;
+  }
+  input:focus, textarea:focus {
+    border-color: #B5451B;
+  }
+
+  button[type="submit"] {
+    background-color: #1C1C1C;
+    color: #F5F0E8;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    cursor: pointer;
+  }
+
+  .direct-email {
+    font-size: 16px;
+  }
+  .direct-email .label {
+    color: #6B7A5E;
+    font-style: italic;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  footer {
+    text-align: center;
+    color: #6B7A5E;
+    font-size: 14px;
+    margin-top: 48px;
+  }
+  footer a { color: #B5451B; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 480px) {
+    .wrap { padding-top: 32px; }
+    nav.site-nav ul { gap: 6px 14px; }
+    nav.site-nav a { font-size: 16px; }
+    .site-title { font-size: 24px; }
+    h1.page-header { font-size: 24px; }
+    body { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="site-title">Ink &amp; Insomnia</h1>
+    <p class="site-sub">notes from the 3am desk of Mara Veltri</p>
+
+    <nav class="site-nav">
+      <ul>
+        <li><a href="../latest/index.html">latest</a></li>
+        <li><a href="../archive/index.html">archive</a></li>
+        <li><a href="../about/index.html">about</a></li>
+        <li><a href="../reading-list/index.html">reading-list</a></li>
+        <li><a href="#">contact</a></li>
+      </ul>
+    </nav>
+
+    <hr>
+
+    <h1 class="page-header">Contact</h1>
+    <p>No newsletters. Just a form that lands in my actual inbox.</p>
+    <p>Tell me about a paperback I should hunt down, a diner I should sit in, or a thought you can't sleep on. I read everything, eventually.</p>
+
+    <form action="#" method="post" novalidate>
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="What should I call you?">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@somewhere.com">
+      </div>
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="6" placeholder="Take your time. It's late anyway."></textarea>
+      </div>
+      <button type="submit">Send it →</button>
+    </form>
+
+    <hr>
+
+    <div class="direct-email">
+      <span class="label">Or, if forms feel too formal:</span>
+      mara.veltri [at] inkandinsomnia.net
+    </div>
+
+    <footer>
+      © 2024 Mara Veltri &nbsp;·&nbsp; Written between midnight and 4am.
+    </footer>
+  </div>
+</body>
+</html>

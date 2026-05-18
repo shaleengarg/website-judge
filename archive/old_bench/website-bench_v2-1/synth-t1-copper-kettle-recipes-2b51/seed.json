@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-copper-kettle-recipes-2b51",
+  "tier": 1,
+  "genre": "recipe-card",
+  "pages": [
+    "featured-recipe",
+    "ingredients",
+    "instructions",
+    "tips-and-notes",
+    "about-the-cook"
+  ],
+  "palette_hint": "Warm cream background #FDF6EC, dark espresso text #2C1A0E, with burnt-orange accent #C1440E and muted olive green #6B7A3E for section dividers and highlights.",
+  "type_style": "Headings in Georgia serif at bold weight for a handwritten-cookbook warmth; body text in system-ui sans-serif at 1rem/1.6 line-height for clean readability.",
+  "description": "Copper Kettle Recipes is a single-dish deep-dive site dedicated to a classic Hungarian Beef Goulash, walking visitors through every detail from ingredients to the cook's personal story.",
+  "constraints": [
+    "All content centered in a single column, max-width 640px, with auto left/right margins.",
+    "Page padding is 24px top/bottom and 16px left/right on the content wrapper.",
+    "Section breaks use a thin 1px horizontal rule in color #C1440E with 32px vertical margin above and below.",
+    "Accent color #C1440E used only for headings, the site title, and the hr elements \u2014 never as a background fill.",
+    "Buttons (e.g. navigation links styled as buttons) are solid #2C1A0E background with #FDF6EC text, 12px 24px padding, no border-radius, displayed as block elements centered with a max-width of 200px."
+  ],
+  "page_specs": {
+    "featured-recipe": "Displays the recipe title 'Hungarian Beef Goulash' in a large Georgia h1 in #C1440E, followed by a two-sentence evocative description of the dish's smoky paprika aroma and tender braised beef. Below that, a metadata block lists prep time (20 min), cook time (2 hr 30 min), servings (6), and difficulty (Intermediate) each on its own line with a bold label, separated from the hero text by an hr divider.",
+    "ingredients": "Lists all ingredients under a bold Georgia h2 heading 'What You'll Need', organized into two labeled groups \u2014 'For the Goulash' and 'For Serving' \u2014 each group introduced by a small olive-green #6B7A3E subheading. Ingredients are presented as a plain unstyled list with each item on its own line, e.g. '700g beef chuck, cut into 4cm cubes', '3 tbsp sweet Hungarian paprika', '1 green pepper, diced'.",
+    "instructions": "Presents numbered step-by-step cooking directions under the h2 'How to Make It', with each step as a list item beginning with a bold action word like 'Sear', 'Sweat', 'Simmer'. Steps cover browning the beef in lard, building the paprika base with onions and garlic, deglazing with beef stock, and the final low-and-slow braise; each step is 1\u20132 sentences of concrete instruction.",
+    "tips-and-notes": "Offers three focused tips under the h2 'Cook's Notes', each introduced by a bold italic title such as 'Paprika Quality Matters', 'Don't Rush the Simmer', and 'Make It Ahead'. Each tip is a short paragraph of 2\u20133 sentences with specific, practical advice like using Pride of Szeged sweet paprika and never letting the goulash boil after the paprika is added.",
+    "about-the-cook": "Introduces the fictional recipe author Marta V\u00e1s\u00e1rhelyi in a short 3\u20134 sentence biography explaining she grew up in Debrecen, Hungary, learned this goulash from her grandmother, and now lives in Toronto where she teaches weekend cooking workshops. Ends with a plain-text contact invite: 'Questions? Write to marta@copperkettlerecipes.com' styled in the body font without a hyperlink."
+  }
+}

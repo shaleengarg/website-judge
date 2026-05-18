@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register — Ironclad Futures Summit</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #F4F1EC;
+    color: #1C1C1C;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  h1, h2, h3 {
+    font-family: Georgia, Times, serif;
+    font-weight: 700;
+    color: #1C1C1C;
+    margin: 0 0 12px;
+  }
+  nav.site-nav {
+    background: #2C3E50;
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-family: Georgia, Times, serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #FFFFFF;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+  }
+  .nav-links a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 15px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  .nav-links a.active {
+    border-bottom: 2px solid #C0392B;
+    padding-bottom: 2px;
+  }
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  .page-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .page-header h1 {
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+  .page-header p {
+    color: #2C3E50;
+    margin: 0;
+    font-size: 16px;
+  }
+  .notice {
+    max-width: 600px;
+    margin: 0 auto 20px;
+    text-align: center;
+    font-style: italic;
+    color: #C0392B;
+    font-size: 15px;
+  }
+  .form-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border: 2px solid #2C3E50;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .form-card .inner {
+    padding: 12px 14px 8px;
+  }
+  .field {
+    margin-bottom: 18px;
+  }
+  .field label.lbl {
+    display: block;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #2C3E50;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #2C3E50;
+    border-radius: 4px;
+    background: #F4F1EC;
+    font-family: system-ui, sans-serif;
+    font-size: 15px;
+    color: #1C1C1C;
+  }
+  .field textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  .row2 {
+    display: flex;
+    gap: 16px;
+  }
+  .row2 .field { flex: 1; }
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid #2C3E50;
+    border-radius: 4px;
+    background: #F4F1EC;
+    font-size: 15px;
+  }
+  .radio-option .price {
+    margin-left: auto;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    color: #C0392B;
+  }
+  .submit-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .btn {
+    background: #C0392B;
+    color: #FFFFFF;
+    padding: 10px 24px;
+    border-radius: 4px;
+    border: none;
+    font-size: 15px;
+    font-family: system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .small-print {
+    max-width: 600px;
+    margin: 18px auto 0;
+    text-align: center;
+    font-size: 13px;
+    color: #2C3E50;
+  }
+  footer {
+    background: #1C1C1C;
+    color: #F4F1EC;
+    margin-top: 40px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .footer-inner .col {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .footer-inner .col strong {
+    font-family: Georgia, serif;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+  .hashtag {
+    color: #C0392B;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <div class="logo">Ironclad Futures Summit</div>
+    <div class="nav-links">
+      <a href="../schedule/index.html">Schedule</a>
+      <a href="../speakers/index.html">Speakers</a>
+      <a href="../venue/index.html">Venue</a>
+      <a href="#" class="active">Register</a>
+      <a href="../about/index.html">About</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <h1>Register</h1>
+    <p>October 14–15, 2025 · August Wilson Cultural Center · Pittsburgh, PA</p>
+  </div>
+
+  <p class="notice">Early-bird pricing ends September 1, 2025.</p>
+
+  <form class="form-card" onsubmit="return false;">
+    <div class="inner">
+      <div class="row2">
+        <div class="field">
+          <label class="lbl" for="fullname">Full Name</label>
+          <input type="text" id="fullname" placeholder="Jane Q. Engineer">
+        </div>
+        <div class="field">
+          <label class="lbl" for="email">Email Address</label>
+          <input type="email" id="email" placeholder="jane@example.org">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="lbl" for="org">Organization</label>
+          <input type="text" id="org" placeholder="Carnegie Mellon University">
+        </div>
+        <div class="field">
+          <label class="lbl" for="title">Job Title</label>
+          <input type="text" id="title" placeholder="Director of Policy">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl">Ticket Type</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="ticket"> General Admission
+            <span class="price">$395</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="ticket"> Government / Public Sector
+            <span class="price">$295</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="ticket"> Academic
+            <span class="price">$195</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="diet">Dietary Restrictions</label>
+        <textarea id="diet" placeholder="Vegetarian, gluten-free, allergies, etc."></textarea>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn">Complete Registration</button>
+      </div>
+    </div>
+  </form>
+
+  <p class="small-print">A confirmation email with venue access details will be sent within 24 hours of registration.</p>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="col">
+      <strong>Ironclad Futures Summit</strong>
+      August Wilson Cultural Center<br>
+      980 Liberty Ave, Pittsburgh, PA 15222<br>
+      contact@ironcladfutures.org · (412) 555-0142
+    </div>
+    <div class="col" style="text-align:right;">
+      <strong>Join the Conversation</strong>
+      <span class="hashtag">#IroncladFS25</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

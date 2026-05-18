@@ -1,0 +1,29 @@
+{
+  "id": "synth-t2-ironclad-futures-summit-842f",
+  "tier": 2,
+  "genre": "conference",
+  "pages": [
+    "program",
+    "speakers",
+    "venue",
+    "register",
+    "about"
+  ],
+  "palette_hint": "Deep navy background (#0d1b2a) with off-white text (#f0ece2), rust-orange accent (#c8441b) for buttons and highlights, and a muted steel-blue (#4a7fa5) for secondary borders and labels.",
+  "type_style": "Headings in Georgia serif at bold weight for gravitas, body in system-ui sans-serif at regular weight, uppercase tracking on section labels for a professional industrial feel.",
+  "description": "Ironclad Futures Summit is a two-day manufacturing and industrial-technology conference held in Pittsburgh, PA, bringing together engineers, policy makers, and investors around the future of domestic production.",
+  "constraints": [
+    "All pages share a top nav bar with a max-width of 1100px, navy background (#0d1b2a), the conference wordmark left-aligned, and five nav links right-aligned using flexbox with justify-content: space-between.",
+    "Footer is three columns (grid-template-columns: 2fr 1fr 1fr) at max-width 1100px containing the tagline, quick links, and contact details, with a 1px rust-orange (#c8441b) top border.",
+    "Cards throughout the site use 16px padding, a 4px rounded corner, a 1px steel-blue (#4a7fa5) border, and off-white (#f0ece2) text on a slightly lighter navy (#162435) background.",
+    "Primary call-to-action buttons are rust-orange (#c8441b) with off-white text, 12px 28px padding, 4px border-radius, and no hover effects.",
+    "Section headings use a small all-caps steel-blue (#4a7fa5) label above the main Georgia serif heading, mimicking a two-line heading block used consistently across all pages."
+  ],
+  "page_specs": {
+    "program": "Displays the two-day schedule (October 14\u201315, 2025) as two side-by-side columns using CSS grid (grid-template-columns: 1fr 1fr), each day listing time-slots as stacked cards showing session title, speaker name, and room assignment. A sticky rust-orange 'Register Now' button appears at the top-right of the schedule section. Sessions are grouped under morning and afternoon labels styled as full-width steel-blue divider rows.",
+    "speakers": "Presents 12 confirmed speakers in a 3-column CSS grid of portrait cards, each card showing a placeholder colored rectangle (120px \u00d7 120px, steel-blue fill) for the headshot, the speaker's name in bold Georgia, their title and company in smaller sans-serif, and a one-sentence talk teaser. A featured keynote speaker block spans full width above the grid with a larger 200px \u00d7 200px placeholder and a longer biography excerpt.",
+    "venue": "Details the Ironclad Summit venue, the Heinz History Center Grand Hall in Pittsburgh, with a full-width rust-orange banner strip at the top containing the venue name and address. Below, a two-column flex layout shows venue details (capacity 800, AV specs, accessibility notes) on the left and a simple CSS-drawn map placeholder (a 400px \u00d7 300px steel-blue bordered rectangle with text 'Venue Map \u2014 1212 Smallman St') on the right. A row of three info cards at the bottom covers parking, nearby hotels, and airport transit.",
+    "register": "Presents three registration tiers\u2014General Admission ($495), Industry Professional ($795), and Corporate Table ($2,800)\u2014in a CSS grid of three cards (grid-template-columns: 1fr 1fr 1fr) with each card listing five included benefits as a plain unordered list. The Industry Professional card is visually distinguished with a rust-orange top border (4px) and a 'Most Popular' all-caps steel-blue label. Below the grid, a simple HTML form collects name, organization, email, and ticket tier with a rust-orange submit button.",
+    "about": "Explains the origin and mission of the Ironclad Futures Summit, founded in 2019 by the Pittsburgh Manufacturing Coalition, using two paragraphs of body copy flanked by a pull-quote in large Georgia italic highlighting the statistic '43% of Summit attendees report a new partnership formed within 90 days.' A two-column flex section below lists the six organizing committee members with name and title, and a final section shows four sponsor logos represented as steel-blue bordered rectangles with company names inside, arranged in a single flex row."
+  }
+}

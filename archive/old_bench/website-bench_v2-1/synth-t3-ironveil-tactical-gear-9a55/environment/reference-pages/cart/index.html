@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cart — Ironveil Tactical Gear</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    background: #F5F3EF;
+    color: #1A1A18;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Top nav */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 56px;
+    background: #1A1A18;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #000;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    color: #fff;
+  }
+  .wordmark .v { color: #B84C2E; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #d8d6d1;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-links a.active {
+    color: #fff;
+    border-bottom-color: #B84C2E;
+  }
+  .nav-utils { font-size: 13px; color: #d8d6d1; }
+  .nav-utils .cartcount {
+    background: #B84C2E;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-left: 8px;
+    font-weight: bold;
+  }
+
+  /* Page wrap */
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 48px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    color: #6a6a66;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 16px;
+  }
+  .breadcrumb .sep { margin: 0 8px; color: #b5b3ad; }
+
+  h1.page-title {
+    font-family: Georgia, serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: #6a6a66;
+    margin-bottom: 24px;
+  }
+
+  .cart-layout {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .cart-main {
+    flex: 0 0 65%;
+    width: 65%;
+  }
+  .cart-side {
+    flex: 0 0 calc(35% - 32px);
+    width: calc(35% - 32px);
+  }
+
+  /* Items table */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #DEDAD4;
+  }
+  .items-table thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #6a6a66;
+    font-weight: 600;
+    padding: 12px 14px;
+    background: #EFEDE7;
+    border-bottom: 1px solid #DEDAD4;
+  }
+  .items-table tbody td {
+    padding: 16px 14px;
+    border-bottom: 1px solid #DEDAD4;
+    vertical-align: middle;
+    font-size: 14px;
+  }
+  .items-table tbody tr:last-child td { border-bottom: none; }
+
+  .thumb {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #4A5240, #2f3429);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d8d6d1;
+    font-family: Georgia, serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    border: 1px solid #DEDAD4;
+  }
+  .thumb.b { background: linear-gradient(135deg, #5a5648, #3a382f); }
+  .thumb.c { background: linear-gradient(135deg, #6b5240, #43352a); }
+
+  .item-name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 15px;
+    color: #1A1A18;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .item-variant {
+    font-size: 12px;
+    color: #6a6a66;
+  }
+  .sku {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #4A5240;
+    letter-spacing: 0.5px;
+  }
+
+  .qty-input {
+    width: 56px;
+    padding: 6px 8px;
+    border: 1px solid #c9c5be;
+    background: #fff;
+    font-size: 14px;
+    font-family: inherit;
+    text-align: center;
+    color: #1A1A18;
+  }
+  .price, .subtotal {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .subtotal { font-weight: bold; }
+
+  .remove {
+    color: #B84C2E;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-top: 6px;
+  }
+
+  .cart-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    font-size: 13px;
+  }
+  .cart-actions a { color: #4A5240; }
+  .promo {
+    display: flex;
+    gap: 0;
+    margin-top: 18px;
+    max-width: 360px;
+  }
+  .promo input {
+    flex: 1;
+    border: 1px solid #c9c5be;
+    border-right: none;
+    padding: 9px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+  }
+  .promo button {
+    background: #1A1A18;
+    color: #fff;
+    border: none;
+    padding: 0 16px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Summary */
+  .summary {
+    background: #fff;
+    border: 1px solid #DEDAD4;
+    padding: 20px;
+  }
+  .summary h2 {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #DEDAD4;
+    margin-bottom: 14px;
+  }
+  .sum-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 6px 0;
+    color: #1A1A18;
+  }
+  .sum-row .label { color: #4a4a48; }
+  .sum-row .val { font-variant-numeric: tabular-nums; }
+
+  .ship-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 6px;
+    font-size: 13px;
+  }
+  .ship-table caption {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #6a6a66;
+    padding: 6px 0;
+    font-weight: 600;
+  }
+  .ship-table td {
+    padding: 8px 6px;
+    border-top: 1px solid #DEDAD4;
+    vertical-align: middle;
+  }
+  .ship-table td.radio { width: 24px; }
+  .ship-table td.price-col {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: #1A1A18;
+  }
+  .ship-table tr.selected td {
+    background: #F5F3EF;
+  }
+  .ship-table tr.selected td:first-child {
+    border-left: 3px solid #4A5240;
+  }
+  .ship-table .ship-name { font-weight: 600; }
+  .ship-table .ship-eta { display: block; color: #6a6a66; font-size: 11px; }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 0 4px;
+    margin-top: 8px;
+    border-top: 2px solid #1A1A18;
+  }
+  .total-row .label {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .total-row .val {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    font-variant-numeric: tabular-nums;
+  }
+  .vat-note {
+    font-size: 11px;
+    color: #6a6a66;
+    margin-bottom: 14px;
+  }
+
+  .checkout-btn {
+    display: block;
+    width: 100%;
+    background: #B84C2E;
+    color: #fff;
+    border: none;
+    padding: 14px 0;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .secure-note {
+    text-align: center;
+    font-size: 11px;
+    color: #6a6a66;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1A1A18;
+    color: #b8b6b1;
+    margin-top: 48px;
+    padding: 36px 0 20px;
+    font-size: 12px;
+  }
+  .foot-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .foot-inner h4 {
+    font-family: Georgia, serif;
+    color: #fff;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .foot-inner a { display: block; padding: 3px 0; color: #b8b6b1; }
+  .foot-brand .wordmark { font-size: 18px; margin-bottom: 8px; display: block; }
+  .foot-brand p { line-height: 1.6; }
+  .foot-bottom {
+    max-width: 1200px;
+    margin: 24px auto 0;
+    padding: 16px 24px 0;
+    border-top: 1px solid #2c2c29;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #777570;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-inner">
+    <a href="#" class="wordmark">IRON<span class="v">VEIL</span></a>
+    <div class="nav-links">
+      <a href="../shop/index.html">Shop</a>
+      <a href="../product-detail/index.html">Product</a>
+      <a href="#" class="active">Cart</a>
+      <a href="../account/index.html">Account</a>
+      <a href="../about/index.html">About</a>
+    </div>
+    <div class="nav-utils">
+      Cart <span class="cartcount">3</span>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="breadcrumb">
+    <a href="../shop/index.html">All Gear</a>
+    <span class="sep">/</span>
+    <span>Cart</span>
+  </div>
+
+  <h1 class="page-title">Your Cart</h1>
+  <div class="page-sub">3 items · Review your gear before checkout</div>
+
+  <div class="cart-layout">
+
+    <div class="cart-main">
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th colspan="2">Item</th>
+            <th>SKU</th>
+            <th>Qty</th>
+            <th style="text-align:right;">Unit Price</th>
+            <th style="text-align:right;">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="width:80px;"><div class="thumb">MK-IV</div></td>
+            <td>
+              <span class="item-name">Ironveil MK-IV Plate Carrier</span>
+              <span class="item-variant">Ranger Green · Size L/XL</span>
+              <a href="#" class="remove">Remove</a>
+            </td>
+            <td><span class="sku">IVC-MK4-RNG</span></td>
+            <td><input type="text" class="qty-input" value="1"></td>
+            <td class="price">$289.00</td>
+            <td class="subtotal">$289.00</td>
+          </tr>
+          <tr>
+            <td><div class="thumb b">ADMIN</div></td>
+            <td>
+              <span class="item-name">MOLLE Admin Pouch</span>
+              <span class="item-variant">Coyote Brown · 500D Cordura</span>
+              <a href="#" class="remove">Remove</a>
+            </td>
+            <td><span class="sku">IVP-ADM-CYT</span></td>
+            <td><input type="text" class="qty-input" value="2"></td>
+            <td class="price">$38.50</td>
+            <td class="subtotal">$77.00</td>
+          </tr>
+          <tr>
+            <td><div class="thumb c">BELT</div></td>
+            <td>
+              <span class="item-name">Tactical Rigger Belt</span>
+              <span class="item-variant">Black · 1.75" · Size 36</span>
+              <a href="#" class="remove">Remove</a>
+            </td>
+            <td><span class="sku">IVB-RGR-BLK-36</span></td>
+            <td><input type="text" class="qty-input" value="1"></td>
+            <td class="price">$64.00</td>
+            <td class="subtotal">$64.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="cart-actions">
+        <a href="../shop/index.html">← Continue Shopping</a>
+        <a href="#">Save Cart to Gear List</a>
+      </div>
+
+      <div class="promo">
+        <input type="text" placeholder="Promo code">
+        <button type="button">Apply</button>
+      </div>
+    </div>
+
+    <aside class="cart-side">
+      <div class="summary">
+        <h2>Order Summary</h2>
+
+        <div class="sum-row"><span class="label">Subtotal (3 items)</span><span class="val">$430.00</span></div>
+        <div class="sum-row"><span class="label">Member Discount</span><span class="val">−$0.00</span></div>
+
+        <table class="ship-table">
+          <caption>Shipping Method</caption>
+          <tr class="selected">
+            <td class="radio"><input type="radio" name="ship" checked></td>
+            <td><span class="ship-name">Standard</span><span class="ship-eta">5–7 business days</span></td>
+            <td class="price-col">$8.99</td>
+          </tr>
+          <tr>
+            <td class="radio"><input type="radio" name="ship"></td>
+            <td><span class="ship-name">Expedited</span><span class="ship-eta">2–3 business days</span></td>
+            <td class="price-col">$18.99</td>
+          </tr>
+          <tr>
+            <td class="radio"><input type="radio" name="ship"></td>
+            <td><span class="ship-name">Overnight</span><span class="ship-eta">Next business day</span></td>
+            <td class="price-col">$34.99</td>
+          </tr>
+        </table>
+
+        <div class="sum-row"><span class="label">Shipping</span><span class="val">$8.99</span></div>
+        <div class="sum-row"><span class="label">Estimated Tax</span><span class="val">$34.32</span></div>
+
+        <div class="total-row">
+          <span class="label">Total</span>
+          <span class="val">$473.31</span>
+        </div>
+        <div class="vat-note">Taxes calculated at checkout based on shipping address.</div>
+
+        <button type="button" class="checkout-btn">Proceed to Checkout →</button>
+        <div class="secure-note">SECURE CHECKOUT · 256-BIT SSL</div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <a href="#" class="wordmark">IRON<span class="v">VEIL</span></a>
+      <p>Direct-to-consumer tactical and outdoor gear, built for operators and trusted by civilians. Boise, Idaho since 2014.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="#">Plate Carriers</a>
+      <a href="#">Pouches</a>
+      <a href="#">Gloves</a>
+      <a href="#">Footwear</a>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <a href="#">Contact</a>
+      <a href="#">Sizing Guide</a>
+      <a href="#">Warranty</a>
+      <a href="#">Returns</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="../about/index.html">About</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+      <a href="#">Pro / LE Program</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2024 Ironveil Tactical Gear, LLC. All rights reserved.</div>
+    <div>Made in the USA · ITAR compliant</div>
+  </div>
+</footer>
+
+</body>
+</html>

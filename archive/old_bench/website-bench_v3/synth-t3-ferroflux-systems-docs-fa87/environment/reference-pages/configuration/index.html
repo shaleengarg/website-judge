@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuration · FerroFlux Systems</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0f1117;
+    color: #c9d1d9;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  code, pre, .mono { font-family: "Courier New", monospace; font-size: 14px; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50;
+    height: 56px;
+    background: #0f1117;
+    border-bottom: 1px solid #30363d;
+    display: flex; align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+  }
+  .logo {
+    color: #58a6ff;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.3px;
+  }
+  .breadcrumb {
+    color: #8b949e;
+    font-size: 13px;
+  }
+  .breadcrumb span.sep { margin: 0 8px; color: #484f58; }
+  .breadcrumb span.current { color: #c9d1d9; }
+  .menu-toggle { display: none; margin-left: auto; color: #8b949e; font-size: 13px; }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 56px); }
+  aside.sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    position: sticky;
+    top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    padding: 20px 0;
+  }
+  .nav-section { margin-bottom: 6px; }
+  .nav-section > .nav-title {
+    display: block;
+    padding: 8px 20px;
+    color: #c9d1d9;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-left: 2px solid transparent;
+  }
+  .nav-section.active > .nav-title {
+    color: #58a6ff;
+    border-left-color: #58a6ff;
+    background: #0f1117;
+  }
+  .nav-links { list-style: none; padding: 4px 0 8px; }
+  .nav-links li a {
+    display: block;
+    padding: 5px 20px 5px 36px;
+    font-size: 13px;
+    color: #8b949e;
+  }
+  .nav-links li a:hover { color: #c9d1d9; text-decoration: none; }
+  .nav-links li a.current { color: #58a6ff; }
+
+  /* Main */
+  main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .content {
+    width: 100%;
+    max-width: 860px;
+    padding: 40px 48px;
+  }
+
+  h1 {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.25;
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #30363d;
+  }
+  h3 {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.3;
+    margin: 24px 0 10px;
+    color: #c9d1d9;
+  }
+  p { margin-bottom: 14px; color: #c9d1d9; }
+  .lead { color: #8b949e; font-size: 16px; margin-bottom: 20px; }
+
+  /* Code block */
+  pre.code {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .tk-key { color: #58a6ff; }
+  .tk-val { color: #3fb950; }
+  .tk-com { color: #8b949e; }
+  .tk-str { color: #a5d6ff; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 16px;
+    font-size: 13px;
+  }
+  table thead th {
+    background: #21262d;
+    color: #c9d1d9;
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 12px;
+    border: 1px solid #30363d;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  table tbody td {
+    padding: 8px 12px;
+    border: 1px solid #30363d;
+    vertical-align: top;
+  }
+  table tbody tr:nth-child(odd) td { background: #161b22; }
+  table tbody tr:nth-child(even) td { background: #0f1117; }
+  td.key, td.envname { font-family: "Courier New", monospace; color: #58a6ff; white-space: nowrap; }
+  td.type { font-family: "Courier New", monospace; color: #c9d1d9; }
+  td.def { font-family: "Courier New", monospace; color: #3fb950; }
+  td.desc { color: #c9d1d9; }
+
+  /* Sticky group header inside table */
+  .group-header {
+    position: sticky;
+    top: 56px;
+    z-index: 5;
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-bottom: 2px solid #58a6ff;
+    padding: 10px 12px;
+    margin-top: 24px;
+    font-weight: 700;
+    font-size: 13px;
+    color: #58a6ff;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .group-header .gh-key {
+    font-family: "Courier New", monospace;
+    color: #c9d1d9;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-size: 12px;
+  }
+
+  /* Callout */
+  .callout {
+    background: #21262d;
+    border-left: 4px solid #58a6ff;
+    padding: 14px 18px;
+    margin: 20px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+  }
+  .callout strong { color: #58a6ff; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #30363d;
+    padding: 24px 48px;
+    color: #8b949e;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer a { color: #8b949e; margin-right: 16px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    aside.sidebar {
+      position: fixed;
+      left: -260px;
+      transition: left 0.2s;
+    }
+    .content { padding: 32px 28px; }
+    h1 { font-size: 26px; }
+    .menu-toggle { display: inline-block; }
+  }
+  @media (max-width: 560px) {
+    .content { padding: 24px 16px; }
+    header.topbar { padding: 0 14px; gap: 12px; }
+    .logo { font-size: 16px; }
+    .breadcrumb { font-size: 12px; }
+    .breadcrumb span.sep { margin: 0 5px; }
+    h1 { font-size: 22px; }
+    h2 { font-size: 18px; }
+    table { font-size: 12px; }
+    table thead th, table tbody td { padding: 6px 8px; }
+    footer { padding: 18px 16px; flex-direction: column; }
+    .group-header { font-size: 12px; padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">FerroFlux</div>
+  <nav class="breadcrumb">
+    <a href="../getting-started/index.html">Docs</a>
+    <span class="sep">/</span>
+    <span>Reference</span>
+    <span class="sep">/</span>
+    <span class="current">Configuration</span>
+  </nav>
+  <span class="menu-toggle">☰ menu</span>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="nav-section">
+      <span class="nav-title">Installation</span>
+      <ul class="nav-links">
+        <li><a href="../getting-started/index.html">Getting Started</a></li>
+        <li><a href="#">System Requirements</a></li>
+        <li><a href="#">npm Package</a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <span class="nav-title">Core Concepts</span>
+      <ul class="nav-links">
+        <li><a href="#">Pipelines</a></li>
+        <li><a href="#">Streams &amp; Frames</a></li>
+        <li><a href="#">Calibration Model</a></li>
+        <li><a href="../changelog/index.html">Changelog</a></li>
+        <li><a href="../troubleshooting/index.html">Troubleshooting</a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <span class="nav-title">SDK Methods</span>
+      <ul class="nav-links">
+        <li><a href="../api-reference/index.html">API Reference</a></li>
+        <li><a href="#">REST Endpoints</a></li>
+        <li><a href="#">WebSocket Streams</a></li>
+        <li><a href="#">Auth</a></li>
+      </ul>
+    </div>
+    <div class="nav-section active">
+      <span class="nav-title">Config Schema</span>
+      <ul class="nav-links">
+        <li><a href="#" class="current">ferroflux.yaml</a></li>
+        <li><a href="#pipeline">pipeline.*</a></li>
+        <li><a href="#sensor">sensor.*</a></li>
+        <li><a href="#stream">stream.*</a></li>
+        <li><a href="#calibration">calibration.*</a></li>
+        <li><a href="#telemetry">telemetry.*</a></li>
+        <li><a href="#env">Environment Overrides</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <article class="content">
+      <h1>Configuration</h1>
+      <p class="lead">The <code>ferroflux.yaml</code> file defines pipeline behaviour, sensor hardware bindings, stream encoding, calibration profiles, and telemetry sinks. Values not present in the file fall back to the documented defaults below.</p>
+
+      <h3>Example: minimal <code>ferroflux.yaml</code></h3>
+<pre class="code"><span class="tk-key">pipeline</span>:
+  <span class="tk-key">name</span>: <span class="tk-str">"flux-edge-01"</span>
+  <span class="tk-key">bufferSize</span>: <span class="tk-val">4096</span>
+  <span class="tk-key">sampleRateHz</span>: <span class="tk-val">2000</span>
+
+<span class="tk-key">sensor</span>:
+  <span class="tk-key">interface</span>: <span class="tk-str">"spi0"</span>
+  <span class="tk-key">model</span>: <span class="tk-str">"FX-3A"</span>
+  <span class="tk-key">axes</span>: [<span class="tk-str">"x"</span>, <span class="tk-str">"y"</span>, <span class="tk-str">"z"</span>]
+
+<span class="tk-key">stream</span>:
+  <span class="tk-key">encoding</span>: <span class="tk-str">"cbor"</span>
+  <span class="tk-key">endpoint</span>: <span class="tk-str">"wss://ingest.local/v1"</span>
+  <span class="tk-com"># compression is optional</span>
+  <span class="tk-key">compression</span>: <span class="tk-str">"zstd"</span></pre>
+
+      <div class="callout">
+        <strong>Resolution order:</strong> CLI flags &rarr; environment variables (<span class="mono">FERROFLUX_*</span>) &rarr; <span class="mono">ferroflux.yaml</span> &rarr; built-in defaults. Environment overrides always win over the YAML file.
+      </div>
+
+      <h2>Schema reference</h2>
+
+      <!-- pipeline.* -->
+      <div class="group-header" id="pipeline">pipeline.* <span class="gh-key">runtime &amp; buffering</span></div>
+      <table>
+        <thead>
+          <tr><th style="width:38%">Key</th><th style="width:18%">Type</th><th style="width:18%">Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">pipeline.name</td><td class="type">string</td><td class="def">"default"</td><td class="desc">Human-readable identifier emitted with every telemetry record.</td></tr>
+          <tr><td class="key">pipeline.bufferSize</td><td class="type">integer</td><td class="def">2048</td><td class="desc">Number of frames held in the in-memory ring buffer before back-pressure engages.</td></tr>
+          <tr><td class="key">pipeline.sampleRateHz</td><td class="type">integer</td><td class="def">1000</td><td class="desc">Target acquisition rate; values above the sensor maximum are clamped at startup.</td></tr>
+          <tr><td class="key">pipeline.maxLatencyMs</td><td class="type">integer</td><td class="def">25</td><td class="desc">Hard deadline for downstream emission before a frame is dropped.</td></tr>
+          <tr><td class="key">pipeline.workerThreads</td><td class="type">integer</td><td class="def">2</td><td class="desc">Worker pool size used for decoding and calibration math.</td></tr>
+          <tr><td class="key">pipeline.dropPolicy</td><td class="type">enum</td><td class="def">"oldest"</td><td class="desc">One of <code>oldest</code>, <code>newest</code>, or <code>block</code> when the buffer is full.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- sensor.* -->
+      <div class="group-header" id="sensor">sensor.* <span class="gh-key">hardware binding</span></div>
+      <table>
+        <thead>
+          <tr><th style="width:38%">Key</th><th style="width:18%">Type</th><th style="width:18%">Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">sensor.interface</td><td class="type">string</td><td class="def">"usb-hid"</td><td class="desc">Transport identifier; supports <code>usb-hid</code>, <code>spi0</code>–<code>spi3</code>, and <code>i2c</code>.</td></tr>
+          <tr><td class="key">sensor.model</td><td class="type">string</td><td class="def">"FX-2"</td><td class="desc">Sensor model code used to load the matching driver profile.</td></tr>
+          <tr><td class="key">sensor.serial</td><td class="type">string</td><td class="def">null</td><td class="desc">Optional device serial; required when multiple sensors share a bus.</td></tr>
+          <tr><td class="key">sensor.axes</td><td class="type">string[]</td><td class="def">["x","y","z"]</td><td class="desc">Axes to acquire and forward into the pipeline.</td></tr>
+          <tr><td class="key">sensor.rangeMt</td><td class="type">float</td><td class="def">2.5</td><td class="desc">Full-scale magnetic range in millitesla.</td></tr>
+          <tr><td class="key">sensor.oversampling</td><td class="type">integer</td><td class="def">4</td><td class="desc">Hardware oversampling factor (1, 2, 4, 8, or 16).</td></tr>
+        </tbody>
+      </table>
+
+      <!-- stream.* -->
+      <div class="group-header" id="stream">stream.* <span class="gh-key">network transport</span></div>
+      <table>
+        <thead>
+          <tr><th style="width:38%">Key</th><th style="width:18%">Type</th><th style="width:18%">Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">stream.endpoint</td><td class="type">URL</td><td class="def">null</td><td class="desc">WebSocket or HTTP endpoint that receives encoded frames.</td></tr>
+          <tr><td class="key">stream.encoding</td><td class="type">enum</td><td class="def">"json"</td><td class="desc">Frame encoding; one of <code>json</code>, <code>cbor</code>, or <code>protobuf</code>.</td></tr>
+          <tr><td class="key">stream.compression</td><td class="type">enum</td><td class="def">"none"</td><td class="desc">Optional payload compression (<code>none</code>, <code>gzip</code>, <code>zstd</code>).</td></tr>
+          <tr><td class="key">stream.batchSize</td><td class="type">integer</td><td class="def">16</td><td class="desc">Frames coalesced into a single outbound message.</td></tr>
+          <tr><td class="key">stream.retry.maxAttempts</td><td class="type">integer</td><td class="def">5</td><td class="desc">Reconnect attempts before the stream transitions to <code>FAILED</code>.</td></tr>
+          <tr><td class="key">stream.retry.backoffMs</td><td class="type">integer</td><td class="def">500</td><td class="desc">Initial reconnect delay; doubles exponentially up to 30s.</td></tr>
+          <tr><td class="key">stream.tls.verify</td><td class="type">boolean</td><td class="def">true</td><td class="desc">Validate server TLS certificate against the system trust store.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- calibration.* -->
+      <div class="group-header" id="calibration">calibration.* <span class="gh-key">correction model</span></div>
+      <table>
+        <thead>
+          <tr><th style="width:38%">Key</th><th style="width:18%">Type</th><th style="width:18%">Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">calibration.profile</td><td class="type">string</td><td class="def">"factory"</td><td class="desc">Named calibration set loaded at startup.</td></tr>
+          <tr><td class="key">calibration.autoZero</td><td class="type">boolean</td><td class="def">false</td><td class="desc">Apply running-average zero correction on startup.</td></tr>
+          <tr><td class="key">calibration.hardIron</td><td class="type">float[3]</td><td class="def">[0,0,0]</td><td class="desc">Hard-iron offset vector in millitesla.</td></tr>
+          <tr><td class="key">calibration.softIron</td><td class="type">float[3][3]</td><td class="def">identity</td><td class="desc">Soft-iron correction matrix; must be invertible.</td></tr>
+          <tr><td class="key">calibration.refreshSec</td><td class="type">integer</td><td class="def">3600</td><td class="desc">Reload calibration from disk every N seconds.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- telemetry.* -->
+      <div class="group-header" id="telemetry">telemetry.* <span class="gh-key">observability</span></div>
+      <table>
+        <thead>
+          <tr><th style="width:38%">Key</th><th style="width:18%">Type</th><th style="width:18%">Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">telemetry.enabled</td><td class="type">boolean</td><td class="def">true</td><td class="desc">Emit internal metrics about the pipeline state.</td></tr>
+          <tr><td class="key">telemetry.exporter</td><td class="type">enum</td><td class="def">"prometheus"</td><td class="desc">One of <code>prometheus</code>, <code>otlp</code>, or <code>stdout</code>.</td></tr>
+          <tr><td class="key">telemetry.bindAddr</td><td class="type">string</td><td class="def">"0.0.0.0:9464"</td><td class="desc">Listen address for the metrics scrape endpoint.</td></tr>
+          <tr><td class="key">telemetry.logLevel</td><td class="type">enum</td><td class="def">"info"</td><td class="desc">One of <code>trace</code>, <code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="env">Environment variable overrides</h2>
+      <p>Every YAML key may be overridden at runtime by an environment variable using the <code>FERROFLUX_</code> prefix and SCREAMING_SNAKE_CASE conversion of the dot-path. Variables are parsed using the same type rules as the YAML schema.</p>
+
+      <table>
+        <thead>
+          <tr><th style="width:46%">Environment variable</th><th style="width:34%">Maps to</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="envname">FERROFLUX_PIPELINE_NAME</td><td class="key">pipeline.name</td><td class="desc">String, no length limit.</td></tr>
+          <tr><td class="envname">FERROFLUX_PIPELINE_BUFFER_SIZE</td><td class="key">pipeline.bufferSize</td><td class="desc">Integer, must be a power of two.</td></tr>
+          <tr><td class="envname">FERROFLUX_PIPELINE_SAMPLE_RATE_HZ</td><td class="key">pipeline.sampleRateHz</td><td class="desc">Integer in Hz.</td></tr>
+          <tr><td class="envname">FERROFLUX_SENSOR_INTERFACE</td><td class="key">sensor.interface</td><td class="desc">Overrides the transport at boot.</td></tr>
+          <tr><td class="envname">FERROFLUX_SENSOR_SERIAL</td><td class="key">sensor.serial</td><td class="desc">Use to pin a specific device.</td></tr>
+          <tr><td class="envname">FERROFLUX_STREAM_ENDPOINT</td><td class="key">stream.endpoint</td><td class="desc">Full URL including scheme.</td></tr>
+          <tr><td class="envname">FERROFLUX_STREAM_ENCODING</td><td class="key">stream.encoding</td><td class="desc">Enum value, lowercase.</td></tr>
+          <tr><td class="envname">FERROFLUX_STREAM_TLS_VERIFY</td><td class="key">stream.tls.verify</td><td class="desc">Set to <code>0</code> to disable TLS verification.</td></tr>
+          <tr><td class="envname">FERROFLUX_CALIBRATION_PROFILE</td><td class="key">calibration.profile</td><td class="desc">Switches profile without editing YAML.</td></tr>
+          <tr><td class="envname">FERROFLUX_CALIBRATION_AUTO_ZERO</td><td class="key">calibration.autoZero</td><td class="desc">Boolean (<code>0</code>/<code>1</code>).</td></tr>
+          <tr><td class="envname">FERROFLUX_TELEMETRY_EXPORTER</td><td class="key">telemetry.exporter</td><td class="desc">Useful for swapping exporters per environment.</td></tr>
+          <tr><td class="envname">FERROFLUX_TELEMETRY_BIND_ADDR</td><td class="key">telemetry.bindAddr</td><td class="desc">Format <code>host:port</code>.</td></tr>
+          <tr><td class="envname">FERROFLUX_TELEMETRY_LOG_LEVEL</td><td class="key">telemetry.logLevel</td><td class="desc">Overrides the YAML value globally.</td></tr>
+          <tr><td class="envname">FERROFLUX_CONFIG_FILE</td><td class="key">— (loader)</td><td class="desc">Path to an alternate YAML config file.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Validation:</strong> Run <code>ferroflux config check ./ferroflux.yaml</code> to lint the schema and resolve environment overrides without starting the pipeline. The command exits non-zero on any unknown key.
+      </div>
+
+      <footer style="margin-top: 56px; border-top: 1px solid #30363d; padding: 24px 0 8px;">
+        <div>
+          <a href="../getting-started/index.html">Getting Started</a>
+          <a href="../api-reference/index.html">API Reference</a>
+          <a href="#">Configuration</a>
+          <a href="../changelog/index.html">Changelog</a>
+          <a href="../troubleshooting/index.html">Troubleshooting</a>
+        </div>
+        <div>© FerroFlux Systems · Docs build 1.4.2</div>
+      </footer>
+    </article>
+  </main>
+</div>
+
+</body>
+</html>

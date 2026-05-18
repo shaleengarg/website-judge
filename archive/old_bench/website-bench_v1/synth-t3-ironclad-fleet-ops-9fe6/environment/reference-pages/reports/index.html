@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reports — Ironclad Logistics</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #0f1623;
+    color: #e8eaf0;
+    font-size: 13px;
+    display: flex;
+    overflow: hidden;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    background: #131c2c;
+    border-right: 1px solid #1e2a3b;
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+  }
+  .logo {
+    padding: 0 20px 22px;
+    border-bottom: 1px solid #1e2a3b;
+    margin-bottom: 14px;
+  }
+  .logo-mark {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    color: #e8eaf0;
+  }
+  .logo-mark span { color: #00c9a7; }
+  .logo-sub {
+    font-size: 10px;
+    color: #6b7a92;
+    letter-spacing: 1.5px;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  .nav { display: flex; flex-direction: column; padding: 6px 10px; }
+  .nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    color: #b8c0d0;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .nav a:hover { background: #1e2a3b; color: #e8eaf0; }
+  .nav a.active {
+    background: #1e2a3b;
+    color: #e8eaf0;
+    border-left: 2px solid #00c9a7;
+    padding-left: 10px;
+  }
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    background: #2a3a52;
+    border-radius: 3px;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .nav a.active .nav-icon { background: #00c9a7; }
+
+  .sidebar-foot {
+    margin-top: auto;
+    padding: 16px 20px;
+    border-top: 1px solid #1e2a3b;
+    font-size: 11px;
+    color: #6b7a92;
+  }
+  .sidebar-foot .mono { color: #b8c0d0; font-size: 11px; }
+
+  /* Main */
+  .main {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #0f1623;
+    border-bottom: 1px solid #1e2a3b;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topbar h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .topbar-sub {
+    font-size: 11px;
+    color: #6b7a92;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .topbar-right { display: flex; align-items: center; gap: 20px; }
+  .clock {
+    background: #1e2a3b;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #e8eaf0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .clock-dot { width: 6px; height: 6px; border-radius: 50%; background: #00c9a7; }
+  .bell { position: relative; font-size: 16px; cursor: pointer; }
+  .bell-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #e53a3a;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content { padding: 22px 28px 40px; }
+
+  /* Period selector */
+  .period-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .period-label {
+    font-size: 12px;
+    color: #6b7a92;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .period-pills { display: flex; gap: 6px; }
+  .pill {
+    padding: 6px 12px;
+    border-radius: 3px;
+    font-size: 11px;
+    background: #1e2a3b;
+    color: #b8c0d0;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+  .pill.active { background: #00c9a7; color: #0f1623; font-weight: 600; }
+
+  /* Stat cards */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .card {
+    background: #1e2a3b;
+    border: 1px solid #243349;
+    border-radius: 4px;
+    padding: 16px 18px;
+  }
+  .card-label {
+    font-size: 11px;
+    color: #b8c0d0;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-trend {
+    font-size: 10px;
+    color: #00c9a7;
+    background: rgba(0,201,167,0.12);
+    padding: 2px 6px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+  .card-trend.down {
+    color: #e5a23a;
+    background: rgba(229,162,58,0.12);
+  }
+  .card-value {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 28px;
+    color: #00c9a7;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .card-unit {
+    font-size: 11px;
+    color: #6b7a92;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Two-col tables */
+  .panels {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 18px;
+  }
+  .panel {
+    background: #131c2c;
+    border: 1px solid #1e2a3b;
+    border-radius: 4px;
+  }
+  .panel-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid #1e2a3b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .panel-sub {
+    font-size: 11px;
+    color: #6b7a92;
+    margin-top: 2px;
+  }
+  .csv-btn {
+    font-size: 11px;
+    color: #00c9a7;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    border: 1px solid #1e3a3a;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: rgba(0,201,167,0.06);
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6b7a92;
+    padding: 10px 14px;
+    background: #162030;
+    border-bottom: 1px solid #1e2a3b;
+    font-weight: 600;
+  }
+  tbody td {
+    padding: 11px 14px;
+    font-size: 12px;
+    border-bottom: 1px solid #0f1623;
+    color: #e8eaf0;
+  }
+  tbody tr:nth-child(odd) { background: #1e2a3b; }
+  tbody tr:nth-child(even) { background: #162030; }
+  tbody tr.selected {
+    border-left: 2px solid #00c9a7;
+  }
+  tbody tr.selected td:first-child { padding-left: 12px; }
+
+  .num { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-align: right; }
+  .score { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: #00c9a7; font-weight: 600; text-align: right; }
+  .id { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: #b8c0d0; }
+  .pct-bar {
+    display: inline-block;
+    width: 50px;
+    height: 4px;
+    background: #243349;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: middle;
+    position: relative;
+  }
+  .pct-bar i {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: #00c9a7;
+    border-radius: 2px;
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .chip-info { background: #00c9a7; color: #0f1623; }
+  .chip-warn { background: #e5a23a; color: #0f1623; }
+
+  tfoot td {
+    background: #131c2c;
+    font-size: 11px;
+    color: #b8c0d0;
+    padding: 10px 14px;
+    border-top: 1px solid #1e2a3b;
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">IRONCLAD<span>•</span>LOGISTICS</div>
+    <div class="logo-sub">Fleet Ops Console</div>
+  </div>
+  <nav class="nav">
+    <a href="../overview/index.html"><span class="nav-icon"></span>Overview</a>
+    <a href="../vehicles/index.html"><span class="nav-icon"></span>Vehicles</a>
+    <a href="../alerts/index.html"><span class="nav-icon"></span>Alerts</a>
+    <a href="#" class="active"><span class="nav-icon"></span>Reports</a>
+    <a href="../settings/index.html"><span class="nav-icon"></span>Settings</a>
+  </nav>
+  <div class="sidebar-foot">
+    Operator<br>
+    <span class="mono">m.harland@ironclad</span>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <h1>Reports</h1>
+      <div class="topbar-sub">Performance &amp; efficiency analytics</div>
+    </div>
+    <div class="topbar-right">
+      <div class="clock"><span class="clock-dot"></span><span class="mono">14:27:08 CST</span></div>
+      <div class="bell">🔔<span class="bell-badge">7</span></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <div class="period-bar">
+      <div class="period-label">Reporting period · Month to date (Nov 1 – Nov 18)</div>
+      <div class="period-pills">
+        <div class="pill">WEEK</div>
+        <div class="pill active">MTD</div>
+        <div class="pill">QUARTER</div>
+        <div class="pill">YTD</div>
+      </div>
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="card-label">Total Miles <span class="card-trend">+4.2%</span></div>
+        <div class="card-value">284,910</div>
+        <div class="card-unit">MILES · ALL UNITS</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Fuel Cost <span class="card-trend down">+1.8%</span></div>
+        <div class="card-value">$41,220</div>
+        <div class="card-unit">USD · MTD</div>
+      </div>
+      <div class="card">
+        <div class="card-label">On-Time Deliveries <span class="card-trend">+2.1%</span></div>
+        <div class="card-value">94%</div>
+        <div class="card-unit">PERCENT · 412 OF 438</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Incidents <span class="card-trend">-50%</span></div>
+        <div class="card-value">3</div>
+        <div class="card-unit">REPORTED · MTD</div>
+      </div>
+    </section>
+
+    <section class="panels">
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Top Routes by Efficiency</div>
+            <div class="panel-sub">Ranked by avg fuel economy, MTD</div>
+          </div>
+          <a href="#" class="csv-btn">↓ Download CSV</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Route Name</th>
+              <th style="text-align:right;">Miles</th>
+              <th style="text-align:right;">Avg MPG</th>
+              <th style="text-align:right;">On-Time %</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="selected">
+              <td>I-80 Chicago → Omaha</td>
+              <td class="num">18,420</td>
+              <td class="num">7.8</td>
+              <td class="num"><span class="pct-bar"><i style="width:96%"></i></span>97%</td>
+            </tr>
+            <tr>
+              <td>I-10 Houston → Phoenix</td>
+              <td class="num">22,104</td>
+              <td class="num">7.4</td>
+              <td class="num"><span class="pct-bar"><i style="width:94%"></i></span>95%</td>
+            </tr>
+            <tr>
+              <td>I-95 Atlanta → Jacksonville</td>
+              <td class="num">14,887</td>
+              <td class="num">7.2</td>
+              <td class="num"><span class="pct-bar"><i style="width:92%"></i></span>93%</td>
+            </tr>
+            <tr>
+              <td>I-70 Denver → Kansas City</td>
+              <td class="num">19,322</td>
+              <td class="num">7.0</td>
+              <td class="num"><span class="pct-bar"><i style="width:91%"></i></span>92%</td>
+            </tr>
+            <tr>
+              <td>I-5 Portland → Sacramento</td>
+              <td class="num">21,540</td>
+              <td class="num">6.9</td>
+              <td class="num"><span class="pct-bar"><i style="width:90%"></i></span>91%</td>
+            </tr>
+            <tr>
+              <td>I-40 Memphis → Albuquerque</td>
+              <td class="num">17,008</td>
+              <td class="num">6.7</td>
+              <td class="num"><span class="pct-bar"><i style="width:88%"></i></span>89%</td>
+            </tr>
+            <tr>
+              <td>I-90 Seattle → Spokane</td>
+              <td class="num">12,665</td>
+              <td class="num">6.6</td>
+              <td class="num"><span class="pct-bar"><i style="width:87%"></i></span>88%</td>
+            </tr>
+            <tr>
+              <td>I-35 Dallas → Minneapolis</td>
+              <td class="num">23,910</td>
+              <td class="num">6.4</td>
+              <td class="num"><span class="pct-bar"><i style="width:84%"></i></span>85%</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="4">Fleet average · <span class="mono">6.9 MPG</span> · <span class="mono">91% on-time</span> · across 47 active routes</td></tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Driver Performance</div>
+            <div class="panel-sub">Composite score: safety + on-time + fuel</div>
+          </div>
+          <a href="#" class="csv-btn">↓ Download CSV</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Driver</th>
+              <th style="text-align:right;">Trips</th>
+              <th style="text-align:right;">Miles</th>
+              <th style="text-align:right;">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="selected">
+              <td>R. Castellanos <span class="id">· D-1129</span></td>
+              <td class="num">28</td>
+              <td class="num">12,840</td>
+              <td class="score">98.4</td>
+            </tr>
+            <tr>
+              <td>M. Okafor <span class="id">· D-1087</span></td>
+              <td class="num">26</td>
+              <td class="num">11,902</td>
+              <td class="score">97.1</td>
+            </tr>
+            <tr>
+              <td>J. Petrenko <span class="id">· D-1156</span></td>
+              <td class="num">25</td>
+              <td class="num">11,440</td>
+              <td class="score">96.8</td>
+            </tr>
+            <tr>
+              <td>S. Tanaka <span class="id">· D-1042</span></td>
+              <td class="num">27</td>
+              <td class="num">12,210</td>
+              <td class="score">95.5</td>
+            </tr>
+            <tr>
+              <td>D. Whitfield <span class="id">· D-1198</span></td>
+              <td class="num">24</td>
+              <td class="num">10,886</td>
+              <td class="score">94.2</td>
+            </tr>
+            <tr>
+              <td>A. Brennan <span class="id">· D-1071</span></td>
+              <td class="num">22</td>
+              <td class="num">10,114</td>
+              <td class="score">92.9</td>
+            </tr>
+            <tr>
+              <td>L. Marchetti <span class="id">· D-1163</span></td>
+              <td class="num">23</td>
+              <td class="num">10,520</td>
+              <td class="score">91.6</td>
+            </tr>
+            <tr>
+              <td>K. Adeyemi <span class="id">· D-1209</span></td>
+              <td class="num">21</td>
+              <td class="num">9,742</td>
+              <td class="score">90.3</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="4">138 drivers on duty · top quartile threshold <span class="mono">≥ 92.0</span></td></tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+</body>
+</html>

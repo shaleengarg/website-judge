@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/synth-t8-half-life-of-light-b6cf"
+description = "A multimedia essay exploring how analog photography processes memory, loss, and time through five interconnected chapters that mix typographic essays, data displays, and visual diagrams."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "multimedia-essay", "tier-8"]
+
+[metadata]
+difficulty_explanation = "Tier 8 (multimedia-essay): A multimedia essay exploring how analog photography processes memory, loss, and time through five interconnected chapters that mix typographic essays, data displays, and visual diagrams."
+category = "frontend"
+tier = 8
+genre = "multimedia-essay"
+
+[verifier]
+timeout_sec = 420.0
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Threshold — A Crust of Crystallized Time</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #F5F0E8;
+    color: #1A1612;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #1A1612;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  .site-nav {
+    width: 100%;
+    border-bottom: 1px solid rgba(26,22,18,0.15);
+    background: #F5F0E8;
+    position: relative;
+    z-index: 10;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #1A1612;
+  }
+  .brand span { color: #C4502A; }
+  .nav-links {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    list-style: none;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+  .nav-links a { color: #1A1612; padding-bottom: 2px; border-bottom: 1px solid transparent; }
+  .nav-links a.current { border-bottom-color: #C4502A; color: #C4502A; }
+  .nav-num {
+    color: #A8C4CC;
+    margin-right: 6px;
+  }
+
+  /* HEADER — diagonal stripes */
+  .chapter-header {
+    width: 100vw;
+    min-height: 38vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(196, 80, 42, 0.16) 0px,
+        rgba(196, 80, 42, 0.16) 2px,
+        transparent 2px,
+        transparent 14px
+      ),
+      #F5F0E8;
+    border-bottom: 1px solid rgba(26,22,18,0.1);
+  }
+  .chapter-eyebrow {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    color: #A8C4CC;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    margin-bottom: 24px;
+  }
+  .chapter-title {
+    font-size: clamp(2rem, 5.4vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: 0.06em;
+    max-width: 1000px;
+    color: #1A1612;
+  }
+  .chapter-sub {
+    margin-top: 28px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    color: #1A1612;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    opacity: 0.6;
+  }
+
+  /* MAIN GRID */
+  .essay-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px 120px;
+  }
+  @media (min-width: 1100px) {
+    .essay-wrap {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 48px;
+      align-items: start;
+    }
+  }
+
+  /* ESSAY COLUMN */
+  .essay {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+  }
+  .essay > p {
+    font-size: 1.05rem;
+    margin-bottom: 1.4em;
+  }
+  .essay > p:first-of-type::first-letter {
+    font-family: Georgia, serif;
+    font-weight: 800;
+    font-size: 4.4rem;
+    float: left;
+    line-height: 0.9;
+    padding: 6px 12px 0 0;
+    color: #C4502A;
+  }
+  .essay h2 {
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  /* PULL-QUOTE — breaks out into sidebar lane */
+  .pullquote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: #C4502A;
+    border-left: 4px solid #C4502A;
+    padding-left: 24px;
+    margin: 48px 0;
+  }
+  @media (min-width: 1100px) {
+    .pullquote {
+      /* break the 720px column to span into the sidebar */
+      width: calc(100% + 280px + 48px);
+      max-width: none;
+    }
+  }
+
+  /* SECTION RHYTHM BREAK */
+  .rhythm {
+    margin: 64px auto 32px;
+    width: 40px;
+    height: 1px;
+    background: #C4502A;
+    border: 0;
+  }
+
+  /* FIGURE / SPECIMEN */
+  .figure {
+    margin: 40px 0;
+  }
+  .figure-box {
+    border: 2px solid #A8C4CC;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      repeating-linear-gradient(45deg,
+        rgba(196,80,42,0.05) 0,
+        rgba(196,80,42,0.05) 2px,
+        transparent 2px,
+        transparent 12px),
+      linear-gradient(180deg, #EFE7DA 0%, #E2D6C0 100%);
+    color: #1A1612;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.85;
+  }
+  .caption {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    color: #A8C4CC;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 10px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 100%;
+    max-width: 280px;
+    margin: 48px auto 0;
+  }
+  @media (min-width: 1100px) {
+    .sidebar {
+      width: 280px;
+      position: sticky;
+      top: 48px;
+      margin: 0;
+    }
+  }
+  .annot {
+    border: 2px solid #A8C4CC;
+    padding: 22px 20px;
+    background: #F5F0E8;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: #1A1612;
+  }
+  .annot-title {
+    font-size: 0.7rem;
+    color: #A8C4CC;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(168, 196, 204, 0.6);
+  }
+  .stat {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px dotted rgba(26,22,18,0.12);
+  }
+  .stat:last-child { border-bottom: 0; }
+  .stat-label {
+    color: #1A1612;
+    opacity: 0.65;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.68rem;
+  }
+  .stat-val {
+    color: #C4502A;
+    font-weight: 600;
+  }
+  .annot-caption {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    color: #A8C4CC;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(26,22,18,0.15);
+    padding: 48px 24px;
+    background: #F5F0E8;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 24px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #1A1612;
+  }
+  .footer-chapters {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    list-style: none;
+  }
+  .footer-chapters a { opacity: 0.7; }
+  .footer-mark { color: #C4502A; }
+
+  @media (max-width: 600px) {
+    .essay { padding: 0 8px; }
+    .essay-wrap { padding: 48px 16px 80px; }
+    .chapter-header { padding: 60px 20px; min-height: 42vh; }
+    .pullquote { font-size: 1.3rem; }
+    .nav-inner { padding: 16px 18px; }
+    .nav-links { gap: 14px; font-size: 0.65rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <div class="brand">Bonneville · <span>An Essay in Five Chapters</span></div>
+    <ul class="nav-links">
+      <li><a href="#" class="current"><span class="nav-num">01</span>threshold</a></li>
+      <li><a href="../stratigraphy/index.html"><span class="nav-num">02</span>stratigraphy</a></li>
+      <li><a href="../halophytes/index.html"><span class="nav-num">03</span>halophytes</a></li>
+      <li><a href="../human-marks/index.html"><span class="nav-num">04</span>human-marks</a></li>
+      <li><a href="../dissolution/index.html"><span class="nav-num">05</span>dissolution</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="chapter-header">
+  <div class="chapter-eyebrow">Chapter 01 — Threshold</div>
+  <h1 class="chapter-title">A Crust of<br>Crystallized Time</h1>
+  <div class="chapter-sub">40°45′N · 113°52′W · Tooele County, Utah</div>
+</header>
+
+<div class="essay-wrap">
+
+  <article class="essay">
+
+    <p>Thirteen thousand years ago, an inland sea the size of Lake Michigan stood where today there is nothing but white. Pleistocene Lake Bonneville covered nearly twenty thousand square miles of the eastern Great Basin, swollen by glacial meltwater and a wetter, cooler atmosphere that has long since departed the continent. Its surface lapped against the Wasatch front at an elevation of roughly 5,100 feet — the high-water marks still legible on canyon walls as a faint horizontal terrace, a geological tide ring etched into rock. Then, sometime around 18,000 years before the present, the lake breached a sediment dam at Red Rock Pass in southeastern Idaho, and within weeks released a flood of catastrophic volume into the Snake River drainage. The water that remained began its long retreat into evaporation.</p>
+
+    <p>What is left at Bonneville is not a lake but the residue of one: a vast level pan of sodium chloride, gypsum, and trace minerals laid down crystal by crystal as the last brine surrendered to a sky that wanted it more. The crust averages around five feet of salt at its thickest, thinning to inches at the margins, and resting on softer sediments that record the cyclic filling and emptying of the basin over hundreds of millennia. To stand at the threshold of the flats — at the edge where pickleweed gives way to bare mineral plane — is to stand at a hydrological frontier thirteen millennia in the making. Distance flattens. The horizon ceases to be a line and becomes a condition.</p>
+
+    <blockquote class="pullquote">
+      To walk on salt is to walk on an evaporated inland sea.
+    </blockquote>
+
+    <p>The transition is abrupt, and it is total. Color drains from the ground in the span of a single footstep. Sound behaves differently — a footfall on dry salt rings hollow, slightly metallic, as though one were walking on a thin sheet of pottery laid over an emptiness one cannot quite measure. In summer the surface bakes hard enough to drive on; in winter a shallow film of brine returns, dissolving the upper crust and re-depositing it nightly in a self-healing geometry of polygons. Each polygon is bounded by a pressure ridge a centimeter or two high, and the pattern tiles toward every horizon with the regularity of something engineered. It is not engineered. It is the signature of evaporation governed by surface tension and salt's own crystalline preferences.</p>
+
+    <hr class="rhythm">
+
+    <h2>Entering the Frame</h2>
+
+    <p>This essay proceeds in five chapters, each devoted to a single register through which the Bonneville Salt Flats can be read: as a geological archive, as an ecological boundary, as a stage for human velocity, and finally as a body in active dissolution. The threshold chapter, the one you are now reading, is the only one that does not require a subject — its subject is the act of arrival itself. What follows is an attempt to look at a place that resists looking, that absorbs the eye into its own evenness and returns it, unsatisfied, to the question of how such a surface came to be.</p>
+
+    <figure class="figure">
+      <div class="figure-box">Salt polygons at dawn — west margin</div>
+      <div class="caption">Fig. 01 — Surface morphology, late September, 06:42 MDT</div>
+    </figure>
+
+    <p>The flats persist on the edge of a paradox: they are simultaneously among the most stable-looking landscapes on the continent and among the most dynamic. The eye reads permanence; the chemistry tells a different story. Every year the salt budget of the basin is debited and credited in measurable quantities, and for the better part of a century now the ledger has tilted toward loss. That accounting will return in the final chapter. For the moment, it is enough to begin where the salt begins, and to register the strangeness of standing on water that has been waiting to leave for thirteen thousand years.</p>
+
+  </article>
+
+  <aside class="sidebar">
+    <div class="annot">
+      <div class="annot-title">Specimen No. 01 — Key Statistics</div>
+      <div class="stat"><span class="stat-label">Area</span><span class="stat-val">30,000 ac</span></div>
+      <div class="stat"><span class="stat-label">NaCl</span><span class="stat-val">12.00 %</span></div>
+      <div class="stat"><span class="stat-label">Elev.</span><span class="stat-val">4,218 ft</span></div>
+      <div class="stat"><span class="stat-label">Crust</span><span class="stat-val">~ 5 ft</span></div>
+      <div class="stat"><span class="stat-label">Retreat</span><span class="stat-val">13,000 ybp</span></div>
+      <div class="stat"><span class="stat-label">County</span><span class="stat-val">Tooele, UT</span></div>
+    </div>
+    <div class="annot-caption">Annotation 01 — field measurements, threshold zone</div>
+  </aside>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><span class="footer-mark">▍</span> Bonneville · A Multimedia Essay</div>
+    <ul class="footer-chapters">
+      <li><a href="#">01 Threshold</a></li>
+      <li><a href="../stratigraphy/index.html">02 Stratigraphy</a></li>
+      <li><a href="../halophytes/index.html">03 Halophytes</a></li>
+      <li><a href="../human-marks/index.html">04 Human Marks</a></li>
+      <li><a href="../dissolution/index.html">05 Dissolution</a></li>
+    </ul>
+    <div>© MMXXIV · Field Edition</div>
+  </div>
+</footer>
+
+</body>
+</html>

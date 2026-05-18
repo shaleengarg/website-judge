@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Plan Select — NorthVault Credit Union</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F4F6F9;
+    color: #1A2332;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  /* Top nav */
+  .nav {
+    background: #FFFFFF;
+    border-bottom: 1px solid #C8D0DC;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    height: 64px;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 18px;
+    color: #1B4FD8;
+    letter-spacing: -0.3px;
+    margin-right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-mark {
+    width: 24px; height: 24px;
+    background: #1B4FD8;
+    border-radius: 4px;
+    position: relative;
+  }
+  .brand-mark::after {
+    content: "N";
+    position: absolute;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    top: 2px; left: 7px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+    flex: 1;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: #1A2332;
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .nav-links a.active {
+    background: #EEF3FD;
+    color: #1B4FD8;
+    font-weight: 600;
+  }
+  .nav-cta {
+    font-size: 12px;
+    color: #1A2332;
+    opacity: 0.7;
+  }
+
+  /* Page wrap */
+  .wrap {
+    padding: 32px 24px 60px;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    max-width: 680px;
+    width: 100%;
+    background: #FFFFFF;
+    padding: 40px 48px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(26,35,50,0.06), 0 1px 0 #E6EAF1;
+  }
+
+  /* Step progress */
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .steps::before {
+    content: "";
+    position: absolute;
+    top: 13px;
+    left: 14px; right: 14px;
+    height: 2px;
+    background: #C8D0DC;
+    z-index: 0;
+  }
+  .step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    font-size: 11px;
+    color: #8A9BB0;
+    font-weight: 500;
+  }
+  .step .dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #C8D0DC;
+    color: #FFFFFF;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 6px;
+    border: 3px solid #FFFFFF;
+  }
+  .step.done .dot { background: #1B4FD8; }
+  .step.active .dot { background: #1B4FD8; box-shadow: 0 0 0 3px #EEF3FD; }
+  .step.active { color: #1B4FD8; font-weight: 600; }
+  .step.done { color: #1A2332; }
+
+  .page-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .page-sub {
+    color: #5C6B7F;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  /* Comparison table */
+  .compare-wrap {
+    border: 1px solid #C8D0DC;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  table.compare thead th {
+    background: #1A2332;
+    color: #FFFFFF;
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+    font-size: 11.5px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+  }
+  table.compare thead th.num { text-align: right; }
+  table.compare tbody tr:nth-child(odd) { background: #F4F6F9; }
+  table.compare tbody tr:nth-child(even) { background: #FFFFFF; }
+  table.compare td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #E6EAF1;
+    vertical-align: middle;
+  }
+  table.compare tbody tr:last-child td { border-bottom: none; }
+  table.compare td.feature {
+    font-weight: 600;
+    color: #1A2332;
+    width: 36%;
+  }
+  table.compare td.num {
+    font-family: "Courier New", monospace;
+    text-align: right;
+    color: #1A2332;
+  }
+  .check { color: #1B4FD8; font-weight: 700; }
+  .dash  { color: #8A9BB0; }
+
+  /* Section heading */
+  .section-h {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #1A2332;
+  }
+  .req::after {
+    content: " *";
+    color: #E8A020;
+    font-weight: 700;
+  }
+
+  /* Inline radio cards */
+  .plan-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .plan-card {
+    border: 1.5px solid #C8D0DC;
+    border-radius: 6px;
+    padding: 14px 14px 14px 36px;
+    cursor: pointer;
+    position: relative;
+    background: #FFFFFF;
+    transition: all 0.15s;
+  }
+  .plan-card.selected {
+    border: 2px solid #1B4FD8;
+    background: #EEF3FD;
+    padding: 13.5px 13.5px 13.5px 35.5px;
+  }
+  .plan-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid #8A9BB0;
+    position: absolute;
+    top: 14px; left: 12px;
+    background: #fff;
+    margin: 0;
+  }
+  .plan-card.selected .plan-radio {
+    border-color: #1B4FD8;
+    background: #1B4FD8;
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+  .plan-card .pname {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .plan-card .pfee {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: #1B4FD8;
+    font-weight: 700;
+  }
+
+  /* Add-on checkboxes */
+  .addons {
+    background: #F4F6F9;
+    border: 1px solid #E6EAF1;
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 28px;
+  }
+  .addon-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+  }
+  .addon-row + .addon-row {
+    border-top: 1px dashed #C8D0DC;
+  }
+  .cbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border: 2px solid #8A9BB0;
+    border-radius: 3px;
+    background: #FFFFFF;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin: 0;
+  }
+  .cbox:checked {
+    background: #1B4FD8;
+    border-color: #1B4FD8;
+  }
+  .cbox:checked::after {
+    content: "✓";
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    position: absolute;
+    top: -2px; left: 2px;
+  }
+  .addon-label {
+    flex: 1;
+    font-size: 13px;
+  }
+  .addon-label .lbl { font-weight: 600; }
+  .addon-label .desc { color: #5C6B7F; font-size: 12px; }
+  .addon-price {
+    font-family: "Courier New", monospace;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1A2332;
+  }
+
+  /* Buttons */
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .btn-back {
+    background: transparent;
+    border: 1.5px solid #C8D0DC;
+    color: #1A2332;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-continue {
+    background: #E8A020;
+    color: #FFFFFF;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1A2332;
+    color: #C8D0DC;
+    padding: 24px 32px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer .fbrand { color: #FFFFFF; font-weight: 700; }
+  footer a { color: #C8D0DC; text-decoration: none; margin-left: 18px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand"><span class="brand-mark"></span>NorthVault</div>
+  <ul class="nav-links">
+    <li><a href="../account-type/index.html">Account Type</a></li>
+    <li><a href="../personal-info/index.html">Personal Info</a></li>
+    <li><a href="../identity-verify/index.html">Identity Verify</a></li>
+    <li><a href="#" class="active">Plan Select</a></li>
+    <li><a href="../review-submit/index.html">Review &amp; Submit</a></li>
+  </ul>
+  <div class="nav-cta">Need help? 1-800-NORTHVAULT</div>
+</nav>
+
+<div class="wrap">
+  <div class="card">
+
+    <div class="steps">
+      <div class="step done"><div class="dot">✓</div>Account Type</div>
+      <div class="step done"><div class="dot">✓</div>Personal Info</div>
+      <div class="step done"><div class="dot">✓</div>Identity</div>
+      <div class="step active"><div class="dot">4</div>Plan Select</div>
+      <div class="step"><div class="dot">5</div>Review</div>
+    </div>
+
+    <h1 class="page-title">Compare &amp; confirm your plan</h1>
+    <p class="page-sub">Review feature details across all three NorthVault account types, then confirm the plan you'd like to open.</p>
+
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="num">Essential Checking</th>
+            <th class="num">High-Yield Savings</th>
+            <th class="num">Student Flex</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="feature">Monthly Fee</td>
+            <td class="num">$4.95</td>
+            <td class="num">$0.00</td>
+            <td class="num">$0.00</td>
+          </tr>
+          <tr>
+            <td class="feature">Overdraft Protection</td>
+            <td class="num"><span class="check">Included</span></td>
+            <td class="num"><span class="dash">— N/A</span></td>
+            <td class="num"><span class="check">Included</span></td>
+          </tr>
+          <tr>
+            <td class="feature">ATM Network</td>
+            <td class="num">55,000+</td>
+            <td class="num">55,000+</td>
+            <td class="num">38,000</td>
+          </tr>
+          <tr>
+            <td class="feature">Interest Rate APY</td>
+            <td class="num">0.05%</td>
+            <td class="num">0.85%</td>
+            <td class="num">0.25%</td>
+          </tr>
+          <tr>
+            <td class="feature">Mobile Deposit Limit</td>
+            <td class="num">$5,000</td>
+            <td class="num">$10,000</td>
+            <td class="num">$2,500</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-h"><span class="req">Confirm your plan selection</span></h2>
+    <div class="plan-cards">
+      <label class="plan-card">
+        <span class="plan-radio"></span>
+        <div class="pname">Essential Checking</div>
+        <div class="pfee">$4.95 / mo</div>
+      </label>
+      <label class="plan-card selected">
+        <span class="plan-radio"></span>
+        <div class="pname">High-Yield Savings</div>
+        <div class="pfee">0.85% APY</div>
+      </label>
+      <label class="plan-card">
+        <span class="plan-radio"></span>
+        <div class="pname">Student Flex</div>
+        <div class="pfee">$0.00 / mo</div>
+      </label>
+    </div>
+
+    <h2 class="section-h">Optional add-ons</h2>
+    <div class="addons">
+      <div class="addon-row">
+        <input type="checkbox" class="cbox" id="paper">
+        <label for="paper" class="addon-label">
+          <div class="lbl">Paper Statements</div>
+          <div class="desc">Mailed monthly to your address on file.</div>
+        </label>
+        <div class="addon-price">+$2.00 / mo</div>
+      </div>
+      <div class="addon-row">
+        <input type="checkbox" class="cbox" id="buffer" checked>
+        <label for="buffer" class="addon-label">
+          <div class="lbl">Overdraft Buffer</div>
+          <div class="desc">Auto-covers transactions up to $500 limit.</div>
+        </label>
+        <div class="addon-price">$500 limit</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-back">← Back</button>
+      <button class="btn-continue">Continue to Review →</button>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div><span class="fbrand">NorthVault Credit Union</span> · Federally insured by NCUA · Routing #314-088-201</div>
+  <div>
+    <a href="#">Privacy</a>
+    <a href="#">Disclosures</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

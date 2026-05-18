@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-ember-and-rye-kitchen-43c8",
+  "tier": 1,
+  "genre": "recipe-card",
+  "pages": [
+    "featured-recipe",
+    "ingredients",
+    "method",
+    "tips-and-swaps",
+    "about-the-cook"
+  ],
+  "palette_hint": "Warm off-white background (#FAF6F0), dark charcoal text (#2B2B2B), burnt sienna accent (#C0522B) for headings and section labels, with soft tan (#D9C4A8) for horizontal rule color.",
+  "type_style": "Georgia serif for headings at font-weight 700 for a rustic warmth, system-ui sans-serif for body text at font-weight 400, moderate 1.6 line-height for easy reading.",
+  "description": "Ember & Rye Kitchen is a single-recipe showcase site presenting a definitive slow-braised short rib with smoked paprika and rye whiskey glaze, laid out as a clean vertical card experience across five focused pages.",
+  "constraints": [
+    "All page content is centered in a single column with max-width 640px and horizontal auto margins.",
+    "Page padding is 24px on the sides and 48px top and bottom on all pages.",
+    "Section headings use the burnt sienna accent color (#C0522B) at font-size 1.1rem uppercase letter-spacing 0.08em.",
+    "Thin horizontal rules (1px solid #D9C4A8) separate every major section with 32px vertical margin above and below.",
+    "Buttons and tag labels use a solid burnt sienna (#C0522B) background with white text, no border-radius, padding 10px 22px, font-size 0.95rem."
+  ],
+  "page_specs": {
+    "featured-recipe": "Displays the recipe title 'Slow-Braised Short Rib with Smoked Paprika & Rye Whiskey Glaze' in a large Georgia serif heading, followed by a two-line description of the dish, prep time (25 min), cook time (3 hrs 30 min), and serves (4 people) listed as simple labeled rows. A solid burnt sienna button labeled 'View Ingredients' links to the ingredients page.",
+    "ingredients": "Lists all ingredients in two labeled groups \u2014 'For the Braise' (bone-in short ribs, beef stock, smoked paprika, garlic, shallots, tomato paste, fresh thyme) and 'For the Rye Glaze' (rye whiskey, brown sugar, whole-grain mustard, apple cider vinegar) \u2014 each item on its own line prefixed with a dash. A thin rule separates the groups, and a button at the bottom links to the method page.",
+    "method": "Presents the cooking steps as a numbered list with six clearly written steps covering searing the ribs, building the braise base, adding stock and aromatics, oven-braising at 325\u00b0F, reducing the rye glaze on the stovetop, and finishing the ribs with the glaze before serving. Each step is separated by a small vertical gap of 16px for readability.",
+    "tips-and-swaps": "Offers four concrete cook's notes under the heading 'Tips & Ingredient Swaps': substituting bourbon for rye whiskey, using a Dutch oven versus a slow cooker with adjusted timing, resting the ribs in braising liquid overnight for deeper flavor, and a gluten-free swap for the thickener. Each tip is introduced by a bold inline label in charcoal.",
+    "about-the-cook": "A short third-person bio of fictional recipe author Maren Sol\u00eds \u2014 a former line cook from Albuquerque who now develops recipes focused on slow-cooked, smoke-forward comfort food. Includes her philosophy on braising, a note that this short rib recipe took eleven test batches to finalize, and a closing line inviting readers to write in with their own variations."
+  }
+}

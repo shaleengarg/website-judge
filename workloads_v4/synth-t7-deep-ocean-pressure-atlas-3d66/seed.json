@@ -1,0 +1,29 @@
+{
+  "id": "synth-t7-deep-ocean-pressure-atlas-3d66",
+  "tier": 7,
+  "genre": "infographic",
+  "pages": [
+    "pressure-zones",
+    "creatures",
+    "light-layers",
+    "human-reach",
+    "data-dive"
+  ],
+  "palette_hint": "Deep navy background #0a0e1a with off-white text #e8edf5, accented by bioluminescent teal #00e5c8 and abyssal amber #f5a623",
+  "type_style": "Headings in Georgia serif bold at large scale, body in system monospace (Courier New) for data labels, creating a scientific-log feel",
+  "description": "Hadal Cartography is a five-page interactive infographic atlas exploring ocean depth zones, pressure physics, and life at extreme depths, rendered entirely through inline SVG diagrams, clipped depth-band visuals, and path-drawn creature illustrations.",
+  "constraints": [
+    "Each page is max-width 960px centered, with at least one full-bleed SVG section spanning the viewport width using a viewBox that scales fluidly",
+    "All depth values on diagrams must use clip-path polygon cuts at 15-degree diagonal angles to separate depth band sections visually",
+    "Creature illustrations on the 'creatures' page must be drawn using only SVG <path> elements with no external images, styled with teal (#00e5c8) stroke on navy fills",
+    "A vertical SVG ruler/scale bar showing 0\u201311,000 meters must appear as a fixed sidebar element on every page, with tick marks at 1000m intervals drawn as SVG lines",
+    "Animated depth transitions are forbidden; all visual complexity must be achieved through static SVG transforms, CSS clip-path, skew, and SVG gradients/patterns defined inline"
+  ],
+  "page_specs": {
+    "pressure-zones": "This page presents a large vertical cross-section SVG of the ocean divided into five named zones (Epipelagic 0\u2013200m, Mesopelagic 200\u20131000m, Bathypelagic 1000\u20134000m, Abyssopelagic 4000\u20136000m, Hadalpelagic 6000\u201311000m), each zone filled with an SVG linearGradient transitioning from the zone's characteristic color to deep navy. Pressure values in atmospheres are displayed as SVG text labels connected to horizontal rule lines, and each zone boundary is cut with a clip-path polygon at a 12-degree diagonal angle rather than a straight horizontal line. A secondary panel below uses a bar chart drawn entirely in SVG comparing pressure at 10 iconic ocean locations.",
+    "creatures": "Six bioluminescent deep-sea creatures (anglerfish, giant isopod, vampire squid, dumbo octopus, viperfish, barreleye fish) are each illustrated as SVG path drawings arranged in a hexagonal grid layout achieved through CSS transforms. Each creature card is a hexagon clipped using clip-path polygon, with the creature SVG path inside glowing via teal (#00e5c8) stroke-width 1.5 and a matching SVG radial gradient simulating bioluminescence. A depth badge showing the creature's recorded depth range is overlaid on each hexagon as a rotated amber (#f5a623) ribbon using CSS skewX(-15deg).",
+    "light-layers": "A horizontal band visualization spans the full viewport width, rendered as a single large inline SVG showing the phototic, dysphotic, and aphotic zones as overlapping diagonal bands using SVG <polygon> shapes and defs-defined hatch patterns for the twilight zone. The page explains how wavelengths of light (red 700nm disappears at 5m, orange at 25m, yellow at 50m, green at 75m, blue survives to 200m) penetrate water, with each wavelength shown as a wavy SVG <path> using sinusoidal d-attribute curves in the corresponding color, each clipped to its maximum penetration depth. A small annotated SVG diagram shows the electromagnetic spectrum strip masked to only the visible ocean-penetrating range using SVG <clipPath>.",
+    "human-reach": "A scaled vertical timeline SVG compares human ocean milestones: Jacques Piccard's 10,916m Challenger Deep dive (1960), Alvin submersible's max 4,500m, James Cameron's solo 10,908m dive (2012), and the Five Deeps Expedition 2019. Each milestone is a diamond shape drawn with SVG <polygon> in amber (#f5a623), positioned along a central vertical axis line at mathematically proportional y-coordinates matching actual depths. A CSS transform rotate(\u221290deg) label system lists vessel names along the timeline. The page also includes an SVG infographic showing how a human body would be compressed at 1,000 atm using a before/after silhouette drawn with <path> elements, the 'after' version scaled with SVG transform scale(0.6, 0.8).",
+    "data-dive": "A dense data dashboard page showing three SVG-drawn charts: a radial spider/radar chart comparing environmental metrics (pressure, temperature, salinity, oxygen, pH) across five depth zones using SVG <polygon> paths layered with 30% opacity fills; a scatter plot of 47 documented deep-sea research dives plotted as SVG <circle> elements by year (x-axis) vs. max depth reached (y-axis) with axes drawn as SVG lines and labels as <text> elements; and a donut chart showing the percentage of ocean floor mapped by humans (20.9% mapped, 79.1% unmapped) constructed from two SVG <path> arc elements. All chart containers use clip-path ellipse() to create oval frames instead of rectangular ones."
+  }
+}

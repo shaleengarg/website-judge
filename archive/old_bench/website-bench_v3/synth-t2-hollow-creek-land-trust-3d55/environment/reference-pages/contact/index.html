@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Hollow Creek Land Trust</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F5F2EC;
+    color: #2B2B2B;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: bold;
+    color: #2B2B2B;
+    margin: 0 0 0.6em;
+  }
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.8rem; }
+  h3 { font-size: 1.2rem; }
+  p { margin: 0 0 1em; }
+  a { color: #3A6B45; }
+
+  /* Nav */
+  .nav-wrap { background: #3A6B45; }
+  .nav {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .logo {
+    color: #F5F2EC;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.15rem;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: flex-end;
+  }
+  .nav-links a {
+    color: #F5F2EC;
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+  .nav-links a.active {
+    text-decoration: underline;
+  }
+
+  /* Main container */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  /* Page header */
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 24px 0 36px;
+    border-bottom: 1px solid #d8d3c8;
+    margin-bottom: 36px;
+  }
+  .page-header h1 { margin-bottom: 16px; }
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .contact-info span { font-size: 1rem; }
+
+  /* Two column layout */
+  .two-col {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .two-col > div {
+    flex: 1 1 360px;
+    min-width: 0;
+  }
+
+  /* Form */
+  form { display: flex; flex-direction: column; gap: 14px; }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.95rem;
+  }
+  input[type=text], input[type=email], select, textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 9px 10px;
+    border: 1px solid #c5c0b4;
+    border-radius: 4px;
+    background: #fff;
+    color: #2B2B2B;
+    width: 100%;
+  }
+  textarea { resize: vertical; min-height: 130px; }
+  .btn {
+    display: inline-block;
+    background: #C47D2E;
+    color: #F5F2EC;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 22px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    align-self: flex-start;
+  }
+
+  /* Staff */
+  .staff-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .staff-card {
+    border-left: 4px solid #3A6B45;
+    padding: 6px 0 6px 14px;
+  }
+  .staff-card .name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.05rem;
+  }
+  .staff-card .title {
+    font-style: italic;
+    color: #555;
+    font-size: 0.95rem;
+  }
+  .staff-card .email {
+    display: block;
+    font-size: 0.95rem;
+    margin-top: 2px;
+    word-break: break-all;
+  }
+
+  /* Footer */
+  footer {
+    background: #2B2B2B;
+    color: #F5F2EC;
+    margin-top: 60px;
+  }
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    gap: 32px;
+    min-height: 160px;
+    flex-wrap: wrap;
+  }
+  .footer-inner > div { flex: 1 1 220px; }
+  footer h4 {
+    color: #F5F2EC;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+  footer a { color: #F5F2EC; text-decoration: none; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { margin-bottom: 6px; font-size: 0.95rem; }
+  footer p { font-size: 0.95rem; margin: 0 0 8px; }
+
+  @media (max-width: 640px) {
+    .nav { flex-direction: column; align-items: flex-start; }
+    .nav-links { justify-content: flex-start; gap: 12px 16px; }
+    main { padding: 28px 24px; }
+    .two-col { gap: 32px; }
+    h1, h2 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <a href="../home/index.html" class="logo">Hollow Creek Land Trust</a>
+    <ul class="nav-links">
+      <li><a href="../home/index.html">Home</a></li>
+      <li><a href="../our-land/index.html">Our Land</a></li>
+      <li><a href="../get-involved/index.html">Get Involved</a></li>
+      <li><a href="../stewardship/index.html">Stewardship</a></li>
+      <li><a href="#" class="active">Contact</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main>
+  <section class="page-header">
+    <h1>Reach the Hollow Creek Land Trust Team</h1>
+    <div class="contact-info">
+      <span>214 Ridgeline Road, Boone, NC 28607</span>
+      <span>828-555-0174</span>
+      <span>info@hollowcreeklandtrust.org</span>
+    </div>
+  </section>
+
+  <section class="two-col">
+    <div>
+      <h2>Send Us a Message</h2>
+      <p>Have a question about our work, an easement inquiry, or want to volunteer? Use the form below and a member of our team will respond within two business days.</p>
+      <form action="#" method="post">
+        <label>
+          Name
+          <input type="text" name="name" required>
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required>
+        </label>
+        <label>
+          Subject
+          <select name="subject">
+            <option value="volunteer">Volunteer</option>
+            <option value="easement">Easement Inquiry</option>
+            <option value="donation">Donation</option>
+            <option value="press">Press</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label>
+          Message
+          <textarea name="message" required></textarea>
+        </label>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+    </div>
+
+    <div>
+      <h2>Staff Directory</h2>
+      <p>Reach a specific team member directly using the contacts below.</p>
+      <div class="staff-list">
+        <div class="staff-card">
+          <span class="name">Margaret Whitlow</span>
+          <span class="title">Executive Director</span>
+          <span class="email">mwhitlow@hollowcreeklandtrust.org</span>
+        </div>
+        <div class="staff-card">
+          <span class="name">Daniel Reyes</span>
+          <span class="title">Director of Land Protection</span>
+          <span class="email">dreyes@hollowcreeklandtrust.org</span>
+        </div>
+        <div class="staff-card">
+          <span class="name">Priya Anand</span>
+          <span class="title">Stewardship Manager</span>
+          <span class="email">panand@hollowcreeklandtrust.org</span>
+        </div>
+        <div class="staff-card">
+          <span class="name">Thomas Carver</span>
+          <span class="title">Outreach &amp; Volunteer Coordinator</span>
+          <span class="email">tcarver@hollowcreeklandtrust.org</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Our Mission</h4>
+      <p>Hollow Creek Land Trust protects 14,000 acres of Appalachian forest, wetland, and farmland through voluntary conservation easements and community stewardship programs.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../home/index.html">Home</a></li>
+        <li><a href="../our-land/index.html">Our Land</a></li>
+        <li><a href="../get-involved/index.html">Get Involved</a></li>
+        <li><a href="../stewardship/index.html">Stewardship</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Mailing Address</h4>
+      <p>Hollow Creek Land Trust<br>
+      214 Ridgeline Road<br>
+      Boone, NC 28607<br>
+      828-555-0174</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Endpoints — FerroFlux API</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #1a1a2e;
+    background: #f8f9fb;
+    line-height: 1.45;
+    font-size: 14px;
+  }
+  code, pre { font-family: ui-monospace, Consolas, monospace; }
+
+  /* Top bar */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 48px;
+    background: #fff; border-bottom: 1px solid #e2e8f0;
+    display: flex; align-items: center; padding: 0 20px;
+    z-index: 100;
+  }
+  .logo { font-weight: 700; font-size: 15px; color: #1a1a2e; display: flex; align-items: center; gap: 8px; }
+  .logo-mark { width: 20px; height: 20px; background: linear-gradient(135deg, #0d9488, #0f172a); border-radius: 4px; }
+  .topbar-center {
+    position: absolute; left: 50%; transform: translateX(-50%);
+  }
+  .version-badge {
+    background: #ecfdf5; color: #0d9488; font-size: 12px; font-weight: 600;
+    padding: 3px 10px; border-radius: 12px; border: 1px solid #99f6e4;
+  }
+  .topbar-right { margin-left: auto; display: flex; gap: 20px; font-size: 13px; }
+  .topbar-right a { color: #475569; text-decoration: none; }
+  .topbar-right a:hover { color: #0d9488; }
+  .status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #10b981; margin-right: 5px; vertical-align: middle; }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; top: 48px; left: 0; bottom: 0; width: 260px;
+    background: #0f172a; color: #fff;
+    padding: 24px 0; overflow-y: auto;
+  }
+  .nav-group { margin-bottom: 20px; }
+  .nav-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    color: #64748b; letter-spacing: 0.08em;
+    padding: 0 24px 8px;
+  }
+  .nav-group a {
+    display: block; color: #cbd5e1; text-decoration: none;
+    padding: 7px 24px; font-size: 13px;
+    border-left: 2px solid transparent;
+  }
+  .nav-group a:hover { color: #fff; background: rgba(255,255,255,0.04); }
+  .nav-group a.active {
+    color: #fff; background: rgba(13,148,136,0.12);
+    border-left-color: #0d9488; font-weight: 600;
+  }
+
+  /* Layout */
+  .layout { margin-left: 260px; margin-top: 48px; display: flex; }
+  .main-wrap { flex: 1; display: flex; justify-content: center; }
+  .main {
+    max-width: 860px; width: 100%;
+    padding: 40px 48px 80px;
+  }
+  .toc {
+    position: sticky; top: 68px; align-self: flex-start;
+    width: 200px; padding: 40px 20px 40px 0;
+    font-size: 12px; color: #64748b;
+  }
+  .toc-title { font-weight: 700; text-transform: uppercase; font-size: 11px; color: #475569; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .toc a { display: block; color: #64748b; text-decoration: none; padding: 4px 0; line-height: 1.4; }
+  .toc a.sub { padding-left: 12px; font-size: 11px; }
+  .toc a:hover { color: #0d9488; }
+
+  /* Page content */
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .lede { color: #475569; font-size: 14px; margin-bottom: 32px; max-width: 640px; }
+
+  .endpoint { margin-bottom: 48px; padding-top: 8px; border-top: 1px solid #e2e8f0; }
+  .endpoint:first-of-type { border-top: none; padding-top: 0; }
+  .endpoint-header {
+    display: flex; align-items: center; gap: 12px;
+    margin: 20px 0 6px;
+  }
+  .method {
+    display: inline-block; font-family: ui-monospace, Consolas, monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: 12px; color: #fff;
+  }
+  .method.get { background: #10b981; }
+  .method.post { background: #2563eb; }
+  .method.delete { background: #dc2626; }
+  .route { font-family: ui-monospace, Consolas, monospace; font-size: 14px; color: #1a1a2e; font-weight: 600; }
+  .endpoint p.desc { color: #475569; margin-bottom: 18px; }
+
+  h2 { font-size: 20px; font-weight: 700; margin-top: 32px; }
+  h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #475569; margin: 22px 0 10px; }
+
+  /* Param table */
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px; margin-bottom: 18px;
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left; padding: 9px 12px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  th { background: #f1f5f9; font-weight: 600; font-size: 12px; color: #475569; text-transform: uppercase; letter-spacing: 0.04em; }
+  tr:last-child td { border-bottom: none; }
+  td code { background: #f1f5f9; padding: 1px 6px; border-radius: 3px; font-size: 12px; color: #0f172a; }
+  td.type { color: #0d9488; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+
+  /* Code block */
+  .code {
+    position: relative;
+    background: #1e293b; color: #e2e8f0;
+    border-radius: 6px; padding: 14px 16px;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.5;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  .code .lang {
+    position: absolute; top: 8px; right: 12px;
+    font-size: 10px; color: #64748b;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .code .kw { color: #5eead4; }
+  .code .str { color: #fcd34d; }
+  .code .num { color: #f472b6; }
+  .code .com { color: #64748b; }
+  .code .prop { color: #93c5fd; }
+
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pair .code { margin-bottom: 0; }
+  .pair-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #475569; letter-spacing: 0.06em; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo"><span class="logo-mark"></span> FerroFlux</div>
+  <div class="topbar-center"><span class="version-badge">v2.4.0</span></div>
+  <div class="topbar-right">
+    <a href="#"><span class="status-dot"></span>API Status</a>
+    <a href="#">GitHub</a>
+  </div>
+</div>
+
+<aside class="sidebar">
+  <div class="nav-group">
+    <div class="nav-label">Getting Started</div>
+    <a href="../overview/index.html">Overview</a>
+    <a href="../quickstart/index.html">Quickstart</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">API Reference</div>
+    <a href="#" class="active">Endpoints</a>
+    <a href="../sdk-reference/index.html">SDK Reference</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Resources</div>
+    <a href="../changelog/index.html">Changelog</a>
+    <a href="#">Rate Limits</a>
+    <a href="#">Authentication</a>
+    <a href="#">Webhooks</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Support</div>
+    <a href="#">Community</a>
+    <a href="#">Contact</a>
+  </div>
+</aside>
+
+<div class="layout">
+  <div class="main-wrap">
+  <main class="main">
+    <h1>REST Endpoints</h1>
+    <p class="lede">The FerroFlux REST API exposes resources for managing sensor streams and retrieving real-time telemetry. All endpoints are rooted at <code>https://api.ferroflux.io/v2</code> and require a Bearer token.</p>
+
+    <!-- GET /streams -->
+    <section class="endpoint" id="list-streams">
+      <h2>List Streams</h2>
+      <div class="endpoint-header">
+        <span class="method get">GET</span>
+        <span class="route">/streams</span>
+      </div>
+      <p class="desc">Returns a paginated collection of sensor streams accessible to the authenticated workspace.</p>
+
+      <h3>Query Parameters</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>limit</code></td><td class="type">integer</td><td>Max items per page (1–200). Defaults to 50.</td></tr>
+          <tr><td><code>cursor</code></td><td class="type">string</td><td>Opaque cursor returned by the previous response.</td></tr>
+          <tr><td><code>region</code></td><td class="type">string</td><td>Filter streams by deployment region code.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="pair">
+        <div>
+          <div class="pair-label">Request</div>
+          <div class="code"><span class="lang">cURL</span><span class="com"># list streams in eu-west-1</span>
+curl <span class="kw">-X</span> GET <span class="str">"https://api.ferroflux.io/v2/streams?region=eu-west-1&amp;limit=20"</span> \
+  <span class="kw">-H</span> <span class="str">"Authorization: Bearer $FF_TOKEN"</span></div>
+        </div>
+        <div>
+          <div class="pair-label">Response · 200 OK</div>
+          <div class="code"><span class="lang">JSON</span>{
+  <span class="prop">"data"</span>: [
+    {
+      <span class="prop">"id"</span>: <span class="str">"strm_8x2qK"</span>,
+      <span class="prop">"name"</span>: <span class="str">"turbine-04"</span>,
+      <span class="prop">"region"</span>: <span class="str">"eu-west-1"</span>,
+      <span class="prop">"rate_hz"</span>: <span class="num">240</span>
+    }
+  ],
+  <span class="prop">"next_cursor"</span>: <span class="str">"eyJvIjoyMH0="</span>
+}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POST /streams -->
+    <section class="endpoint" id="create-stream">
+      <h2>Create Stream</h2>
+      <div class="endpoint-header">
+        <span class="method post">POST</span>
+        <span class="route">/streams</span>
+      </div>
+      <p class="desc">Provisions a new sensor stream and returns its ingest credentials. The stream becomes active within ~3s.</p>
+
+      <h3>Body Parameters</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>name</code></td><td class="type">string</td><td>Human-readable stream label, max 64 chars.</td></tr>
+          <tr><td><code>rate_hz</code></td><td class="type">integer</td><td>Target sample rate. Supports 1–10000.</td></tr>
+          <tr><td><code>schema</code></td><td class="type">object</td><td>Typed map of field names to FerroFlux primitive types.</td></tr>
+          <tr><td><code>retention_days</code></td><td class="type">integer</td><td>Optional. Days to retain raw samples. Default 30.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="pair">
+        <div>
+          <div class="pair-label">Request</div>
+          <div class="code"><span class="lang">JSON</span>POST /v2/streams
+{
+  <span class="prop">"name"</span>: <span class="str">"turbine-05"</span>,
+  <span class="prop">"rate_hz"</span>: <span class="num">240</span>,
+  <span class="prop">"schema"</span>: {
+    <span class="prop">"rpm"</span>: <span class="str">"float32"</span>,
+    <span class="prop">"temp"</span>: <span class="str">"float32"</span>
+  }
+}</div>
+        </div>
+        <div>
+          <div class="pair-label">Response · 201 Created</div>
+          <div class="code"><span class="lang">JSON</span>{
+  <span class="prop">"id"</span>: <span class="str">"strm_9p4tL"</span>,
+  <span class="prop">"name"</span>: <span class="str">"turbine-05"</span>,
+  <span class="prop">"ingest_url"</span>: <span class="str">"wss://ingest.ferroflux.io/strm_9p4tL"</span>,
+  <span class="prop">"ingest_key"</span>: <span class="str">"ik_live_a1b2c3..."</span>,
+  <span class="prop">"created_at"</span>: <span class="str">"2024-09-14T10:21:08Z"</span>
+}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GET /streams/{id}/data -->
+    <section class="endpoint" id="read-data">
+      <h2>Read Stream Data</h2>
+      <div class="endpoint-header">
+        <span class="method get">GET</span>
+        <span class="route">/streams/{id}/data</span>
+      </div>
+      <p class="desc">Fetches a time-bounded window of samples from a stream. Returns up to 100k points per request.</p>
+
+      <h3>Path &amp; Query Parameters</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>id</code></td><td class="type">string</td><td>Stream identifier (path).</td></tr>
+          <tr><td><code>from</code></td><td class="type">timestamp</td><td>ISO-8601 lower bound, inclusive.</td></tr>
+          <tr><td><code>to</code></td><td class="type">timestamp</td><td>ISO-8601 upper bound, exclusive.</td></tr>
+          <tr><td><code>downsample</code></td><td class="type">string</td><td>Aggregation interval, e.g. <code>1s</code>, <code>500ms</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="pair">
+        <div>
+          <div class="pair-label">Request</div>
+          <div class="code"><span class="lang">cURL</span>curl <span class="kw">-X</span> GET <span class="str">"https://api.ferroflux.io/v2/streams/strm_8x2qK/data?from=2024-09-14T09:00Z&amp;to=2024-09-14T09:05Z&amp;downsample=1s"</span> \
+  <span class="kw">-H</span> <span class="str">"Authorization: Bearer $FF_TOKEN"</span></div>
+        </div>
+        <div>
+          <div class="pair-label">Response · 200 OK</div>
+          <div class="code"><span class="lang">JSON</span>{
+  <span class="prop">"stream_id"</span>: <span class="str">"strm_8x2qK"</span>,
+  <span class="prop">"points"</span>: [
+    [<span class="str">"2024-09-14T09:00:00Z"</span>, <span class="num">1820.4</span>, <span class="num">63.1</span>],
+    [<span class="str">"2024-09-14T09:00:01Z"</span>, <span class="num">1821.0</span>, <span class="num">63.2</span>]
+  ],
+  <span class="prop">"columns"</span>: [<span class="str">"ts"</span>, <span class="str">"rpm"</span>, <span class="str">"temp"</span>]
+}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DELETE /streams/{id} -->
+    <section class="endpoint" id="delete-stream">
+      <h2>Delete Stream</h2>
+      <div class="endpoint-header">
+        <span class="method delete">DELETE</span>
+        <span class="route">/streams/{id}</span>
+      </div>
+      <p class="desc">Permanently removes a stream and all of its retained samples. This action is irreversible.</p>
+
+      <h3>Path Parameters</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>id</code></td><td class="type">string</td><td>Stream identifier to delete.</td></tr>
+          <tr><td><code>force</code></td><td class="type">boolean</td><td>If true, skips the 24h soft-delete grace window.</td></tr>
+          <tr><td><code>reason</code></td><td class="type">string</td><td>Optional audit string, recorded in workspace logs.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="pair">
+        <div>
+          <div class="pair-label">Request</div>
+          <div class="code"><span class="lang">cURL</span>curl <span class="kw">-X</span> DELETE <span class="str">"https://api.ferroflux.io/v2/streams/strm_8x2qK?force=true"</span> \
+  <span class="kw">-H</span> <span class="str">"Authorization: Bearer $FF_TOKEN"</span></div>
+        </div>
+        <div>
+          <div class="pair-label">Response · 204 No Content</div>
+          <div class="code"><span class="lang">HTTP</span><span class="com"># empty body</span>
+HTTP/1.1 <span class="num">204</span> No Content
+x-ferroflux-request-id: req_7Hk2pQ
+x-ferroflux-deleted-at: <span class="str">2024-09-14T10:42:17Z</span></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  </div>
+
+  <nav class="toc">
+    <div class="toc-title">On this page</div>
+    <a href="#list-streams">List Streams</a>
+    <a class="sub" href="#list-streams">GET /streams</a>
+    <a href="#create-stream">Create Stream</a>
+    <a class="sub" href="#create-stream">POST /streams</a>
+    <a href="#read-data">Read Stream Data</a>
+    <a class="sub" href="#read-data">GET /streams/{id}/data</a>
+    <a href="#delete-stream">Delete Stream</a>
+    <a class="sub" href="#delete-stream">DELETE /streams/{id}</a>
+  </nav>
+</div>
+
+</body>
+</html>

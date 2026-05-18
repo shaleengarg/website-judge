@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironbark No.4 Splitting Axe — Ironbark Supply Co.</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    background: #F5F0E8;
+    color: #1C1A17;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; }
+
+  /* Header */
+  .header {
+    position: sticky;
+    top: 0;
+    height: 56px;
+    background: #1C1A17;
+    color: #F5F0E8;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    color: #F5F0E8;
+    text-decoration: none;
+    flex: 0 0 auto;
+  }
+  .wordmark .mark-accent { color: #C45B1E; }
+  .nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+  }
+  .nav a {
+    color: #F5F0E8;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: capitalize;
+  }
+  .nav a:hover { color: #C45B1E; }
+  .nav a.active { color: #C45B1E; }
+  .cart-icon {
+    position: relative;
+    color: #F5F0E8;
+    text-decoration: none;
+    font-size: 14px;
+    padding-right: 4px;
+  }
+  .cart-icon::before {
+    content: "🛒";
+    font-size: 16px;
+    margin-right: 4px;
+  }
+  .cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #C45B1E;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 1px 6px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 24px 0;
+    font-size: 13px;
+    color: #6b6358;
+  }
+  .breadcrumb a { color: #6b6358; text-decoration: none; }
+  .breadcrumb a:hover { color: #C45B1E; }
+
+  /* Product split */
+  .product-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .gallery .main-image {
+    width: 100%;
+    height: 400px;
+    background: #D6CFC4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b6358;
+    font-family: Georgia, serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    background-image: linear-gradient(135deg, #D6CFC4 0%, #c7bfb1 100%);
+  }
+  .thumb-strip {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .thumb {
+    width: 80px;
+    height: 80px;
+    background: #D6CFC4;
+    border: 1px solid #c7bfb1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #6b6358;
+  }
+  .thumb.active { border: 2px solid #C45B1E; }
+
+  /* Right column */
+  .product-info h1 {
+    font-size: 30px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .sku {
+    font-size: 13px;
+    color: #6b6358;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  .stars {
+    color: #C45B1E;
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  .rating-count { color: #6b6358; font-size: 13px; }
+  .price {
+    font-size: 28px;
+    font-weight: bold;
+    font-family: Georgia, serif;
+    margin-bottom: 6px;
+  }
+  .price-note {
+    font-size: 12px;
+    color: #6b6358;
+    margin-bottom: 20px;
+  }
+  .specs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .specs-table caption {
+    text-align: left;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 16px;
+    padding-bottom: 8px;
+    color: #1C1A17;
+  }
+  .specs-table th, .specs-table td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #D6CFC4;
+  }
+  .specs-table th {
+    font-weight: 600;
+    color: #6b6358;
+    width: 45%;
+    background: rgba(214,207,196,0.25);
+  }
+  .product-copy {
+    font-size: 15px;
+    margin-bottom: 20px;
+    color: #2a2723;
+  }
+  .add-to-cart {
+    display: block;
+    width: 100%;
+    height: 48px;
+    background: #4A7C59;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: system-ui, sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+  .add-to-cart:hover { background: #3d6649; }
+  .qty-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .qty-stepper {
+    display: inline-flex;
+    border: 1px solid #D6CFC4;
+    background: #fff;
+  }
+  .qty-stepper button {
+    width: 36px;
+    height: 40px;
+    background: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #1C1A17;
+  }
+  .qty-stepper input {
+    width: 44px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid #D6CFC4;
+    border-right: 1px solid #D6CFC4;
+    font-size: 15px;
+    font-family: inherit;
+  }
+  .stock-badge {
+    display: inline-block;
+    background: #4A7C59;
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  /* Related */
+  .related {
+    max-width: 1200px;
+    margin: 20px auto 0;
+    padding: 32px 24px 48px;
+    border-top: 1px solid #D6CFC4;
+  }
+  .related h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .card {
+    width: 100%;
+    max-width: 280px;
+    border: 1px solid #D6CFC4;
+    padding: 16px;
+    background: #fff;
+  }
+  .card-img {
+    width: 100%;
+    height: 160px;
+    background: #D6CFC4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b6358;
+    font-size: 12px;
+    margin-bottom: 12px;
+    background-image: linear-gradient(135deg, #D6CFC4 0%, #c7bfb1 100%);
+  }
+  .card h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .card .descriptor {
+    font-size: 13px;
+    color: #6b6358;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .card .card-price {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .card .add-link {
+    color: #C45B1E;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  /* Footer */
+  .footer {
+    background: #1C1A17;
+    color: #c7bfb1;
+    padding: 36px 24px 20px;
+    margin-top: 40px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .footer h4 {
+    color: #F5F0E8;
+    font-size: 14px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .footer a {
+    color: #c7bfb1;
+    text-decoration: none;
+    display: block;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .footer a:hover { color: #C45B1E; }
+  .footer .brand-blurb {
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 320px;
+  }
+  .footer .brand-name {
+    font-family: Georgia, serif;
+    color: #F5F0E8;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .copyright {
+    max-width: 1200px;
+    margin: 24px auto 0;
+    border-top: 1px solid #2B2520;
+    padding-top: 16px;
+    font-size: 12px;
+    color: #6b6358;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .product-wrap {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .gallery .main-image { height: 340px; }
+    .related-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .nav { gap: 14px; font-size: 12px; }
+    .nav a { font-size: 12px; }
+    .header { padding: 0 14px; }
+    .wordmark { font-size: 16px; }
+    .product-wrap { padding: 18px 16px; }
+    .product-info h1 { font-size: 24px; }
+    .price { font-size: 24px; }
+    .gallery .main-image { height: 260px; }
+    .thumb { width: 60px; height: 60px; }
+    .related { padding: 24px 16px 32px; }
+    .related-grid { grid-template-columns: 1fr; }
+    .card { max-width: none; }
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="wordmark" href="#">IRONBARK<span class="mark-accent">.</span></a>
+  <nav class="nav">
+    <a href="../shop/index.html">Shop</a>
+    <a href="#" class="active">Product</a>
+    <a href="../cart/index.html">Cart</a>
+    <a href="../account/index.html">Account</a>
+    <a href="../about/index.html">About</a>
+  </nav>
+  <a class="cart-icon" href="../cart/index.html">
+    Cart
+    <span class="cart-badge">3</span>
+  </a>
+</header>
+
+<div class="breadcrumb">
+  <a href="../shop/index.html">Shop</a> / <a href="#">Cutting Tools</a> / <span>Ironbark No.4 Splitting Axe</span>
+</div>
+
+<section class="product-wrap">
+  <div class="gallery">
+    <div class="main-image">PRODUCT IMAGE — AXE</div>
+    <div class="thumb-strip">
+      <div class="thumb active">VIEW 1</div>
+      <div class="thumb">VIEW 2</div>
+      <div class="thumb">HEAD</div>
+      <div class="thumb">GRIP</div>
+    </div>
+  </div>
+
+  <div class="product-info">
+    <h1>Ironbark No.4 Splitting Axe</h1>
+    <div class="sku">SKU: IB-AXE-004</div>
+    <div class="rating">
+      <span class="stars">★★★★☆</span>
+      <span class="rating-count">4.5 / 5 — based on 86 reviews</span>
+    </div>
+    <div class="price">AU$189.00</div>
+    <div class="price-note">GST included. Free shipping on orders over AU$150.</div>
+
+    <span class="stock-badge">In Stock — Ships in 24h</span>
+
+    <table class="specs-table">
+      <caption>Specifications</caption>
+      <tbody>
+        <tr><th>Handle Material</th><td>Hickory</td></tr>
+        <tr><th>Head Weight</th><td>1.8 kg</td></tr>
+        <tr><th>Blade Steel</th><td>Swedish high-carbon</td></tr>
+        <tr><th>Overall Length</th><td>76 cm</td></tr>
+      </tbody>
+    </table>
+
+    <p class="product-copy">
+      The No.4 is our workhorse splitting axe — built to halve seasoned hardwood with a single committed swing.
+      Each head is forged from Swedish high-carbon steel and finished with a hand-ground convex bevel that
+      bites cleanly and releases without binding. The straight-grain American hickory handle is shaped in
+      our Ballarat workshop and rubbed with three coats of raw linseed oil for grip you can trust in cold,
+      wet conditions. Comes wrapped in a vegetable-tanned leather sheath.
+    </p>
+
+    <div class="qty-row">
+      <span style="font-size:13px;color:#6b6358;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Qty</span>
+      <div class="qty-stepper">
+        <button type="button">−</button>
+        <input type="text" value="1" readonly>
+        <button type="button">+</button>
+      </div>
+    </div>
+
+    <button class="add-to-cart" type="button">Add to Cart — AU$189.00</button>
+  </div>
+</section>
+
+<section class="related">
+  <h2>You might also need</h2>
+  <div class="related-grid">
+    <div class="card">
+      <div class="card-img">FIELD BAG</div>
+      <h3>Waxed Canvas Field Bag</h3>
+      <p class="descriptor">Heavy 18oz canvas, brass hardware throughout</p>
+      <div class="card-price">AU$74.00</div>
+      <button class="add-link" type="button">+ Add to Cart</button>
+    </div>
+    <div class="card">
+      <div class="card-img">FERRO ROD</div>
+      <h3>Ferro Rod Fire Kit</h3>
+      <p class="descriptor">Magnesium core, jute tinder, leather lanyard</p>
+      <div class="card-price">AU$28.50</div>
+      <button class="add-link" type="button">+ Add to Cart</button>
+    </div>
+    <div class="card">
+      <div class="card-img">LEATHER SHEATH</div>
+      <h3>Veg-Tan Axe Sheath</h3>
+      <p class="descriptor">Hand-stitched leather, fits No.4 head perfectly</p>
+      <div class="card-price">AU$42.00</div>
+      <button class="add-link" type="button">+ Add to Cart</button>
+    </div>
+    <div class="card">
+      <div class="card-img">SHARPENING PUCK</div>
+      <h3>Dual-Grit Sharpening Puck</h3>
+      <p class="descriptor">Coarse 180 / fine 400, fits axes and machetes</p>
+      <div class="card-price">AU$18.00</div>
+      <button class="add-link" type="button">+ Add to Cart</button>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="brand-name">Ironbark Supply Co.</div>
+      <p class="brand-blurb">Outdoor and bushcraft goods built to outlast the user. Designed and assembled in Ballarat, Victoria since 2009.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="../shop/index.html">All Products</a>
+      <a href="#">Cutting Tools</a>
+      <a href="#">Fire &amp; Light</a>
+      <a href="#">Carry &amp; Storage</a>
+      <a href="#">Camp Kitchen</a>
+    </div>
+    <div>
+      <h4>Account</h4>
+      <a href="../account/index.html">My Orders</a>
+      <a href="../cart/index.html">Cart</a>
+      <a href="#">Saved Items</a>
+      <a href="#">Addresses</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="../about/index.html">About Us</a>
+      <a href="#">Workshop Visits</a>
+      <a href="#">Lifetime Guarantee</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="copyright">© 2024 Ironbark Supply Co. — Ballarat, Victoria. All prices in AUD.</div>
+</footer>
+
+</body>
+</html>

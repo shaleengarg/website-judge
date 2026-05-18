@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Dispatches — Operation Phantom Net</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F4F0E8;
+    color: #1A1A1A;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  /* Header band */
+  .header-band {
+    width: 100%;
+    max-width: 100vw;
+    height: 80px;
+    background: #1A1A1A;
+    color: #F4F0E8;
+    display: flex;
+    align-items: center;
+    padding: 0 48px;
+    position: relative;
+  }
+  .header-inner {
+    max-width: 1160px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .masthead {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 0.01em;
+  }
+  .masthead span {
+    color: #C8392B;
+  }
+  .masthead-sub {
+    display: block;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: #D9D3C4;
+    margin-top: 2px;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    color: #F4F0E8;
+    text-decoration: none;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color .15s;
+  }
+  nav a.active {
+    border-bottom-color: #C8392B;
+    color: #fff;
+  }
+  nav a:hover { border-bottom-color: #2E5D8B; }
+
+  /* Title band */
+  .title-band {
+    background: #2E5D8B;
+    color: #F4F0E8;
+    padding: 64px 48px;
+  }
+  .title-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+  .kicker {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #D9D3C4;
+    margin-bottom: 16px;
+  }
+  .page-title {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 48px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .page-sub {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 20px;
+    max-width: 720px;
+    color: #F4F0E8;
+    opacity: 0.92;
+  }
+
+  /* Main grid */
+  main {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 64px 48px;
+  }
+  .dispatch-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 64px;
+    column-gap: 24px;
+  }
+
+  .dispatch {
+    background: #F4F0E8;
+    border-top: 3px solid #2E5D8B;
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+  }
+
+  /* Dispatch 1: spans 2 cols */
+  .dispatch-1 { grid-column: span 2; }
+  /* Dispatch 2: 1 narrow col */
+  .dispatch-2 { grid-column: span 1; }
+  /* Dispatch 3: full width */
+  .dispatch-3 { grid-column: span 3; }
+
+  .dateline-stamp {
+    position: absolute;
+    top: 16px;
+    right: 0;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1A1A1A;
+    background: #E8E2D6;
+    padding: 6px 10px;
+    border: 1px solid #D9D3C4;
+  }
+
+  .dispatch-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2E5D8B;
+  }
+  .dispatch-meta span { color: #1A1A1A; }
+
+  .dispatch h2 {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.2;
+    color: #1A1A1A;
+  }
+  .byline {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2E5D8B;
+  }
+
+  .dispatch p {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .pullquote {
+    border-left: 4px solid #C8392B;
+    padding: 8px 0 8px 24px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 24px;
+    line-height: 1.35;
+    color: #1A1A1A;
+    margin: 8px 0;
+  }
+  .pullquote cite {
+    display: block;
+    margin-top: 12px;
+    font-family: "Courier New", monospace;
+    font-style: normal;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2E5D8B;
+  }
+
+  /* Dispatch 1 internal flex */
+  .d1-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .d1-img {
+    background: linear-gradient(135deg, #2E5D8B 0%, #1A3A5C 100%);
+    height: 180px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 16px;
+    color: #F4F0E8;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+  }
+  .d1-img::after {
+    content: "";
+    position: absolute;
+    top: 24px; right: 24px;
+    width: 60px; height: 60px;
+    border: 2px solid #C8392B;
+    border-radius: 50%;
+  }
+
+  /* Dispatch 2 sidebar */
+  .stat-block {
+    background: #E8E2D6;
+    border-left: 4px solid #C8392B;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .stat-block h3 {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #C8392B;
+    font-weight: 700;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #D9D3C4;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row .label {
+    color: #1A1A1A;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .stat-row .value {
+    color: #2E5D8B;
+    font-weight: 700;
+  }
+  .stat-subhead {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1A1A1A;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #D9D3C4;
+  }
+
+  /* Dispatch 3 split */
+  .d3-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .d3-narrative {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .evidence-log {
+    background: #E8E2D6;
+    padding: 24px;
+    border-top: 1px solid #D9D3C4;
+    border-bottom: 1px solid #D9D3C4;
+  }
+  .evidence-log h3 {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #1A1A1A;
+  }
+  .evidence-log ol {
+    list-style: none;
+    counter-reset: ev;
+  }
+  .evidence-log li {
+    counter-increment: ev;
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px dashed #D9D3C4;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .evidence-log li:last-child { border-bottom: none; }
+  .evidence-log li::before {
+    content: counter(ev, decimal-leading-zero);
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: #C8392B;
+    font-weight: 700;
+    min-width: 28px;
+    padding-top: 4px;
+  }
+  .evidence-log li strong {
+    display: block;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2E5D8B;
+    margin-bottom: 2px;
+  }
+
+  /* Section intro between */
+  .section-divider {
+    height: 1px;
+    background: #D9D3C4;
+    margin: 0 auto;
+    max-width: 1160px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1A1A1A;
+    color: #F4F0E8;
+    padding: 32px 48px;
+    margin-top: 64px;
+  }
+  .footer-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .footer-col h4 {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #D9D3C4;
+    margin-bottom: 8px;
+  }
+  .footer-col a {
+    color: #F4F0E8;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .footer-col a:hover { color: #C8392B; }
+  .footer-mast {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: 900;
+  }
+  .footer-mast span { color: #C8392B; }
+  .footer-fine {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #D9D3C4;
+    margin-top: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .dispatch-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 64px;
+    }
+    .dispatch-1 { grid-column: span 2; }
+    .dispatch-2 { grid-column: span 2; }
+    .dispatch-3 { grid-column: span 2; }
+    .d3-content { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .page-title { font-size: 40px; }
+  }
+  @media (max-width: 720px) {
+    .header-band { height: auto; padding: 16px 24px; }
+    .header-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+    nav ul { gap: 12px 18px; }
+    .title-band { padding: 48px 24px; }
+    .page-title { font-size: 32px; }
+    .page-sub { font-size: 16px; }
+    main { padding: 48px 24px; }
+    .dispatch-grid { grid-template-columns: 1fr; gap: 64px; }
+    .dispatch-1, .dispatch-2, .dispatch-3 { grid-column: span 1; }
+    .d3-content { grid-template-columns: 1fr; gap: 32px; }
+    .dispatch h2 { font-size: 24px; }
+    .pullquote { font-size: 20px; padding-left: 16px; }
+    .dateline-stamp { position: static; align-self: flex-start; margin-bottom: 8px; }
+    footer { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header-band">
+  <div class="header-inner">
+    <div class="masthead">
+      TETHYS<span>·</span>JOURNALISM COLLECTIVE
+      <span class="masthead-sub">Operation Phantom Net · Special Report</span>
+    </div>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="../overview/index.html">Overview</a></li>
+        <li><a href="../data-atlas/index.html">Data Atlas</a></li>
+        <li><a href="#" class="active">Field Dispatches</a></li>
+        <li><a href="../policy-matrix/index.html">Policy Matrix</a></li>
+        <li><a href="../about-the-investigation/index.html">About the Investigation</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<section class="title-band">
+  <div class="title-inner">
+    <div class="kicker">Part III · Field Correspondents · 2023–2024</div>
+    <h1 class="page-title">Field Dispatches from the Phantom Fleet</h1>
+    <p class="page-sub">Three reports filed from port cities along the trawl corridor, where the wake of the South Coral Sea fishery reaches land — in radio static, dockside rumor, and shipping manifests redacted in red ink.</p>
+  </div>
+</section>
+
+<main>
+  <div class="dispatch-grid">
+
+    <!-- DISPATCH 1 -->
+    <article class="dispatch dispatch-1">
+      <div class="dateline-stamp">Filed · 03·14·2023 · 06:42 UTC</div>
+      <div class="dispatch-meta">
+        <span>Dispatch 01</span>
+        <span>Rabaul, PNG — March 2023</span>
+        <span>Correspondent: Mara Soliven</span>
+      </div>
+      <h2>The Harbor That Forgot Its Own Boats</h2>
+      <div class="byline">Reporting from Simpson Harbour, East New Britain Province</div>
+
+      <div class="d1-body">
+        <div class="d1-img">RABAUL · SIMPSON HARBOUR · 04:12 LOCAL</div>
+
+        <p class="pullquote">
+          "They come in at first light with their nets folded under tarpaulin and their AIS transponders off. By the time the sun is fully up, the boats are gone and so are the men. The wharf stays quiet, like nothing ever passed through."
+          <cite>— Port worker, name withheld at source's request</cite>
+        </p>
+
+        <p>The harbor at Rabaul has been a fueling point for distant-water trawlers for more than a decade, but in the past five years it has become something else entirely: a transshipment ghost-port where vessels arrive without flags and depart without paperwork. Fishermen here describe a routine procession of stern trawlers that drop anchor in the outer roads, exchange catch with smaller carriers, and leave before customs officers begin their morning rounds.</p>
+
+        <p>Over four nights of observation, our team counted nineteen vessels matching the configuration of bottom trawlers known to operate in the Louisiade Plateau zone, roughly 380 nautical miles southeast. None broadcast on the international maritime tracking network during their stay. Two displayed names painted over in fresh marine paint — a practice former enforcement officers describe as the clearest signal that a vessel intends to vanish from any future inquiry.</p>
+
+        <p>Local cooperatives told us the reef fisheries within twenty kilometers of the coastline have collapsed since 2021. A fisherman who has worked these waters since 1994 said his daily catch has fallen by an estimated seventy percent, and that he now spends his nights repairing nets rather than setting them. The province's marine resources office did not respond to seven requests for comment over the course of our reporting.</p>
+
+        <p>By the time we left Rabaul, the harbor had returned to its practiced quiet — a quiet that, increasingly, sounds less like peace than like complicity.</p>
+      </div>
+    </article>
+
+    <!-- DISPATCH 2 -->
+    <article class="dispatch dispatch-2">
+      <div class="dispatch-meta">
+        <span>Dispatch 02</span>
+        <span>Aug 2023</span>
+      </div>
+      <h2>Listening on Channel 16</h2>
+      <div class="byline">Cairns, QLD — Declan Thorpe</div>
+
+      <p>For three weeks in August, a shortwave hobbyist working out of a Trinity Beach garage captured cross-band radio traffic that does not appear in any Australian Maritime Safety Authority log. The frequencies are not assigned to commercial fishing. They are, however, well-known to anyone who has listened in on the South Coral Sea after dark.</p>
+
+      <p>The voices speak in clipped Mandarin and Bahasa Indonesia, with occasional English coordinates. Three frequencies recurred across forty-one separate intercepts. Two vessel names — neither registered with the Western and Central Pacific Fisheries Commission — were repeated by multiple callers.</p>
+
+      <div class="stat-block" aria-label="Intercepted signals">
+        <h3>⚠ Intercept Log · Aug 2023</h3>
+        <div class="stat-subhead" style="margin-top:0;padding-top:0;border:none;">Frequencies (MHz)</div>
+        <div class="stat-row"><span class="label">CH-Alpha</span><span class="value">8.291</span></div>
+        <div class="stat-row"><span class="label">CH-Bravo</span><span class="value">12.353</span></div>
+        <div class="stat-row"><span class="label">CH-Charlie</span><span class="value">16.578</span></div>
+        <div class="stat-subhead">Unregistered Vessels</div>
+        <div class="stat-row"><span class="label">Callsign 01</span><span class="value">MV SHENLONG 7</span></div>
+        <div class="stat-row"><span class="label">Callsign 02</span><span class="value">FV MARIS STELLA II</span></div>
+      </div>
+
+      <p>AFMA confirmed in a brief written statement that it was "aware of unauthorized maritime communications in the region" but declined to identify whether the agency had opened any investigation. The hobbyist, who asked not to be named for fear of legal reprisal, has continued to monitor the bands.</p>
+    </article>
+
+    <!-- DISPATCH 3 -->
+    <article class="dispatch dispatch-3">
+      <div class="dispatch-meta">
+        <span>Dispatch 03</span>
+        <span>Manila, PHL — January 2024</span>
+        <span>Correspondent: Yuki Tanamoto, with Amara Osei</span>
+      </div>
+      <h2>What the Manifests Said, and What They Didn't</h2>
+
+      <div class="d3-content">
+        <div class="d3-narrative">
+          <p>The freight forwarder's office on Roxas Boulevard was unremarkable — a single desk, a filing cabinet, a calendar from 2019. But over six visits in January, our correspondents documented a steady stream of bills of lading describing "frozen marine product, mixed species" departing from Manila South Harbor on routes that did not match the vessels' declared fishing zones.</p>
+
+          <p>The discrepancies were not subtle. Cargo manifests listed origin ports in the Sulu Sea while corresponding catch certificates referenced coordinates well inside contested waters of the South Coral Sea — roughly 1,800 kilometers from the declared point of harvest. In two cases, the catch certificates carried signatures from inspectors who, according to public personnel records, had retired more than two years earlier.</p>
+
+          <p>A forwarder agreed to speak with us on the condition of anonymity. He described what he called a "documentation laundry": a circuit of small offices that take in irregular paperwork from arriving captains, regenerate it on properly stamped letterhead, and forward it to importers in three different countries. The fee, he said, was a flat figure per container, paid in cash. He did not believe what he did was illegal. He did believe, he said, that no one was looking.</p>
+
+          <p>By the time we filed this dispatch, the office on Roxas Boulevard had closed. The filing cabinet had been emptied. The calendar still read 2019.</p>
+        </div>
+
+        <aside class="evidence-log" aria-label="Evidence log">
+          <h3>Evidence Log · MNL-24-01</h3>
+          <ol>
+            <li><span><strong>Item A · Bill of Lading</strong>Manifest #PH-44128 lists Sulu Sea origin; catch coords place harvest at 14°S 153°E.</span></li>
+            <li><span><strong>Item B · Catch Certificate</strong>Signed by inspector R. Andrade, retired Dec 2021 per BFAR personnel records.</span></li>
+            <li><span><strong>Item C · Vessel Photo</strong>Hull markings consistent with FV Maris Stella II; flag obscured with tarp.</span></li>
+            <li><span><strong>Item D · Cash Receipt</strong>Handwritten ledger, USD 3,400 per container, dated 09·12·2023.</span></li>
+            <li><span><strong>Item E · Cold Storage Log</strong>Facility intake records show 47 tonnes "mixed species" with no species-level breakdown.</span></li>
+            <li><span><strong>Item F · Source Statement</strong>Forwarder interview, 26 mins, audio archived with Tethys legal counsel.</span></li>
+          </ol>
+        </aside>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-mast">TETHYS<span>·</span>JC</div>
+      <div class="footer-fine">An independent journalism collective. Reporting financed by reader contributions and the Halcyon Marine Press Foundation.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Report</h4>
+      <a href="../overview/index.html">Overview</a>
+      <a href="../data-atlas/index.html">Data Atlas</a>
+      <a href="#">Field Dispatches</a>
+      <a href="../policy-matrix/index.html">Policy Matrix</a>
+      <a href="../about-the-investigation/index.html">About the Investigation</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="#">secure@tethys.press</a>
+      <a href="#">Signal · +0 000 000 000</a>
+      <a href="#">SecureDrop · onion address</a>
+    </div>
+    <div class="footer-col">
+      <h4>Edition</h4>
+      <div class="footer-fine">Operation Phantom Net<br>Volume 01 · Field Dispatches<br>Published 2024 · CC BY-NC-ND 4.0</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
