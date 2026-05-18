@@ -1478,3 +1478,164 @@ the high end.
 v6 ships as-is. The single-CSS-file rule, shared-CSS workflow,
 and density floors are now part of the generator and persist forward.
 
+--------------------------
+The actual benchmark — Opus 4.7 vs. workload_v6, 10 attempts/task
+
+This is the run the trial brief is actually about. Grader pinned
+at V4.0, dataset is v6, agent is Claude Code with
+`anthropic/claude-opus-4-7`, 10 attempts per task across 10 tasks
+= 100 trials. Job at
+`jobs/2026-05-19__02-17-44/`.
+
+    harbor run -p ./workload_v6 -a claude-code -m anthropic/claude-opus-4-7 \
+      --env modal --ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY -k 10 -n 100
+
+Pre-run note on the flag I almost got wrong: `-n` is
+`--n-concurrent` (parallelism), not trials-per-task. Trials-per-task
+is `-k`/`--n-attempts`. Easy to misread from the prior
+`-n 10`/`-n 100` shorthand in the docs.
+
+Wall-clock 60 min on Modal. Cost $380.74 of Opus calls
+(449M input tokens, 5M output, 440M cached — so heavily cached,
+which means the agent calls are reusing prompt prefixes well).
+Errored 4/100: 3 `AgentTimeoutError` (one each on T1
+maren-solvik, T7 deep-current-oceandata, T8 forma-negra) and 1
+`VerifierTimeoutError` (T7 again). T7 absorbed 2 of the 4
+errors; the others scattered across T1 and T8. The job did not
+`--max-retries`. Important subtlety: 3 of the 4 errored trials
+**still produced rewards** — the verifier ran on the partial
+HTML the agent had written before timeout, and those scores are
+in the per-tier means below. The only trial missing a reward
+entirely is the `VerifierTimeoutError` on T7 zfhG5qe, which is
+why T7 has n=9 instead of 10 below. Harbor's reported
+`metrics.mean` is **0.7176**, computed as
+`sum_of_99_rewards / 100` (the unrewarded trial counted as 0).
+Mean over the 99 valid rewards is **0.725**.
+
+Headline by tier (mean ± stdev over n trials):
+
+| Tier | n  | mean  | stdev | min   | max   |
+|------|---:|------:|------:|------:|------:|
+| T1   | 20 | 0.831 | 0.056 | 0.757 | 0.962 |
+| T2   | 20 | 0.747 | 0.050 | 0.676 | 0.840 |
+| T3   | 10 | 0.782 | 0.025 | 0.726 | 0.813 |
+| T4   | 10 | 0.727 | 0.108 | 0.452 | 0.835 |
+| T5   | 10 | 0.668 | 0.085 | 0.497 | 0.779 |
+| T6   | 10 | 0.655 | 0.027 | 0.602 | 0.688 |
+| T7   |  9 | 0.684 | 0.118 | 0.500 | 0.831 |
+| T8   | 10 | 0.573 | 0.083 | 0.494 | 0.731 |
+| all  | 99 | 0.725 | 0.121 | 0.452 | 0.962 |
+
+Two small inversions (T3 above T2 by 0.035, T7 above T6 by 0.029);
+both inside neighbour-tier stdev. Otherwise monotonic T1 → T8.
+Best trial overall: `synth-t1-maren-solvik-design` attempt
+b5Qn2jC at 0.962 — but this one actually errored on
+`AgentTimeoutError` and got scored on partial output. Best clean
+(non-errored) trial: same task, attempt yaQbhvt at 0.926. Worst
+trial: `synth-t4-lumivex-signal-boost` attempt Qfdxb59 at 0.452.
+
+The Likert vote distribution across all ~7,400 individual judge
+votes is the most diagnostic single piece of evidence:
+
+| Criterion         | L1 | L2 | L3 | L4 | L5 |
+|-------------------|---:|---:|---:|---:|---:|
+| color_palette     | 0% | 1% | 4% | 32%| 63%|
+| visual_hierarchy  | 0% | 0% | 3% | 57%| 40%|
+| typography        | 0% | 0% | 2% | 60%| 38%|
+| layout_fidelity   | 0% | 2% | 44%| 49%|  5%|
+| overall_fidelity  | 0% | 2% | 38%| 54%|  6%|
+
+Opus is excellent on colour palette (L5 on 63% of votes) and
+strong on hierarchy + typography (L4-L5 dominant). On
+`layout_fidelity` the L5 share collapses to 5% and the modal
+verdict is L3-L4 ("recognisable but clearly different"). This
+holds across all eight tiers — even T1 sees Opus rarely earning a
+"perfect layout" verdict.
+
+The deterministic side independently agrees on where the failure
+lives:
+
+- `repeating_groups` mean 0.321 — below 0.5 on **438 / 495** of
+  page-trials.
+- `layout_skeleton` mean 0.415 — below 0.5 on **460 / 495**.
+
+These two are the aspects that measure whether bounded boxes line
+up across reference and agent. The agent puts the right elements
+on the page but not in the right grid. Both halves of the grader
+independently report the same diagnosis.
+
+Tier-specific failures worth recording:
+
+- **T8 (forma-negra-review, magazine layout):** mean 0.573,
+  furthest from any other tier. Six of the ten lowest trials in
+  the whole run are T8. Det breakdown: `repeating_groups 0.180`,
+  `palette 0.203`, `color_histogram 0.261`, `text_content
+  0.532`. The 6-distinct-modules-per-page target collapses to a
+  generic blog-with-hero — exactly the failure the tier was built
+  to detect. Confirms the tier-validation story: T8 ranks 6th
+  in v6 by structural composite, the agent's score ranks last.
+  Both signals agree the spec language didn't bind.
+- **T7 (deep-current-oceandata, infographic):** `det.navigation =
+  0.181` vs. next-lowest tier 0.283. V2.1 weighted navigation 70%
+  on link-text similarity. Reference site has scientific
+  microcopy ("Bathymetry", "Thermohaline"); Opus paraphrases. Two
+  candidate fixes: (a) relax link-text weight on
+  domain-specific sites, (b) verify whether the agent is omitting
+  nav on data-viz pages entirely (need to look at the rendered
+  output of the worst T7 trial).
+- **T5 (chlorophyll-dispatch-weekly, editorial):**
+  `text_content 0.595` (vs T1's 0.992), `palette 0.355` (worst
+  in run). The agent reads the editorial template as a visual
+  cue and re-generates plausible-substitute body copy. When
+  design *is* text, the agent's instinct to paraphrase
+  collides with the grader's preference for literal
+  transcription.
+- **T6 (nexum-vault-settings, forms):** `paragraphs 0.333` —
+  lowest of any tier on this aspect. Form labels and field copy
+  don't survive the screenshot round-trip.
+
+Where the agent is reliably strong: `region_color` 0.904,
+`text_content` 0.816, `judge.color_palette` 0.892. Macro colour
+distribution and brand colour identification land well even when
+exact hex values differ. Across ~7,400 judge votes, the
+catastrophic `overall_fidelity = L1` floor is never reached. The
+agent never gives up.
+
+A sanity cross-check on the grader itself: the 30/70
+deterministic/judge split is in fact load-bearing on real agent
+output, not just on calibration variants. Page-level final
+reward stratifies cleanly by `judge.layout_fidelity`: L2 → 0.44,
+L3 → 0.63, L4 → 0.80, L5 → 0.94. Pearson correlation between a
+trial's mean `judge.layout_fidelity` and its final reward is
+**+0.87** over the 99 valid trials. The judge dominates the
+visual-design verdict; the deterministic text gate catches
+text-as-design failures. Neither half alone would produce this
+spread.
+
+Limitations to bear in mind before quoting these numbers:
+
+1. **N=10 per task is enough for per-task mean and stdev, not
+   distribution shape.** Claims like "T8 has a bimodal reward
+   distribution" need ≥ 30 trials per task.
+2. **Most high-numbered tiers have one task each** (T3, T4, T5,
+   T6, T7, T8). The per-tier mean is one task's mean. To make
+   "T6 is harder than T5" load-bearing, regenerate v6 with two
+   tasks per high tier and re-run.
+3. **The reference HTML was generated under a 1280×800 prompt,
+   not the new V4-aware multi-viewport prompt.** Part of what
+   the grader is measuring is "how well does the agent recover
+   from a non-responsive reference" rather than "how well does
+   the agent design responsively." Regenerating v6 under
+   V4-aware prompts is the next iteration.
+4. **The four errored trials are not retried.** If
+   `AgentTimeoutError` correlates with low-reward trials (likely),
+   the per-tier means above are slightly optimistic. Next run
+   should set `--max-retries 1` on `AgentTimeoutError`.
+5. **No agent / model comparison.** Single agent
+   (`claude-code`), single model (`opus-4-7`). Cross-agent and
+   cross-model comparisons require another 100-trial run each.
+
+Full writeup, with all the tables and the calibration
+cross-references, lives at
+`docs/observations_and_limitation.md`.
+

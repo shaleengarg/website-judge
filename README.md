@@ -106,6 +106,7 @@ cd generator/scoring_calibration/experiments_v4
 ## Where to read next
 
 - [`problem_breakdown.md`](docs/problem_breakdown.md) — why this benchmark exists, what it's testing, what it isn't
+- [`docs/observations_and_limitation.md`](docs/observations_and_limitation.md) — end-to-end benchmark run of Claude Code (Opus 4.7) against `workload_v6`: experimental method, per-tier and per-aspect results, where the model breaks, and the limits of the evidence base
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how `generator/` produces tasks (two-stage pipeline, tier/genre taxonomy, parallelism, extension points)
 - [`docs/SCORING.md`](docs/SCORING.md) — V4 grader design + calibration evidence
 - [`generator/README.md`](generator/README.md) — CLI reference for the codegen tools

@@ -717,6 +717,70 @@ other side makes visible.
 - Per-task template version stamping so that future verifier changes
   don't silently fail to propagate to already-generated tasks.
 
+## Step 6 — the end-to-end benchmark run
+
+With the V4 grader pinned and v6 of the workloads released, I run
+the actual benchmark the trial brief asks for: Claude Code with
+Opus 4.7 against the full v6 dataset, 10 attempts per task.
+
+```bash
+harbor run -p ./workload_v6 -a claude-code -m anthropic/claude-opus-4-7 \
+  --env modal --ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY -k 10 -n 100
+```
+
+100 trials total, 60 minutes wall-clock on Modal, $380 of Opus
+calls, 4 errored trials (3 agent timeouts, 1 verifier timeout —
+T7 absorbed 2 of those 4, the others scattered across T1 and
+T8). Mean reward across the 99 trials that have a reward:
+**0.725** (Harbor's reported metric is **0.7176** — same numbers
+divided by 100 instead of 99, treating the one unrewarded trial
+as 0). Three of the four errored trials still produced rewards
+from the partial output the agent had written before timeout.
+Job at
+[`jobs/2026-05-19__02-17-44/`](../jobs/2026-05-19__02-17-44/).
+
+The numbers do what calibration predicted they would:
+
+- **Tier monotonicity holds on real agent output.** Mean reward
+  declines across tiers — T1 (0.831), T2 (0.747), T3 (0.782),
+  T4 (0.727), T5 (0.668), T6 (0.655), T7 (0.684), T8 (0.573).
+  Two small inversions (T3 above T2, T7 above T6), both inside
+  per-tier stdev. The tier ladder is at least partially
+  predictive of real difficulty, not just structural-metric
+  difficulty.
+- **The grader uses its dynamic range.** Trials span 0.452 to
+  0.962. No piling-up at 1.0, no collapse at 0.5.
+- **The judge dominates layout failures, the deterministic side
+  dominates text failures.** Both halves carry the weight they
+  were designed to. The 30/70 split holds.
+
+And the failure patterns are concrete and reproducible across
+all 99 trials:
+
+- **Layout fidelity is the universal bottleneck.** Across ~7,400
+  individual Likert votes, `layout_fidelity` Likert 5 happens only
+  5% of the time vs. 63% for `color_palette`. The deterministic
+  side agrees: `repeating_groups` (mean 0.32) and
+  `layout_skeleton` (mean 0.42) sit below 0.5 on roughly 90% of
+  page-trials. The agent puts the right elements on the page but
+  not in the right grid.
+- **T8 (magazine layouts) is in its own difficulty bucket** —
+  mean 0.573, a 0.08 gap to the nearest tier. The 6-distinct-
+  visual-modules-per-page target collapses to a generic
+  "blog-with-hero."
+- **Text-as-design tiers fail on text-content axes.** T5
+  (editorial) and T6 (forms) drop `text_content` and `paragraphs`
+  by 30–40 points vs. T1 because the agent ad-libs body copy and
+  form labels instead of transcribing them.
+- **Domain-specific microcopy breaks navigation extraction.** T7
+  (scientific infographic) has `det.navigation = 0.181` because
+  V2.1 weighted navigation 70% on link-text similarity and Opus
+  paraphrases the reference's domain terms.
+
+Full method, per-tier and per-aspect tables, Likert
+distributions, and the limitations of this evidence base are in
+[`observations_and_limitation.md`](observations_and_limitation.md).
+
 ## Why this shape
 
 The trial is generous about freedom. I deliberately spend it
