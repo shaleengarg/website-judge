@@ -59,6 +59,7 @@ TIER_TARGETS = {
     "near_perfect": (0.85, 1.01),
     "mediocre": (0.40, 0.65),
     "bad": (0.00, 0.15),
+    "adversarial": (0.00, 0.15),
 }
 
 
@@ -132,6 +133,8 @@ def discover_tasks(filter_ids: list[str] | None) -> list[tuple[str, Path]]:
             continue
         if filter_ids and task_dir.name not in filter_ids:
             continue
+        # Require the three original tiers; adversarial is optional so older
+        # `degrade.py` outputs still load.
         if all((task_dir / v).is_dir() for v in ("near_perfect", "mediocre", "bad")):
             tasks.append((task_dir.name, task_dir))
     return tasks
@@ -146,10 +149,13 @@ def find_reference_pages(task_id: str) -> Path | None:
     return None
 
 
+ALL_VARIANTS = ("near_perfect", "mediocre", "bad", "adversarial")
+
+
 def aggregate_table(results: dict) -> dict:
     """Compute per-variant mean/stdev and inversion count from per-task rewards."""
     summary = {}
-    for variant in ("near_perfect", "mediocre", "bad"):
+    for variant in ALL_VARIANTS:
         values = [
             t[variant]["reward"]
             for t in results.values()
@@ -162,8 +168,10 @@ def aggregate_table(results: dict) -> dict:
         }
 
     # Inversions: per-task pair (near_perfect > mediocre > bad) must hold.
+    # Adversarial sits next to bad but is not part of the monotonic chain — it's
+    # a separate "did the grader catch this design-only failure" question.
     inversions = 0
-    for task_id, variants in results.items():
+    for _task_id, variants in results.items():
         np_ = variants.get("near_perfect", {}).get("reward", 0.0)
         md_ = variants.get("mediocre", {}).get("reward", 0.0)
         bd_ = variants.get("bad", {}).get("reward", 0.0)
@@ -179,17 +187,20 @@ def print_report(grader_version: str, results: dict, summary: dict) -> None:
     print()
     print(f"=== Calibration report ({grader_version}) ===")
     print()
-    print(f"{'task':<48} {'near_perfect':>14} {'mediocre':>11} {'bad':>9}")
-    print("-" * 84)
+    print(f"{'task':<48} {'near_perfect':>14} {'mediocre':>11} {'bad':>9} {'adversarial':>13}")
+    print("-" * 98)
     for task_id, variants in sorted(results.items()):
         np_ = variants.get("near_perfect", {}).get("reward", float("nan"))
         md_ = variants.get("mediocre", {}).get("reward", float("nan"))
         bd_ = variants.get("bad", {}).get("reward", float("nan"))
-        print(f"{task_id:<48} {np_:>14.3f} {md_:>11.3f} {bd_:>9.3f}")
+        adv = variants.get("adversarial", {}).get("reward", float("nan"))
+        print(f"{task_id:<48} {np_:>14.3f} {md_:>11.3f} {bd_:>9.3f} {adv:>13.3f}")
 
-    print("-" * 84)
-    for variant in ("near_perfect", "mediocre", "bad"):
+    print("-" * 98)
+    for variant in ALL_VARIANTS:
         s = summary[variant]
+        if s["n"] == 0:
+            continue
         lo, hi = TIER_TARGETS[variant]
         hit = "HIT " if (lo <= s["mean"] <= hi) else "MISS"
         print(
@@ -232,7 +243,14 @@ def main() -> None:
         )
         sys.exit(1)
 
-    variants = ("near_perfect",) if args.oracle_only else ("near_perfect", "mediocre", "bad")
+    if args.oracle_only:
+        variants = ("near_perfect",)
+    else:
+        # Only include variants that actually exist on disk for at least one task.
+        variants = tuple(
+            v for v in ALL_VARIANTS
+            if any((td / v).is_dir() for _, td in tasks)
+        )
     results: dict[str, dict[str, dict]] = {}
     for task_id, task_dir in tasks:
         ref_pages = find_reference_pages(task_id)

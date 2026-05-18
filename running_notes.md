@@ -378,3 +378,129 @@ V2 still doesn't address:
    match every extracted primitive, and score ~1.0. V2 looks only at the
    rendered output.
 
+--------------------------
+Scoring V2.1 — sub-aspect sharpening + text-content gate
+
+V2's per-task ranking was correct (no inversions) but both `mediocre` and
+`bad` scored above their tightened target bands (`mediocre` 0.661 > 0.65;
+`bad` 0.393 > 0.15). The per-aspect breakdown in `results/v2.json` showed
+three aspects leaking credit on the bad variant in particular:
+
+- `navigation = 0.804` (extractor's 4+-child-links heuristic catches stripped
+  `<div class="nav">`; primary-position match = 1.0; link-count match = 1.0;
+  only link-text was low at ~0.2 — averaging to 0.8)
+- `repeating_groups = 0.74` (children still share tag + size_bucket after
+  layout flattening; item_text similarity only 30% of the formula's weight)
+- `pixel_ssim = 0.68–0.79` (grayscale SSIM forgiving of color changes when
+  layout survives)
+
+V2.1 attacks all three of those plus adds a new failure mode to the
+calibration set:
+
+**1. Sub-aspect sharpening.** Inside `score_navigation`, link-text similarity
+now carries 70% of the weight (was 25%); the structure signals (position,
+count, region count) share the remaining 30%. Inside `score_repeating_groups`,
+the per-item text similarity now carries 55% of the within-group weight (was
+30%); count/direction/position share the remaining 35%.
+
+**2. Top-level weight retune.** The weights that survive structural rewrites
+(pixel_ssim, repeating_groups, layout_skeleton) were demoted; the
+discriminating signals (text_content, region_color, palette) were promoted:
+
+| Aspect             | V2   | V2.1 | Rationale |
+|--------------------|------|------|-----------|
+| pixel_ssim         | 0.18 | 0.08 | Grayscale SSIM is forgiving of palette/text changes |
+| color_histogram    | 0.07 | 0.05 | RGB histograms don't capture placement |
+| region_color       | 0.08 | 0.10 | 3×3 spatial bins correctly tank for wrong palettes |
+| palette            | 0.05 | 0.07 | Quantized dominant colors correctly tank |
+| headings           | 0.10 | 0.08 | — |
+| paragraphs         | 0.07 | 0.05 | — |
+| navigation         | 0.08 | 0.07 | — |
+| repeating_groups   | 0.12 | 0.08 | Group detection survives structural rewrites |
+| interactive        | 0.05 | 0.04 | — |
+| layout_skeleton    | 0.10 | 0.06 | IoU matches survive structural rewrites |
+| text_content       | 0.10 | 0.32 | Best single discriminator across all three tiers |
+
+**3. Multiplicative text gate.** After the weighted-sum-and-renormalize step,
+the per-page score is multiplied by `0.30 + 0.70 × text_content_score`. A page
+whose visible text is mostly lorem cannot be a faithful replication no matter
+how perfect its structure is — the gate caps the achievable score at 30% of
+the raw weighted average when text similarity is zero. text_content = 1.0
+means gate factor = 1.0 (no penalty); text_content = 0.5 means gate factor =
+0.65; text_content = 0.0 means gate factor = 0.30. Both `final_score` and
+`pre_gate_score` are exposed in `score_details.json` so the gate's effect is
+auditable.
+
+**4. New calibration tier — adversarial.** Three programmatic tiers
+(near_perfect/mediocre/bad) test the grader on *structural* failures.
+None of them test what happens when the agent gets the structure right but
+the visual design wrong — exactly the failure mode a deterministic grader is
+architecturally blind to. The `adversarial` tier fills that gap. Rules
+(see `bench-generator/scoring_calibration/degrade.py`):
+
+- Every DOM primitive the V2.1 grader inspects is preserved: all five pages,
+  all semantic tags, all `@media` queries, every heading/paragraph/link/
+  button/repeating group with their original text.
+- Only a `<style>` block is injected before `</head>` overriding the visual
+  presentation with `!important` rules: Comic Sans on everything; 96px
+  headings with `transform: rotate(2deg)`; 9px center-aligned body text with
+  `letter-spacing: 4px`; clashing neon palette
+  (`#FF00FF` / `#00FF00` / `#FFFF00`); drop shadows; wavy underlines.
+- Target band: same as bad (≤ 0.15). A grader that understood design
+  fidelity would score adversarial in the floor band; a grader that only
+  checks primitives will score it near the ceiling.
+
+<!-- BEGIN v2.1 calibration -->
+V2.1 results (run: 2026-05-18, same task as V1/V2):
+
+| tier         | mean  | target band | verdict |
+|--------------|-------|-------------|---------|
+| near_perfect | 0.999 | ≥ 0.85      | HIT     |
+| mediocre     | 0.538 | 0.40–0.65   | HIT     |
+| bad          | 0.112 | ≤ 0.15      | HIT     |
+| adversarial  | 0.441 | ≤ 0.15      | MISS    |
+| inversions   | 0     | 0           | HIT     |
+
+V1 → V2 → V2.1 side by side:
+
+|              | V1    | V2    | V2.1  | target      |
+|--------------|-------|-------|-------|-------------|
+| near_perfect | 1.000 | 0.999 | 0.999 | ≥ 0.85      |
+| mediocre     | 0.465 | 0.661 | 0.538 | 0.40–0.65   |
+| bad          | 0.482 | 0.393 | 0.112 | ≤ 0.15      |
+| adversarial  | —     | —     | 0.441 | ≤ 0.15      |
+| inversions   | 1     | 0     | 0     | 0           |
+<!-- END v2.1 calibration -->
+
+The three monotonic tiers all HIT cleanly. `bad` dropped from V2's 0.393 to
+0.112 — under the 0.15 target with margin. The drivers (visible in
+`results/v2.1.json`'s per-aspect breakdown):
+
+- `navigation` aspect dropped from 0.80 (V2) to 0.54 (V2.1) on bad —
+  link-text-dominant formula working as designed.
+- `repeating_groups` dropped from 0.74 to 0.28–0.56 — item-text-dominant
+  formula penalizing lorem cards correctly.
+- Text gate factor for bad pages: 0.36–0.45 — multiplying the pre-gate
+  weighted average (~0.31–0.36) down to 0.11–0.16 final per page.
+
+**The MISS on `adversarial` (0.441 vs target ≤ 0.15) is the point.** Every
+DOM primitive the deterministic grader inspects matches the reference because
+the adversarial variant was constructed that way. text_content = 0.92,
+navigation = 0.99, headings = 0.57, paragraphs = 0.71, layout_skeleton = 0.34
+— mostly high. text gate factor = 0.97 (text is preserved, so the gate
+doesn't penalize). Only the pure pixel/color aspects tank (region_color
+0.06, palette 0.0, pixel_ssim 0.58 due to giant headings shifting edges).
+
+There is no deterministic weighting that fixes this. We could push the
+pixel/color weights to 100% and the structural aspects to 0%, but then any
+agent output with the right text content but slightly different rendering
+(font hinting, antialiasing, sub-pixel layout differences) would score bad.
+The signal the grader needs — "this looks visually broken" — requires
+actually looking at the rendered image at the level of semantic design,
+which is exactly what an MLLM judge does.
+
+**V2.1's adversarial MISS is the empirical justification for V3.** It's the
+calibration row that V3 (Claude Opus 4.7 vision judge) needs to drive into
+the target band. Without the adversarial tier, V3 would look like ornament
+on top of an already-passing V2.1.
+

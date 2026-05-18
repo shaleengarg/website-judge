@@ -4,7 +4,7 @@
 # dependencies = []
 # ///
 """
-Generate three calibration variants of a bench-generator task:
+Generate four calibration variants of a bench-generator task:
 
   near_perfect  — verbatim copy of reference HTML. Lower bound for "what a perfect
                   agent would produce." A sane grader should score these >= 0.95.
@@ -13,7 +13,18 @@ Generate three calibration variants of a bench-generator task:
   bad           — all <h*>/<p>/<a>/<li>/<button> text replaced with lorem; @media
                   queries stripped; viewport meta stripped; semantic tags rewritten
                   to <div>; <link rel=stylesheet> removed; the last page (alpha sort)
-                  is omitted entirely. Target band 0.10-0.30.
+                  is omitted entirely. Target band ≤ 0.15.
+  adversarial   — every DOM primitive a deterministic grader inspects is preserved
+                  (text content, headings, paragraphs, links, buttons, nav regions,
+                  repeating groups, semantic tags, @media queries, all five pages).
+                  ONLY the visual presentation is sabotaged via a forced style block:
+                  Comic Sans on everything, 96px headings, 9px body, clashing neon
+                  palette (#FF00FF / #00FF00 / #FFFF00), 2deg rotations on alternate
+                  headings, drop shadows, center alignment everywhere. A human looks
+                  at this and says "garbage"; a deterministic grader sees identical
+                  primitives and scores it high. Target band ≤ 0.15 — V2.1 will MISS
+                  this band (deterministic graders are architecturally blind to
+                  design quality); the MISS is the evidence we need V3's MLLM judge.
 
 Layout produced:
 
@@ -209,6 +220,37 @@ def make_mediocre(ref_root: Path, out_root: Path, pages: list[str]) -> None:
         dest.write_text(html, encoding="utf-8")
 
 
+_ADVERSARIAL_STYLE = """
+<style>
+  * { font-family: "Comic Sans MS", "Papyrus", cursive !important; letter-spacing: 4px !important; }
+  body { background: #FF00FF !important; color: #00FF00 !important; }
+  h1, h2, h3 { font-size: 96px !important; line-height: 0.85 !important; transform: rotate(2deg) !important; color: #FFFF00 !important; text-shadow: 6px 6px 0 #FF00FF !important; }
+  h4, h5, h6 { font-size: 48px !important; color: #00FFFF !important; }
+  p, li, span { font-size: 9px !important; line-height: 0.8 !important; text-align: center !important; color: #00FF00 !important; }
+  a { color: #FFFF00 !important; text-decoration: underline wavy #FF00FF !important; }
+  button { background: #FFFF00 !important; color: #FF00FF !important; box-shadow: 8px 8px 0 #00FF00 !important; }
+  nav { background: #00FF00 !important; }
+</style>
+"""
+
+
+def make_adversarial(ref_root: Path, out_root: Path, pages: list[str]) -> None:
+    """Preserve every DOM primitive; sabotage only the visual presentation."""
+    out_root.mkdir(parents=True, exist_ok=True)
+    for page in pages:
+        src = ref_root / page / "index.html"
+        html = src.read_text(encoding="utf-8")
+        # Inject the style block as the very last thing inside <head> so it
+        # wins the cascade. Use !important to override any source rules.
+        if "</head>" in html:
+            html = html.replace("</head>", f"{_ADVERSARIAL_STYLE}</head>", 1)
+        else:
+            html = _ADVERSARIAL_STYLE + html
+        dest = out_root / page / "index.html"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(html, encoding="utf-8")
+
+
 def make_bad(ref_root: Path, out_root: Path, pages: list[str]) -> None:
     """Aggressive degradation. The last page (alpha sort) is omitted entirely."""
     out_root.mkdir(parents=True, exist_ok=True)
@@ -278,6 +320,8 @@ def main() -> None:
     make_bad(reference_pages, task_out / "bad", pages)
     bad_pages = len(pages) if len(pages) <= 1 else len(pages) - 1
     print(f"  bad/           -> {bad_pages} pages (full lorem, no @media, no semantic tags, 1 omitted)")
+    make_adversarial(reference_pages, task_out / "adversarial", pages)
+    print(f"  adversarial/   -> {len(pages)} pages (all DOM preserved; Comic Sans + neon + 96px headings)")
 
 
 if __name__ == "__main__":
