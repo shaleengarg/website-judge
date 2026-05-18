@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Backups / temp
+*.bak
+*.tmp
+*.swp
+
+# Local run artifacts (Harbor writes job outputs to a sibling jobs/ dir)
+/jobs/
+**/jobs/
+
+# uv / venv
+.venv/
+.uv-cache/
+
+# Calibration intermediates (regeneratable)
+generator/scoring_calibration/degraded/

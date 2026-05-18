@@ -63,6 +63,13 @@ harbor run -p ./workloads_v4/synth-t1-ink-and-insomnia-blog-fea9 \
   -a claude-code -m anthropic/claude-opus-4-7 --env modal --ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY
 ```
 
+**Run Claude Code across the whole benchmark** (10 tasks):
+
+```bash
+harbor run -p ./workloads_v4 -a claude-code -m anthropic/claude-opus-4-7 \
+  --env modal --ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY -n 10
+```
+
 **Generate a fresh dataset:**
 
 ```bash
