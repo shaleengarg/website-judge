@@ -75,6 +75,12 @@ class _HTMLValidator(HTMLParser):
         self.has_body_tag = False
         self.has_script_tag = False
         self.external_urls: list[str] = []
+        # Track <link rel="stylesheet"> hrefs so we can enforce the
+        # "at most one stylesheet, must be ../_shared.css" rule.
+        self.stylesheet_hrefs: list[str] = []
+        self._in_style = False
+        self._style_buf: list[str] = []
+        self.style_imports: list[str] = []
 
     def error(self, message: str) -> None:  # type: ignore[override]
         self.ok = False
@@ -86,6 +92,15 @@ class _HTMLValidator(HTMLParser):
             self.has_body_tag = True
         elif tag == "script":
             self.has_script_tag = True
+        elif tag == "style":
+            self._in_style = True
+            self._style_buf = []
+        elif tag == "link":
+            attr_dict = dict(attrs)
+            rel = (attr_dict.get("rel") or "").lower()
+            href = attr_dict.get("href") or ""
+            if "stylesheet" in rel.split():
+                self.stylesheet_hrefs.append(href)
         for name, value in attrs:
             # xmlns and xmlns:* attribute values are XML namespace identifiers
             # (e.g. "http://www.w3.org/2000/svg"), not network resources. They
@@ -94,6 +109,16 @@ class _HTMLValidator(HTMLParser):
                 continue
             if value and isinstance(value, str) and re.match(r"https?://", value):
                 self.external_urls.append(value)
+
+    def handle_endtag(self, tag):
+        if tag == "style" and self._in_style:
+            self._in_style = False
+            css = "".join(self._style_buf)
+            self.style_imports.extend(re.findall(r"@import\b[^;]*;", css, re.IGNORECASE))
+
+    def handle_data(self, data):
+        if self._in_style:
+            self._style_buf.append(data)
 
 
 @dataclass
@@ -118,8 +143,52 @@ def validate_html(html: str) -> ValidationResult:
         errors.append("<script> tag present (task says no JS)")
     if p.external_urls:
         errors.append(f"external network URLs present: {p.external_urls[:3]}")
+    # At most one <link rel="stylesheet">, and it must be ../_shared.css.
+    if len(p.stylesheet_hrefs) > 1:
+        errors.append(
+            f"multiple <link rel=\"stylesheet\"> tags ({len(p.stylesheet_hrefs)}); "
+            f"benchmark allows at most one shared stylesheet"
+        )
+    for href in p.stylesheet_hrefs:
+        if href != "../_shared.css":
+            errors.append(
+                f"<link rel=\"stylesheet\"> href={href!r} is not the expected "
+                f"\"../_shared.css\""
+            )
+    if p.style_imports:
+        errors.append(
+            f"@import in inline <style> not allowed (found {p.style_imports[:2]})"
+        )
     if len(html) < 200:
         errors.append(f"suspiciously short HTML ({len(html)} bytes)")
+    return ValidationResult(ok=not errors, errors=errors)
+
+
+def validate_shared_css(css: str) -> ValidationResult:
+    """Sanity check the shared stylesheet — at-most-one CSS file means the
+    shared CSS itself cannot @import another stylesheet."""
+    errors: list[str] = []
+    imports = re.findall(r"@import\b[^;]*;", css, re.IGNORECASE)
+    if imports:
+        errors.append(
+            f"@import not allowed in shared CSS (found {imports[:2]})"
+        )
+    if len(css) < 200:
+        errors.append(f"suspiciously short shared CSS ({len(css)} bytes)")
+    # External URLs are banned, but the W3C SVG / XLink namespace strings
+    # (`http://www.w3.org/2000/svg`, `http://www.w3.org/1999/xlink`) are XML
+    # vocabulary identifiers, NOT network resources — Chromium recognizes them
+    # as static identifiers and never fetches them. Strip them before checking.
+    _XML_NAMESPACE_PREFIXES = (
+        "http://www.w3.org/2000/svg",
+        "http://www.w3.org/1999/xlink",
+        "http://www.w3.org/2000/xmlns/",
+        "http://www.w3.org/XML/1998/namespace",
+    )
+    found = re.findall(r"https?://[^\s\"')]+", css)
+    real = [u for u in found if not any(u.startswith(p) for p in _XML_NAMESPACE_PREFIXES)]
+    if real:
+        errors.append(f"external network URLs present in shared CSS: {real[:3]}")
     return ValidationResult(ok=not errors, errors=errors)
 
 
@@ -133,26 +202,69 @@ def validate_html(html: str) -> ValidationResult:
 # hints being prescriptive — sanity.py catches drift after the fact.
 
 
+def call_llm_shared_css(client: Anthropic, model: str, seed: dict) -> str:
+    """Generate the site's shared stylesheet. One LLM call per seed, run BEFORE
+    per-page HTML codegen. Returns raw CSS. May raise ValueError.
+
+    Streaming is mandatory because the shared stylesheet for a dense T7/T8 site
+    can easily exceed Anthropic's 10-minute non-streaming response timeout.
+    """
+    user = prompts.build_shared_css_prompt(seed)
+    print(f"  [{seed['id']}/_shared.css] LLM call")
+    with client.messages.stream(
+        model=model,
+        max_tokens=32000,
+        system=prompts.SHARED_CSS_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": user}],
+    ) as stream:
+        resp = stream.get_final_message()
+    text = "".join(b.text for b in resp.content if hasattr(b, "text"))
+    stop_reason = getattr(resp, "stop_reason", None)
+    if stop_reason == "max_tokens":
+        raise ValueError(
+            f"shared CSS truncated at max_tokens ({len(text)} chars produced)."
+        )
+    text = text.strip()
+    # Strip any markdown fences the model snuck in.
+    if text.startswith("```"):
+        text = re.sub(r"^```(?:css)?\s*", "", text)
+        text = re.sub(r"\s*```$", "", text)
+        text = text.strip()
+    if not text:
+        raise ValueError("shared CSS LLM call returned empty output")
+    return text
+
+
 def call_llm_one_page(
     client: Anthropic,
     model: str,
     seed: dict,
     page_name: str,
+    shared_css: str = "",
     attempt: int = 1,
     prior_errors: list[str] | None = None,
 ) -> str:
     """Single LLM call for one page; returns raw HTML. May raise ValueError."""
-    user = prompts.build_page_prompt(seed, page_name, prior_errors=prior_errors)
+    user = prompts.build_page_prompt(
+        seed, page_name, shared_css=shared_css, prior_errors=prior_errors,
+    )
 
     print(f"  [{seed['id']}/{page_name}] LLM call (attempt {attempt})")
-    resp = client.messages.create(
+    # Per-page output budget. T7 infographic pages with 30+ SVG primitives
+    # plus tier-4 polish blew the original 16k cap (all 5 pages truncated
+    # at ~34k chars). 32k tokens (~96k chars) gives enough headroom for
+    # the densest T7/T8 pages. Opus 4.6+ supports up to 64k if needed.
+    #
+    # Streaming is mandatory once max_tokens exceeds what the API can return
+    # within its 10-minute non-streaming timeout. Dense T7 pages routinely
+    # cross that threshold even at 32k.
+    with client.messages.stream(
         model=model,
-        # 16000 tokens per page is plenty for tier-3 dashboards and docs.
-        # Sonnet/Opus 4.6+ supports up to 64k output if a future tier needs it.
-        max_tokens=16000,
+        max_tokens=32000,
         system=prompts.SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user}],
-    )
+    ) as stream:
+        resp = stream.get_final_message()
 
     text = "".join(b.text for b in resp.content if hasattr(b, "text"))
 
@@ -184,6 +296,7 @@ def _generate_one_page_with_retries(
     model: str,
     seed: dict,
     page_name: str,
+    shared_css: str,
     max_retries: int,
 ) -> str:
     """Generate + validate one page with retries on validation failure."""
@@ -192,6 +305,7 @@ def _generate_one_page_with_retries(
         try:
             html = call_llm_one_page(
                 client, model, seed, page_name,
+                shared_css=shared_css,
                 attempt=attempt,
                 prior_errors=prior_errors or None,
             )
@@ -219,17 +333,35 @@ def generate_pages_for_seed(
     model: str,
     seed: dict,
     max_retries: int,
-) -> dict[str, str]:
-    """Generate all 5 pages for one seed, running per-page calls in parallel.
+) -> tuple[str, dict[str, str]]:
+    """Generate the site's shared CSS, then all 5 pages in parallel.
+
+    Returns (shared_css, {page_name: html}). The shared CSS is authored once
+    (single LLM call) and threaded into every per-page call so pages can
+    reference its tokens and classes rather than redefine them inline. This
+    cuts per-page output tokens enough that dense T7/T8 pages fit under the
+    API streaming threshold.
 
     Each page has an independent retry loop, so a single flaky page no longer
-    forces re-generation of the other four.
+    forces re-generation of the other four. Shared-CSS generation itself does
+    not retry — if it fails, the whole seed fails.
 
     Note on concurrency: this opens a nested ThreadPoolExecutor with up to 5
     workers inside the outer per-seed pool. With --concurrency 16 outside,
     that's up to 16*5 = 80 in-flight API calls. Drop --concurrency if you
     hit 429s.
     """
+    # Stage 1: shared CSS — sequential, before any per-page work. The
+    # benchmark allows at most one CSS file per website, so the shared
+    # stylesheet itself must be self-contained (no @import, no external URLs).
+    shared_css = call_llm_shared_css(client, model, seed)
+    css_check = validate_shared_css(shared_css)
+    if not css_check.ok:
+        raise RuntimeError(
+            f"shared CSS for {seed['id']} failed validation: {css_check.errors}"
+        )
+
+    # Stage 2: per-page HTML in parallel, each seeing the shared CSS.
     page_names = list(seed["page_specs"].keys())
     results: dict[str, str] = {}
     first_error: BaseException | None = None
@@ -238,7 +370,7 @@ def generate_pages_for_seed(
         futures = {
             pool.submit(
                 _generate_one_page_with_retries,
-                client, model, seed, name, max_retries,
+                client, model, seed, name, shared_css, max_retries,
             ): name
             for name in page_names
         }
@@ -258,7 +390,7 @@ def generate_pages_for_seed(
     if first_error is not None:
         raise first_error
 
-    return results
+    return shared_css, results
 
 
 # ---------- Template rendering ----------
@@ -383,8 +515,8 @@ def apply_templates_to_task(
     )
 
 
-def write_task(seed: dict, pages: dict[str, str], templates_dir: Path,
-               output_root: Path) -> Path:
+def write_task(seed: dict, pages: dict[str, str], shared_css: str,
+               templates_dir: Path, output_root: Path) -> Path:
     task_id = seed["id"]
     task_dir = output_root / task_id
     if task_dir.exists():
@@ -392,10 +524,13 @@ def write_task(seed: dict, pages: dict[str, str], templates_dir: Path,
     task_dir.mkdir(parents=True)
 
     # Write the LLM-generated reference pages first (so apply_templates can
-    # leave them untouched).
+    # leave them untouched). Shared CSS (if any) sits at the ref_root and is
+    # linked by every page via <link rel="stylesheet" href="../_shared.css">.
     (task_dir / "environment").mkdir()
     ref_root = task_dir / "environment" / "reference-pages"
     ref_root.mkdir()
+    if shared_css:
+        (ref_root / "_shared.css").write_text(shared_css, encoding="utf-8")
     for page_name, html in pages.items():
         page_dir = ref_root / page_name
         page_dir.mkdir()
@@ -432,24 +567,38 @@ def write_registry(output_root: Path, manifest: list[dict]) -> None:
             f"- **{entry['id']}** (tier {entry['tier']}, {entry['genre']}): "
             f"{entry['description']}"
         )
+    example_task = manifest[0]["id"] if manifest else "<task-id>"
     readme.extend([
         "",
         "## Running a task",
         "",
+        "The grader's multimodal-LLM judge (70% of the reward) requires",
+        "`ANTHROPIC_API_KEY` inside the verifier container. Pass it through",
+        "with `--ve` (or `--env-file`). Without it, every trial returns 0.0",
+        "because `tests/test.sh` writes a zero on any verifier crash.",
+        "",
         "```bash",
-        "harbor check ./001-minimal-portfolio",
-        "harbor run -p ./001-minimal-portfolio -a oracle --env modal",
-        "harbor run -p ./001-minimal-portfolio -a claude-code \\",
-        "  -m anthropic/claude-opus-4-7 --env modal",
+        f"harbor check ./{example_task}",
+        f"harbor run -p ./{example_task} -a oracle --env modal \\",
+        "  --ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY",
+        f"harbor run -p ./{example_task} -a claude-code \\",
+        "  -m anthropic/claude-opus-4-7 --env modal \\",
+        "  --ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY",
         "```",
         "",
         "## Running all tasks",
         "",
-        "There's no built-in dataset wrapping yet; iterate with a shell loop:",
+        "There's no built-in dataset wrapping yet; iterate with a shell loop",
+        "or pass the whole dataset directory:",
         "",
         "```bash",
-        "for d in */; do",
-        '  harbor run -p \"$d\" -a oracle --env modal',
+        "harbor run -p . -a oracle --env modal -n 10 \\",
+        "  --ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY",
+        "",
+        "# or per-task:",
+        "for d in synth-*/; do",
+        '  harbor run -p "$d" -a oracle --env modal \\',
+        '    --ve ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY',
         "done",
         "```",
         "",
@@ -608,10 +757,12 @@ def main() -> None:
             # they prefix with seed id implicitly via the seed argument's id.
             # To keep parallel logs readable we re-prefix here.
             print(f"{prefix} starting...")
-            pages = generate_pages_for_seed(
+            shared_css, pages = generate_pages_for_seed(
                 client, args.model, seed, max_retries=args.max_retries,
             )
-            task_dir = write_task(seed, pages, args.templates_dir, args.output)
+            task_dir = write_task(
+                seed, pages, shared_css, args.templates_dir, args.output,
+            )
             elapsed = time.time() - start
 
             entry = {

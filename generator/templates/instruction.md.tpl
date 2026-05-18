@@ -35,10 +35,25 @@ adapts cleanly across the three sizes.
 
 ## Output locations
 
-Create exactly these files:
+You MUST create exactly these page files:
 
 {{OUTPUT_LIST}}
 
-You may use additional files (CSS, fonts, etc.) inside each page's directory.
-The verifier renders `file://` URLs, so any external assets you reference
-(Google Fonts, CDNs, etc.) must be reachable during the agent's run.
+You MAY additionally create **exactly ONE** shared stylesheet at
+`/app/output/_shared.css` and reference it from each page via
+`<link rel="stylesheet" href="../_shared.css">`. Each page may also contain a
+small inline `<style>` block in `<head>` for page-specific overrides.
+
+### Hard constraints on file structure
+
+- **At most ONE CSS file** anywhere under `/app/output/`. No per-page CSS files
+  (e.g. `/app/output/about/about.css` is NOT allowed). No additional shared
+  stylesheets.
+- **No `@import` statements** in any CSS — the one shared stylesheet must be
+  self-contained.
+- **No external network resources**: no Google Fonts, no CDN links, no remote
+  images. The renderer has NO network access; external URLs will silently
+  fail to load.
+- **No JavaScript.** Pure HTML + CSS only.
+- **No image files.** Where images would go, use colored placeholder blocks
+  (e.g. a `<div>` with a background color or gradient).

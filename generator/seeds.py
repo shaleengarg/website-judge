@@ -36,7 +36,11 @@ TIERS: dict[int, TierSpec] = {
         "name": "Static blocks",
         "description": (
             "Single-page-feeling layouts. Vertical stacks, basic typography, "
-            "solid colors, simple buttons. No multi-column layouts."
+            "solid colors, simple buttons. No multi-column layouts. "
+            "DENSITY FLOOR (binding): each page MUST have at least 40 visible "
+            "DOM elements AND at least 15 CSS rules. T1 is the simplest tier "
+            "but not empty — every page still has a hero, a few sections, "
+            "and a footer."
         ),
         "css_capabilities": [
             "system fonts",
@@ -44,6 +48,7 @@ TIERS: dict[int, TierSpec] = {
             "basic margins/padding",
             "centered single-column content",
             "thin horizontal rules between sections",
+            "BINDING density floor: 40+ visible DOM elements and 15+ CSS rules per page",
         ],
     },
     2: {
@@ -51,7 +56,10 @@ TIERS: dict[int, TierSpec] = {
         "description": (
             "Five pages sharing a nav, footer, palette, and typography. "
             "Flexbox basics, simple grid layouts, consistent cross-page "
-            "components."
+            "components. DENSITY FLOOR (binding): each page MUST have at "
+            "least 100 visible DOM elements AND at least 40 CSS rules. The "
+            "shared nav must list ALL 5 pages and appear on every page; the "
+            "footer must be identical across pages."
         ),
         "css_capabilities": [
             "flexbox for nav and cards",
@@ -59,13 +67,18 @@ TIERS: dict[int, TierSpec] = {
             "consistent header/footer across pages",
             "buttons with hover-less styling",
             "rounded corners, basic borders",
+            "BINDING density floor: 100+ visible DOM elements and 40+ CSS rules per page",
         ],
     },
     3: {
         "name": "Real layout",
         "description": (
             "Multi-column layouts, sidebars, sticky positioning, mixed "
-            "content widths. Layout itself becomes a challenge to replicate."
+            "content widths. Layout itself becomes a challenge to replicate. "
+            "DENSITY FLOOR (binding): each page MUST have at least 180 "
+            "visible DOM elements AND at least 60 CSS rules. At least 2 "
+            "distinct layout containers per page using flex or grid (e.g. "
+            "a sidebar + main + content grid)."
         ),
         "css_capabilities": [
             "fixed sidebars with scrollable main areas",
@@ -73,6 +86,7 @@ TIERS: dict[int, TierSpec] = {
             "sticky positioning",
             "filter sidebars",
             "tables and dense data UIs",
+            "BINDING density floor: 180+ visible DOM elements and 60+ CSS rules per page",
         ],
     },
     4: {
@@ -81,7 +95,11 @@ TIERS: dict[int, TierSpec] = {
             "Layouts from tier 2 or 3, treated with intentional decoration. "
             "Gradients, shadow elevation systems, varied border-radius, "
             "decorative pseudo-elements. Layout is not the challenge here — "
-            "treatment is."
+            "treatment is. DENSITY FLOOR (binding): each page MUST have at "
+            "least 220 visible DOM elements AND at least 80 CSS rules AND "
+            "at least 15 distinct CSS colors AND at least 5 gradient or "
+            "shadow declarations. A bare hero page with one gradient does "
+            "NOT qualify."
         ),
         "css_capabilities": [
             "linear and radial gradients on backgrounds and accents",
@@ -89,71 +107,124 @@ TIERS: dict[int, TierSpec] = {
             "border-radius rhythms (e.g. 4px / 12px / 999px) used consistently",
             "::before and ::after decorative pseudo-elements",
             "CSS filters such as drop-shadow or backdrop-filter (glass)",
+            "BINDING density floor: 220+ visible DOM elements, 80+ CSS rules, 15+ distinct colors, 5+ gradients/shadows per page",
         ],
     },
     5: {
         "name": "Custom typography systems",
         "description": (
-            "Typography is the visual identity. A coherent type scale across "
-            "multiple sizes and weights, deliberate letter-spacing and "
-            "line-height tuning, drop caps, pull quotes."
+            "Inherits tier-3 multi-column layout AND tier-4 visual polish, "
+            "then layers a deliberate typographic system on top. Pages must be "
+            "BOTH text-dense AND visually composed — never a single sparse "
+            "column. Each page contains many distinct typographic elements "
+            "(sections, callouts, footnotes, marginalia, captions, by-lines, "
+            "pull quotes) treated as first-class design objects. A simpler "
+            "tier-4 page that merely uses one or two fancy fonts does NOT "
+            "qualify as tier 5. DENSITY FLOOR (binding): each page MUST have "
+            "at least 280 visible DOM elements AND at least 110 CSS rules "
+            "AND at least 6 distinct font-sizes AND at least 3 font-weights. "
+            "Must visibly exceed a typical tier-4 page in both content "
+            "richness AND visual polish."
         ),
         "css_capabilities": [
-            "4+ distinct font-size values forming a clear modular scale",
-            "2-3 font-weight values used purposefully (not just bold/regular)",
-            "letter-spacing tuned per heading level",
-            "line-height variation between headlines and body",
-            "drop caps via ::first-letter",
-            "pull quotes with their own typographic treatment",
+            "6+ distinct font-size values forming a clear modular scale (display, h1, h2, h3, body, caption, small)",
+            "3+ font-weight values used purposefully across hierarchy",
+            "letter-spacing tuned per heading level and per text role",
+            "line-height variation between headlines, body, and dense type",
+            "drop caps via ::first-letter on lead paragraphs",
+            "pull quotes with their own typographic treatment (size, weight, color, position)",
+            "marginalia or sidebar annotations alongside main column",
+            "captions, by-lines, and section labels as recognizable type elements",
+            "preserve tier-3 multi-column layouts (sidebars, sticky positioning)",
+            "preserve tier-4 visual polish (gradients, shadows, radii, decorative pseudo-elements)",
+            "BINDING density floor: 280+ visible DOM elements, 110+ CSS rules, 6+ font-sizes, 3+ font-weights per page",
         ],
     },
     6: {
         "name": "Forms and data-heavy",
         "description": (
-            "Pixel-accurate forms with custom-styled inputs, checkboxes, and "
-            "radios. Or dense tables with zebra striping, sticky headers, "
-            "and aligned numeric columns. The challenge is precision in "
-            "many small repeated elements."
+            "Inherits tier-4 visual polish. Each page combines pixel-accurate "
+            "forms AND dense data tables — not one or the other. Custom-"
+            "styled checkboxes, radios, selects, and toggles — never browser "
+            "defaults. Summary stat cards or aggregate-readout strips above "
+            "tables. The challenge is precision in many small repeated "
+            "elements packed into dense, scannable layouts. DENSITY FLOOR "
+            "(binding): each page MUST have at least 380 visible DOM elements "
+            "AND at least 140 CSS rules AND at least 15 form inputs spread "
+            "across multiple form sections AND at least one data table with "
+            "6+ columns × 20+ rows."
         ),
         "css_capabilities": [
-            "styled <input>, <select>, <textarea> with consistent borders, padding",
-            "custom checkbox and radio appearance (CSS-only)",
-            "multi-column form layouts with consistent gutter spacing",
-            "dense data tables with zebra striping and sticky headers",
+            "15+ form inputs per page spread across multiple form sections",
+            "styled <input>, <select>, <textarea> with consistent borders and padding",
+            "custom checkbox, radio, and toggle appearance (CSS-only, no defaults)",
+            "multi-column form layouts with consistent gutter spacing and aligned labels",
+            "dense data tables: 6+ columns, 20+ rows, zebra striping, sticky headers",
             "tabular-feeling numeric alignment (right-aligned, monospace digits)",
             "form validation visual states using only CSS pseudo-classes",
+            "summary stat cards or aggregate readouts above tables",
+            "preserve tier-4 visual polish (gradients, shadows, radii) across all surfaces",
+            "BINDING density floor: 380+ visible DOM elements, 140+ CSS rules, 15+ form inputs, 1+ table (6 cols × 20 rows) per page",
         ],
     },
     7: {
         "name": "Inline SVG and complex shapes",
         "description": (
-            "Inline <svg> illustrations, custom icons drawn from paths, "
-            "clipped images, masked elements, transformed shapes. The page's "
-            "visual signature comes from non-rectangular geometry."
+            "Inherits tier-3 multi-column layout AND tier-4 visual polish. "
+            "The page's distinguishing signature is non-rectangular geometry "
+            "delivered through substantial inline SVG content. Each page must "
+            "contain at least 30 inline <path>/<polygon>/<circle>/<rect>/"
+            "<ellipse> primitives spread across multiple distinct SVG figures "
+            "(illustrations, decorative dividers, custom icons, infographic "
+            "diagrams, or chart geometry). A page that uses a single small "
+            "SVG logo on top of an otherwise tier-3 layout does NOT qualify "
+            "as tier 7 — the SVG must carry meaningful visual weight. "
+            "DENSITY FLOOR (binding): each page MUST have at least 460 "
+            "visible DOM elements (the SVG primitives count toward this) "
+            "AND at least 180 CSS rules in addition to the 30+ SVG primitives."
         ),
         "css_capabilities": [
+            "30+ inline SVG primitives (path/polygon/circle/rect/ellipse) per page",
+            "multiple distinct SVG figures per page (illustrations, icons, dividers, diagrams)",
             "inline <svg> with custom paths, shapes, and patterns",
-            "clip-path for non-rectangular cuts",
+            "clip-path for non-rectangular cuts on raster or text content",
             "CSS transforms combining rotate, skew, translate",
             "mask-image or clip-path masking",
             "SVG-defined gradients and patterns as backgrounds",
+            "preserve tier-3 multi-column layouts (sidebars, sticky positioning)",
+            "preserve tier-4 visual polish (gradients, shadows, varied radii, decorative pseudo-elements)",
+            "BINDING density floor: 460+ visible DOM elements, 180+ CSS rules, 30+ SVG primitives per page",
         ],
     },
     8: {
         "name": "Mixed visual systems",
         "description": (
-            "Multiple distinct sections per page, each with its own internal "
-            "layout language. Magazine-style assemblies or dashboard-style "
-            "compositions of disparate components. Cohesion comes from "
-            "spacing, type, and color discipline holding heterogeneous "
-            "sections together."
+            "The most demanding tier. Each page is a composition of 6+ "
+            "distinct visual modules (hero, longform body, sidebar, gallery "
+            "grid, data callout, timeline strip, figure with caption, "
+            "marginalia, pull quote, footer block — pick 6+), each with its "
+            "own internal layout language. Combines tier-3 multi-column "
+            "layout, tier-4 visual polish, tier-5 typographic system, tier-6 "
+            "data density, and selectively tier-7 SVG accents in a single "
+            "coherent page. Held together by disciplined spacing, type, and "
+            "color tokens shared across modules. DENSITY FLOOR (binding): "
+            "each page MUST have at least 550 visible DOM elements AND at "
+            "least 240 CSS rules. A tier-8 page is unmistakably the densest "
+            "in the benchmark — no tier-8 page should have fewer visible "
+            "elements than a tier-7 infographic page."
         ),
         "css_capabilities": [
-            "3+ distinct layout regions per page with different grid systems",
-            "intentional mixing of flex, grid, and positioning in one page",
-            "intentional rhythm breaks between sections",
-            "typography variation aligned with section purpose",
-            "a discernible spacing system across heterogeneous sections",
+            "6+ distinct visual modules per page, each with its own internal layout",
+            "intentional mixing of flex, grid, and positioning between modules",
+            "module-to-module rhythm breaks held together by global spacing/type discipline",
+            "inherit tier-3 multi-column layout (sidebars, sticky positioning)",
+            "inherit tier-4 visual polish (gradients, shadows, varied radii, pseudo-elements)",
+            "inherit tier-5 typographic system (6+ font sizes, 3+ weights, drop caps, pull quotes)",
+            "inherit tier-6 data density where appropriate (tables, stat cards, structured lists)",
+            "selective tier-7 inline SVG accents (decorative dividers, icons, illustrative spots)",
+            "asymmetric grid systems with deliberate ragged edges",
+            "shared color tokens (4+ accent roles) and shared type tokens unifying disparate modules",
+            "BINDING density floor: 550+ visible DOM elements and 240+ CSS rules per page",
         ],
     },
     9: {

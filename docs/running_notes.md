@@ -1347,3 +1347,134 @@ of news-feature) and adding numeric density floors to the T7/T8 spec
 text. Re-run score_difficulty.py against the resulting workload set
 and check whether composite ρ crosses 0.7.
 
+--------------------------
+Generator refactor: shared CSS + single-CSS-file rule + density floors
+on every tier
+
+Two structural problems with the v5 generation surfaced once we tried
+to push T7 and T8 past the 0.85 Spearman target:
+
+1. **Per-page output token cap.** T7 infographic pages with 30+ inline
+   SVG primitives and tier-4 polish blew past the 16k codegen budget,
+   then past 32k. Beyond 32k the API also flips to "streaming required"
+   because individual non-streaming requests hit the 10-min server
+   ceiling. Fixed by switching codegen to `client.messages.stream()`
+   and raising the per-page max to 32k.
+2. **Per-page CSS bloat.** Even with streaming, dense pages spend
+   most of their tokens re-emitting the same palette/typography/layout
+   primitives. The right answer is to author the design system once
+   and let pages reference it.
+
+The shared-CSS refactor: every seed now goes through a new
+`call_llm_shared_css()` stage *before* per-page codegen. The shared
+stylesheet is written to `environment/reference-pages/_shared.css` and
+each page `<link rel="stylesheet" href="../_shared.css">`s it as the
+FIRST head element, plus optionally a small inline `<style>` for
+page-unique overrides. Each per-page LLM call receives the previously
+generated shared CSS in its prompt so pages know which tokens and
+classes to reuse rather than redefine.
+
+The benchmark allows **at most ONE CSS file per generated website**.
+The rationale is forward-looking: any future judge MLLM that grades
+agent output by reading source + screenshots must fit everything in
+one prompt. Per-page CSS files would multiply attachments. The
+generator's validator now enforces: at most one `<link rel="stylesheet">`
+per page, its href must be exactly `../_shared.css`, no `@import` in
+the inline `<style>`, and `validate_shared_css()` rejects any `@import`
+or external URL (with an allow-list for the W3C XML namespace strings,
+which appear as `xmlns` but are static identifiers — not network
+fetches).
+
+Density floors went on every tier:
+
+| Tier | DOM ≥ | CSS rules ≥ |
+|---|---|---|
+| T1 | 40 | 15 |
+| T2 | 100 | 40 |
+| T3 | 180 | 60 |
+| T4 | 220 | 80 + 5 gradients + 15 colors |
+| T5 | 280 | 110 + 6 font-sizes + 3 weights |
+| T6 | 380 | 140 + 15 inputs + 6×20 table |
+| T7 | 460 | 180 + 30 SVG primitives |
+| T8 | 550 | 240 + 6 modules |
+
+Strictly monotonic on both DOM and CSS-rule axes. The floors are
+written into each tier's `description` and into `css_capabilities`
+as the final "BINDING density floor:" bullet. They are passed to the
+LLM as instructions; the codegen pipeline does NOT validate post-hoc
+that the rendered DOM actually meets the count. The floors are
+directional pressure, not hard enforcement.
+
+--------------------------
+Building workloads_v6
+
+10 workloads across T1–T8 with the new specs, shared CSS workflow,
+and Opus 4.7 codegen. Most generated cleanly under
+`--concurrency 2 --tier-min 1 --tier-max 8 --count 10`; two seeds
+(T6 and T8) got dropped at the synth stage as palette duplicates
+within their 2-pair wave. Gap-filled both sequentially with fresh
+synth-seeds.
+
+One validator bug caught at this stage: the first shared-CSS run for
+T6 rejected `http://www.w3.org/2000/svg` (the SVG XML namespace) as
+"external network URL." Added an allow-list for the W3C XML
+namespace prefixes (`/2000/svg`, `/1999/xlink`, `/2000/xmlns/`,
+`/XML/1998/namespace`) — these look like URLs to a regex but are
+static identifiers Chromium never fetches. Mirrors the same xmlns
+exception in `_HTMLValidator`.
+
+The first full v6 run produced T7 = icon-library and T8 = news-feature
+by random draw from GENRES. Both came out short of their tier's
+intent: icon-library is intrinsically restrained-palette so the
+composite (which weights `cssColors`) demoted it; news-feature is
+text-rich but visually conventional. The headline composite hit
+ρ = +0.80, just below v5's +0.85. T7 and T8 were regenerated with
+GENRES temporarily restricted to `["infographic"]` and
+`["design-magazine"]` — the two genres that scored well in v5.
+
+T7 infographic delivered. DOM = 732 (well above the 460 floor),
+188 inline SVG primitives, 30 distinct colors, composite S = +1.34.
+T7 is now the highest-ranked workload in v6, exactly where it should
+be.
+
+T8 design-magazine did not deliver. DOM = 298 vs the 550 floor —
+under-spec by 46%. CSS rules came in at 269 (above the 240 floor),
+but the page didn't have the element density the spec asks for.
+Composite S = +0.02 — T8 ranked 6th in v6, behind T6, T4, T7,
+T3, and T5. **The floor is being treated by the LLM as advisory
+prose, not as a binding minimum.** Across three T8 attempts (v5
+news-feature, v6 attempt-1 news-feature, v6 attempt-2 design-magazine)
+the DOM count has landed at 323, 359, and 298 — within a tight band
+well below the 550 floor regardless of genre or synth-seed. The
+generator does not validate post-hoc that the rendered DOM hits the
+floor; doing so would require a Playwright pass per page and a
+retry loop. Deferred — see the problem_breakdown for the followup.
+
+--------------------------
+Final v6 numbers vs. the progression
+
+| Version | Composite ρ | Kendall τ | Inversions | Note |
+|---|---|---|---|---|
+| v4 (original) | +0.36 | +0.28 | T4→T5, T6→T7 | tier-as-label only, no density floors |
+| v5 (T7/T8 floors only) | +0.85 | +0.70 | T4→T5, T6→T7 | hit ρ ≥ 0.85 target |
+| v6 attempt 1 | +0.80 | +0.61 | T4→T5, T6→T7, T7→T8 | full T1–T8 floors |
+| **v6 final** | **+0.75** | **+0.61** | **T4→T5, T7→T8** | T7 fixed (infographic), T8 missed floor |
+
+The v6 final headline is *below* v5 by 0.10 in Spearman ρ.
+Bootstrap CI [+0.13, +0.99] is still entirely positive and the
+correlation is highly significant (p = 0.0125), but the 0.85 target
+is no longer hit. The honest reading: v6 is structurally healthier
+(every tier T1–T6 plus T7 now hits its floor; T1→T6→T7 is perfectly
+monotonic for the first time), but T8 remains a thorn that genre
+choice alone cannot fix.
+
+Web Almanac comparison: v6 means DOM = 280, cssRules = 208. Versus
+v4 (DOM = 177, cssRules = 66) we are now nearly 2× the v4 density
+on DOM and 3× on CSS rules. The top of our range (T7 at DOM = 732)
+exceeds the public web median (594) for the first time. The
+benchmark now tests agents at roughly real-world page complexity at
+the high end.
+
+v6 ships as-is. The single-CSS-file rule, shared-CSS workflow,
+and density floors are now part of the generator and persist forward.
+

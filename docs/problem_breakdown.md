@@ -672,12 +672,48 @@ other side makes visible.
   at task-creation time emitting a per-page checklist from seed.json
   would be more precise. Deferred until the generic criteria
   measurably fail on a real task.
-- T7 / T8 tier validation. Spearman ρ at +0.57 is real progress
-  from +0.36 but well below the 0.85 target. Both remaining
-  inversions are at boundaries the LLM is fighting against because
-  the genre choices (brand-identity, news-feature) pull toward
-  minimalism. Plan documented in
-  [running_notes.md](running_notes.md) lines 1342–1349.
+- T7 / T8 tier validation. Progression across regenerations: v4 ρ
+  +0.36 → v5 +0.85 (hit target) → v6 +0.75 (regressed). v5's win
+  came from tightened T5/T6/T7/T8 specs with explicit numeric
+  density floors plus the shared-CSS refactor (every seed authors
+  one `_shared.css` and pages link it, instead of inlining the
+  design system per page — this kept dense T7 pages under the API
+  streaming token cap). v6 extended the floors to all tiers T1-T8
+  and rebuilt the whole set with the new generator. T1–T6 + T7 now
+  hit their floors cleanly and T1→T6→T7 is perfectly monotonic for
+  the first time; T7 infographic landed at DOM = 732 (above its 460
+  floor) with composite S = +1.34, top of the ladder where it
+  should be. T8 missed its 550 DOM floor (came out 298 across two
+  attempts) — the floor is advisory prose, not an enforced minimum,
+  and the LLM treats it as a hint. Result: T7→T8 is the persistent
+  remaining inversion. Web Almanac comparison improved
+  dramatically: v6 mean DOM = 280 (v4: 177) and cssRules = 208 (v4:
+  66); top of v6 range exceeds the public web median page for the
+  first time.
+- Per-page DOM-count enforcement. The next iteration on tier
+  validation is a post-codegen Playwright pass that renders each
+  generated page, counts visible DOM elements via the existing
+  `EXTRACTION_JS`, and rejects pages under the tier's floor with a
+  retry loop. ~30 LOC change in `generate_dataset.py`. Deferred
+  because v6's overall ρ = +0.75 is already statistically
+  significant (p = 0.0125, CI [+0.13, +0.99]) and the structural
+  improvements (shared CSS, single-CSS-file rule, monotonic floors
+  T1-T8) shipped with v6.
+- Single-CSS-file rule and shared-CSS workflow. Every generated
+  website now ships at most one CSS file: a shared
+  `environment/reference-pages/_shared.css` authored by a dedicated
+  pre-codegen LLM call. Each page `<link rel="stylesheet"
+  href="../_shared.css">` it as the FIRST head element plus an
+  optional small inline `<style>` for page-unique overrides.
+  Rationale: any future judge MLLM that grades agent output by
+  reading source + screenshots must fit everything into one prompt,
+  so per-page CSS files would multiply attachments unnecessarily.
+  The HTML validator now rejects multiple `<link rel="stylesheet">`,
+  wrong hrefs, and `@import` inside inline `<style>`;
+  `validate_shared_css()` rejects any `@import` or external URL in
+  the stylesheet itself (with a W3C XML namespace allow-list for
+  `http://www.w3.org/2000/svg` and friends, which look like URLs to a
+  regex but are static identifiers Chromium never fetches).
 - Per-task template version stamping so that future verifier changes
   don't silently fail to propagate to already-generated tasks.
 

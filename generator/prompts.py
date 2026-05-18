@@ -48,7 +48,14 @@ Hard rules — violating any of these breaks the benchmark:
 
 1. The page must be a complete, valid HTML document with <!DOCTYPE html>,
    <html>, <head>, and <body> tags.
-2. All CSS must be inline in <style> tags inside <head>. NO external stylesheets.
+2. The page MUST reference the site's shared stylesheet as the FIRST element in
+   <head>, exactly as:  <link rel="stylesheet" href="../_shared.css">
+   You may ALSO add a small inline <style> block in <head> for page-specific
+   overrides (page-unique rules only — the shared design system lives in
+   _shared.css and you must NOT redefine its tokens or component classes here).
+   AT MOST ONE <link rel="stylesheet"> tag per page (the shared one). NO other
+   external stylesheets, NO Google Fonts, NO CDN links, NO @import statements
+   inside the inline <style> block.
 3. NO <script> tags. NO JavaScript. Pure HTML + CSS only.
 4. NO network resources: no Google Fonts, no CDN links, no remote images,
    no <link href="https://...">, no <img src="https://...">. The renderer
@@ -74,11 +81,80 @@ NO JSON wrapper.
 """
 
 
+# ---------- Shared-CSS system prompt + builder ----------
+# This stage runs ONCE per seed, before per-page HTML generation. It produces
+# the site's design system as a standalone stylesheet that every page then
+# references via <link rel="stylesheet" href="../_shared.css">. Splitting CSS
+# out of per-page output cut the per-page token budget enough to fit T7/T8
+# infographic pages with 30+ inline SVG primitives under the API streaming
+# threshold.
+
+SHARED_CSS_SYSTEM_PROMPT = f"""You generate a single shared CSS stylesheet for a 5-page benchmark website.
+
+The stylesheet is loaded by every page of the site via
+<link rel="stylesheet" href="../_shared.css">. Each page then composes its
+layout from the classes you define here and adds at most a small inline
+<style> for page-unique overrides.
+
+Hard rules — violating any of these breaks the benchmark:
+
+1. Output ONLY CSS. No HTML, no markdown fences, no commentary, no JSON wrapper.
+2. NO @import statements at all. The shared stylesheet must be fully self-
+   contained — no Google Fonts, no CDN links, no @import of any other file
+   (the benchmark allows at most one CSS file per website).
+3. Use ONLY system fonts (-apple-system, BlinkMacSystemFont, "Segoe UI",
+   Helvetica, Arial, Georgia, Times, monospace, sans-serif, serif).
+4. Use CSS custom properties (--ink, --paper, --accent-1, --space-1, etc.) for
+   palette, type, and spacing tokens so per-page <style> overrides can reuse them.
+5. The stylesheet must encode the FULL shared visual identity: palette tokens,
+   type tokens (font-size scale, weights, line-heights, letter-spacing),
+   nav and footer styling, layout primitives (containers, grids, sidebars),
+   component classes (buttons, cards, callouts, pull quotes, captions, etc.),
+   and responsive @media rules for the three viewports {_viewports_inline()}.
+6. Be generous: define enough utility/component classes that each page can
+   build its layout by composing classes. If a tier needs forms (T6),
+   typography (T5), or SVG accents (T7), define their styling here.
+
+Output the complete CSS document. NO markdown fences, NO commentary, NO preamble.
+"""
+
+
+def build_shared_css_prompt(seed: dict) -> str:
+    """Format the prompt for generating the site's shared stylesheet."""
+    constraints = "\n".join(f"  - {c}" for c in seed["constraints"])
+    page_spec_lines = "\n".join(
+        f"  - **{p}**: {seed['page_specs'][p]}" for p in seed["pages"]
+    )
+    return f"""Generate the shared stylesheet for a 5-page website.
+
+**Site ID:** {seed["id"]}
+**Tier:** {seed["tier"]}  **Genre:** {seed["genre"]}
+**Description:** {seed["description"]}
+
+**Palette:** {seed["palette_hint"]}
+**Typography:** {seed["type_style"]}
+
+**Hard constraints — must hold identically on every page:**
+{constraints}
+
+**The site's 5 pages (each will <link rel="stylesheet" href="../_shared.css">):**
+{page_spec_lines}
+
+The pages share nav, footer, palette, and typography — encode those here.
+Define enough component/utility classes that each page can build its layout
+by composing classes you define. Per-page HTML will reference your tokens
+and classes; do NOT expect pages to redefine them inline.
+
+Output the complete CSS document. NO markdown fences, NO commentary.
+"""
+
+
 # ---------- User prompt builder ----------
 
 def build_page_prompt(
     seed: dict,
     page_name: str,
+    shared_css: str = "",
     prior_errors: list[str] | None = None,
 ) -> str:
     """Format a prompt for generating ONE page of a multi-page site.
@@ -97,6 +173,16 @@ def build_page_prompt(
         f"  - **{p}**: {seed['page_specs'][p]}" for p in other_pages
     )
     pages_list = ", ".join(seed["pages"])
+
+    shared_css_block = ""
+    if shared_css:
+        shared_css_block = (
+            "\n**Shared stylesheet (already generated — REUSE its tokens and "
+            "classes; do NOT redefine them inline):**\n"
+            "```css\n"
+            f"{shared_css}\n"
+            "```\n"
+        )
 
     prompt = f"""Generate ONE page of a 5-page website.
 
@@ -117,9 +203,14 @@ href="../<other>/index.html") are fine — the renderer does not follow them.
 **Other pages of this site** (DO NOT generate these — listed so you know the
 site's full surface area and can keep the nav/footer consistent):
 {other_page_lines}
-
+{shared_css_block}
 **THE PAGE YOU ARE GENERATING NOW:**
 - **{page_name}**: {seed["page_specs"][page_name]}
+
+Reference the shared stylesheet as the FIRST element in <head>:
+<link rel="stylesheet" href="../_shared.css">
+Then add a small inline <style> only for page-unique overrides (do NOT
+redefine the shared tokens or component classes).
 
 Output the complete HTML document for the **{page_name}** page only. No JSON,
 no fences, no commentary.
