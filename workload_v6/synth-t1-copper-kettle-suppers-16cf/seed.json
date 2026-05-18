@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-copper-kettle-suppers-16cf",
+  "tier": 1,
+  "genre": "recipe-card",
+  "pages": [
+    "featured-recipe",
+    "ingredients",
+    "method",
+    "tips-and-swaps",
+    "about-the-cook"
+  ],
+  "palette_hint": "Warm off-white background #fdf8f2, near-black text #1a1210, with brick-terracotta accent #b84c1e and a muted mustard secondary accent #c9901f.",
+  "type_style": "Headings in Georgia serif, bold weight, body in system-ui at regular weight \u2014 warm, editorial, like a handwritten recipe card made digital.",
+  "description": "Copper Kettle Suppers is a single-recipe showcase site presenting a definitive slow-braised lamb shank with white bean ragout, walking visitors through every detail from pantry list to plating notes.",
+  "constraints": [
+    "All content centered in a single column, max-width 640px, with 24px horizontal padding on each side.",
+    "Section dividers are solid 1px horizontal rules in #d4b89a with 40px vertical margin above and below.",
+    "Accent color #b84c1e is used exclusively for headings, key labels, and the primary call-to-action buttons; mustard #c9901f is used only for secondary labels and highlight tags.",
+    "Buttons are solid #b84c1e with #fdf8f2 text, 12px 28px padding, no border-radius, uppercase letter-spacing 0.08em.",
+    "Body font-size is 17px with line-height 1.7; headings h1 at 2.2rem, h2 at 1.5rem, h3 at 1.15rem, all in Georgia serif."
+  ],
+  "page_specs": {
+    "featured-recipe": "Hero section displays the recipe title 'Slow-Braised Lamb Shanks with White Bean Ragout' in a large h1, a one-paragraph flavor description mentioning rosemary, anchovy, and dry vermouth, and a row of three stat tags (Serves: 4, Prep: 25 min, Cook: 3 hr 20 min) styled as mustard-labeled badges. Below the hero, a section lists the recipe's origin story \u2014 a grandmother's Ligurian kitchen \u2014 followed by a navigation block with four labeled buttons linking to the other pages.",
+    "ingredients": "Page opens with an h2 reading 'What You'll Need' and splits the ingredient list into three labeled groups: Lamb & Marinade (7 items), White Bean Ragout (9 items), and Finishing Touches (4 items). Each group is introduced by a terracotta h3 label, and each ingredient line shows quantity, unit, and specific item name (e.g., '4 meaty lamb shanks, ~380 g each'). A note block at the bottom in a #f3ece3 background box specifies acceptable substitutions with a border-left of 4px solid #c9901f.",
+    "method": "Page shows step-by-step cooking instructions divided into four phases: Marinating, Searing, Braising, and Building the Ragout. Each phase is an h3 in terracotta followed by a numbered ordered list with at least four steps each, written in precise imperative language ('Deglaze the pot with 120 ml dry vermouth, scraping up all browned bits'). A timing summary bar at the top displays three time blocks (Active: 40 min, Hands-off: 2 hr 40 min, Rest: 10 min) as inline-block elements with mustard borders.",
+    "tips-and-swaps": "Page presents five standalone tip cards, each in a #fdf0e8 background box with 20px padding and a terracotta left border of 4px, covering topics: choosing lamb shank weight, dried vs. canned beans, vermouth alternatives, make-ahead braising, and reheating without drying out. Below the tips, a two-section 'Swaps' area lists four ingredient substitutions (e.g., lamb \u2192 beef osso buco) and three dietary adaptations (gluten-free confirmation, dairy-free note, low-sodium adjustment) as labeled unordered lists.",
+    "about-the-cook": "Page introduces the fictional recipe author Teodora Marchetti with a two-paragraph bio describing her upbringing in Genoa, her move to Edinburgh, and her philosophy of slow, unfussy cooking. A pull-quote block in large italic Georgia text reads 'A good braise forgives almost everything except impatience.' Below the bio, a short section titled 'Other Recipes in This Series' lists five dish names as a plain unordered list (e.g., 'Pork Belly with Fennel & Nduja Lentils'), followed by a footer with copyright line and a contact email address."
+  }
+}

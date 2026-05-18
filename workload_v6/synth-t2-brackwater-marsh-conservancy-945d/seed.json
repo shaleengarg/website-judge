@@ -1,0 +1,29 @@
+{
+  "id": "synth-t2-brackwater-marsh-conservancy-945d",
+  "tier": 2,
+  "genre": "nonprofit",
+  "pages": [
+    "mission",
+    "wetlands",
+    "volunteer",
+    "grants",
+    "contact"
+  ],
+  "palette_hint": "Background #f0f7f4 (pale mint), body text #1b2c25 (deep forest), primary accent #b85c1a (burnt sienna), secondary accent #3a7d5e (moss green).",
+  "type_style": "Headings in Georgia serif at font-weight 700 for authority; body in system-ui at font-weight 400; compact line-height 1.5 for dense informational feel.",
+  "description": "Brackwater Marsh Conservancy is a Gulf Coast nonprofit dedicated to restoring tidal wetlands, educating the public about estuarine ecosystems, and funding community-led habitat projects.",
+  "constraints": [
+    "Max page width 1100px centered with auto side margins; inner content padding 24px on each side.",
+    "Nav bar background #1b2c25 with all 5 page links in #f0f7f4 text, 14px uppercase letter-spacing 0.08em, height 56px using flexbox space-between.",
+    "Footer background #3a7d5e with white text, three equal columns via CSS grid, padding 32px 24px, identical across all pages.",
+    "Cards use border 2px solid #3a7d5e, border-radius 6px, padding 20px, background white, displayed in CSS grid with minmax(280px, 1fr) columns.",
+    "Accent buttons use background #b85c1a, color white, border-radius 4px, padding 10px 22px, font-weight 700, no hover effects."
+  ],
+  "page_specs": {
+    "mission": "The landing page opens with a full-width hero banner (background #1b2c25, text white) featuring the tagline 'Restoring the Gulf's Living Edge' and a two-sentence description of the conservancy's founding in 2009 by coastal ecologist Dr. Renata Sol\u00eds. Below the hero, a three-column stat grid highlights 14,200 acres restored, 38 partner organizations, and $2.1M distributed in grants. A long-form mission statement section uses alternating left-right text blocks describing tidal ecology, sea-level threats, and the conservancy's three-pillar strategy: restoration, education, and advocacy.",
+    "wetlands": "A full-page reference guide to the four wetland types the conservancy manages: black mangrove fringe, Spartina salt marsh, brackish transition zones, and freshwater cypress swamp. Each type has a dedicated card with a text-based icon (ASCII leaf glyph), a 60-word ecological description, geographic range along the Gulf Coast, and current acreage under protection. A secondary grid below lists six indicator species\u2014roseate spoonbill, diamondback terrapin, Gulf killifish, Louisiana iris, sea ox-eye daisy, and American alligator\u2014with a two-sentence ecological role note for each.",
+    "volunteer": "Displays eight volunteer program cards organized in a CSS grid, covering roles including Marsh Monitor, Shoreline Cleanup Lead, School Outreach Educator, Native Plant Nursery Assistant, Water Quality Sampler, Bird Survey Technician, Grant Writing Support, and Trail Maintenance Crew. Each card lists time commitment, required skills, and a brief 30-word role description. Below the grid, a two-column 'How to Join' section lists the four-step application process with numbered steps and a prominent burnt-sienna call-to-action button linking to the contact page.",
+    "grants": "A structured page presenting the conservancy's three active grant programs: the Tidal Habitat Seed Fund (up to $15,000 for local restoration projects), the Estuary Education Initiative ($5,000 for K-12 curriculum development), and the Coastal Resilience Fellowship ($25,000 for emerging scientists). Each program is displayed in a wide card with eligibility criteria, application deadlines, and past recipient highlights. A secondary table-style section lists 11 past grant recipients from 2019\u20132023 with project names, awarded amounts, and a one-sentence outcome summary.",
+    "contact": "A content-rich contact page divided into four sections: a mailing address block for the Corpus Christi, TX headquarters, a staff directory table listing six team members with name, title, and email address, a two-column FAQ grid answering eight common questions about donations, volunteering, and grant applications, and a plain HTML form with fields for name, email, subject (dropdown with five options), and a 120-character message textarea, submitted to a placeholder mailto action."
+  }
+}

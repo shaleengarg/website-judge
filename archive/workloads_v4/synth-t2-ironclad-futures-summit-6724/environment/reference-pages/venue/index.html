@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venue — Ironclad Futures Summit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F5F0E8;
+    color: #1C1C1C;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #2C3E50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #F5F0E8;
+    letter-spacing: 0.5px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+  .nav-links a {
+    color: #F5F0E8;
+    text-decoration: none;
+    font-size: 14px;
+    padding-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .nav-links a.active {
+    border-bottom: 2px solid #C0392B;
+  }
+
+  /* Container */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* Page header */
+  .page-header {
+    padding: 56px 0 32px;
+  }
+  .page-header h1 {
+    font-size: 42px;
+    color: #2C3E50;
+    margin-bottom: 12px;
+  }
+  .page-header p {
+    font-size: 17px;
+    color: #555;
+    max-width: 720px;
+  }
+
+  /* Section heading */
+  .section-heading {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2C3E50;
+    border-left: 3px solid #C0392B;
+    padding-left: 12px;
+    margin: 48px 0 24px;
+  }
+
+  /* Venue main flex */
+  .venue-flex {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .venue-photo {
+    width: 600px;
+    height: 340px;
+    max-width: 100%;
+    background: #D5CFC4;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2C3E50;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 18px;
+    flex-shrink: 0;
+    background-image: linear-gradient(135deg, #D5CFC4 0%, #c6c0b5 100%);
+  }
+  .venue-details {
+    flex: 1;
+    min-width: 280px;
+  }
+  .venue-details h2 {
+    font-size: 26px;
+    color: #2C3E50;
+    margin-bottom: 16px;
+  }
+  .detail-block {
+    margin-bottom: 20px;
+  }
+  .detail-block h3 {
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #C0392B;
+    margin-bottom: 6px;
+    font-family: system-ui, sans-serif;
+  }
+  .detail-block p, .detail-block ul {
+    font-size: 15px;
+    color: #1C1C1C;
+  }
+  .detail-block ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .detail-block ul li {
+    padding: 4px 0;
+    border-bottom: 1px dotted #D5CFC4;
+  }
+  .detail-block ul li:last-child { border-bottom: none; }
+
+  /* Hotel grid */
+  .hotel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  .card {
+    background: #FFFFFF;
+    border: 1px solid #D5CFC4;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .hotel-card h3 {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: bold;
+    color: #2C3E50;
+    margin-bottom: 4px;
+  }
+  .hotel-card .hotel-sub {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 14px;
+  }
+  .hotel-card dl {
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  .hotel-card dt {
+    font-weight: bold;
+    color: #2C3E50;
+    margin-top: 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .hotel-card dd {
+    color: #1C1C1C;
+    margin-top: 2px;
+  }
+  .booking-code {
+    display: inline-block;
+    background: #C0392B;
+    color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .rate {
+    color: #C0392B;
+    font-weight: bold;
+    font-size: 17px;
+  }
+
+  /* Map placeholder */
+  .map-placeholder {
+    width: 100%;
+    height: 220px;
+    background: repeating-linear-gradient(45deg, #D5CFC4, #D5CFC4 14px, #c6c0b5 14px, #c6c0b5 28px);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2C3E50;
+    font-family: Georgia, serif;
+    font-style: italic;
+    margin-bottom: 56px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1C1C1C;
+    color: #F5F0E8;
+    border-top: 4px solid #C0392B;
+    padding: 32px 40px;
+    margin-top: 32px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .footer-col {
+    flex: 1;
+    min-width: 200px;
+  }
+  .footer-col h4 {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #FFFFFF;
+  }
+  .footer-col p, .footer-col a {
+    color: #F5F0E8;
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    padding: 3px 0;
+  }
+  .footer-col a:hover { color: #C0392B; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .venue-photo { width: 100%; height: 280px; }
+    .hotel-grid { grid-template-columns: 1fr; }
+    .page-header h1 { font-size: 34px; }
+  }
+  @media (max-width: 600px) {
+    .nav { padding: 14px 20px; }
+    .nav-links { gap: 14px; }
+    .container { padding: 0 20px; }
+    .page-header { padding: 36px 0 20px; }
+    .page-header h1 { font-size: 28px; }
+    .section-heading { font-size: 22px; }
+    .venue-flex { gap: 24px; }
+    footer { padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">IRONCLAD FUTURES</div>
+  <ul class="nav-links">
+    <li><a href="../program/index.html">Program</a></li>
+    <li><a href="../speakers/index.html">Speakers</a></li>
+    <li><a href="#" class="active">Venue</a></li>
+    <li><a href="../register/index.html">Register</a></li>
+    <li><a href="../about/index.html">About</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <header class="page-header">
+    <h1>Venue &amp; Travel</h1>
+    <p>The 2025 Ironclad Futures Summit convenes at the David L. Lawrence Convention Center in downtown Pittsburgh — a LEED Platinum-certified facility on the banks of the Allegheny River.</p>
+  </header>
+
+  <section class="venue-flex">
+    <div class="venue-photo">Venue Exterior — Convention Center</div>
+    <div class="venue-details">
+      <h2>David L. Lawrence Convention Center</h2>
+
+      <div class="detail-block">
+        <h3>Address</h3>
+        <p>1000 Fort Duquesne Blvd<br>Pittsburgh, PA 15222</p>
+      </div>
+
+      <div class="detail-block">
+        <h3>Parking</h3>
+        <p>On-site garage available beneath the convention center (1,400 spaces). Daily rate: $24. Pre-paid validation codes provided in registration packet.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3>Nearby Hotels</h3>
+        <ul>
+          <li>Omni William Penn — 0.4 mi walk</li>
+          <li>Drury Plaza Pittsburgh Downtown — 0.3 mi walk</li>
+          <li>Westin Pittsburgh — 0.5 mi walk</li>
+        </ul>
+      </div>
+
+      <div class="detail-block">
+        <h3>Public Transit</h3>
+        <p>Steel Plaza T-station (light rail) is a 6-minute walk. Port Authority bus routes 54, 86, and P3 stop at 11th &amp; Penn. Free downtown Loop service connects all major hotels.</p>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="section-heading">Official Hotel Partners</h2>
+
+  <div class="hotel-grid">
+
+    <div class="card hotel-card">
+      <h3>Omni William Penn</h3>
+      <div class="hotel-sub">530 William Penn Place · 0.4 mi from venue</div>
+      <dl>
+        <dt>Negotiated Rate</dt>
+        <dd class="rate">$219 / night</dd>
+        <dt>Check-in</dt>
+        <dd>3:00 PM · Check-out 11:00 AM</dd>
+        <dt>Cutoff Date</dt>
+        <dd>April 18, 2025</dd>
+      </dl>
+      <span class="booking-code">CODE: IFS25-OMNI</span>
+    </div>
+
+    <div class="card hotel-card">
+      <h3>Drury Plaza Pittsburgh Downtown</h3>
+      <div class="hotel-sub">745 Grant Street · 0.3 mi from venue</div>
+      <dl>
+        <dt>Negotiated Rate</dt>
+        <dd class="rate">$184 / night</dd>
+        <dt>Check-in</dt>
+        <dd>3:00 PM · Check-out 11:00 AM</dd>
+        <dt>Cutoff Date</dt>
+        <dd>April 20, 2025</dd>
+      </dl>
+      <span class="booking-code">CODE: IFS25-DRURY</span>
+    </div>
+
+    <div class="card hotel-card">
+      <h3>Westin Pittsburgh</h3>
+      <div class="hotel-sub">1000 Penn Avenue · 0.2 mi from venue</div>
+      <dl>
+        <dt>Negotiated Rate</dt>
+        <dd class="rate">$229 / night</dd>
+        <dt>Check-in</dt>
+        <dd>4:00 PM · Check-out 12:00 PM</dd>
+        <dt>Cutoff Date</dt>
+        <dd>April 15, 2025</dd>
+      </dl>
+      <span class="booking-code">CODE: IFS25-WSTN</span>
+    </div>
+
+    <div class="card hotel-card">
+      <h3>Renaissance Pittsburgh</h3>
+      <div class="hotel-sub">107 Sixth Street · 0.4 mi from venue</div>
+      <dl>
+        <dt>Negotiated Rate</dt>
+        <dd class="rate">$199 / night</dd>
+        <dt>Check-in</dt>
+        <dd>3:00 PM · Check-out 12:00 PM</dd>
+        <dt>Cutoff Date</dt>
+        <dd>April 22, 2025</dd>
+      </dl>
+      <span class="booking-code">CODE: IFS25-RENPGH</span>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>Ironclad Futures Summit</p>
+      <p>info@ironcladfutures.org</p>
+      <p>+1 (412) 555-0188</p>
+      <p>Pittsburgh, PA</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="../program/index.html">Program</a>
+      <a href="../speakers/index.html">Speakers</a>
+      <a href="#">Venue</a>
+      <a href="../register/index.html">Register</a>
+      <a href="../about/index.html">About</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social Handles</h4>
+      <a href="#">@ironcladfutures</a>
+      <a href="#">LinkedIn / Ironclad Futures</a>
+      <a href="#">YouTube / IFSummit</a>
+      <a href="#">#IFSummit2025</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

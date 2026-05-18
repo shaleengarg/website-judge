@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venue — Ironclad Summit 2025</title>
+<style>
+  .venue-hero {
+    background: var(--ink);
+    color: var(--paper);
+    padding: var(--space-6) var(--space-4);
+  }
+  .venue-hero-inner { max-width: var(--maxw); margin: 0 auto; }
+  .venue-hero h1 { color: var(--paper); margin-bottom: var(--space-2); }
+  .venue-hero p { color: #d8d4cc; max-width: 680px; }
+  .venue-hero .eyebrow { color: var(--accent-2); margin-bottom: var(--space-2); }
+
+  .location-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .map-placeholder {
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    height: 320px;
+    background:
+      linear-gradient(135deg, #e8e5dc 25%, transparent 25%) 0 0/40px 40px,
+      linear-gradient(225deg, #e8e5dc 25%, transparent 25%) 0 0/40px 40px,
+      var(--paper-alt);
+    position: relative;
+    overflow: hidden;
+  }
+  .map-pin {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--accent-1);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: var(--fs-sm);
+    box-shadow: var(--shadow-md);
+  }
+  .map-pin:after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--accent-1);
+  }
+  .transit-line {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.06em;
+    margin-right: 6px;
+  }
+  .transit-blue { background: var(--accent-2); }
+  .transit-red { background: var(--accent-1); }
+
+  .floor-plan-big {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 200px 140px;
+    gap: var(--space-3);
+    background: var(--paper-alt);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+  }
+  .fb {
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: var(--fs-lg);
+    color: #fff;
+    position: relative;
+  }
+  .fb .fb-sub {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 4px;
+  }
+  .fb-hall-a { background: var(--ink); }
+  .fb-hall-b { background: var(--accent-2); }
+  .fb-expo { background: var(--accent-1); }
+  .fb-reg { background: #6b6b7a; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    font-size: var(--fs-sm);
+  }
+  .legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  @media (max-width: 820px) {
+    .location-grid { grid-template-columns: 1fr; }
+    .floor-plan-big {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+    .map-placeholder { height: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <div class="brand"><span class="brand-mark">◆</span> Ironclad Summit</div>
+    <ul class="nav-links">
+      <li><a href="../home/index.html">Home</a></li>
+      <li><a href="../schedule/index.html">Schedule</a></li>
+      <li><a href="../speakers/index.html">Speakers</a></li>
+      <li><a href="../venue/index.html" class="active">Venue</a></li>
+      <li><a href="../register/index.html">Register</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="venue-hero">
+  <div class="venue-hero-inner">
+    <div class="eyebrow">Pittsburgh, PA · October 9–10, 2025</div>
+    <h1>David L. Lawrence Convention Center</h1>
+    <p>Set on the banks of the Allegheny River, the Lawrence Center is a LEED-certified, light-filled venue with 313,000 sq ft of contiguous exhibit space — purpose-built for technical conferences like ours.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <h2 class="section-heading">Location &amp; Transit</h2>
+  <div class="location-grid">
+    <div class="map-placeholder" aria-label="Map placeholder">
+      <div class="map-pin">Lawrence Center</div>
+    </div>
+    <div class="stack">
+      <div>
+        <h4>Address</h4>
+        <p class="lede" style="margin:0;">
+          1000 Fort Duquesne Boulevard<br>
+          Pittsburgh, PA 15222<br>
+          United States
+        </p>
+      </div>
+      <div>
+        <h4>Public Transit</h4>
+        <p style="margin-bottom:var(--space-2);">
+          <span class="transit-line transit-blue">T · Blue Line</span>
+          <span class="transit-line transit-red">T · Red Line</span>
+        </p>
+        <p class="small muted" style="margin:0;">Exit at Steel Plaza or Wood Street stations. Both stops are within a 6-minute walk of the convention center's south entrance.</p>
+      </div>
+      <div>
+        <h4>From Union Station</h4>
+        <p class="small" style="margin:0;">A flat 12-minute walk along the Strip District corridor, or a 4-minute ride on the T-Blue. Wayfinding signage will be posted October 8–11.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-heading">Hotel Block</h2>
+  <p class="lede">We've secured discounted rates at three partner hotels within a 10-minute walk of the venue. Use the booking codes below before <strong>September 12, 2025</strong> to lock in the conference rate.</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Hotel</th>
+        <th>Distance</th>
+        <th>Conference Rate</th>
+        <th>Booking Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Omni William Penn</strong><br><span class="small muted">530 William Penn Place</span></td>
+        <td>0.6 mi · 11 min walk</td>
+        <td>$229 / night</td>
+        <td><code>IRONCLAD25</code></td>
+      </tr>
+      <tr>
+        <td><strong>Drury Plaza Hotel</strong><br><span class="small muted">745 Grant Street</span></td>
+        <td>0.4 mi · 7 min walk</td>
+        <td>$189 / night</td>
+        <td><code>ICS-DRURY</code></td>
+      </tr>
+      <tr>
+        <td><strong>Courtyard Riverfront</strong><br><span class="small muted">945 Penn Avenue</span></td>
+        <td>0.3 mi · 5 min walk</td>
+        <td>$209 / night</td>
+        <td><code>SUMMIT2025</code></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="small muted" style="margin-top:var(--space-3);">Rates include in-room Wi-Fi. State and occupancy taxes additional. Standard cancellation policies apply per hotel.</p>
+
+  <h2 class="section-heading">Floor Plan</h2>
+  <p class="lede">The conference occupies the east wing of Level 3. Halls A and B host all sessions and workshops; the Expo Floor (Level 2) houses hardware vendors and the Ironclad Lounge.</p>
+
+  <div class="floor-plan-big" aria-label="Conference floor plan schematic">
+    <div class="fb fb-hall-a">
+      <span class="fb-sub">Level 3 · East</span>
+      Hall A — Main Stage
+    </div>
+    <div class="fb fb-hall-b">
+      <span class="fb-sub">Level 3 · West</span>
+      Hall B — Workshops
+    </div>
+    <div class="fb fb-expo">
+      <span class="fb-sub">Level 2 · Atrium</span>
+      Expo Floor
+    </div>
+    <div class="fb fb-reg">
+      <span class="fb-sub">Level 1 · Lobby</span>
+      Registration Desk
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="legend-swatch" style="background:var(--ink);"></span> Hall A · Keynotes &amp; main track</span>
+    <span><span class="legend-swatch" style="background:var(--accent-2);"></span> Hall B · Hands-on workshops</span>
+    <span><span class="legend-swatch" style="background:var(--accent-1);"></span> Expo Floor · Hardware vendors</span>
+    <span><span class="legend-swatch" style="background:#6b6b7a;"></span> Registration · Check-in &amp; badge</span>
+  </div>
+
+  <h2 class="section-heading">Parking</h2>
+  <div class="callout">
+    <h4>Convention Center Garage — Open 24/7</h4>
+    <p>
+      The attached underground garage offers 700 spaces with direct elevator access to Level 1 (Registration).
+      <strong>Daily rate: $22 flat</strong> with conference validation at the registration desk.
+      Standard non-validated rate is $32/day. EV chargers (J1772 and CCS) are available on levels P2 and P3 on a first-come basis.
+      Overflow parking at the Grant Street Garage (5-minute walk) runs $18/day.
+    </p>
+  </div>
+
+  <h2 class="section-heading">On-Site Amenities</h2>
+  <div class="card-grid">
+    <div class="card">
+      <h3>Wi-Fi</h3>
+      <p class="small">Dedicated 10 Gbps backbone with conference SSID <code class="mono">ironclad-2025</code>. No password — captive portal acceptance only.</p>
+    </div>
+    <div class="card">
+      <h3>Accessibility</h3>
+      <p class="small">All session halls are step-free and ADA-compliant. Live captioning is provided in Hall A. Quiet room available on Level 3.</p>
+    </div>
+    <div class="card">
+      <h3>Food &amp; Coffee</h3>
+      <p class="small">Catered breakfast, lunch, and afternoon espresso bar included with every badge. Dietary options labeled at each station.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">◆ Ironclad Summit</div>
+      <p class="footer-tagline">Two days of systems engineering, infrastructure, and hardware — Pittsburgh, PA.</p>
+      <p class="small">October 9–10, 2025<br>David L. Lawrence Convention Center</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../home/index.html">Home</a></li>
+        <li><a href="../schedule/index.html">Schedule</a></li>
+        <li><a href="../speakers/index.html">Speakers</a></li>
+        <li><a href="../venue/index.html">Venue</a></li>
+        <li><a href="../register/index.html">Register</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>hello@ironcladsummit.io</li>
+        <li>register@ironcladsummit.io</li>
+        <li>@ironcladsummit (Mastodon)</li>
+        <li>@ironclad_conf (X)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <span>© 2025 Ironclad Summit. All rights reserved.</span>
+    <span>Made in Pittsburgh, PA</span>
+  </div>
+</footer>
+
+</body>
+</html>

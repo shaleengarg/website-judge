@@ -1,0 +1,29 @@
+{
+  "id": "synth-t3-ironbark-supply-co-0759",
+  "tier": 3,
+  "genre": "ecommerce",
+  "pages": [
+    "shop",
+    "product-detail",
+    "cart",
+    "account",
+    "about"
+  ],
+  "palette_hint": "Background #F5F0E8 (warm off-white), primary text #1C1A17 (near-black), accent #C45B1E (burnt orange) and #4A7C59 (forest green) for badges and CTAs.",
+  "type_style": "Headings in Georgia serif, bold weight for product names and section titles; body in system-ui sans-serif at 15px/1.6, giving a rugged-but-readable catalog feel.",
+  "description": "Ironbark Supply Co. is an Australian-themed outdoor and bushcraft goods store selling axes, fire-starters, canvas bags, and field tools via a dense catalog with sidebar filtering and full cart management.",
+  "constraints": [
+    "Shop page uses a fixed 260px left sidebar for filters (categories, price range, material) with the product grid scrolling independently in the remaining viewport; sidebar background is #2B2520 with white filter labels.",
+    "Product grid is strictly 3 columns at max-width 1200px, collapsing to 2 columns below 860px; each card is 280px wide with a 1px solid #D6CFC4 border and 16px internal padding.",
+    "Sticky header (height 56px, background #1C1A17, text #F5F0E8) persists across all pages containing the Ironbark wordmark left-aligned, nav links centered, and a cart icon with item-count badge (accent #C45B1E) right-aligned.",
+    "Cart page uses a two-column layout: 65% left for line-item table (columns: product thumbnail 48px, name, qty stepper, unit price, subtotal, remove) and 35% right for a sticky order-summary panel with background #2B2520 and white text.",
+    "Product detail page uses a two-column split at 50/50 up to 1100px max-width: left column holds a single large product image placeholder (400px tall, background #D6CFC4) and thumbnail strip; right column has name, SKU, star rating row (5 filled/empty glyphs), price in 28px bold, material specs table, and an Add-to-Cart button (#4A7C59, full width, 48px tall)."
+  ],
+  "page_specs": {
+    "shop": "Displays 18 product cards across 3 columns with the fixed left sidebar showing checkboxes for categories (Cutting Tools, Fire & Light, Carry & Storage, Navigation, Camp Kitchen) and a price-range text-input pair. A horizontal sort bar sits above the grid with a dropdown (Sort by: Featured, Price Low\u2013High, Price High\u2013Low, Newest) and a result count label reading '18 products'. Each card shows a product image placeholder, product name in bold Georgia, a short 6-word descriptor, price, and an 'Add to Cart' text button in burnt orange.",
+    "product-detail": "Shows the 'Ironbark No.4 Splitting Axe' as the featured product with SKU IB-AXE-004, rated 4.5 stars, priced at AU$189.00. The right column includes a specs table listing Handle Material (Hickory), Head Weight (1.8 kg), Blade Steel (Swedish high-carbon), and Overall Length (76 cm), followed by a paragraph of real product copy about the hand-ground bevel and linseed-oil finish. Below the fold, a full-width section shows 4 related product cards in a single row.",
+    "cart": "Renders a cart containing 3 sample line items: Ironbark No.4 Splitting Axe \u00d71 at AU$189.00, Waxed Canvas Field Bag \u00d72 at AU$74.00 each, and Ferro Rod Fire Kit \u00d71 at AU$28.50. The sticky right panel shows Subtotal AU$365.50, Shipping AU$12.00, GST Included note, and a bold Total AU$377.50, plus a full-width forest-green 'Proceed to Checkout' button and a text link 'Continue Shopping' below it.",
+    "account": "Presents a two-column layout with a narrow 220px left nav listing links (My Orders, Saved Items, Addresses, Payment Methods, Account Settings) with the active link highlighted in burnt orange. The main area defaults to the Orders tab showing a dense table of 5 past orders with columns: Order #, Date, Items Summary, Total, Status (badge-styled: Delivered in green, Processing in orange), and a 'View Details' link per row. A greeting header reads 'Welcome back, Dale Ferrington.'",
+    "about": "Single-column narrative page max-width 760px centered, with a large all-caps section heading 'Built for the Bush Since 2009' in Georgia at 36px. Three content blocks follow: company founding story set in Ballarat, Victoria; a values table comparing Ironbark's practices (hand-selected materials, carbon-offset shipping, lifetime tool guarantee) against industry norms; and a team grid showing 4 staff portraits as 120\u00d7120px placeholder squares with name and role beneath. Page ends with a 'Visit Our Workshop' call-to-action button in burnt orange."
+  }
+}

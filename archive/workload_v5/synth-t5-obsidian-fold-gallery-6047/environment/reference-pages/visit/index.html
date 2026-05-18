@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visit — Obsidian Fold</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    background: #1a1a1a;
+    color: #f0ede6;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Typography scale */
+  .display { font-size: 4.8rem; font-weight: 700; line-height: 1.02; letter-spacing: -0.02em; }
+  h1 { font-size: 3rem; font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+  h2 { font-size: 1.875rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.5rem; }
+  h3 { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+  .caption { font-size: 0.8rem; }
+  .small { font-size: 0.65rem; }
+
+  /* Header / Nav */
+  .site-header {
+    border-bottom: 1px solid #3a3a3a;
+    position: sticky;
+    top: 0;
+    background: #1a1a1a;
+    z-index: 10;
+  }
+  .nav-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+  }
+  .brand span { color: #c0512f; }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .nav-links a { color: #f0ede6; padding-bottom: 4px; }
+  .nav-links a.active { color: #d4af6e; border-bottom: 1px solid #c0512f; }
+
+  /* Master grid */
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+    display: grid;
+    grid-template-columns: 200px 680px 280px;
+    gap: 24px;
+  }
+
+  /* Hero block sits across the grid */
+  .hero {
+    grid-column: 1 / -1;
+    border-top: 1px solid #d4af6e;
+    border-bottom: 1px solid #3a3a3a;
+    padding: 40px 0 32px;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: 200px 680px 280px;
+    gap: 24px;
+  }
+  .hero-label {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: #8a8070;
+    line-height: 1.9;
+    text-transform: uppercase;
+  }
+  .hero-title { color: #f0ede6; }
+  .hero-title em { color: #c0512f; font-style: normal; }
+  .hero-meta {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: #d4af6e;
+    text-transform: uppercase;
+    line-height: 1.9;
+    align-self: end;
+  }
+
+  /* Marginalia */
+  .marginalia {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: #8a8070;
+    line-height: 1.9;
+    text-transform: uppercase;
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+  .marginalia .group { margin-bottom: 28px; }
+  .marginalia .compass {
+    font-size: 0.65rem;
+    color: #d4af6e;
+    letter-spacing: 0.3em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .marginalia h4 {
+    font-size: 0.65rem;
+    color: #c0512f;
+    letter-spacing: 0.2em;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .marginalia p { margin-bottom: 10px; }
+  .marginalia .rule {
+    width: 24px;
+    height: 1px;
+    background: #d4af6e;
+    margin: 10px 0;
+  }
+
+  /* Main column */
+  .main {
+    min-width: 0;
+  }
+  .main > section { margin-bottom: 56px; }
+  .section-label {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: #d4af6e;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: inline-block;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #c0512f;
+  }
+
+  .lead { margin-top: 16px; margin-bottom: 24px; }
+  .lead::first-letter,
+  .accessibility p:first-of-type::first-letter,
+  .transport p:first-of-type::first-letter {
+    font-family: Georgia, serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: #c0512f;
+    float: left;
+    line-height: 0.8;
+    margin-right: 6px;
+    margin-top: 4px;
+  }
+
+  /* Hours table */
+  .hours-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  .hours-table th, .hours-table td {
+    padding: 14px 0;
+    border-bottom: 1px solid #3a3a3a;
+    text-align: left;
+    vertical-align: baseline;
+  }
+  .hours-table th {
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #f0ede6;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    width: 40%;
+  }
+  .hours-table td {
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    text-align: right;
+    color: #f0ede6;
+  }
+  .hours-table tr.closed td { color: #8a8070; font-style: italic; }
+  .hours-table caption {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: #d4af6e;
+    text-transform: uppercase;
+    text-align: left;
+    padding-bottom: 10px;
+  }
+
+  .body-p { margin-bottom: 18px; }
+  .body-p strong { color: #d4af6e; font-weight: 700; }
+
+  /* Pull quote */
+  .pullquote {
+    font-family: Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #d4af6e;
+    line-height: 1.3;
+    border-left: 4px solid #c0512f;
+    padding-left: 1.5rem;
+    margin: 56px 0 32px -48px;
+  }
+  .pullquote cite {
+    display: block;
+    font-style: normal;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: #8a8070;
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: #f0ede6;
+    min-width: 0;
+  }
+  .sidebar-head {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #d4af6e;
+    border-bottom: 1px solid #c0512f;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+  }
+  .event {
+    border-bottom: 1px dotted #3a3a3a;
+    padding: 14px 0;
+  }
+  .event:last-child { border-bottom: none; }
+  .event .date {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: #8a8070;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .event h3 {
+    font-family: Georgia, serif;
+    color: #f0ede6;
+    margin-bottom: 6px;
+  }
+  .event .meta {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: #8a8070;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    line-height: 1.7;
+    font-family: system-ui, sans-serif;
+  }
+  .flag {
+    display: inline-block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: #c0512f;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 1px solid #c0512f;
+    padding: 3px 8px;
+  }
+
+  /* Map placeholder */
+  .map {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 50%, #3a2a22 100%);
+    height: 220px;
+    border: 1px solid #3a3a3a;
+    position: relative;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8a8070;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .map::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px dashed #c0512f;
+    opacity: 0.5;
+  }
+  .map .pin {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #c0512f;
+    border-radius: 50%;
+    top: 45%;
+    left: 55%;
+    box-shadow: 0 0 0 6px rgba(192,81,47,0.2);
+  }
+
+  /* Footer */
+  .site-footer {
+    border-top: 1px solid #3a3a3a;
+    margin-top: 48px;
+    background: #141414;
+  }
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+    display: grid;
+    grid-template-columns: 200px 680px 280px;
+    gap: 24px;
+  }
+  .footer-inner .col {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    line-height: 1.9;
+    color: #8a8070;
+    text-transform: uppercase;
+  }
+  .footer-inner .brand-foot {
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    color: #f0ede6;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .footer-inner .brand-foot span { color: #c0512f; }
+  .footer-inner h5 {
+    font-size: 0.65rem;
+    color: #d4af6e;
+    letter-spacing: 0.25em;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .footer-bottom {
+    border-top: 1px solid #2a2a2a;
+    padding: 20px 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: #8a8070;
+    text-transform: uppercase;
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .page, .hero, .footer-inner {
+      grid-template-columns: 160px 1fr 240px;
+    }
+  }
+  @media (max-width: 900px) {
+    .page, .hero, .footer-inner {
+      grid-template-columns: 1fr 1fr;
+    }
+    .marginalia {
+      position: static;
+      grid-column: 1 / -1;
+      order: -1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #3a3a3a;
+      margin-bottom: 8px;
+    }
+    .main { grid-column: 1 / -1; }
+    .sidebar { grid-column: 1 / -1; }
+    .hero-meta { grid-column: 1 / -1; }
+    .display { font-size: 3.6rem; }
+    .pullquote { margin-left: 0; }
+  }
+  @media (max-width: 560px) {
+    .page { padding: 40px 18px 64px; }
+    .nav-links { gap: 16px; font-size: 0.65rem; letter-spacing: 0.15em; }
+    .display { font-size: 2.6rem; }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    .pullquote { font-size: 1.25rem; padding-left: 1rem; }
+    .marginalia { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; }
+    .hours-table th { font-size: 0.65rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-wrap">
+    <div class="brand">Obsidian <span>Fold</span></div>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../manifesto/index.html">Manifesto</a>
+      <a href="../collection/index.html">Collection</a>
+      <a href="../artists/index.html">Artists</a>
+      <a href="../catalogue/index.html">Catalogue</a>
+      <a href="#" class="active">Visit</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <div class="hero-label">
+      § 05<br>
+      Practical<br>
+      Information
+    </div>
+    <div>
+      <div class="section-label">Plan Your Visit</div>
+      <h1 class="display">Vuurplaat 14<em>.</em></h1>
+      <p style="margin-top:18px; font-family: system-ui, sans-serif; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: #8a8070;">
+        Katendrecht &nbsp;·&nbsp; Rotterdam &nbsp;·&nbsp; 3072 AB &nbsp;·&nbsp; NL
+      </p>
+    </div>
+    <div class="hero-meta">
+      Open<br>
+      Wed — Sun<br>
+      11:00 – 18:00
+    </div>
+  </section>
+
+  <aside class="marginalia">
+    <div class="group">
+      <span class="compass">N ↑</span>
+      <h4>Orientation</h4>
+      <p>From Rijnhaven metro, walk south 9 minutes across the Rijnhavenbrug.</p>
+      <div class="rule"></div>
+      <p>South façade faces the Maashaven. North entrance only.</p>
+    </div>
+
+    <div class="group">
+      <h4>The Building</h4>
+      <p>Katendrecht district, former harbor warehouse, ceiling height 6.4m.</p>
+      <div class="rule"></div>
+      <p>Structural brick, reinforced concrete floor, north-clerestory daylight 09:00–16:00.</p>
+    </div>
+
+    <div class="group">
+      <h4>Neighborhood</h4>
+      <p>Once the Dutch port's red-light quarter; now a quiet residential cape with a half-dozen artist studios within 400 m.</p>
+    </div>
+
+    <div class="group">
+      <h4>Contact</h4>
+      <p>+31 10 412 0617<br>visit@obsidianfold.nl</p>
+    </div>
+  </aside>
+
+  <article class="main">
+
+    <section class="hours">
+      <span class="section-label">§ 5.1 — Opening Hours</span>
+      <h2>When the Gallery is Open</h2>
+      <table class="hours-table">
+        <caption>Winter Schedule, Nov 2024 – Mar 2025</caption>
+        <tbody>
+          <tr class="closed"><th>Monday</th><td>Closed</td></tr>
+          <tr class="closed"><th>Tuesday</th><td>Closed</td></tr>
+          <tr><th>Wednesday</th><td>11:00 – 18:00</td></tr>
+          <tr><th>Thursday</th><td>11:00 – 20:00</td></tr>
+          <tr><th>Friday</th><td>11:00 – 18:00</td></tr>
+          <tr><th>Saturday</th><td>10:00 – 18:00</td></tr>
+          <tr><th>Sunday</th><td>12:00 – 17:00</td></tr>
+        </tbody>
+      </table>
+      <p class="body-p" style="margin-top:18px; font-size:0.8rem; color:#8a8070;">
+        Thursday evenings host extended viewings with the gallerist on the floor. Group visits of more than eight require written notice.
+      </p>
+    </section>
+
+    <section class="transport">
+      <span class="section-label">§ 5.2 — Getting Here</span>
+      <h2>Public Transport &amp; Approach</h2>
+      <p class="body-p">
+        The gallery is most easily reached by <strong>metro line D or E to Rijnhaven</strong>, followed by a nine-minute walk south across the Rijnhavenbrug. Tram 25 from Rotterdam Centraal stops at Katendrechtse Hoofd; from there it is six minutes on foot along Veerlaan. Bus 76 connects directly to the warehouse district every twenty minutes on weekday afternoons. A waterbus from Erasmusbrug docks at the Katendrecht pier on Saturdays only.
+      </p>
+      <p class="body-p">
+        Cyclists may use the free racks beside the loading bay on the eastern wall of the building; the gallery does not operate dedicated car parking, but municipal lots on Brede Hilledijk are a four-minute walk away. We strongly recommend arriving on foot — the approach along the harbor edge is, in our view, part of the work.
+      </p>
+    </section>
+
+    <section class="accessibility">
+      <span class="section-label">§ 5.3 — Accessibility</span>
+      <h2>For Every Visitor</h2>
+      <p class="body-p">
+        Obsidian Fold occupies a single ground-floor exhibition hall with a level concrete surface throughout, accessible by a 1.4m-wide ramp at the north entrance. The threshold is flush; door widths exceed 90cm; an accessible WC with grab-rails is located adjacent to the reading room. Seating is provided every 12 meters along the principal viewing wall, and large-print catalogues are available at the reception desk in Dutch and English.
+      </p>
+      <p class="body-p">
+        Service animals are welcome. We can arrange BSL-interpreted or audio-described tours on request with two weeks' notice. The lighting in the hall is intentionally low (approximately 50 lux at the work surface, in line with conservation standards for paper-based media); visitors with low vision are encouraged to ask staff for a hand-held task lamp at the desk.
+      </p>
+    </section>
+
+    <blockquote class="pullquote">
+      “The work asks to be seen slowly. We have arranged the light accordingly.”
+      <cite>— Iris van der Velde, Director</cite>
+    </blockquote>
+
+    <section>
+      <span class="section-label">§ 5.4 — Map</span>
+      <h2>Locating the Building</h2>
+      <div class="map" aria-label="Map placeholder">
+        <span class="pin" aria-hidden="true"></span>
+        Katendrecht · Maashaven Quadrant
+      </div>
+      <p class="body-p caption" style="margin-top:14px; color:#8a8070; font-family: system-ui, sans-serif;">
+        Vuurplaat 14 sits at the southern tip of Katendrecht, two blocks from the Maashaven water. The red marker indicates the north entrance.
+      </p>
+    </section>
+
+  </article>
+
+  <aside class="sidebar">
+    <div class="sidebar-head">Next Six Weeks</div>
+
+    <div class="event">
+      <span class="date">Thu 14 Nov · 19:30</span>
+      <h3>Opening: Strata &amp; Sediment</h3>
+      <p class="meta">Vernissage · Drinks from 19:00 · All four artists in attendance</p>
+      <span class="flag">Free Entry</span>
+    </div>
+
+    <div class="event">
+      <span class="date">Sat 23 Nov · 14:00</span>
+      <h3>Risograph Demonstration</h3>
+      <p class="meta">In the press room · 90 min · Limited to 12 visitors</p>
+      <span class="flag">€ 8</span>
+    </div>
+
+    <div class="event">
+      <span class="date">Thu 28 Nov · 20:00</span>
+      <h3>In Conversation: Maren Holt</h3>
+      <p class="meta">With curator Iris van der Velde · Reading room · Norwegian / English</p>
+      <span class="flag">€ 12</span>
+    </div>
+
+    <div class="event">
+      <span class="date">Sun 08 Dec · 11:00</span>
+      <h3>Letterpress Workshop</h3>
+      <p class="meta">Hands-on · Vandercook proof press · Materials included · 4 hrs</p>
+      <span class="flag">€ 65</span>
+    </div>
+
+    <div class="event">
+      <span class="date">Fri 13 Dec · 19:00</span>
+      <h3>Late Night: Reading the Edition</h3>
+      <p class="meta">Critic Paolo Renz on print as archive · Gallery floor</p>
+      <span class="flag">Free Entry</span>
+    </div>
+
+    <div class="event">
+      <span class="date">Sat 21 Dec · 15:30</span>
+      <h3>Soo-Jin Bae: Studio Visit</h3>
+      <p class="meta">Off-site · Departs from gallery · Reservation required</p>
+      <span class="flag">€ 20</span>
+    </div>
+
+    <div class="event">
+      <span class="date">Sun 05 Jan · 13:00</span>
+      <h3>Closing Brunch</h3>
+      <p class="meta">End of Strata &amp; Sediment, Vol. III · Catalogue signing</p>
+      <span class="flag">Free Entry</span>
+    </div>
+
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="col">
+      <div class="brand-foot">Obsidian <span>Fold</span></div>
+      <p>Print-Art Gallery<br>Rotterdam · Est. 2017</p>
+    </div>
+    <div class="col">
+      <h5>Address</h5>
+      <p>
+        Vuurplaat 14, 3072 AB<br>
+        Katendrecht, Rotterdam<br>
+        The Netherlands<br>
+        +31 10 412 0617<br>
+        visit@obsidianfold.nl
+      </p>
+    </div>
+    <div class="col">
+      <h5>Navigate</h5>
+      <p>
+        <a href="../manifesto/index.html">Manifesto</a><br>
+        <a href="../collection/index.html">Collection</a><br>
+        <a href="../artists/index.html">Artists</a><br>
+        <a href="../catalogue/index.html">Catalogue</a><br>
+        <a href="#">Visit</a>
+      </p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Obsidian Fold Stichting</span>
+    <span>KvK 68214409 · BTW NL857482910B01</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Wetland Types — Brackwater Marsh Conservancy</title>
+<style>
+  .glyph {
+    font-family: ui-monospace, "Courier New", monospace;
+    white-space: pre;
+    background: var(--muted);
+    color: var(--accent-2);
+    border-left: 4px solid var(--accent-1);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.25;
+    margin-bottom: var(--space-4);
+    display: block;
+  }
+  .acreage {
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    color: var(--accent-1);
+    line-height: 1;
+  }
+  .acreage-label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caps);
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+  .wetland-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px dotted var(--border);
+  }
+  .legend {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4) var(--space-5);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .legend-item { font-size: var(--fs-sm); }
+  .legend-item .swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @media (max-width: 900px) {
+    .legend { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 620px) {
+    .legend { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../mission/index.html" class="nav-brand">Brackwater Marsh Conservancy</a>
+    <ul class="nav-links">
+      <li><a href="../mission/index.html">Mission</a></li>
+      <li><a href="#" class="active">Wetlands</a></li>
+      <li><a href="../volunteer/index.html">Volunteer</a></li>
+      <li><a href="../grants/index.html">Grants</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero hero-compact">
+  <div class="hero-inner">
+    <div class="eyebrow">Field Reference Guide</div>
+    <h1>The Four Wetland Types We Steward</h1>
+    <p>From salt-soaked mangrove fringe to cypress-shadowed freshwater swamp, the Gulf Coast harbors a mosaic of tidal and transitional habitats. Brackwater Marsh Conservancy actively manages restoration plots across all four of these ecosystem classes.</p>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="section">
+    <div class="eyebrow">Reading This Page</div>
+    <h2 class="section-title">Habitat Classification</h2>
+    <p class="lede">Each wetland type below is profiled with a brief ecological overview, its geographic range along the Gulf, and the acreage currently under Conservancy protection or active restoration. The indicator species grid that follows highlights six animals and plants whose presence signals a functioning marsh.</p>
+
+    <div class="legend">
+      <div class="legend-item"><span class="swatch" style="background:#1b2c25;"></span><strong>Mangrove</strong> — salt</div>
+      <div class="legend-item"><span class="swatch" style="background:#3a7d5e;"></span><strong>Spartina</strong> — tidal</div>
+      <div class="legend-item"><span class="swatch" style="background:#b85c1a;"></span><strong>Brackish</strong> — mixed</div>
+      <div class="legend-item"><span class="swatch" style="background:#5a6b63;"></span><strong>Cypress</strong> — fresh</div>
+    </div>
+
+    <div class="grid-cards">
+
+      <div class="card">
+        <div class="card-meta">Type 01 · Saline Coastal</div>
+        <h3 class="card-title">Black Mangrove Fringe</h3>
+        <span class="glyph">     &amp;
+    &amp;&amp;&amp;&amp;
+   &amp;&amp;|&amp;&amp;&amp;
+    &amp;&amp;|&amp;
+~~~~~|~~~~~</span>
+        <p>Salt-tolerant <em>Avicennia germinans</em> forms the Gulf's northernmost mangrove community, anchoring shoreline sediments with pneumatophores—pencil-like aerial roots that pierce the mudflat. These fringe forests buffer storm surge, filter nitrogen runoff, and shelter juvenile redfish and snook. Cold snaps periodically prune them back; climate warming is extending their range northward each decade.</p>
+        <div class="wetland-foot">
+          <div>
+            <div class="acreage-label">Range</div>
+            <div style="font-size: var(--fs-sm);">South Texas to Cedar Key, FL</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="acreage">3,840</div>
+            <div class="acreage-label">Acres protected</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">Type 02 · Saline Tidal</div>
+        <h3 class="card-title">Spartina Salt Marsh</h3>
+        <span class="glyph">  \|/ \|/ \|/
+   |   |   |
+~~~~~~~~~~~~~
+  ~  ~  ~  ~</span>
+        <p>Smooth cordgrass (<em>Spartina alterniflora</em>) dominates the low intertidal zone, flooding twice daily and exporting detritus that fuels the entire Gulf food web. These marshes sequester carbon at rates rivaling tropical forests, anchor the shoreline against erosion, and serve as nursery grounds for blue crab, brown shrimp, and over seventy fish species critical to the region's commercial fisheries.</p>
+        <div class="wetland-foot">
+          <div>
+            <div class="acreage-label">Range</div>
+            <div style="font-size: var(--fs-sm);">Brownsville, TX to Tampa Bay, FL</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="acreage">6,210</div>
+            <div class="acreage-label">Acres protected</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">Type 03 · Mixohaline</div>
+        <h3 class="card-title">Brackish Transition Zone</h3>
+        <span class="glyph">  *  \|/  *
+  \|/  |  \|/
+~~~|~~~|~~~|~
+ ~ ~ . ~ . ~</span>
+        <p>Where freshwater rivers meet incoming tides, salinity fluctuates between 5 and 18 parts per thousand, creating mixed stands of bulrush, saltmeadow cordgrass, and black needlerush. These transitional bands are among the most productive yet vulnerable habitats on the coast, supporting diamondback terrapins, mottled ducks, and clapper rails while absorbing nutrient loads from upstream agriculture.</p>
+        <div class="wetland-foot">
+          <div>
+            <div class="acreage-label">Range</div>
+            <div style="font-size: var(--fs-sm);">Estuary mouths, TX–LA–MS</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="acreage">2,975</div>
+            <div class="acreage-label">Acres protected</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">Type 04 · Freshwater Forested</div>
+        <h3 class="card-title">Freshwater Cypress Swamp</h3>
+        <span class="glyph">    /\  /\
+   /__\/__\
+    ||  ||
+~~~~||~~||~~~
+   /||\/||\</span>
+        <p>Bald cypress (<em>Taxodium distichum</em>) and tupelo gum tower over slow-moving freshwater backwaters just inland of the saline marshes. Centuries-old trees host wood ducks, prothonotary warblers, and basking alligators, while their buttressed trunks and knee roots slow floodwaters during hurricane events. Saltwater intrusion from sea-level rise is the swamp's most urgent existential threat.</p>
+        <div class="wetland-foot">
+          <div>
+            <div class="acreage-label">Range</div>
+            <div style="font-size: var(--fs-sm);">Coastal LA, AL &amp; FL panhandle</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="acreage">1,175</div>
+            <div class="acreage-label">Acres protected</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">Bioindicators</div>
+    <h2 class="section-title">Six Species That Tell Us the Marsh is Working</h2>
+    <p class="lede">Healthy estuarine systems reveal themselves through their inhabitants. The species below are monitored on a quarterly schedule by Conservancy field teams; population trends inform our restoration priorities and grant allocations.</p>
+
+    <div class="species-grid mt-5">
+
+      <div class="species">
+        <h4>Roseate Spoonbill</h4>
+        <span class="latin">Platalea ajaja</span>
+        <p>This vivid pink wader sweeps shallow brackish ponds for shrimp and small fish, its specialized bill detecting prey by touch. Spoonbill nesting colonies are sensitive to disturbance and water-level shifts, making them a flagship indicator of estuary stability.</p>
+      </div>
+
+      <div class="species">
+        <h4>Diamondback Terrapin</h4>
+        <span class="latin">Malaclemys terrapin</span>
+        <p>North America's only obligate brackish-water turtle, the terrapin grazes on periwinkle snails that would otherwise overconsume Spartina shoots. Its decline signals overharvest, crab-trap bycatch, or loss of sandy nesting beaches adjacent to the marsh.</p>
+      </div>
+
+      <div class="species">
+        <h4>Gulf Killifish</h4>
+        <span class="latin">Fundulus grandis</span>
+        <p>A hardy, finger-sized fish that thrives across a wide salinity range and dominates marsh-edge minnow communities. Robust killifish populations indicate clean tidal exchange and intact vegetative cover, while sudden absences flag hypoxia or chemical contamination events.</p>
+      </div>
+
+      <div class="species">
+        <h4>Louisiana Iris</h4>
+        <span class="latin">Iris giganticaerulea</span>
+        <p>This native blue-violet iris blooms in freshwater swamp margins and shallow ditches during early spring. Wild stands signal freshwater hydrology and intact soil chemistry; their disappearance often precedes saltwater intrusion into cypress systems.</p>
+      </div>
+
+      <div class="species">
+        <h4>Sea Ox-Eye Daisy</h4>
+        <span class="latin">Borrichia frutescens</span>
+        <p>A silver-leaved, salt-tolerant perennial that colonizes the upper marsh berm just above tidal flooding. Dense ox-eye stands stabilize the marsh-upland boundary and provide critical nectar for native bees and migrating monarch butterflies.</p>
+      </div>
+
+      <div class="species">
+        <h4>American Alligator</h4>
+        <span class="latin">Alligator mississippiensis</span>
+        <p>An ecosystem engineer whose "gator holes" retain freshwater through dry seasons and create microhabitat for fish, herons, and turtles. Stable alligator densities in cypress and brackish zones reflect adequate prey, water quality, and minimal human conflict.</p>
+      </div>
+
+    </div>
+
+    <div class="callout mt-6">
+      <strong>Field data note —</strong> Indicator surveys are conducted in March, June, September, and December at 22 fixed monitoring stations across the four wetland types. Aggregated annual results are published in the Conservancy's <em>State of the Marsh</em> report each February.
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Acreage Under Protection — At a Glance</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Wetland Type</th>
+          <th>Primary Range</th>
+          <th>Salinity (ppt)</th>
+          <th>Acres Protected</th>
+          <th>Active Restoration Plots</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Black Mangrove Fringe</td>
+          <td>South TX → Cedar Key, FL</td>
+          <td>25–35</td>
+          <td>3,840</td>
+          <td>9</td>
+        </tr>
+        <tr>
+          <td>Spartina Salt Marsh</td>
+          <td>Brownsville, TX → Tampa Bay, FL</td>
+          <td>18–30</td>
+          <td>6,210</td>
+          <td>17</td>
+        </tr>
+        <tr>
+          <td>Brackish Transition Zone</td>
+          <td>Estuary mouths, TX–LA–MS</td>
+          <td>5–18</td>
+          <td>2,975</td>
+          <td>11</td>
+        </tr>
+        <tr>
+          <td>Freshwater Cypress Swamp</td>
+          <td>Coastal LA, AL &amp; FL panhandle</td>
+          <td>0–3</td>
+          <td>1,175</td>
+          <td>4</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="caption mt-4">Acreage current as of Q1 2024 · totals include both fee-simple holdings and conservation easements</p>
+
+    <div class="mt-6">
+      <a href="../volunteer/index.html" class="btn">Help Monitor These Habitats</a>
+      <a href="../grants/index.html" class="btn-ghost" style="margin-left: 12px;">View Restoration Grants</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <h4>Brackwater Marsh</h4>
+      <p>A Gulf Coast nonprofit restoring tidal wetlands, educating communities, and funding habitat projects since 2009.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="../mission/index.html">Our Mission</a></li>
+        <li><a href="#">Wetland Types</a></li>
+        <li><a href="../volunteer/index.html">Volunteer</a></li>
+        <li><a href="../grants/index.html">Grant Programs</a></li>
+        <li><a href="../contact/index.html">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Headquarters</h4>
+      <p>1418 Shoreline Boulevard<br>Corpus Christi, TX 78401<br>(361) 555-0142<br>info@brackwatermarsh.org</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2024 Brackwater Marsh Conservancy · 501(c)(3) nonprofit · EIN 27-3849021</div>
+</footer>
+
+</body>
+</html>

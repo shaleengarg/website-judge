@@ -1,0 +1,29 @@
+{
+  "id": "synth-t5-chlorophyll-dispatch-weekly-5325",
+  "tier": 5,
+  "genre": "magazine-feature",
+  "pages": [
+    "cover-story",
+    "deep-dive",
+    "field-notes",
+    "contributors",
+    "archive"
+  ],
+  "palette_hint": "Warm ivory background #faf6ee with near-black ink #1c1709, accented by forest green #2d6a4f and saffron #e8a020 for pull quotes and section labels.",
+  "type_style": "Display headings in Georgia serif at heavy weight 700-900, body text in system-ui at weight 400, captions and marginalia in monospace at weight 300-400, creating a naturalist-journal editorial feel.",
+  "description": "Chlorophyll Dispatch is a premium long-form environmental journalism magazine covering ecological science, land politics, and biodiversity stories from the field.",
+  "constraints": [
+    "Main content column max-width 780px centered within a 1200px page wrapper, with a 220px marginalia column on the right separated by a 1px solid #c9c0a8 rule and 32px gap",
+    "Modular type scale: display 72px, h1 48px, h2 32px, h3 22px, body 17px, caption 13px, small/footnote 11px \u2014 all sizes applied consistently across all five pages",
+    "Pull quotes styled at 28px Georgia italic weight 700, color #2d6a4f, with a 4px left border in #e8a020, 24px left padding, 40px vertical margin, and max-width 520px",
+    "Drop caps on every lead paragraph: ::first-letter at 4.2em, float left, font-weight 900, color #2d6a4f, line-height 0.8, margin-right 8px, padding-top 4px",
+    "Section labels rendered as all-caps monospace 11px weight 400 letter-spacing 0.2em color #e8a020, preceded by a 40px horizontal rule line in #c9c0a8, used to open every major article section"
+  ],
+  "page_specs": {
+    "cover-story": "The flagship feature 'The Last Peat Bogs of Connemara' runs across three editorial columns with a dominant 680px-wide illustrated header zone using CSS gradients simulating a mist-green bog landscape. The page includes a 420-word lead article with drop cap, four named sub-sections each opened by a saffron section label, two pull quotes, six marginalia annotations citing scientific studies, a by-line block with author name and credentials, a photo caption block for three inline figure zones, and a footnote rail at page bottom listing seven source citations in 11px monospace.",
+    "deep-dive": "A 2,800-word investigative piece titled 'Nitrogen Cascade: How Industrial Farming Is Rewriting River Chemistry' uses a two-column body layout (380px + 340px) with a sticky 220px sidebar displaying a running glossary of 12 technical terms. The page features eight distinct section headers, three pull quotes, a data callout box styled with a #2d6a4f background and ivory text listing five key statistics, inline marginalia on every other paragraph, a by-line with dateline, and a 14-item bibliography footer in compressed monospace small type.",
+    "field-notes": "A curated digest page presenting six short dispatches (150\u2013200 words each) from field correspondents across the Congo Basin, Sundarbans, Patagonian steppe, Scottish Cairngorms, Borneo lowlands, and the Aral Sea recovery zone. Each dispatch occupies a card-like block with a colored top border (alternating #2d6a4f and #e8a020), a correspondent by-line, a location tag in all-caps caption type, a single pull quote, and two marginalia notes. The page uses a masonry-style three-column grid at 360px column width with 24px gaps, and a dense footer ribbon listing all six correspondents' bios in 13px caption type.",
+    "contributors": "A richly typeset masthead page listing 24 contributors organized into four editorial tiers: Senior Fellows, Staff Writers, Field Correspondents, and Illustrators. Each contributor entry includes name at h3 weight 700, title in italic body type, a 60-word biography, a specialist-beat tag in saffron label type, and a contribution count badge in monospace. The layout uses a two-column grid with alternating ivory and #f0ebe0 row backgrounds, a decorative drop-ruled section opener for each tier, and an editorial note from the Editor-in-Chief as a full-width pull quote spanning the top of the page at 36px Georgia italic.",
+    "archive": "A typographically dense index of 40 past issues organized chronologically across five years (2020\u20132024), displayed in a four-column grid with each issue represented by a title, volume/issue number in monospace caption, lead story headline at h3 size, and a 30-word abstract in 13px body type. The page opens with a 280-word editor's introduction using a drop cap, includes a sticky left sidebar with decade/year jump-links in all-caps label type, features a highlighted 'Editor's Selection' band every eighth entry with a #2d6a4f background block, and closes with a subscription call-to-action section using display-size type at 48px and a saffron underline rule."
+  }
+}

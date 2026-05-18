@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Grid Dispatch — Folio Obscura, Issue XXXVII</title>
+<style>
+  .dispatch-head{padding:var(--space-7) 0 var(--space-5)}
+  .dispatch-head h1{font-size:var(--fs-display);max-width:14ch}
+  .article-row{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gutter);margin:var(--space-6) 0}
+  .article-row .card{min-height:240px;justify-content:flex-start}
+  .article-row .card h3{font-size:var(--fs-h3);line-height:1.15}
+  .article-row .card .abstract{font-size:14px;color:var(--ink);line-height:1.5}
+  .article-row .card .read{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid-tone);margin-top:auto}
+  .opinion-head{border-top:3px double var(--ink);padding-top:var(--space-5);margin-top:var(--space-7)}
+  .opinion-head h2{font-size:var(--fs-h1);max-width:18ch;margin-bottom:var(--space-3)}
+  .byline{font-family:var(--mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid-tone);display:flex;gap:var(--space-5);flex-wrap:wrap;padding:var(--space-3) 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-bottom:var(--space-5)}
+  .byline b{color:var(--ink);font-weight:700}
+  .explainer{background:var(--parchment);border:1px solid var(--ink);padding:var(--space-6);margin:var(--space-6) 0}
+  .explainer-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--space-6);align-items:center}
+  .explainer svg{width:100%;height:auto;background:#EDE2C5;border:1px solid var(--ink);padding:var(--space-3)}
+  .explainer .legend{list-style:none;margin:0;padding:0;font-size:13px}
+  .explainer .legend li{padding:var(--space-2) 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:28px 1fr;gap:var(--space-3)}
+  .explainer .legend .k{font-family:var(--mono);font-size:11px;color:var(--sienna);font-weight:700}
+  .rank-list .nm-row{display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline}
+  .rank-list .score{font-family:var(--mono);font-size:11px;color:var(--mid-tone);letter-spacing:0.08em}
+  .rank-list .bar-label{display:flex;justify-content:space-between;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--mid-tone);margin-top:6px}
+  .sidebar h3{font-size:var(--fs-h3);margin-bottom:var(--space-3)}
+  .sidebar .kicker{margin-bottom:var(--space-2)}
+  .compare-wrap{margin-top:var(--space-7);border-top:3px double var(--ink);padding-top:var(--space-5)}
+  table.data td.flex-cell{font-family:var(--serif);font-weight:700}
+  @media (max-width:1024px){
+    .article-row{grid-template-columns:1fr 1fr}
+    .explainer-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:768px){
+    .article-row{grid-template-columns:1fr}
+    .compare-wrap{overflow-x:auto}
+    table.data{min-width:680px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a class="brand" href="../cover-story/index.html">Folio Obscura<small>Quarterly Design Criticism</small></a>
+    <ul class="nav-links">
+      <li><a href="../cover-story/index.html">Cover Story</a></li>
+      <li><a href="../type-lab/index.html">Type Lab</a></li>
+      <li><a href="../object-study/index.html">Object Study</a></li>
+      <li><a href="#" class="active">Grid Dispatch</a></li>
+      <li><a href="../archive-index/index.html">Archive Index</a></li>
+    </ul>
+    <span class="nav-issue">№ XXXVII · WINTER 2024</span>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- MASTHEAD STRIP -->
+  <div class="masthead">
+    <span>Issue <b class="tabular">XXXVII</b> · Section 04 / Grid Dispatch</span>
+    <span class="tabular">Filed 12.03.2024 · 06:42 GMT</span>
+    <span>Folio Obscura Press, London &amp; Basel</span>
+  </div>
+
+  <!-- DISPATCH HEAD -->
+  <header class="dispatch-head">
+    <span class="kicker">Dispatch · Grid Theory Controversies</span>
+    <h1 class="serif">The Field, the Fence, and the Forgery of Order.</h1>
+    <p class="lead" style="max-width:62ch;margin-top:var(--space-4)">A working bulletin from the modular front — three reports, one polemic, and a ranked register of the systems we still cannot stop arguing about.</p>
+
+    <!-- Decorative ruled divider (required SVG) -->
+    <svg class="svg-rule" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="12" x2="1200" y2="12"/>
+      <line x1="0" y1="6" x2="0" y2="18"/>
+      <line x1="300" y1="4" x2="300" y2="20"/>
+      <line x1="600" y1="2" x2="600" y2="22"/>
+      <line x1="900" y1="4" x2="900" y2="20"/>
+      <line x1="1200" y1="6" x2="1200" y2="18"/>
+      <circle cx="600" cy="12" r="4"/>
+      <polyline points="580,12 590,7 590,17 580,12"/>
+      <polyline points="620,12 610,7 610,17 620,12"/>
+    </svg>
+  </header>
+
+  <!-- 3-ARTICLE HORIZONTAL CARD ROW -->
+  <section class="article-row" aria-label="Dispatch briefs">
+    <article class="card">
+      <span class="tag sienna">News</span>
+      <h3 class="serif">Zurich Reopens the Brockmann Estate to Grid Pilgrims</h3>
+      <p class="abstract">After 14 years of private custody, 312 working sheets from Müller-Brockmann's late field-system studies have been released to scholars. Curators warn the unannotated overlays may "outweigh the published canon entirely."</p>
+      <span class="read">Brief · 4 min · M. Aalto</span>
+    </article>
+    <article class="card">
+      <span class="tag chartreuse">Controversy</span>
+      <h3 class="serif">A Baseline Civil War Erupts on the Continental Press Council</h3>
+      <p class="abstract">Two German imprints have withdrawn from the EBP standards body over a proposal to fix the editorial baseline at 14pt. Dissenters call the move "rationalist cosplay" and threaten a competing 13.5pt schism.</p>
+      <span class="read">Report · 6 min · J. Berthoud</span>
+    </article>
+    <article class="card">
+      <span class="tag solid">Field Note</span>
+      <h3 class="serif">The Twelve-Column Web Grid Is Quietly Dying — and Nobody Mourns</h3>
+      <p class="abstract">A survey of 480 redesigned mastheads finds the canonical 12-unit web grid present in only 31% of 2024 launches, supplanted by asymmetric subgrid and intrinsic-sized layouts. The dogma, it seems, finally cracked.</p>
+      <span class="read">Field Note · 5 min · R. Okonkwo</span>
+    </article>
+  </section>
+
+</div>
+
+<!-- MAIN LAYOUT: OPINION + SIDEBAR -->
+<div class="layout">
+
+  <main class="main">
+
+    <header class="opinion-head">
+      <span class="kicker">Featured Opinion · Polemic № 04</span>
+      <h2 class="serif">The Grid Was Never Neutral. It Was Always a Politics in Disguise.</h2>
+      <div class="byline">
+        <span>By <b>Elsa Marković-Hartmann</b></span>
+        <span>Senior Editor, Grid Studies</span>
+        <span class="tabular">3,420 words · Reading time 14 min</span>
+      </div>
+    </header>
+
+    <div class="body-2col dropcap">
+      <p>Every grid carries a worldview folded into its gutters. To draw twelve columns is to inherit a thousand prior arguments about hierarchy, eligibility, and the right speed at which a reader should be permitted to move. The Swiss did not invent neutrality; they invented a particularly persuasive costume for it, and three generations of editorial designers have worn it without checking the lining.</p>
+      <p>The vocabulary betrays us. "Baseline." "Field." "Module." We borrow our terms from agriculture and infantry, then pretend the structure that results is a matter of pure proportion. It is not. A grid decides who appears at the top of the page and who is consigned to the marginal column. It dictates whose photograph runs four units wide and whose runs two. The grid is editorial governance; we have simply taught ourselves to call it geometry.</p>
+
+      <div class="pullquote">
+        A grid that admits no exceptions is not a system. It is an ideology with kerning.
+        <cite>— Marković-Hartmann, on the 8-column dogma</cite>
+      </div>
+
+      <p>Consider the curious afterlife of Müller-Brockmann's <em>Grid Systems in Graphic Design</em>, a book whose calm pedagogical tone has been mistaken, for fifty years, for a description of the natural order. Brockmann himself was clear: the field system was a method, not a moral. Yet the rationalist inheritance has hardened into something closer to liturgy. Junior designers are taught to "respect the grid" before they are taught to ask what the grid believes.</p>
+      <p>The 1990s loosened the screws. Carson tore the field. Brody cantilevered the headline into the gutter. The deconstructionists, in their brief and necessary mischief, demonstrated that a magazine could survive — even thrive — without a single repeated baseline. What they did not do, and could not do, was provide a replacement vocabulary. The discipline retreated, after a decade of vandalism, to the safety of measurable order.</p>
+      <p>We are now in a third phase, less reported because less photogenic. The intrinsic grid — sized by content, negotiated by container queries, drawn at runtime — has begun to dissolve the very idea of a prescribed module. A page no longer "sits inside" a grid. It generates one, locally, each time it is rendered. The implications for editorial design are not yet understood.</p>
+
+      <div class="pullquote">
+        The most radical grid of the next decade will be the one that disappears when nobody is looking at it.
+        <cite>— On intrinsic, generative layout</cite>
+      </div>
+
+      <p>What persists is the old confusion between order and authority. A grid imposes order; this is its job. But authority — the right to decide what order means — is bestowed by editors, art directors, publishers, and increasingly by software defaults written in California. To speak of the grid as if it were a neutral substrate is to launder authorship through arithmetic. It is a sleight of hand we should, finally, name.</p>
+      <p>If there is a dispatch to file from the front, it is this: the grid is alive, embattled, more interesting than at any point since 1968, and not at all what its inheritors have insisted. The young designers I admire most do not "follow the grid." They interrogate it, occasionally obey it, frequently ignore it, and — on the rare exceptional page — design one that has never existed before.</p>
+      <p>The remaining question is whether our institutions, our schools, and our trade press will catch up before the practice has moved on entirely. The evidence, as elsewhere in this issue, is mixed.</p>
+    </div>
+
+    <!-- SVG-ILLUSTRATED EXPLAINER -->
+    <section class="explainer">
+      <header class="flex-between" style="margin-bottom:var(--space-5)">
+        <div>
+          <span class="kicker">Explainer · Module 04.3</span>
+          <h3 class="serif" style="margin:0">The Müller-Brockmann Field System, Diagrammed</h3>
+        </div>
+        <span class="caption">After "Grid Systems," 1981 · plate 47</span>
+      </header>
+
+      <div class="explainer-grid">
+        <svg viewBox="0 0 400 300" aria-label="Field system diagram">
+          <!-- frame -->
+          <rect x="20" y="20" width="360" height="260"/>
+          <!-- 8x6 fields -->
+          <g>
+            <line x1="20" y1="63.3" x2="380" y2="63.3"/>
+            <line x1="20" y1="106.6" x2="380" y2="106.6"/>
+            <line x1="20" y1="150" x2="380" y2="150"/>
+            <line x1="20" y1="193.3" x2="380" y2="193.3"/>
+            <line x1="20" y1="236.6" x2="380" y2="236.6"/>
+            <line x1="65" y1="20" x2="65" y2="280"/>
+            <line x1="110" y1="20" x2="110" y2="280"/>
+            <line x1="155" y1="20" x2="155" y2="280"/>
+            <line x1="200" y1="20" x2="200" y2="280"/>
+            <line x1="245" y1="20" x2="245" y2="280"/>
+            <line x1="290" y1="20" x2="290" y2="280"/>
+            <line x1="335" y1="20" x2="335" y2="280"/>
+          </g>
+          <!-- highlighted module A: 2x2 -->
+          <rect x="65" y="63.3" width="90" height="86.7" stroke-width="2.5"/>
+          <!-- highlighted module B: 4x1 headline -->
+          <rect x="155" y="20" width="180" height="43.3" stroke-width="2.5"/>
+          <!-- baseline arrows -->
+          <line x1="20" y1="290" x2="380" y2="290"/>
+          <polyline points="20,290 28,286 28,294 20,290"/>
+          <polyline points="380,290 372,286 372,294 380,290"/>
+          <text x="200" y="305" font-family="Georgia" font-size="9" fill="none" stroke="#1A1208" stroke-width="0.3">— page width —</text>
+          <!-- callout circles -->
+          <circle cx="110" cy="107" r="8"/>
+          <circle cx="245" cy="42" r="8"/>
+          <circle cx="370" cy="270" r="8"/>
+        </svg>
+
+        <ol class="legend">
+          <li><span class="k">A</span><span><b>Field unit (2×2):</b> the elementary picture module. Brockmann derived its proportions from the typographic block, not the page.</span></li>
+          <li><span class="k">B</span><span><b>Compound headline span:</b> four fields merged horizontally; the dominant hierarchy device of the Zurich masthead style.</span></li>
+          <li><span class="k">C</span><span><b>Gutter rhythm:</b> equal vertical and horizontal interstice. Sacred to the rationalists; routinely violated after 1985.</span></li>
+          <li><span class="k">D</span><span><b>Outer margin:</b> the most argued-about dimension in 20th-century print. Brockmann favoured generosity.</span></li>
+          <li><span class="k">E</span><span><b>Baseline grid:</b> typographic substrate beneath the field system; the two are independently tunable and frequently confused.</span></li>
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SIDEBAR: RANKED LIST OF 10 GRID SYSTEMS -->
+  <aside class="sidebar sticky">
+    <span class="kicker">Sidebar Index · Dispatch</span>
+    <h3 class="serif">Ten Grid Systems, Ranked</h3>
+    <p class="small muted" style="margin-bottom:var(--space-4)">Flexibility (■ chartreuse) plotted against dogmatism. Higher bars indicate greater operational range; lower bars indicate doctrinal rigidity.</p>
+
+    <ol class="rank-list">
+      <li>
+        <span class="rk">01</span>
+        <div>
+          <div class="nm-row"><span class="nm">Intrinsic / Container-Query</span><span class="score">9.4</span></div>
+          <span class="meta">Generative · post-2021</span>
+          <span class="bar"><span class="bar-fill" style="width:94%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 12%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">02</span>
+        <div>
+          <div class="nm-row"><span class="nm">Müller-Brockmann Field</span><span class="score">7.8</span></div>
+          <span class="meta">Swiss · 1961</span>
+          <span class="bar"><span class="bar-fill" style="width:78%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 64%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">03</span>
+        <div>
+          <div class="nm-row"><span class="nm">Van de Graaf Canon</span><span class="score">6.2</span></div>
+          <span class="meta">Medieval · codified 1946</span>
+          <span class="bar"><span class="bar-fill" style="width:62%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 71%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">04</span>
+        <div>
+          <div class="nm-row"><span class="nm">Modulor (Le Corbusier)</span><span class="score">5.5</span></div>
+          <span class="meta">Anthropometric · 1948</span>
+          <span class="bar"><span class="bar-fill" style="width:55%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 82%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">05</span>
+        <div>
+          <div class="nm-row"><span class="nm">Tschichold Golden Section</span><span class="score">5.1</span></div>
+          <span class="meta">Late-period · 1953</span>
+          <span class="bar"><span class="bar-fill" style="width:51%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 78%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">06</span>
+        <div>
+          <div class="nm-row"><span class="nm">Bootstrap 12-Column</span><span class="score">7.2</span></div>
+          <span class="meta">Web orthodox · 2011</span>
+          <span class="bar"><span class="bar-fill" style="width:72%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 58%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">07</span>
+        <div>
+          <div class="nm-row"><span class="nm">Hartz Mountain Modular</span><span class="score">4.7</span></div>
+          <span class="meta">Editorial · NYT 1976</span>
+          <span class="bar"><span class="bar-fill" style="width:47%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 69%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">08</span>
+        <div>
+          <div class="nm-row"><span class="nm">Brody Compound Asym.</span><span class="score">8.6</span></div>
+          <span class="meta">The Face · 1984</span>
+          <span class="bar"><span class="bar-fill" style="width:86%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 24%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">09</span>
+        <div>
+          <div class="nm-row"><span class="nm">Carson Anti-Grid</span><span class="score">9.1</span></div>
+          <span class="meta">Ray Gun · 1992</span>
+          <span class="bar"><span class="bar-fill" style="width:91%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 09%</span></span>
+        </div>
+      </li>
+      <li>
+        <span class="rk">10</span>
+        <div>
+          <div class="nm-row"><span class="nm">Bringhurst Baseline</span><span class="score">6.8</span></div>
+          <span class="meta">Typographic · 1992</span>
+          <span class="bar"><span class="bar-fill" style="width:68%"></span></span>
+          <span class="bar-label"><span>Flex</span><span>Dogma 55%</span></span>
+        </div>
+      </li>
+    </ol>
+
+    <div class="note-box" style="margin-top:var(--space-5)">
+      <b>Method note:</b> Scores derived from a 42-criterion rubric (Folio Obscura Editorial Board, 2024). Dogmatism inverts admissibility of exception; flexibility weights cross-medium portability.
+    </div>
+  </aside>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="container">
+  <section class="compare-wrap">
+    <span class="kicker">Module 04.6 · Reference Table</span>
+    <h2 class="serif">Six Editorial Grid Frameworks, Compared</h2>
+    <p class="lead" style="max-width:60ch">Seven attributes apiece: column count, baseline pitch, gutter ratio, prescribed margin, asymmetry tolerance, breakpoint logic, and canonical year of first deployment.</p>
+
+    <table class="data">
+      <caption>Editorial grid frameworks · selected production deployments, 1961–2024</caption>
+      <thead>
+        <tr>
+          <th>Framework</th>
+          <th>Columns</th>
+          <th>Baseline</th>
+          <th>Gutter Ratio</th>
+          <th>Margin (pt)</th>
+          <th>Asym. Tol.</th>
+          <th>Breakpoints</th>
+          <th class="num">Year</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="flex-cell">Neue Grafik 8-Field</td>
+          <td>8</td>
+          <td>12 pt</td>
+          <td>1 : 1.000</td>
+          <td class="num">42</td>
+          <td>Low</td>
+          <td>Fixed (print)</td>
+          <td class="num">1961</td>
+        </tr>
+        <tr>
+          <td class="flex-cell">Brockmann Compound</td>
+          <td>12</td>
+          <td>11 pt</td>
+          <td>1 : 1.250</td>
+          <td class="num">38</td>
+          <td>Medium</td>
+          <td>Two (A3 / A4)</td>
+          <td class="num">1981</td>
+        </tr>
+        <tr>
+          <td class="flex-cell">Hartz Editorial Modular</td>
+          <td>6</td>
+          <td>14 pt</td>
+          <td>1 : 1.500</td>
+          <td class="num">48</td>
+          <td>Medium</td>
+          <td>Fixed (broadsheet)</td>
+          <td class="num">1976</td>
+        </tr>
+        <tr>
+          <td class="flex-cell">Brody Asymmetric</td>
+          <td>5 + 2</td>
+          <td>13 pt</td>
+          <td>variable</td>
+          <td class="num">24</td>
+          <td>High</td>
+          <td>Per-spread</td>
+          <td class="num">1984</td>
+        </tr>
+        <tr>
+          <td class="flex-cell">Web Twelve (Bootstrap)</td>
+          <td>12</td>
+          <td>1.5 rem</td>
+          <td>1 : 1.000</td>
+          <td class="num">16</td>
+          <td>Low</td>
+          <td>5 fixed</td>
+          <td class="num">2011</td>
+        </tr>
+        <tr>
+          <td class="flex-cell">Intrinsic Subgrid</td>
+          <td>n (declared)</td>
+          <td>fluid</td>
+          <td>relative</td>
+          <td class="num">flex</td>
+          <td>Very High</td>
+          <td>Container queries</td>
+          <td class="num">2021</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="small muted">Source: Folio Obscura Grid Atlas 2024 · gutter ratio expressed as gutter-width : column-width · margin pt measured at canonical page size · asymmetry tolerance scored qualitatively across 12 reference spreads.</p>
+  </section>
+
+  <!-- Closing rule -->
+  <svg class="svg-rule" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="0" y1="8" x2="1200" y2="8"/>
+    <line x1="0" y1="16" x2="1200" y2="16"/>
+    <rect x="580" y="4" width="40" height="16"/>
+    <line x1="600" y1="0" x2="600" y2="24"/>
+  </svg>
+
+  <p class="caption center" style="margin-top:var(--space-4)">End of Dispatch · Section 04 · Issue XXXVII</p>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="colophon">
+      <b style="color:var(--chartreuse)">Folio Obscura.</b><br>
+      A quarterly excavation of visual systems, forgotten movements, and the hidden logic of objects we no longer notice.
+    </div>
+    <div>
+      <h4>Sections</h4>
+      <a href="../cover-story/index.html">Cover Story</a>
+      <a href="../type-lab/index.html">Type Lab</a>
+      <a href="../object-study/index.html">Object Study</a>
+      <a href="#">Grid Dispatch</a>
+      <a href="../archive-index/index.html">Archive Index</a>
+    </div>
+    <div>
+      <h4>Editorial</h4>
+      <a href="#">Masthead</a>
+      <a href="#">Contributors</a>
+      <a href="#">Submissions</a>
+      <a href="#">Style Guide</a>
+    </div>
+    <div>
+      <h4>Subscribe</h4>
+      <a href="#">Print Quarterly</a>
+      <a href="#">Digital Edition</a>
+      <a href="#">Institutional</a>
+      <a href="#">Back Issues</a>
+    </div>
+    <div class="legal">
+      <span>© 2024 Folio Obscura Press · London &amp; Basel</span>
+      <span class="tabular">ISSN 2754-XXXVII · Issue 37</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

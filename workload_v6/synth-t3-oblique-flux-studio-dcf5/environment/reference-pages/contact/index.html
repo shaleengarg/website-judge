@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Contact — Oblique Flux Studio</title>
+<style>
+  .enquiry-routes h3 .route-num {
+    display: block;
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: var(--accent-1);
+    letter-spacing: 0.16em;
+    margin-bottom: var(--space-2);
+    font-weight: 400;
+  }
+  .form-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--rule);
+    margin-top: var(--space-5);
+    font-size: var(--fs-xs);
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .check-line {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--fs-sm);
+    color: var(--ink-dim);
+    line-height: 1.5;
+  }
+  .check-line input {
+    width: 14px; height: 14px;
+    accent-color: var(--accent-1);
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .sla-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .sla-list li {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--fs-xs);
+    color: var(--ink-dim);
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--rule-soft);
+    margin: 0;
+  }
+  .sla-list .v {
+    font-family: var(--mono);
+    color: var(--accent-1);
+  }
+  .now-block {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--rule);
+  }
+  .now-block .now-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent-1);
+    margin-right: var(--space-2);
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"></span>Oblique Flux</div>
+    <div class="brand-sub">Studio · est. 2011</div>
+
+    <nav class="nav" aria-label="Primary">
+      <span class="nav-label">Studio</span>
+      <a href="../work/index.html"><span>Work</span><span class="nav-num">01</span></a>
+      <a href="../services/index.html"><span>Services</span><span class="nav-num">02</span></a>
+      <a href="../studio/index.html"><span>Studio</span><span class="nav-num">03</span></a>
+      <a href="../process/index.html"><span>Process</span><span class="nav-num">04</span></a>
+      <a href="#" aria-current="page" class="active"><span>Contact</span><span class="nav-num">05</span></a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <strong>Oblique Flux Studio</strong><br>
+      Brand strategy &amp; digital<br>
+      experience for science,<br>
+      technology, and culture.<br><br>
+      <strong>NYC · BER · MEL</strong>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <header class="page-head">
+        <span class="eyebrow">05 — Contact</span>
+        <h1 class="page-title">Begin a conversation.</h1>
+        <p class="page-lede">We work with research institutes, museums, civic platforms, and technology teams on projects that ask careful questions. Tell us what you're building — we read every enquiry within two business days.</p>
+      </header>
+
+      <section class="enquiry-routes contact-split">
+        <div>
+          <h3><span class="route-num">A · NEW BUSINESS</span>Commissions &amp; collaborations</h3>
+          <p>For project enquiries, retainers, and partnership conversations. We typically take on six to eight engagements per year and prefer to begin with a 30-minute introductory call. Use the form below — a senior partner will reply directly.</p>
+          <p class="text-sm text-faint">Direct: <a href="#">new-business@obliqueflux.studio</a></p>
+        </div>
+        <div>
+          <h3><span class="route-num">B · PRESS &amp; SPEAKING</span>Editorial, juries, lectures</h3>
+          <p>Interview requests, conference invitations, juror appointments, and guest writing. Please include outlet, dates, and audience scope. Our communications lead handles inbound within one week.</p>
+          <p class="text-sm text-faint">Direct: <a href="#">press@obliqueflux.studio</a></p>
+        </div>
+      </section>
+
+      <hr>
+
+      <div class="contact-layout">
+        <section>
+          <h2 class="section-heading">Project enquiry form
+            <span class="kicker" style="display:block; font-family:var(--sans); font-size:var(--fs-xs); text-transform:uppercase; letter-spacing:0.16em; color:var(--ink-faint); font-weight:500; margin-bottom:var(--space-2);">All fields are required unless marked optional</span>
+          </h2>
+
+          <form class="form-grid" action="#" method="post" novalidate>
+            <div class="field">
+              <label for="f-name">Your name</label>
+              <input id="f-name" type="text" placeholder="Full name" value="">
+            </div>
+            <div class="field">
+              <label for="f-email">Email address</label>
+              <input id="f-email" type="email" placeholder="you@organisation.org">
+            </div>
+
+            <div class="field">
+              <label for="f-org">Organisation</label>
+              <input id="f-org" type="text" placeholder="Institute, museum, company">
+            </div>
+            <div class="field">
+              <label for="f-role">Your role <span class="hint" style="text-transform:none; letter-spacing:0;">(optional)</span></label>
+              <input id="f-role" type="text" placeholder="e.g. Director of Communications">
+            </div>
+
+            <div class="field">
+              <label for="f-type">Project type</label>
+              <select id="f-type">
+                <option>Brand identity &amp; architecture</option>
+                <option>Digital product / UX</option>
+                <option>Editorial &amp; publication design</option>
+                <option>Environmental &amp; wayfinding</option>
+                <option>Research synthesis</option>
+                <option>Motion identity</option>
+                <option>Accessibility review</option>
+                <option>Not sure yet — please advise</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-budget">Budget range (USD)</label>
+              <select id="f-budget">
+                <option>Under $25k — limited scope</option>
+                <option>$25k – $60k</option>
+                <option>$60k – $120k</option>
+                <option>$120k – $250k</option>
+                <option>$250k+ multi-phase</option>
+                <option>Grant-funded — flexible</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="f-timeline">Timeline / target launch</label>
+              <input id="f-timeline" type="text" placeholder="e.g. Q3 2025, or 'before September'">
+            </div>
+            <div class="field">
+              <label for="f-region">Primary region</label>
+              <select id="f-region">
+                <option>North America</option>
+                <option>Europe / UK</option>
+                <option>Asia-Pacific</option>
+                <option>Latin America</option>
+                <option>Middle East / Africa</option>
+                <option>Global / distributed</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="f-msg">Project brief &amp; context</label>
+              <textarea id="f-msg" placeholder="Tell us about the institution, the audience, the question you're trying to answer, and anything we should know about constraints, partners, or prior work. Two or three paragraphs is ideal."></textarea>
+              <span class="hint">Confidential — not shared outside the studio.</span>
+            </div>
+
+            <div class="field full">
+              <span class="label">How did you hear about us?</span>
+              <div class="radio-group">
+                <label><input type="radio" name="ref"><span>Referral</span></label>
+                <label><input type="radio" name="ref" checked><span>Past project</span></label>
+                <label><input type="radio" name="ref"><span>Conference / talk</span></label>
+                <label><input type="radio" name="ref"><span>Editorial mention</span></label>
+                <label><input type="radio" name="ref"><span>Search</span></label>
+                <label><input type="radio" name="ref"><span>Social</span></label>
+                <label><input type="radio" name="ref"><span>Other</span></label>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label class="check-line">
+                <input type="checkbox" checked>
+                <span>I'd like to receive the Oblique Flux quarterly dispatch — a short letter on studio work, reading, and field notes. Unsubscribe at any time.</span>
+              </label>
+            </div>
+
+            <div class="full">
+              <button class="btn btn-solid btn-block" type="submit">Send enquiry →</button>
+            </div>
+
+            <div class="full form-meta">
+              <span>Response within 2 business days</span>
+              <span>PGP key available on request</span>
+              <span class="text-mono" style="letter-spacing:0.04em; text-transform:none;">v.2025.03</span>
+            </div>
+          </form>
+        </section>
+
+        <aside class="contact-sidebar" aria-label="Studio locations">
+          <h4>Studio offices</h4>
+
+          <div class="office">
+            <div class="office-name">New York</div>
+            <table class="office-data">
+              <tr><th>Addr.</th><td>148 Lafayette St,<br>Floor 4, NY 10013</td></tr>
+              <tr><th>Tel.</th><td>+1 (212) 555 0184</td></tr>
+              <tr><th>UTC</th><td>−05:00 (EST)</td></tr>
+            </table>
+          </div>
+
+          <div class="office">
+            <div class="office-name">Berlin</div>
+            <table class="office-data">
+              <tr><th>Addr.</th><td>Köpenicker Str. 96,<br>10179 Berlin-Mitte</td></tr>
+              <tr><th>Tel.</th><td>+49 30 5557 0142</td></tr>
+              <tr><th>UTC</th><td>+01:00 (CET)</td></tr>
+            </table>
+          </div>
+
+          <div class="office">
+            <div class="office-name">Melbourne</div>
+            <table class="office-data">
+              <tr><th>Addr.</th><td>Level 2, 31 Flinders Ln,<br>Melbourne VIC 3000</td></tr>
+              <tr><th>Tel.</th><td>+61 3 9555 0177</td></tr>
+              <tr><th>UTC</th><td>+11:00 (AEDT)</td></tr>
+            </table>
+          </div>
+
+          <div class="socials">
+            <a href="#"><span>Instagram</span><span class="text-faint text-mono">@obliqueflux</span></a>
+            <a href="#"><span>LinkedIn</span><span class="text-faint text-mono">/oblique-flux</span></a>
+            <a href="#"><span>Are.na</span><span class="text-faint text-mono">/oblique-flux</span></a>
+            <a href="#"><span>Mastodon</span><span class="text-faint text-mono">@flux@design.mst</span></a>
+            <a href="#"><span>Dispatch</span><span class="text-faint text-mono">letter.obliqueflux</span></a>
+          </div>
+
+          <div class="now-block">
+            <div class="text-xs text-upper text-faint" style="margin-bottom:6px;"><span class="now-dot"></span>Studio status</div>
+            <div class="text-sm">Accepting commissions for Q3 &amp; Q4 2025. Two strategy slots remain.</div>
+          </div>
+
+          <ul class="sla-list" style="margin-top: var(--space-5);">
+            <li><span>Reply window</span><span class="v">≤ 48h</span></li>
+            <li><span>Intro call</span><span class="v">30 min</span></li>
+            <li><span>Proposal lead</span><span class="v">7–10 days</span></li>
+            <li><span>Min. engagement</span><span class="v">6 weeks</span></li>
+          </ul>
+        </aside>
+      </div>
+
+      <footer class="footer">
+        <div>
+          <div class="brand" style="margin-bottom:var(--space-2);"><span class="brand-mark"></span>Oblique Flux Studio</div>
+          <p class="text-sm text-dim" style="max-width:36ch;">A boutique brand strategy and digital experience studio working with science, technology, and cultural institutions since 2011.</p>
+        </div>
+        <div>
+          <h6>Studio</h6>
+          <ul>
+            <li><a href="../work/index.html">Work</a></li>
+            <li><a href="../services/index.html">Services</a></li>
+            <li><a href="../studio/index.html">Studio</a></li>
+            <li><a href="../process/index.html">Process</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h6>Contact</h6>
+          <ul>
+            <li>new-business@<br>obliqueflux.studio</li>
+            <li>press@<br>obliqueflux.studio</li>
+            <li>+1 (212) 555 0184</li>
+          </ul>
+        </div>
+        <div>
+          <h6>Offices</h6>
+          <ul>
+            <li>New York · EST</li>
+            <li>Berlin · CET</li>
+            <li>Melbourne · AEDT</li>
+          </ul>
+        </div>
+        <div class="footer-legal">
+          <span>© 2025 Oblique Flux Studio</span>
+          <span>Privacy · Colophon · Imprint</span>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

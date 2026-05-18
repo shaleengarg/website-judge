@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vessel Registration — Ironclad Maritime Registry</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #0B1F3A;
+    color: #E8EDF2;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  a { color: #2ABFBF; text-decoration: none; }
+  h1, h2, h3, h4 { font-family: Georgia, 'Times New Roman', serif; font-weight: 700; margin: 0; color: #E8EDF2; }
+
+  /* Top banner */
+  .gov-banner {
+    background: #061428;
+    color: #E8EDF2;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 0;
+    border-bottom: 1px solid #1E3A5F;
+  }
+  .gov-banner .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .gov-banner strong { color: #F5A623; }
+
+  /* Header */
+  header.site {
+    background: #0D2647;
+    border-bottom: 2px solid #F5A623;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #F5A623 0%, #2ABFBF 100%);
+    border: 2px solid #061428;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif; font-weight: 700; color: #0B1F3A; font-size: 20px;
+  }
+  .brand h1 { font-size: 20px; letter-spacing: 0.5px; }
+  .brand .sub { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #2ABFBF; }
+
+  nav.primary { width: 100%; background: #061428; border-top: 1px solid #1E3A5F; }
+  nav.primary ul {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  nav.primary a {
+    display: block;
+    padding: 12px 18px;
+    color: #E8EDF2;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-right: 1px solid #1E3A5F;
+  }
+  nav.primary a:hover { background: #0D2647; color: #F5A623; }
+  nav.primary a.active { background: #0D2647; color: #F5A623; border-bottom: 2px solid #F5A623; }
+
+  /* Main wrap */
+  main { max-width: 1200px; margin: 0 auto; padding: 32px 24px 48px; }
+
+  .page-title { margin-bottom: 24px; border-left: 4px solid #F5A623; padding-left: 16px; }
+  .page-title h2 { font-size: 28px; letter-spacing: 0.5px; }
+  .page-title p { margin: 4px 0 0; font-size: 12px; color: #A8B5C5; }
+
+  .breadcrumb { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #A8B5C5; margin-bottom: 12px; }
+  .breadcrumb span { color: #F5A623; }
+
+  /* Form */
+  form.registry {
+    background: #0D2647;
+    border: 1px solid #1E3A5F;
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 40px;
+  }
+
+  fieldset {
+    border: none;
+    border-top: 1px solid #1E3A5F;
+    padding: 24px 0;
+    margin: 0;
+  }
+  fieldset:first-of-type { border-top: none; padding-top: 0; }
+  legend {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #F5A623;
+    padding: 0 12px 0 0;
+    margin-bottom: 4px;
+  }
+  .legend-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .legend-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    background: #0B1F3A; border: 1px solid #2ABFBF;
+    color: #2ABFBF; font-family: Georgia, serif; font-weight: 700;
+  }
+
+  .grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .field { display: flex; flex-direction: column; }
+  .field.col-span-2 { grid-column: span 2; }
+  .field.col-span-3 { grid-column: span 3; }
+
+  label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #E8EDF2;
+    margin-bottom: 6px;
+    font-family: 'Courier New', monospace;
+  }
+  .req::after { content: " *"; color: #E84040; font-size: 10px; margin-left: 2px; }
+
+  input[type="text"], input[type="number"], input[type="date"], input[type="email"], select, textarea {
+    background: #0D2647;
+    color: #E8EDF2;
+    border: 1px solid #2ABFBF;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    border-radius: 2px;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #F5A623;
+    box-shadow: 0 0 0 2px rgba(245,166,35,0.2);
+  }
+  input:required:invalid:not(:focus),
+  select:required:invalid:not(:focus),
+  textarea:required:invalid:not(:focus) {
+    border: 2px solid #E84040;
+  }
+  input:required:valid,
+  select:required:valid,
+  textarea:required:valid {
+    border: 2px solid #2ABFBF;
+  }
+  textarea { resize: vertical; min-height: 80px; font-family: 'Courier New', monospace; }
+  select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #2ABFBF 50%), linear-gradient(135deg, #2ABFBF 50%, transparent 50%);
+    background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 32px;
+  }
+
+  /* Radio group */
+  .radio-group, .check-group { display: flex; flex-wrap: wrap; gap: 16px; padding-top: 4px; }
+  .radio-group label, .check-group label {
+    display: inline-flex; align-items: center; gap: 8px;
+    text-transform: none; letter-spacing: 0; font-size: 12px;
+    margin-bottom: 0; cursor: pointer;
+  }
+  input[type="radio"] {
+    appearance: none;
+    width: 16px; height: 16px;
+    border: 2px solid #2ABFBF;
+    border-radius: 50%;
+    background: #0D2647;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+  }
+  input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #F5A623;
+  }
+  input[type="checkbox"]:not(.toggle) {
+    appearance: none;
+    width: 16px; height: 16px;
+    background: #0D2647;
+    border: 2px solid #2ABFBF;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+  }
+  input[type="checkbox"]:not(.toggle):checked::after {
+    content: "✓";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+    color: #2ABFBF;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  /* Toggle */
+  .toggle-field { display: flex; flex-direction: column; }
+  .toggle-row { display: flex; align-items: center; gap: 12px; padding-top: 4px; }
+  input.toggle {
+    appearance: none;
+    width: 40px; height: 20px;
+    background: #3A5068;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+    transition: background 0.15s;
+  }
+  input.toggle::after {
+    content: "";
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: left 0.15s;
+  }
+  input.toggle:checked { background: #2ABFBF; }
+  input.toggle:checked::after { left: 22px; }
+  .toggle-label { font-size: 12px; text-transform: none; letter-spacing: 0; }
+
+  /* Form actions */
+  .form-actions {
+    display: flex; gap: 12px; justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #1E3A5F;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  button, .btn {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 10px 22px;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .btn-primary { background: #F5A623; color: #0B1F3A; font-weight: bold; }
+  .btn-secondary { background: transparent; color: #2ABFBF; border: 1px solid #2ABFBF; }
+  .btn-ghost { background: transparent; color: #A8B5C5; border: 1px solid #3A5068; }
+
+  /* Stat cards */
+  .stat-strip {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    width: 160px;
+    background: #0D2647;
+    border: 2px solid #2ABFBF;
+    border-radius: 12px;
+    padding: 16px;
+    flex-shrink: 0;
+  }
+  .stat-card .num {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #F5A623;
+    line-height: 1.1;
+  }
+  .stat-card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #E8EDF2;
+    margin-top: 6px;
+  }
+
+  /* Section header bar */
+  .section-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #1E3A5F;
+    padding-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .section-bar h3 {
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: #E8EDF2;
+  }
+  .section-bar .meta { font-size: 10px; color: #A8B5C5; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Table */
+  .table-wrap {
+    background: #0D2647;
+    border: 1px solid #1E3A5F;
+    border-radius: 4px;
+    overflow: auto;
+    max-height: 640px;
+  }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    min-width: 880px;
+  }
+  table.data thead th {
+    position: sticky;
+    top: 0;
+    background: #0D2647;
+    color: #F5A623;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 10px;
+    font-weight: normal;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid #F5A623;
+    border-right: 1px solid #1E3A5F;
+  }
+  table.data thead th.num { text-align: right; }
+  table.data tbody td {
+    padding: 6px 12px;
+    border: 1px solid #1E3A5F;
+    color: #E8EDF2;
+  }
+  table.data tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.data tbody tr:nth-child(odd) td { background: #0B1F3A; }
+  table.data tbody tr:nth-child(even) td { background: #0D2647; }
+  table.data tbody tr:hover td { background: #142F52; }
+
+  .status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .status.active { background: rgba(42,191,191,0.15); color: #2ABFBF; border: 1px solid #2ABFBF; }
+  .status.suspended { background: rgba(232,64,64,0.15); color: #E84040; border: 1px solid #E84040; }
+  .status.pending { background: rgba(245,166,35,0.15); color: #F5A623; border: 1px solid #F5A623; }
+
+  /* Table tools */
+  .table-tools {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; align-items: center;
+  }
+  .table-tools input[type="text"], .table-tools select { width: auto; }
+  .table-tools .spacer { flex: 1; }
+
+  /* Footer */
+  footer.site {
+    background: #061428;
+    border-top: 2px solid #F5A623;
+    color: #A8B5C5;
+    margin-top: 48px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 36px 24px 16px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h4 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+    color: #F5A623; margin-bottom: 12px;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { margin-bottom: 6px; font-size: 12px; }
+  footer .seal {
+    width: 56px; height: 56px;
+    border: 2px solid #2ABFBF; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #2ABFBF; font-family: Georgia, serif; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .footer-bottom {
+    max-width: 1200px; margin: 0 auto; padding: 14px 24px;
+    border-top: 1px solid #1E3A5F;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    font-size: 11px;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .grid3 { grid-template-columns: repeat(2, 1fr); }
+    .field.col-span-3 { grid-column: span 2; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .grid3 { grid-template-columns: 1fr; }
+    .field.col-span-2, .field.col-span-3 { grid-column: span 1; }
+    .footer-inner { grid-template-columns: 1fr; }
+    nav.primary a { padding: 10px 12px; font-size: 10px; }
+    .page-title h2 { font-size: 22px; }
+    .stat-card { width: calc(50% - 8px); }
+    .header-inner { padding: 14px 24px; }
+    .brand h1 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gov-banner">
+  <div class="wrap">
+    <span><strong>OFFICIAL PORTAL</strong> · IRONCLAD MARITIME REGISTRY · DIRECTORATE OF VESSEL AFFAIRS</span>
+    <span>SECURE SESSION · ENCRYPTED · UTC 14:22:07</span>
+  </div>
+</div>
+
+<header class="site">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">⚓</div>
+      <div>
+        <h1>Ironclad Maritime Registry</h1>
+        <div class="sub">Form IMR-01 · Vessel Registration</div>
+      </div>
+    </div>
+    <div style="font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#A8B5C5;">
+      Operator: <span style="color:#F5A623;">PACIFIC HULL CO.</span> · ID 884-2210
+    </div>
+  </div>
+  <nav class="primary">
+    <ul>
+      <li><a href="#" class="active">Vessel Registration</a></li>
+      <li><a href="../crew-certification/index.html">Crew Certification</a></li>
+      <li><a href="../voyage-manifest/index.html">Voyage Manifest</a></li>
+      <li><a href="../compliance-audit/index.html">Compliance Audit</a></li>
+      <li><a href="../fee-schedule/index.html">Fee Schedule</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="breadcrumb">Home / Registry Services / <span>Vessel Registration</span></div>
+  <div class="page-title">
+    <h2>Vessel Registration</h2>
+    <p>Submit a new commercial vessel for inclusion in the National Registry. All fields marked with an asterisk are mandatory under Maritime Code §214.</p>
+  </div>
+
+  <form class="registry" novalidate>
+
+    <fieldset>
+      <div class="legend-row">
+        <span class="legend-num">I</span>
+        <legend>Vessel Identity</legend>
+      </div>
+      <div class="grid3">
+        <div class="field">
+          <label class="req" for="vname">Vessel Name</label>
+          <input type="text" id="vname" name="vname" required placeholder="MV NORTH STAR">
+        </div>
+        <div class="field">
+          <label class="req" for="imo">IMO Number</label>
+          <input type="text" id="imo" name="imo" required pattern="[0-9]{7}" placeholder="9876543">
+        </div>
+        <div class="field">
+          <label class="req" for="flag">Flag State</label>
+          <select id="flag" name="flag" required>
+            <option value="">— Select Flag —</option>
+            <option>Panama</option>
+            <option>Liberia</option>
+            <option>Marshall Islands</option>
+            <option>Singapore</option>
+            <option>Malta</option>
+            <option>Bahamas</option>
+            <option>Cyprus</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="port">Port of Registry</label>
+          <input type="text" id="port" name="port" placeholder="HALIFAX">
+        </div>
+        <div class="field">
+          <label for="callsign">Call Sign</label>
+          <input type="text" id="callsign" name="callsign" placeholder="ZDLP4">
+        </div>
+        <div class="field">
+          <label for="mmsi">MMSI</label>
+          <input type="text" id="mmsi" name="mmsi" placeholder="538-XXXXXXX">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="legend-row">
+        <span class="legend-num">II</span>
+        <legend>Technical Specifications</legend>
+      </div>
+      <div class="grid3">
+        <div class="field">
+          <label class="req" for="gt">Gross Tonnage (GT)</label>
+          <input type="number" id="gt" name="gt" required min="0" placeholder="24500">
+        </div>
+        <div class="field">
+          <label class="req" for="build">Build Year</label>
+          <input type="number" id="build" name="build" required min="1900" max="2025" placeholder="2018">
+        </div>
+        <div class="field">
+          <label for="length">Length Overall (m)</label>
+          <input type="number" id="length" name="length" placeholder="182.4">
+        </div>
+        <div class="field col-span-3">
+          <label class="req">Hull Material</label>
+          <div class="radio-group">
+            <label><input type="radio" name="hull" value="steel" required> Steel</label>
+            <label><input type="radio" name="hull" value="alu"> Aluminum</label>
+            <label><input type="radio" name="hull" value="frp"> FRP / Composite</label>
+            <label><input type="radio" name="hull" value="wood"> Wood</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="legend-row">
+        <span class="legend-num">III</span>
+        <legend>Ownership &amp; Insurance</legend>
+      </div>
+      <div class="grid3">
+        <div class="field col-span-2">
+          <label class="req" for="owner">Owner Entity Name</label>
+          <input type="text" id="owner" name="owner" required placeholder="PACIFIC HULL CO. LTD.">
+        </div>
+        <div class="field">
+          <label class="req" for="ocountry">Owner Country</label>
+          <select id="ocountry" name="ocountry" required>
+            <option value="">— Select —</option>
+            <option>Canada</option>
+            <option>United States</option>
+            <option>United Kingdom</option>
+            <option>Norway</option>
+            <option>Greece</option>
+            <option>Japan</option>
+            <option>Korea</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="req" for="ins">Insurance Provider</label>
+          <input type="text" id="ins" name="ins" required placeholder="LLOYD'S OF LONDON">
+        </div>
+        <div class="field">
+          <label class="req" for="policy">Policy Number</label>
+          <input type="text" id="policy" name="policy" required placeholder="POL-2024-77831">
+        </div>
+        <div class="field">
+          <label class="req" for="pexpiry">Policy Expiry Date</label>
+          <input type="date" id="pexpiry" name="pexpiry" required>
+        </div>
+        <div class="field col-span-3">
+          <label for="pandi">P&amp;I Club</label>
+          <input type="text" id="pandi" name="pandi" placeholder="NORTH OF ENGLAND P&I ASSOCIATION">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="legend-row">
+        <span class="legend-num">IV</span>
+        <legend>Safety Equipment</legend>
+      </div>
+      <div class="grid3">
+        <div class="toggle-field">
+          <label>EPIRB Installed</label>
+          <div class="toggle-row">
+            <input type="checkbox" class="toggle" id="epirb" checked>
+            <span class="toggle-label">406 MHz beacon, GPS-encoded</span>
+          </div>
+        </div>
+        <div class="toggle-field">
+          <label>AIS Transponder</label>
+          <div class="toggle-row">
+            <input type="checkbox" class="toggle" id="ais" checked>
+            <span class="toggle-label">Class A — Type approved</span>
+          </div>
+        </div>
+        <div class="toggle-field">
+          <label>Liferaft Compliance</label>
+          <div class="toggle-row">
+            <input type="checkbox" class="toggle" id="liferaft">
+            <span class="toggle-label">SOLAS-A inflatable, serviced</span>
+          </div>
+        </div>
+        <div class="field col-span-3">
+          <label for="remarks">Remarks / Additional Notes</label>
+          <textarea id="remarks" name="remarks" placeholder="Enter any auxiliary equipment, modifications, or jurisdictional notes pertinent to the registration..."></textarea>
+        </div>
+        <div class="field col-span-3">
+          <div class="check-group">
+            <label><input type="checkbox" required> I certify the above information is complete and accurate under penalty of perjury (Maritime Code §214.7)</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost">Save Draft</button>
+      <button type="reset" class="btn btn-secondary">Clear Form</button>
+      <button type="submit" class="btn btn-primary">Submit Registration</button>
+    </div>
+  </form>
+
+  <div class="section-bar">
+    <h3>Registered Vessels — Live Registry</h3>
+    <div class="meta">Last Sync: 14:21 UTC · 22 records</div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-card"><div class="num">1,284</div><div class="label">Total Vessels</div></div>
+    <div class="stat-card"><div class="num">1,147</div><div class="label">Active</div></div>
+    <div class="stat-card"><div class="num">42</div><div class="label">Suspended</div></div>
+    <div class="stat-card"><div class="num">95</div><div class="label">Pending Review</div></div>
+  </div>
+
+  <div class="table-tools">
+    <input type="text" placeholder="Search IMO / Vessel Name..." style="min-width:220px;">
+    <select style="width:auto;">
+      <option>All Flags</option><option>Panama</option><option>Liberia</option><option>Singapore</option>
+    </select>
+    <select style="width:auto;">
+      <option>All Statuses</option><option>Active</option><option>Suspended</option><option>Pending</option>
+    </select>
+    <div class="spacer"></div>
+    <button type="button" class="btn btn-secondary">Export CSV</button>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data">
+      <thead>
+        <tr>
+          <th>IMO No.</th>
+          <th>Vessel Name</th>
+          <th>Flag</th>
+          <th>Type</th>
+          <th class="num">GT</th>
+          <th>Registry Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>9743210</td><td>MV NORTH STAR</td><td>Panama</td><td>Bulk Carrier</td><td class="num">24,500</td><td>2024-08-14</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9821044</td><td>MV ATLANTIC PRIDE</td><td>Liberia</td><td>Container</td><td class="num">58,210</td><td>2024-07-29</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9612885</td><td>MT KESTREL HORIZON</td><td>Marshall Is.</td><td>Tanker</td><td class="num">81,447</td><td>2024-06-12</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9558721</td><td>MV BLUE MERIDIAN</td><td>Singapore</td><td>Bulk Carrier</td><td class="num">33,920</td><td>2024-05-30</td><td><span class="status suspended">Suspended</span></td></tr>
+        <tr><td>9881202</td><td>MV CORAL BAY</td><td>Malta</td><td>RoRo</td><td class="num">19,680</td><td>2024-05-22</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9447163</td><td>MT SILVER WAKE</td><td>Bahamas</td><td>Tanker</td><td class="num">102,500</td><td>2024-05-05</td><td><span class="status pending">Pending</span></td></tr>
+        <tr><td>9710045</td><td>MV ORION DRIFT</td><td>Panama</td><td>General Cargo</td><td class="num">8,210</td><td>2024-04-18</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9667231</td><td>MV PACIFIC ENVOY</td><td>Liberia</td><td>Container</td><td class="num">71,200</td><td>2024-04-02</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9509812</td><td>MT IRON BARQUE</td><td>Cyprus</td><td>Chemical Tanker</td><td class="num">29,400</td><td>2024-03-21</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9332100</td><td>MV SOUTHERN CROSS</td><td>Singapore</td><td>Bulk Carrier</td><td class="num">42,160</td><td>2024-03-09</td><td><span class="status suspended">Suspended</span></td></tr>
+        <tr><td>9854411</td><td>MV AURELIAN</td><td>Malta</td><td>Container</td><td class="num">66,940</td><td>2024-02-27</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9712558</td><td>MV CAPE GANNET</td><td>Bahamas</td><td>Reefer</td><td class="num">11,330</td><td>2024-02-14</td><td><span class="status pending">Pending</span></td></tr>
+        <tr><td>9426817</td><td>MV TIDAL HAWK</td><td>Panama</td><td>Tug</td><td class="num">1,884</td><td>2024-02-01</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9589003</td><td>MT BRIGHTSTONE</td><td>Liberia</td><td>LNG Carrier</td><td class="num">118,250</td><td>2024-01-19</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9230871</td><td>MV WINDLASS</td><td>Marshall Is.</td><td>Bulk Carrier</td><td class="num">37,500</td><td>2024-01-08</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9788412</td><td>MV LANTERN ROCK</td><td>Singapore</td><td>General Cargo</td><td class="num">6,200</td><td>2023-12-22</td><td><span class="status pending">Pending</span></td></tr>
+        <tr><td>9621904</td><td>MV HARBINGER</td><td>Malta</td><td>Container</td><td class="num">54,330</td><td>2023-12-11</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9472310</td><td>MT EVERFLOW</td><td>Bahamas</td><td>Tanker</td><td class="num">88,720</td><td>2023-11-28</td><td><span class="status suspended">Suspended</span></td></tr>
+        <tr><td>9367210</td><td>MV CARDINAL POINT</td><td>Cyprus</td><td>RoRo</td><td class="num">22,140</td><td>2023-11-04</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9145008</td><td>MV SEALARK</td><td>Panama</td><td>Fishing Vessel</td><td class="num">2,470</td><td>2023-10-19</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9822330</td><td>MV LUMINARY</td><td>Liberia</td><td>Cruise</td><td class="num">94,800</td><td>2023-10-02</td><td><span class="status active">Active</span></td></tr>
+        <tr><td>9290641</td><td>MT GRANITE TIDE</td><td>Singapore</td><td>Chemical Tanker</td><td class="num">31,610</td><td>2023-09-15</td><td><span class="status pending">Pending</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer class="site">
+  <div class="footer-inner">
+    <div>
+      <div class="seal">IMR</div>
+      <h4>Ironclad Maritime Registry</h4>
+      <p style="font-size:11px; line-height:1.6; margin:0;">
+        An official portal for commercial vessel operators. All transactions are logged under Maritime Code §214 and audited quarterly by the Directorate of Vessel Affairs.
+      </p>
+    </div>
+    <div>
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Vessel Registration</a></li>
+        <li><a href="../crew-certification/index.html">Crew Certification</a></li>
+        <li><a href="../voyage-manifest/index.html">Voyage Manifest</a></li>
+        <li><a href="../compliance-audit/index.html">Compliance Audit</a></li>
+        <li><a href="../fee-schedule/index.html">Fee Schedule</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Regulations</a></li>
+        <li><a href="#">Form Library</a></li>
+        <li><a href="#">Audit Reports</a></li>
+        <li><a href="#">Notice to Mariners</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>HQ: Pier 7, Lighthouse Ave.</li>
+        <li>Tel: +1 (902) 555-0114</li>
+        <li>registry@imr.gov</li>
+        <li>SAR 24/7: ch. 16 VHF</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Ironclad Maritime Registry · Government Issue</span>
+    <span>Privacy · Accessibility · FOIA · Build 4.12.7</span>
+  </div>
+</footer>
+
+</body>
+</html>

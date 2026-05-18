@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Services — Oblique Flux Studio</title>
+<style>
+  .svc-intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-5);
+    margin-bottom: var(--space-6);
+  }
+  .stat-block {
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-5);
+    background: var(--paper-2);
+  }
+  .stat-block .num {
+    font-family: var(--serif);
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    color: var(--accent-1);
+    line-height: 1;
+    margin-bottom: var(--space-2);
+  }
+  .stat-block .lbl {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+  }
+  .svc-filter-list a .count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent-2);
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.35);
+    padding: 1px 7px;
+    border-radius: 10px;
+    letter-spacing: 0.02em;
+  }
+  .svc-filter-list a.active .count {
+    color: var(--paper);
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+  }
+  .filter-meta {
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-xs);
+    color: var(--ink-faint);
+    line-height: 1.6;
+  }
+  .filter-meta strong { color: var(--ink-dim); font-weight: 500; display: block; margin-bottom: 4px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .svc-card .svc-deliv-list {
+    color: var(--ink-dim);
+    font-size: var(--fs-sm);
+  }
+  .svc-card .svc-engage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--rule-soft);
+    font-size: var(--fs-xs);
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .svc-card .svc-engage span strong {
+    color: var(--ink-dim);
+    font-family: var(--mono);
+    font-weight: 500;
+    margin-left: 6px;
+    letter-spacing: 0.04em;
+  }
+  @media (max-width: 1100px){
+    .svc-intro-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px){
+    .svc-intro-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"></span>Oblique Flux</div>
+    <div class="brand-sub">Studio · Est. 2011</div>
+
+    <nav class="nav">
+      <div class="nav-label">Index</div>
+      <a href="../work/index.html"><span>Work</span><span class="nav-num">01</span></a>
+      <a href="#" aria-current="page" class="active"><span>Services</span><span class="nav-num">02</span></a>
+      <a href="../studio/index.html"><span>Studio</span><span class="nav-num">03</span></a>
+      <a href="../process/index.html"><span>Process</span><span class="nav-num">04</span></a>
+      <a href="../contact/index.html"><span>Contact</span><span class="nav-num">05</span></a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <strong>Brand &amp; Experience</strong>
+      For science, technology<br>and cultural institutions.<br><br>
+      NYC · BER · MEL<br>
+      © 2024 OFS
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <header class="page-head">
+        <span class="eyebrow">02 — Services</span>
+        <h1 class="page-title">Disciplines, deliverables, and where they fit.</h1>
+        <p class="page-lede">Eight overlapping practices we offer as discrete engagements or as woven programmes inside larger institutional partnerships. Filter by category to scan the surface; each card lists the typical artefacts and a starting investment band.</p>
+      </header>
+
+      <section class="svc-intro-grid">
+        <div class="stat-block">
+          <div class="num">08</div>
+          <div class="lbl">Practice areas</div>
+        </div>
+        <div class="stat-block">
+          <div class="num">62</div>
+          <div class="lbl">Active engagements / yr</div>
+        </div>
+        <div class="stat-block">
+          <div class="num">11 wk</div>
+          <div class="lbl">Median project length</div>
+        </div>
+      </section>
+
+      <div class="svc-layout">
+
+        <aside class="svc-filter">
+          <h6>Filter by category</h6>
+          <ul class="svc-filter-list">
+            <li><a href="#brand-architecture" class="active">Brand Architecture <span class="count">12</span></a></li>
+            <li><a href="#editorial-design">Editorial Design <span class="count">09</span></a></li>
+            <li><a href="#environmental-graphics">Environmental Graphics <span class="count">07</span></a></li>
+            <li><a href="#ux-audit">UX Audit <span class="count">14</span></a></li>
+            <li><a href="#motion-identity">Motion Identity <span class="count">06</span></a></li>
+            <li><a href="#content-strategy">Content Strategy <span class="count">11</span></a></li>
+            <li><a href="#accessibility-review">Accessibility Review <span class="count">08</span></a></li>
+            <li><a href="#research-synthesis">Research Synthesis <span class="count">10</span></a></li>
+          </ul>
+
+          <div class="filter-meta">
+            <strong>Engagement models</strong>
+            Fixed-scope sprints, retainers from 3 months, and embedded partnerships for multi-year programmes. All work scoped against the studio's six-phase process.
+          </div>
+          <div class="filter-meta">
+            <strong>Currency</strong>
+            Prices listed in USD. Equivalent quotes available in EUR and AUD on request.
+          </div>
+        </aside>
+
+        <div class="svc-list">
+
+          <article class="svc-card" id="brand-architecture">
+            <div class="svc-head">
+              <h3 class="svc-name">Brand Architecture</h3>
+              <span class="svc-price">from $48,000</span>
+            </div>
+            <p class="svc-desc">Structural work for institutions whose offer has outgrown a single mark. We map portfolios, clarify endorsement logic, and write naming systems that scale across exhibitions, research labs, and public programmes.</p>
+            <div class="svc-deliv">
+              <strong>Typical deliverables</strong>
+              <p class="svc-deliv-list mb-0">Portfolio audit, taxonomy diagram, naming framework, sub-brand guidelines, governance playbook, two stakeholder workshops.</p>
+            </div>
+            <div class="svc-engage">
+              <span>Duration <strong>10–14 wks</strong></span>
+              <span>Team <strong>4 people</strong></span>
+              <span>Category <strong>Strategy</strong></span>
+            </div>
+          </article>
+
+          <article class="svc-card" id="editorial-design">
+            <div class="svc-head">
+              <h3 class="svc-name">Editorial Design</h3>
+              <span class="svc-price">from $22,000</span>
+            </div>
+            <p class="svc-desc">Long-form publications for museums, research consortia, and university presses. We pair narrative pacing with rigorous typographic systems suited to dense citation work and image-led essays.</p>
+            <div class="svc-deliv">
+              <strong>Typical deliverables</strong>
+              <p class="svc-deliv-list mb-0">Editorial grid, type specimen, master InDesign template, cover system, print specification, two rounds of layout production.</p>
+            </div>
+            <div class="svc-engage">
+              <span>Duration <strong>6–12 wks</strong></span>
+              <span>Team <strong>3 people</strong></span>
+              <span>Category <strong>Print</strong></span>
+            </div>
+          </article>
+
+          <article class="svc-card" id="environmental-graphics">
+            <div class="svc-head">
+              <h3 class="svc-name">Environmental Graphics</h3>
+              <span class="svc-price">from $65,000</span>
+            </div>
+            <p class="svc-desc">Wayfinding, donor recognition, and exhibition signage for sites where the audience is already moving. Designed in close collaboration with architects, fabricators, and curatorial teams.</p>
+            <div class="svc-deliv">
+              <strong>Typical deliverables</strong>
+              <p class="svc-deliv-list mb-0">Sign family schedule, location plans, material specifications, ADA compliance audit, fabricator-ready artwork, on-site review.</p>
+            </div>
+            <div class="svc-engage">
+              <span>Duration <strong>14–22 wks</strong></span>
+              <span>Team <strong>5 people</strong></span>
+              <span>Category <strong>Spatial</strong></span>
+            </div>
+          </article>
+
+          <article class="svc-card" id="ux-audit">
+            <div class="svc-head">
+              <h3 class="svc-name">UX Audit</h3>
+              <span class="svc-price">from $14,000</span>
+            </div>
+            <p class="svc-desc">Heuristic and task-based review of existing digital products with specific attention to information architecture, content density, and the institutional voice. Concludes with prioritised intervention roadmap.</p>
+            <div class="svc-deliv">
+              <strong>Typical deliverables</strong>
+              <p class="svc-deliv-list mb-0">Heuristic scorecard, journey diagrams, annotated screen tear-downs, prioritised backlog, executive summary, 60-minute readout.</p>
+            </div>
+            <div class="svc-engage">
+              <span>Duration <strong>4–6 wks</strong></span>
+              <span>Team <strong>2 people</strong></span>
+              <span>Category <strong>Digital</strong></span>
+            </div>
+          </article>
+
+          <article class="svc-card" id="motion-identity">
+            <div class="svc-head">
+              <h3 class="svc-name">Motion Identity</h3>
+              <span class="svc-price">from $28,000</span>
+            </div>
+            <p class="svc-desc">Kinetic logo behaviour, transitions, and broadcast packaging extending a static identity into film, screen, and live event contexts. We deliver both finished assets and the rules that govern their reuse.</p>
+            <div class="svc-deliv">
+              <strong>Typical deliverables</strong>
+              <p class="svc-deliv-list mb-0">Motion principles document, logo animations, lower thirds, transition library, sound design brief, After Effects source files.</p>
+            </div>
+            <div class="svc-engage">
+              <span>Duration <strong>8–10 wks</strong></span>
+              <span>Team <strong>3 people</strong></span>
+              <span>Category <strong>Motion</strong></span>
+            </div>
+          </article>
+
+          <article class="svc-card" id="content-strategy">
+            <div class="svc-head">
+              <h3 class="svc-name">Content Strategy</h3>
+              <span class="svc-price">from $32,000</span>
+            </div>
+            <p class="svc-desc">Editorial frameworks for institutions that publish constantly but rarely deliberately. We define voice, governance, and the editorial calendar that connects exhibitions, research outputs, and audience programmes.</p>
+            <div class="svc-deliv">
+              <strong>Typical deliverables</strong>
+              <p class="svc-deliv-list mb-0">Voice and tone guide, content model, editorial calendar, channel matrix, governance handbook, writers' style sheet.</p>
+            </div>
+            <div class="svc-engage">
+              <span>Duration <strong>8–12 wks</strong></span>
+              <span>Team <strong>3 people</strong></span>
+              <span>Category <strong>Strategy</strong></span>
+            </div>
+          </article>
+
+          <article class="svc-card" id="accessibility-review">
+            <div class="svc-head">
+              <h3 class="svc-name">Accessibility Review</h3>
+              <span class="svc-price">from $11,000</span>
+            </div>
+            <p class="svc-desc">WCAG 2.2 AA conformance review across digital and physical touchpoints, paired with practical remediation guidance. We work from lived-experience testing as well as automated tooling.</p>
+            <div class="svc-deliv">
+              <strong>Typical deliverables</strong>
+              <p class="svc-deliv-list mb-0">Conformance report, severity-scored issue log, remediation patterns, accessible component examples, team training session.</p>
+            </div>
+            <div class="svc-engage">
+              <span>Duration <strong>3–5 wks</strong></span>
+              <span>Team <strong>2 people</strong></span>
+              <span>Category <strong>Digital</strong></span>
+            </div>
+          </article>
+
+          <article class="svc-card" id="research-synthesis">
+            <div class="svc-head">
+              <h3 class="svc-name">Research Synthesis</h3>
+              <span class="svc-price">from $18,000</span>
+            </div>
+            <p class="svc-desc">Mid-engagement work that translates interview transcripts, analytics, and stakeholder interviews into a usable shared model. The output is a working artefact, not a deck — designed to be argued over.</p>
+            <div class="svc-deliv">
+              <strong>Typical deliverables</strong>
+              <p class="svc-deliv-list mb-0">Insight clusters, opportunity map, persona snapshots, evidence appendix, hypotheses register, 90-minute synthesis workshop.</p>
+            </div>
+            <div class="svc-engage">
+              <span>Duration <strong>5–7 wks</strong></span>
+              <span>Team <strong>3 people</strong></span>
+              <span>Category <strong>Research</strong></span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <section>
+        <h2 class="section-heading"><span class="kicker">Not listed</span>Bespoke programmes</h2>
+        <p class="text-dim" style="max-width:62ch;">Many of our longest partnerships sit outside these eight categories — multi-year identity stewardship, embedded design leadership, jury work, and curatorial collaboration. If your remit doesn't fit a card, write to us with the shape of the problem and we'll respond within three working days.</p>
+        <p><a href="../contact/index.html" class="btn btn-solid">Start a conversation →</a></p>
+      </section>
+
+      <footer class="footer">
+        <div>
+          <div class="brand" style="margin-bottom:6px;"><span class="brand-mark"></span>Oblique Flux Studio</div>
+          <p class="text-sm text-dim mb-0">Brand strategy &amp; digital experience for science, technology, and cultural institutions.</p>
+        </div>
+        <div>
+          <h6>Site</h6>
+          <ul>
+            <li><a href="../work/index.html">Work</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="../studio/index.html">Studio</a></li>
+            <li><a href="../process/index.html">Process</a></li>
+            <li><a href="../contact/index.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h6>Offices</h6>
+          <ul>
+            <li>New York · UTC-5</li>
+            <li>Berlin · UTC+1</li>
+            <li>Melbourne · UTC+11</li>
+          </ul>
+        </div>
+        <div>
+          <h6>Elsewhere</h6>
+          <ul>
+            <li><a href="#">Are.na</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Journal</a></li>
+          </ul>
+        </div>
+        <div class="footer-legal">
+          <span>© 2024 Oblique Flux Studio</span>
+          <span>Index 02 / 05 — Services</span>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

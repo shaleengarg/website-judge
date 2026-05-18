@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work — Oblique Flux Studio</title>
+<style>
+  .work-meta {
+    display: flex;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: var(--space-4);
+  }
+  .work-meta span strong { color: var(--accent-1); font-weight: 500; }
+  .thumb-label {
+    position: absolute;
+    left: var(--space-4);
+    bottom: var(--space-4);
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: rgba(13,17,23,0.75);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    z-index: 2;
+  }
+  .thumb-figure {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+  .thumb-figure .glyph {
+    font-family: var(--serif);
+    font-weight: 700;
+    color: rgba(13,17,23,0.18);
+    font-size: 96px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .work-card.span-2 .thumb-figure .glyph { font-size: 140px; }
+  .thumb.ink .thumb-figure .glyph { color: rgba(245,166,35,0.22); }
+  .thumb.slate .thumb-figure .glyph { color: rgba(232,230,225,0.12); }
+  .thumb-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(13,17,23,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(13,17,23,0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+    z-index: 0;
+  }
+  .results-count {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+    margin-left: auto;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"></span>Oblique Flux</div>
+    <div class="brand-sub">Studio · Est. 2011</div>
+
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-label">Index</div>
+      <a href="../work/index.html" class="active" aria-current="page"><span>Work</span><span class="nav-num">01</span></a>
+      <a href="../services/index.html"><span>Services</span><span class="nav-num">02</span></a>
+      <a href="../studio/index.html"><span>Studio</span><span class="nav-num">03</span></a>
+      <a href="../process/index.html"><span>Process</span><span class="nav-num">04</span></a>
+      <a href="../contact/index.html"><span>Contact</span><span class="nav-num">05</span></a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <strong>Oblique Flux Studio</strong><br>
+      Brand strategy &amp; digital experience for science, technology, and cultural institutions.<br><br>
+      NY · BER · MEL
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner wide">
+
+      <div class="sticky-top">
+        <div class="filter-row">
+          <span class="filter-label">Filter ·</span>
+          <span class="pill is-active">All<span class="pill-x">12</span></span>
+          <span class="pill is-active">Wayfinding</span>
+          <span class="pill is-active">Digital</span>
+          <span class="pill is-active">Print</span>
+          <span class="pill is-active">Strategy</span>
+          <span class="pill">Identity</span>
+          <span class="pill">Editorial</span>
+          <span class="pill">Motion</span>
+          <span class="results-count">12 / 47 projects · 2019–2024</span>
+        </div>
+      </div>
+
+      <header class="page-head">
+        <span class="eyebrow">01 — Selected Work</span>
+        <h1 class="page-title">A working archive of long-form collaborations with cultural and scientific institutions.</h1>
+        <p class="page-lede">Each engagement begins with research and ends with a system that can be operated by the institution after we leave. Below: twelve recent projects, filtered by discipline.</p>
+        <div class="work-meta">
+          <span><strong>47</strong> Projects Since 2011</span>
+          <span><strong>23</strong> Institutional Clients</span>
+          <span><strong>6</strong> Continents</span>
+          <span><strong>14</strong> Awards / 2023</span>
+        </div>
+      </header>
+
+      <section class="work-grid">
+
+        <article class="work-card span-2">
+          <div class="thumb teal">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">M⌖</span></div>
+            <div class="thumb-label">Featured · Case 01</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Meridian Museum of Natural History</span>
+            <h3 class="wc-title">A Wayfinding System for Four Centuries of Specimens</h3>
+            <p class="text-dim text-sm mb-0">Identity, signage, and a permanent digital companion guiding visitors through 38 galleries and 1.2 million catalogued objects.</p>
+            <div class="wc-tags">
+              <span class="tag">Wayfinding</span>
+              <span class="tag">Brand Identity</span>
+              <span class="tag">Digital</span>
+              <span class="tag">Strategy</span>
+            </div>
+            <span class="wc-year">2024 · London, UK</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb amber">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">Æ</span></div>
+            <div class="thumb-label">Case 02</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Aeson Biosciences</span>
+            <h3 class="wc-title">Translating Genomic Research for Public Audiences</h3>
+            <div class="wc-tags">
+              <span class="tag">UX Research</span>
+              <span class="tag">Digital</span>
+              <span class="tag">Content</span>
+            </div>
+            <span class="wc-year">2024 · Cambridge, MA</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb slate">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">◐</span></div>
+            <div class="thumb-label">Case 03</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Helix Observatory</span>
+            <h3 class="wc-title">Public Identity for a Deep-Field Survey Telescope</h3>
+            <div class="wc-tags">
+              <span class="tag">Identity</span>
+              <span class="tag">Print</span>
+              <span class="tag">Motion</span>
+            </div>
+            <span class="wc-year">2023 · Atacama, CL</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb teal-dim">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">K</span></div>
+            <div class="thumb-label">Case 04</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Kunsthalle Vorsted</span>
+            <h3 class="wc-title">An Editorial System for Twelve Annual Exhibitions</h3>
+            <div class="wc-tags">
+              <span class="tag">Editorial</span>
+              <span class="tag">Print</span>
+              <span class="tag">Brand Identity</span>
+            </div>
+            <span class="wc-year">2023 · Aarhus, DK</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb amber-dim">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">∮</span></div>
+            <div class="thumb-label">Case 05</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Foundation for Open Science</span>
+            <h3 class="wc-title">Strategy Refresh &amp; New Funding Platform</h3>
+            <div class="wc-tags">
+              <span class="tag">Strategy</span>
+              <span class="tag">Digital</span>
+            </div>
+            <span class="wc-year">2023 · Geneva, CH</span>
+          </div>
+        </article>
+
+        <article class="work-card span-2">
+          <div class="thumb ink">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">▣</span></div>
+            <div class="thumb-label">Featured · Case 06</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Northbank Institute of Technology</span>
+            <h3 class="wc-title">Campus Wayfinding for a Living Research Estate</h3>
+            <p class="text-dim text-sm mb-0">A modular signage and digital map system spanning eleven buildings, six interior languages, and a 24-month phased rollout.</p>
+            <div class="wc-tags">
+              <span class="tag">Wayfinding</span>
+              <span class="tag">Environmental</span>
+              <span class="tag">Digital</span>
+              <span class="tag">Print</span>
+            </div>
+            <span class="wc-year">2023 · Melbourne, AU</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb teal">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">⊕</span></div>
+            <div class="thumb-label">Case 07</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Quintile Climate Lab</span>
+            <h3 class="wc-title">Data Dashboards for a Public-Facing Research Group</h3>
+            <div class="wc-tags">
+              <span class="tag">Digital</span>
+              <span class="tag">UX Research</span>
+            </div>
+            <span class="wc-year">2022 · Berlin, DE</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb amber">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">P</span></div>
+            <div class="thumb-label">Case 08</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Praxis Architecture Review</span>
+            <h3 class="wc-title">Quarterly Journal Redesign &amp; Subscriber Platform</h3>
+            <div class="wc-tags">
+              <span class="tag">Editorial</span>
+              <span class="tag">Print</span>
+              <span class="tag">Digital</span>
+            </div>
+            <span class="wc-year">2022 · New York, US</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb slate">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">⌬</span></div>
+            <div class="thumb-label">Case 09</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Calder Center for Marine Biology</span>
+            <h3 class="wc-title">Identity &amp; Annual Report for a Coastal Research Station</h3>
+            <div class="wc-tags">
+              <span class="tag">Brand Identity</span>
+              <span class="tag">Print</span>
+              <span class="tag">Strategy</span>
+            </div>
+            <span class="wc-year">2022 · Halifax, CA</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb teal-dim">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">§</span></div>
+            <div class="thumb-label">Case 10</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Sostre Public Library</span>
+            <h3 class="wc-title">A Reading-First Digital Catalogue for 480,000 Titles</h3>
+            <div class="wc-tags">
+              <span class="tag">Digital</span>
+              <span class="tag">UX Research</span>
+              <span class="tag">Accessibility</span>
+            </div>
+            <span class="wc-year">2021 · Barcelona, ES</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb amber-dim">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">◇</span></div>
+            <div class="thumb-label">Case 11</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Verdant Botanic Gardens</span>
+            <h3 class="wc-title">Seasonal Identity &amp; Visitor Wayfinding Refresh</h3>
+            <div class="wc-tags">
+              <span class="tag">Wayfinding</span>
+              <span class="tag">Brand Identity</span>
+              <span class="tag">Print</span>
+            </div>
+            <span class="wc-year">2021 · Singapore</span>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="thumb ink">
+            <div class="thumb-grid"></div>
+            <div class="thumb-figure"><span class="glyph">⌘</span></div>
+            <div class="thumb-label">Case 12</div>
+          </div>
+          <div class="body">
+            <span class="wc-client">Lumen Public Broadcasting</span>
+            <h3 class="wc-title">Strategy &amp; Motion System for a Documentary Network</h3>
+            <div class="wc-tags">
+              <span class="tag">Strategy</span>
+              <span class="tag">Motion</span>
+              <span class="tag">Digital</span>
+            </div>
+            <span class="wc-year">2019 · Toronto, CA</span>
+          </div>
+        </article>
+
+      </section>
+
+      <div class="callout callout-teal mt-7">
+        <div class="callout-title">Selected, not exhaustive</div>
+        <p class="mb-0 text-dim">The full archive of forty-seven engagements is available on request, including confidential strategy work for three research universities and a national broadcaster. <a href="../contact/index.html">Request a private index →</a></p>
+      </div>
+
+      <footer class="footer">
+        <div>
+          <div class="brand"><span class="brand-mark"></span>Oblique Flux Studio</div>
+          <p class="text-sm text-dim" style="max-width:34ch; margin-top:var(--space-3);">A boutique brand strategy and digital experience agency for science, technology, and cultural institutions.</p>
+        </div>
+        <div>
+          <h6>Index</h6>
+          <ul>
+            <li><a href="../work/index.html">Work</a></li>
+            <li><a href="../services/index.html">Services</a></li>
+            <li><a href="../studio/index.html">Studio</a></li>
+            <li><a href="../process/index.html">Process</a></li>
+            <li><a href="../contact/index.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h6>Offices</h6>
+          <ul>
+            <li>New York · UTC−5</li>
+            <li>Berlin · UTC+1</li>
+            <li>Melbourne · UTC+11</li>
+          </ul>
+        </div>
+        <div>
+          <h6>Channels</h6>
+          <ul>
+            <li><a href="#">Are.na</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">Journal</a></li>
+            <li><a href="#">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-legal">
+          <span>© 2024 Oblique Flux Studio</span>
+          <span>Est. 2011 — All rights reserved</span>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

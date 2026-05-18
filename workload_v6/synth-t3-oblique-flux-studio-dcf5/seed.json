@@ -1,0 +1,29 @@
+{
+  "id": "synth-t3-oblique-flux-studio-dcf5",
+  "tier": 3,
+  "genre": "agency",
+  "pages": [
+    "work",
+    "services",
+    "studio",
+    "process",
+    "contact"
+  ],
+  "palette_hint": "Deep slate background #0d1117, primary text #e8e6e1, accent teal #00b8a2, secondary accent amber #f5a623",
+  "type_style": "Headings in Georgia serif at 700 weight, body in system-ui at 400/500, tight tracking on labels, clinical yet warm feel",
+  "description": "Oblique Flux Studio is a boutique brand strategy and digital experience agency specializing in science, technology, and cultural institutions.",
+  "constraints": [
+    "Fixed left sidebar 240px wide with site nav and current-page indicator; main content area scrolls independently with min-width 0",
+    "Work page uses a 3-column CSS grid with mixed-span cards (some cards span 2 columns); grid gap 24px, max-width 1200px",
+    "Services page uses a two-column layout: 320px sticky filter/category sidebar on the left, scrollable service cards on the right",
+    "All section headings use a teal #00b8a2 left border 4px solid with 16px left padding; body text size 15px line-height 1.7",
+    "Contact page includes a dense two-column form grid alongside a 280px info sidebar listing office addresses, phone, and timezone data in a small table"
+  ],
+  "page_specs": {
+    "work": "Displays 12 case study cards in a 3-column CSS grid where the first and fifth cards span 2 columns; each card contains a project title, client name, discipline tags (e.g. 'Brand Identity', 'UX Research'), year, and a solid color thumbnail block using palette accent colors. A sticky top bar within the main area shows active filter pills for disciplines like 'Wayfinding', 'Digital', 'Print', 'Strategy'.",
+    "services": "Left sidebar (320px, sticky top 0) lists 8 service categories as clickable filter labels with counts in amber badges; main area renders each service as a two-row card with a bold service name, a 2-sentence description, typical deliverables as a comma-separated inline list, and a starting price range. Categories include Brand Architecture, Editorial Design, Environmental Graphics, UX Audit, Motion Identity, Content Strategy, Accessibility Review, and Research Synthesis.",
+    "studio": "Three-column layout: a narrow 200px left column with a vertical timeline of studio milestones (2011\u20132024), a wide center column with studio philosophy text broken into 4 titled sections, and a 220px right column listing 14 team members in a compact card grid with name, role, and a two-letter monogram avatar in teal. A full-width banner at the top displays the studio's founding statement in large Georgia serif.",
+    "process": "A two-column layout with a sticky left column (280px) showing a numbered phase navigation (Discovery, Define, Design, Develop, Deploy, Debrief) that highlights the active phase; the right scrollable column renders each phase as a dense content block with phase title, duration estimate, key activities as a 4-column icon-label grid, outputs list, and a client responsibility callout box in amber. A summary table at page bottom compares all 6 phases across 5 attributes.",
+    "contact": "Split layout with a 280px right sidebar containing a small HTML table of three office locations (New York, Berlin, Melbourne) with address, phone, and UTC offset, plus social handle labels. The main area holds a two-column form grid with fields for name, organization, project type (select), budget range (select), timeline, message textarea, and a referral source radio group; a teal submit button spans full width below. A thin horizontal rule separates a new-business enquiry section from a press/speaking section above the form."
+  }
+}

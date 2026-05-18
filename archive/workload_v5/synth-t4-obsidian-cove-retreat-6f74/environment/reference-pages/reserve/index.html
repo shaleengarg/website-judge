@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reserve — Obsidian Cove Retreat</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1a2e;
+    color: #f5f0e8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(13, 27, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #f5f0e8;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .brand span { color: #c9a84c; }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #f5f0e8;
+    opacity: 0.78;
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+    transition: all 0.25s ease;
+  }
+  .nav-links a:hover { opacity: 1; border-bottom-color: #c9a84c; }
+  .nav-links a.active { color: #c9a84c; opacity: 1; }
+
+  /* HERO BANNER */
+  .hero {
+    width: 100%;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0d1b2a 100%);
+    padding: 80px 24px 60px;
+    text-align: center;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 300;
+    color: #f5f0e8;
+    letter-spacing: 0.02em;
+  }
+  .hero .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 18px;
+  }
+  .hero p {
+    max-width: 620px;
+    margin: 22px auto 0;
+    color: #f5f0e8;
+    opacity: 0.78;
+    font-size: 16px;
+  }
+  .hero::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: #c9a84c;
+    margin: 36px auto 0;
+  }
+
+  /* SECTIONS */
+  section { width: 100%; padding: 70px 24px; position: relative; }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  .sec-form {
+    background: radial-gradient(circle at 50% 30%, #2a6b7c18 0%, #1a1a2e 70%);
+  }
+  .sec-trust { background: #1a1a2e; }
+  .sec-trust::before {
+    content: "";
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: -30px auto 30px;
+    background: radial-gradient(circle, #c9a84c22 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  /* TWO-COLUMN LAYOUT */
+  .reserve-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  /* FORM */
+  .form-card {
+    background: #0d1b2a;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    border: 1px solid rgba(201, 168, 76, 0.12);
+  }
+  .step {
+    counter-increment: step;
+    margin-bottom: 32px;
+  }
+  .step:last-child { margin-bottom: 8px; }
+  fieldset {
+    border: none;
+    padding: 0;
+  }
+  legend {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #f5f0e8;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  legend::before {
+    content: counter(step);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: rgba(201, 168, 76, 0.15);
+    color: #c9a84c;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    border: 1px solid rgba(201, 168, 76, 0.5);
+  }
+  .step-hint {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    opacity: 0.7;
+    margin: 6px 0 18px 46px;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .field label {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #f5f0e8;
+    opacity: 0.7;
+  }
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    background: #1a1a2e;
+    border: 1px solid rgba(245, 240, 232, 0.12);
+    border-radius: 4px;
+    padding: 14px 16px;
+    color: #f5f0e8;
+    font-family: inherit;
+    font-size: 15px;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  textarea { min-height: 110px; resize: vertical; font-family: inherit; }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid #c9a84c;
+    outline-offset: 2px;
+    border-color: #c9a84c;
+  }
+  select { appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, #c9a84c 50%), linear-gradient(135deg, #c9a84c 50%, transparent 50%); background-position: calc(100% - 20px) center, calc(100% - 14px) center; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 40px; }
+  ::placeholder { color: rgba(245, 240, 232, 0.35); }
+
+  /* CHECKBOX EXPERIENCES */
+  .exp-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-left: 46px;
+  }
+  .exp-chip {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #1a1a2e;
+    border: 1px solid rgba(245, 240, 232, 0.1);
+    border-radius: 999px;
+    font-size: 13px;
+  }
+  .exp-chip span:last-child { color: #c9a84c; }
+
+  /* SUMMARY CARD */
+  .summary {
+    background: linear-gradient(180deg, #0d1b2a 0%, #1a1a2e 100%);
+    border-radius: 12px;
+    padding: 36px 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    border: 1px solid rgba(201, 168, 76, 0.18);
+    position: sticky;
+    top: 100px;
+  }
+  .summary h3 {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+  .summary .sub {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 24px;
+  }
+  .suite-preview {
+    background: linear-gradient(135deg, #2a6b7c 0%, #0d1b2a 100%);
+    border-radius: 4px;
+    height: 140px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 16px;
+    margin-bottom: 24px;
+    color: #f5f0e8;
+    font-family: Georgia, serif;
+    font-size: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .suite-preview::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 30%, #c9a84c33, transparent 60%);
+  }
+  .suite-preview span { position: relative; z-index: 1; }
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+    font-size: 14px;
+  }
+  .price-row:last-of-type { border-bottom: none; }
+  .price-row .label {
+    color: #2a6b7c;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+  .price-row .val { color: #f5f0e8; opacity: 0.92; }
+  .total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 22px 0 8px;
+    margin-top: 8px;
+    border-top: 1px solid #c9a84c;
+  }
+  .total .label {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f5f0e8;
+  }
+  .total .val {
+    font-family: Georgia, serif;
+    font-size: 38px;
+    color: #c9a84c;
+    font-weight: 400;
+  }
+  .nights-note {
+    font-size: 12px;
+    color: #f5f0e8;
+    opacity: 0.55;
+    margin-bottom: 24px;
+  }
+  .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 18px 24px;
+    border-radius: 999px;
+    background: #c9a84c;
+    color: #1a1a2e;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    margin-top: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .submit-btn:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    transform: translateY(-2px);
+  }
+  .summary-foot {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #f5f0e8;
+    opacity: 0.5;
+  }
+
+  /* TRUST STRIP */
+  .trust-strip {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 26px;
+    border-radius: 999px;
+    border: 1px solid rgba(201, 168, 76, 0.35);
+    background: rgba(13, 27, 42, 0.5);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f5f0e8;
+  }
+  .trust-badge::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c9a84c;
+    box-shadow: 0 0 12px #c9a84c88;
+  }
+  .trust-title {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .trust-title h2 {
+    font-size: 30px;
+    font-weight: 300;
+    margin-bottom: 10px;
+  }
+  .trust-title p {
+    color: #f5f0e8;
+    opacity: 0.7;
+    font-size: 14px;
+  }
+
+  /* CONTACT BLOCK */
+  .contact-block {
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    text-align: center;
+  }
+  .contact-block > div {
+    padding: 28px 20px;
+    border-radius: 12px;
+    background: #0d1b2a;
+    border: 1px solid rgba(245, 240, 232, 0.06);
+  }
+  .contact-block h4 {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 10px;
+    font-family: system-ui, sans-serif;
+    font-weight: 500;
+  }
+  .contact-block p { font-family: Georgia, serif; font-size: 18px; color: #f5f0e8; }
+
+  /* FOOTER */
+  footer {
+    background: #0d1b2a;
+    padding: 60px 24px 30px;
+    border-top: 1px solid rgba(201, 168, 76, 0.18);
+    position: relative;
+  }
+  footer::before {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: #c9a84c;
+    margin: 0 auto 50px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .footer-col h5 {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 18px;
+    font-family: system-ui, sans-serif;
+    font-weight: 500;
+  }
+  .footer-col p, .footer-col a {
+    font-size: 13px;
+    color: #f5f0e8;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 8px;
+    line-height: 1.7;
+  }
+  .footer-col a:hover { opacity: 1; color: #c9a84c; }
+  .footer-brand {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    color: #f5f0e8;
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+  .footer-brand span { color: #c9a84c; }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 50px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid rgba(245, 240, 232, 0.08);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #f5f0e8;
+    opacity: 0.5;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 980px) {
+    .reserve-grid { grid-template-columns: 1fr; }
+    .summary { position: static; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .contact-block { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .nav-inner { padding: 16px 20px; gap: 14px; }
+    .nav-links { gap: 16px; }
+    .nav-links a { font-size: 11px; letter-spacing: 0.15em; }
+    .hero { padding: 60px 20px 40px; }
+    section { padding: 50px 18px; }
+    .form-card { padding: 26px 20px; }
+    .field-row { grid-template-columns: 1fr; }
+    .exp-options { grid-template-columns: 1fr; margin-left: 0; }
+    .step-hint { margin-left: 0; }
+    .footer-inner { grid-template-columns: 1fr; gap: 30px; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .summary { padding: 28px 22px; }
+    .total .val { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../sanctuary/index.html" class="brand">Obsidian <span>Cove</span></a>
+    <ul class="nav-links">
+      <li><a href="../sanctuary/index.html">Sanctuary</a></li>
+      <li><a href="../suites/index.html">Suites</a></li>
+      <li><a href="../dining/index.html">Dining</a></li>
+      <li><a href="../experiences/index.html">Experiences</a></li>
+      <li><a href="#" class="active">Reserve</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Begin Your Stay</div>
+  <h1>Reserve Your Sanctuary</h1>
+  <p>Twenty-four suites carved into the Aegean cliffs. Curate your arrival with our concierge — each reservation is personally confirmed within four hours.</p>
+</header>
+
+<section class="sec-form">
+  <div class="container">
+    <div class="reserve-grid">
+
+      <!-- LEFT: FORM -->
+      <div class="form-card" style="counter-reset: step;">
+
+        <div class="step">
+          <fieldset>
+            <legend>Arrival &amp; Departure</legend>
+            <div class="step-hint">Minimum two-night stay</div>
+            <div class="field-row" style="margin-left: 0;">
+              <div class="field">
+                <label for="ci">Check-in</label>
+                <input type="date" id="ci" value="2024-09-14">
+              </div>
+              <div class="field">
+                <label for="co">Check-out</label>
+                <input type="date" id="co" value="2024-09-19">
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="step">
+          <fieldset>
+            <legend>Suite Category</legend>
+            <div class="step-hint">Six tiers, twenty-four suites</div>
+            <div class="field">
+              <label for="suite">Choose your suite</label>
+              <select id="suite">
+                <option>Cliff Edge King — from €480 / night</option>
+                <option selected>Sea Grotto Suite — from €620 / night</option>
+                <option>Panorama Loft — from €740 / night</option>
+                <option>Garden Plunge Double — from €560 / night</option>
+                <option>Obsidian Pool Villa — from €1,180 / night</option>
+                <option>Lighthouse Penthouse — from €1,860 / night</option>
+              </select>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="step">
+          <fieldset>
+            <legend>Guests</legend>
+            <div class="step-hint">Suites accommodate up to four guests</div>
+            <div class="field-row" style="margin-left: 0;">
+              <div class="field">
+                <label for="adults">Adults</label>
+                <input type="number" id="adults" min="1" max="4" value="2">
+              </div>
+              <div class="field">
+                <label for="children">Children</label>
+                <input type="number" id="children" min="0" max="3" value="0">
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="step">
+          <fieldset>
+            <legend>Curated Experiences</legend>
+            <div class="step-hint">Optional — added to your folio</div>
+            <div class="exp-options">
+              <div class="exp-chip"><span>Aegean Kayak at Dawn</span><span>€95</span></div>
+              <div class="exp-chip"><span>Clifftop Yoga</span><span>€60</span></div>
+              <div class="exp-chip"><span>Pottery Workshop</span><span>€140</span></div>
+              <div class="exp-chip"><span>Sailing to Naxos</span><span>€480</span></div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="step">
+          <fieldset>
+            <legend>Special Requests</legend>
+            <div class="step-hint">Dietary needs, anniversaries, transfers</div>
+            <div class="field">
+              <label for="notes">Notes for the concierge</label>
+              <textarea id="notes" placeholder="We will arrange in advance — please share any preferences.">Anniversary stay. Vegetarian dietary preference. Airport transfer from Santorini ferry, 14:00.</textarea>
+            </div>
+          </fieldset>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: SUMMARY -->
+      <aside class="summary">
+        <h3>Your Reservation</h3>
+        <div class="sub">Folio Preview</div>
+
+        <div class="suite-preview"><span>Sea Grotto Suite</span></div>
+
+        <div class="price-row">
+          <span class="label">Base Rate</span>
+          <span class="val">€620 × 5 nights</span>
+        </div>
+        <div class="price-row">
+          <span class="label">Subtotal Suite</span>
+          <span class="val">€3,100</span>
+        </div>
+        <div class="price-row">
+          <span class="label">Experiences</span>
+          <span class="val">€155</span>
+        </div>
+        <div class="price-row">
+          <span class="label">Resort Fee</span>
+          <span class="val">€90</span>
+        </div>
+        <div class="price-row">
+          <span class="label">Tax &amp; Service</span>
+          <span class="val">€388</span>
+        </div>
+
+        <div class="total">
+          <span class="label">Total</span>
+          <span class="val">€3,733</span>
+        </div>
+        <div class="nights-note">5 nights · 2 guests · all-inclusive of port transfers</div>
+
+        <button class="submit-btn">Confirm Reservation</button>
+        <div class="summary-foot">Held with 25% deposit · No charge today</div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<section class="sec-trust">
+  <div class="container">
+    <div class="trust-title">
+      <h2>Reserve With Confidence</h2>
+      <p>Direct bookings receive our promise of transparency, flexibility, and personal service.</p>
+    </div>
+
+    <div class="trust-strip">
+      <div class="trust-badge">Best Rate Guaranteed</div>
+      <div class="trust-badge">Free Cancellation 14 Days</div>
+      <div class="trust-badge">Concierge On Call 24h</div>
+    </div>
+
+    <div class="contact-block">
+      <div>
+        <h4>Reservations</h4>
+        <p>+30 22 8604 1100</p>
+      </div>
+      <div>
+        <h4>Concierge</h4>
+        <p>stay@obsidiancove.gr</p>
+      </div>
+      <div>
+        <h4>Location</h4>
+        <p>Akrotiri Cliffs, Aegean Sea</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-brand">Obsidian <span>Cove</span></div>
+      <p>A clifftop retreat of twenty-four suites on the Aegean coast. Carved from volcanic stone, kept by the sea.</p>
+      <p>Akrotiri Peninsula · Greece</p>
+    </div>
+    <div class="footer-col">
+      <h5>Explore</h5>
+      <a href="../sanctuary/index.html">Sanctuary</a>
+      <a href="../suites/index.html">Suites</a>
+      <a href="../dining/index.html">Dining</a>
+      <a href="../experiences/index.html">Experiences</a>
+      <a href="#">Reserve</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <a href="#">+30 22 8604 1100</a>
+      <a href="#">stay@obsidiancove.gr</a>
+      <a href="#">Press Inquiries</a>
+    </div>
+    <div class="footer-col">
+      <h5>Follow</h5>
+      <a href="#">Instagram</a>
+      <a href="#">Journal</a>
+      <a href="#">Newsletter</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Obsidian Cove Retreat</span>
+    <span>Privacy · Terms · Accessibility</span>
+  </div>
+</footer>
+
+</body>
+</html>

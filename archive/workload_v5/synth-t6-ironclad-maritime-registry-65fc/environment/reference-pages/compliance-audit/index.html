@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compliance Audit — Ironclad Maritime Registry</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #0B1F3A;
+    color: #E8EDF2;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, 'Times New Roman', serif; font-weight: 700; margin: 0; }
+  a { color: #2ABFBF; text-decoration: none; }
+
+  /* ===== Header ===== */
+  .topbar {
+    background: #08172B;
+    border-bottom: 1px solid #1E3A5F;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .topbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6px 24px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: #8FA3BD;
+  }
+  .topbar-inner span b { color: #F5A623; font-weight: 400; }
+
+  header.site {
+    background: #0D2647;
+    border-bottom: 2px solid #F5A623;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-mark {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #F5A623 0%, #2ABFBF 100%);
+    border: 2px solid #E8EDF2;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    color: #0B1F3A;
+    font-size: 20px;
+  }
+  .logo h1 {
+    font-size: 20px;
+    letter-spacing: 0.02em;
+  }
+  .logo .sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #8FA3BD;
+    margin-top: 2px;
+  }
+
+  nav.main {
+    background: #0B1F3A;
+    border-bottom: 1px solid #1E3A5F;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  nav.main a {
+    color: #E8EDF2;
+    padding: 14px 18px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    border-right: 1px solid #1E3A5F;
+    display: block;
+  }
+  nav.main a:first-child { border-left: 1px solid #1E3A5F; }
+  nav.main a.active {
+    background: #0D2647;
+    color: #F5A623;
+    box-shadow: inset 0 -3px 0 #F5A623;
+  }
+  nav.main a:hover { color: #2ABFBF; }
+
+  /* ===== Page ===== */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 24px 48px;
+  }
+
+  .page-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #1E3A5F;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  .page-title h2 {
+    font-size: 30px;
+    color: #E8EDF2;
+  }
+  .page-title h2 span { color: #F5A623; }
+  .crumbs {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #8FA3BD;
+  }
+  .crumbs b { color: #2ABFBF; font-weight: 400; }
+
+  .notice {
+    background: #0D2647;
+    border-left: 4px solid #F5A623;
+    padding: 10px 14px;
+    font-size: 12px;
+    margin-bottom: 28px;
+    color: #E8EDF2;
+  }
+  .notice b { color: #F5A623; }
+
+  /* ===== Form ===== */
+  .form-section {
+    background: #0D2647;
+    border: 1px solid #1E3A5F;
+    margin-bottom: 24px;
+  }
+  .form-section header {
+    background: #0B1F3A;
+    border-bottom: 1px solid #1E3A5F;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .form-section header h3 {
+    font-family: Georgia, serif;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    color: #F5A623;
+  }
+  .form-section header .secnum {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #8FA3BD;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 18px 16px;
+  }
+  .field { display: flex; flex-direction: column; }
+  .field.col-2 { grid-column: span 2; }
+  .field.col-3 { grid-column: span 3; }
+
+  label {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #E8EDF2;
+    margin-bottom: 6px;
+  }
+  label .req {
+    color: #E84040;
+    font-size: 10px;
+    margin-left: 4px;
+  }
+  label .hint {
+    color: #8FA3BD;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+    font-size: 10px;
+  }
+
+  input[type="text"], input[type="email"], input[type="tel"],
+  input[type="number"], input[type="date"], input[type="datetime-local"],
+  select, textarea {
+    background: #0D2647;
+    color: #E8EDF2;
+    border: 1px solid #2ABFBF;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    border-radius: 0;
+    outline: none;
+    width: 100%;
+  }
+  textarea { min-height: 80px; resize: vertical; }
+  input:focus, select:focus, textarea:focus {
+    border-color: #F5A623;
+    box-shadow: 0 0 0 2px rgba(245,166,35,0.15);
+  }
+  input:required:invalid:not(:focus),
+  select:required:invalid:not(:focus),
+  textarea:required:invalid:not(:focus) {
+    border: 2px solid #E84040;
+  }
+  input:required:valid,
+  select:required:valid,
+  textarea:required:valid {
+    border: 2px solid #2ABFBF;
+  }
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #2ABFBF 50%), linear-gradient(135deg, #2ABFBF 50%, transparent 50%);
+    background-position: calc(100% - 16px) 50%, calc(100% - 10px) 50%;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 32px;
+  }
+
+  /* Radio groups */
+  .radio-group, .check-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    padding: 8px 0 2px;
+  }
+  .radio-group label, .check-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 12px;
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+  }
+
+  /* Custom radio */
+  input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #0D2647;
+    border: 2px solid #2ABFBF;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #F5A623;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Custom checkbox */
+  input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    background: #0D2647;
+    border: 2px solid #2ABFBF;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    border-radius: 0;
+  }
+  input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: #2ABFBF;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+  }
+
+  /* Toggle */
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+  }
+  .toggle input { display: none; }
+  .toggle .pill {
+    width: 40px; height: 20px;
+    background: #3A5068;
+    border-radius: 999px;
+    position: relative;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .toggle .pill::after {
+    content: "";
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    top: 2px; left: 2px;
+    transition: left 0.15s;
+  }
+  .toggle input:checked + .pill { background: #2ABFBF; }
+  .toggle input:checked + .pill::after { left: 22px; }
+  .toggle .tog-label {
+    font-size: 12px;
+    color: #E8EDF2;
+  }
+
+  /* ===== Stat Cards ===== */
+  .stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 32px 0 16px;
+  }
+  .stat {
+    width: 160px;
+    background: #0D2647;
+    border: 2px solid #2ABFBF;
+    border-radius: 12px;
+    padding: 14px 14px;
+    flex: 0 1 160px;
+  }
+  .stat .num {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #F5A623;
+    line-height: 1.1;
+  }
+  .stat .lab {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #E8EDF2;
+    margin-top: 6px;
+  }
+
+  /* ===== Table ===== */
+  .table-wrap {
+    border: 1px solid #1E3A5F;
+    overflow-x: auto;
+    background: #0B1F3A;
+  }
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0D2647;
+    border-bottom: 1px solid #1E3A5F;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .table-header h3 {
+    font-family: Georgia, serif;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    color: #F5A623;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+  }
+  .filters {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .filters select, .filters input {
+    padding: 4px 8px;
+    font-size: 11px;
+    min-width: 100px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 880px;
+  }
+  thead {
+    position: sticky;
+    top: 0;
+  }
+  thead th {
+    background: #0D2647;
+    color: #F5A623;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11px;
+    font-weight: 400;
+    text-align: left;
+    padding: 8px 12px;
+    border: 1px solid #1E3A5F;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 6px 12px;
+    border: 1px solid #1E3A5F;
+    color: #E8EDF2;
+  }
+  tbody tr:nth-child(odd) td { background: #0B1F3A; }
+  tbody tr:nth-child(even) td { background: #0D2647; }
+  td.num, th.num { text-align: right; font-family: 'Courier New', monospace; }
+  .pill-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid #2ABFBF;
+    color: #2ABFBF;
+    border-radius: 2px;
+  }
+  .pill-badge.amber { border-color: #F5A623; color: #F5A623; }
+  .pill-badge.red { border-color: #E84040; color: #E84040; }
+  .pill-badge.slate { border-color: #3A5068; color: #8FA3BD; }
+
+  /* Submit row */
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 14px 16px;
+    border-top: 1px solid #1E3A5F;
+    background: #0B1F3A;
+    flex-wrap: wrap;
+  }
+  .actions .left {
+    margin-right: auto;
+    font-size: 11px;
+    color: #8FA3BD;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  button, .btn {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 10px 18px;
+    border: 1px solid #2ABFBF;
+    background: transparent;
+    color: #2ABFBF;
+    cursor: pointer;
+    border-radius: 0;
+  }
+  .btn-primary {
+    background: #F5A623;
+    border-color: #F5A623;
+    color: #0B1F3A;
+    font-weight: 700;
+  }
+  .btn-ghost { border-color: #3A5068; color: #8FA3BD; }
+
+  /* ===== Footer ===== */
+  footer {
+    background: #08172B;
+    border-top: 2px solid #F5A623;
+    margin-top: 40px;
+    color: #8FA3BD;
+    font-size: 11px;
+  }
+  .foot-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 16px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .foot-grid h4 {
+    font-family: Georgia, serif;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    color: #F5A623;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .foot-grid ul { list-style: none; padding: 0; margin: 0; }
+  .foot-grid ul li { padding: 3px 0; }
+  .foot-grid a { color: #E8EDF2; }
+  .foot-grid p { margin: 0 0 8px; }
+  .foot-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    border-top: 1px solid #1E3A5F;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 900px) {
+    .form-grid { grid-template-columns: repeat(2, 1fr); }
+    .field.col-2, .field.col-3 { grid-column: span 2; }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .field.col-2, .field.col-3 { grid-column: span 1; }
+    .page-title h2 { font-size: 24px; }
+    nav.main a { padding: 10px 12px; font-size: 10px; letter-spacing: 0.1em; }
+    .stat { width: 100%; flex: 1 1 100%; }
+    .foot-grid { grid-template-columns: 1fr; }
+    .logo h1 { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>OFFICIAL PORTAL · DOMAIN: <b>maritime.gov.icm</b></span>
+    <span>SECURE SESSION · OPERATOR ID: <b>OP-44781</b></span>
+  </div>
+</div>
+
+<header class="site">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">⚓</div>
+      <div>
+        <h1>Ironclad Maritime Registry</h1>
+        <div class="sub">Directorate of Vessel Compliance &amp; Safety</div>
+      </div>
+    </div>
+    <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:#8FA3BD; text-align:right;">
+      Form ICM-4 / Rev. 12<br>
+      <span style="color:#2ABFBF;">Audit Cycle Q3-2024</span>
+    </div>
+  </div>
+</header>
+
+<nav class="main">
+  <div class="nav-inner">
+    <a href="../vessel-registration/index.html">Vessel Registration</a>
+    <a href="../crew-certification/index.html">Crew Certification</a>
+    <a href="../voyage-manifest/index.html">Voyage Manifest</a>
+    <a href="#" class="active">Compliance Audit</a>
+    <a href="../fee-schedule/index.html">Fee Schedule</a>
+  </div>
+</nav>
+
+<main>
+
+  <div class="page-title">
+    <h2>Compliance <span>Audit</span> Filing</h2>
+    <div class="crumbs">Home &nbsp;›&nbsp; Inspections &nbsp;›&nbsp; <b>Compliance Audit</b></div>
+  </div>
+
+  <div class="notice">
+    <b>NOTICE:</b> All sections marked with red asterisks are mandatory. Submissions are logged under the Maritime Compliance Act §14.2. Detention findings require attachment of supporting evidence within 48 hours of audit closure.
+  </div>
+
+  <form>
+
+    <!-- SECTION 1 -->
+    <section class="form-section">
+      <header>
+        <h3>§ 1 · Audit Identification</h3>
+        <div class="secnum">01 / 04</div>
+      </header>
+      <div class="form-grid">
+        <div class="field">
+          <label>Audit Reference No. <span class="req">*</span></label>
+          <input type="text" required placeholder="ICM-AUD-XXXXXX">
+        </div>
+        <div class="field">
+          <label>Vessel IMO <span class="req">*</span></label>
+          <select required>
+            <option value="">-- Select Vessel --</option>
+            <option>9281456 — MV NORTH MERIDIAN</option>
+            <option>9472013 — MV CAPE FERROUS</option>
+            <option>9618204 — MT IRONCLAD STAR</option>
+            <option>9750321 — MV ATLAS BEACON</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Inspector Name <span class="req">*</span></label>
+          <input type="text" required placeholder="Surname, Given">
+        </div>
+        <div class="field">
+          <label>Inspection Date <span class="req">*</span></label>
+          <input type="date" required>
+        </div>
+        <div class="field">
+          <label>Port State Control <span class="req">*</span></label>
+          <select required>
+            <option value="">-- Select PSC Region --</option>
+            <option>Paris MoU</option>
+            <option>Tokyo MoU</option>
+            <option>Indian Ocean MoU</option>
+            <option>Caribbean MoU</option>
+            <option>Mediterranean MoU</option>
+            <option>Black Sea MoU</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Audit Location <span class="hint">(port / berth)</span></label>
+          <input type="text" placeholder="e.g. Rotterdam · Berth 7B">
+        </div>
+        <div class="field col-2">
+          <label>Inspection Type <span class="req">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="itype" required> PSC</label>
+            <label><input type="radio" name="itype"> Flag</label>
+            <label><input type="radio" name="itype"> Class</label>
+            <label><input type="radio" name="itype"> ISM</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Overall Result <span class="req">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="result" required> Clear</label>
+            <label><input type="radio" name="result"> Deficiency</label>
+            <label><input type="radio" name="result"> Detention</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="form-section">
+      <header>
+        <h3>§ 2 · Inspection Findings</h3>
+        <div class="secnum">02 / 04</div>
+      </header>
+      <div class="form-grid">
+        <div class="field">
+          <label>Deficiency Code <span class="req">*</span></label>
+          <input type="text" required placeholder="e.g. 04108">
+        </div>
+        <div class="field">
+          <label>Severity <span class="req">*</span></label>
+          <select required>
+            <option value="">-- Select Severity --</option>
+            <option>Minor</option>
+            <option>Major</option>
+            <option>Critical</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Convention Reference</label>
+          <input type="text" placeholder="SOLAS / MARPOL / STCW">
+        </div>
+        <div class="field col-3">
+          <label>Deficiency Description <span class="req">*</span></label>
+          <textarea required placeholder="Provide a concise narrative of the deficiency observed, including location aboard, equipment involved, and conditions noted at time of inspection."></textarea>
+        </div>
+        <div class="field">
+          <label>ISM Non-Conformity</label>
+          <div class="check-group">
+            <label><input type="checkbox"> Flag as ISM NC</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>MARPOL Violation</label>
+          <div class="check-group">
+            <label><input type="checkbox"> Flag as MARPOL</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Follow-up Required</label>
+          <div class="toggle">
+            <label class="toggle">
+              <input type="checkbox">
+              <span class="pill"></span>
+              <span class="tog-label">Schedule follow-up audit</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="form-section">
+      <header>
+        <h3>§ 3 · Deficiency Records</h3>
+        <div class="secnum">03 / 04</div>
+      </header>
+      <div class="form-grid">
+        <div class="field col-3">
+          <label>Detention Reason <span class="hint">(required only if result = Detention)</span></label>
+          <textarea placeholder="State the grounds for detention including direct safety hazards, environmental risk, or evidence of systematic non-compliance."></textarea>
+        </div>
+        <div class="field">
+          <label>Deficiencies Logged</label>
+          <input type="number" min="0" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Repeat Finding?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="repeat"> Yes</label>
+            <label><input type="radio" name="repeat"> No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Risk Rating</label>
+          <select>
+            <option>Low</option>
+            <option>Standard</option>
+            <option>Elevated</option>
+            <option>High</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="form-section">
+      <header>
+        <h3>§ 4 · Corrective Actions</h3>
+        <div class="secnum">04 / 04</div>
+      </header>
+      <div class="form-grid">
+        <div class="field col-3">
+          <label>Corrective Action <span class="req">*</span></label>
+          <textarea required placeholder="Describe the corrective measures proposed by the master / operator and the procedural verification path."></textarea>
+        </div>
+        <div class="field">
+          <label>Responsible Officer <span class="req">*</span></label>
+          <input type="text" required placeholder="Name &amp; rank">
+        </div>
+        <div class="field">
+          <label>Target Completion Date <span class="req">*</span></label>
+          <input type="date" required>
+        </div>
+        <div class="field">
+          <label>Verification Method</label>
+          <select>
+            <option>Document Review</option>
+            <option>On-board Re-inspection</option>
+            <option>Class Survey</option>
+            <option>Photo Evidence</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="left">Form auto-saves to operator workspace · v12.4</div>
+        <button type="button" class="btn-ghost">Save Draft</button>
+        <button type="reset" class="btn-ghost">Reset</button>
+        <button type="submit" class="btn-primary">Submit Audit</button>
+      </div>
+    </section>
+
+  </form>
+
+  <!-- ===== Stats ===== -->
+  <div class="stats">
+    <div class="stat"><div class="num">147</div><div class="lab">Audits This Quarter</div></div>
+    <div class="stat"><div class="num">12</div><div class="lab">Detentions</div></div>
+    <div class="stat"><div class="num">63</div><div class="lab">Open Deficiencies</div></div>
+    <div class="stat"><div class="num">218</div><div class="lab">Cleared</div></div>
+  </div>
+
+  <!-- ===== Table ===== -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3>Recent Audit Records — Last 90 Days</h3>
+      <div class="filters">
+        <select><option>All Types</option><option>PSC</option><option>Flag</option><option>Class</option><option>ISM</option></select>
+        <select><option>All Results</option><option>Clear</option><option>Deficiency</option><option>Detention</option></select>
+        <input type="text" placeholder="Search ref / vessel…">
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Audit Ref</th>
+          <th>Vessel</th>
+          <th>Inspector</th>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Result</th>
+          <th class="num">Deficiencies</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ICM-AUD-104221</td><td>MV NORTH MERIDIAN</td><td>L. Hargrove</td><td>2024-09-14</td><td>PSC</td><td><span class="pill-badge">Clear</span></td><td class="num">0</td></tr>
+        <tr><td>ICM-AUD-104220</td><td>MT IRONCLAD STAR</td><td>R. Okafor</td><td>2024-09-13</td><td>Flag</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">4</td></tr>
+        <tr><td>ICM-AUD-104219</td><td>MV CAPE FERROUS</td><td>P. Lindqvist</td><td>2024-09-12</td><td>ISM</td><td><span class="pill-badge red">Detention</span></td><td class="num">9</td></tr>
+        <tr><td>ICM-AUD-104218</td><td>MV ATLAS BEACON</td><td>S. Marwah</td><td>2024-09-11</td><td>Class</td><td><span class="pill-badge">Clear</span></td><td class="num">0</td></tr>
+        <tr><td>ICM-AUD-104217</td><td>MV SOUTHERN CROSS</td><td>L. Hargrove</td><td>2024-09-10</td><td>PSC</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">2</td></tr>
+        <tr><td>ICM-AUD-104216</td><td>MT POLARIS BAY</td><td>K. Tanaka</td><td>2024-09-09</td><td>PSC</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">3</td></tr>
+        <tr><td>ICM-AUD-104215</td><td>MV GULF ANCHORA</td><td>R. Okafor</td><td>2024-09-08</td><td>Flag</td><td><span class="pill-badge">Clear</span></td><td class="num">0</td></tr>
+        <tr><td>ICM-AUD-104214</td><td>MV ARCTIC TIDE</td><td>P. Lindqvist</td><td>2024-09-07</td><td>ISM</td><td><span class="pill-badge red">Detention</span></td><td class="num">7</td></tr>
+        <tr><td>ICM-AUD-104213</td><td>MV CORAL SENTINEL</td><td>S. Marwah</td><td>2024-09-06</td><td>Class</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">1</td></tr>
+        <tr><td>ICM-AUD-104212</td><td>MT BREAKWATER</td><td>L. Hargrove</td><td>2024-09-05</td><td>PSC</td><td><span class="pill-badge">Clear</span></td><td class="num">0</td></tr>
+        <tr><td>ICM-AUD-104211</td><td>MV ORIENT REEF</td><td>K. Tanaka</td><td>2024-09-04</td><td>PSC</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">5</td></tr>
+        <tr><td>ICM-AUD-104210</td><td>MV HALCYON CAY</td><td>R. Okafor</td><td>2024-09-03</td><td>Flag</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">2</td></tr>
+        <tr><td>ICM-AUD-104209</td><td>MV PACIFIC FORGE</td><td>P. Lindqvist</td><td>2024-09-02</td><td>ISM</td><td><span class="pill-badge">Clear</span></td><td class="num">0</td></tr>
+        <tr><td>ICM-AUD-104208</td><td>MT NIMBUS DRIFT</td><td>S. Marwah</td><td>2024-09-01</td><td>Class</td><td><span class="pill-badge red">Detention</span></td><td class="num">11</td></tr>
+        <tr><td>ICM-AUD-104207</td><td>MV LUMEN HARBOR</td><td>L. Hargrove</td><td>2024-08-30</td><td>PSC</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">3</td></tr>
+        <tr><td>ICM-AUD-104206</td><td>MV VANGUARD HAIL</td><td>K. Tanaka</td><td>2024-08-29</td><td>PSC</td><td><span class="pill-badge">Clear</span></td><td class="num">0</td></tr>
+        <tr><td>ICM-AUD-104205</td><td>MV SEABRIGHT</td><td>R. Okafor</td><td>2024-08-28</td><td>Flag</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">6</td></tr>
+        <tr><td>ICM-AUD-104204</td><td>MT STORMWALL</td><td>P. Lindqvist</td><td>2024-08-27</td><td>ISM</td><td><span class="pill-badge">Clear</span></td><td class="num">0</td></tr>
+        <tr><td>ICM-AUD-104203</td><td>MV KINDRED OAK</td><td>S. Marwah</td><td>2024-08-26</td><td>Class</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">1</td></tr>
+        <tr><td>ICM-AUD-104202</td><td>MV BISMUTH GALE</td><td>L. Hargrove</td><td>2024-08-25</td><td>PSC</td><td><span class="pill-badge amber">Deficiency</span></td><td class="num">4</td></tr>
+        <tr><td>ICM-AUD-104201</td><td>MT SLATE MARINER</td><td>K. Tanaka</td><td>2024-08-24</td><td>PSC</td><td><span class="pill-badge red">Detention</span></td><td class="num">8</td></tr>
+        <tr><td>ICM-AUD-104200</td><td>MV TERRA FORTE</td><td>R. Okafor</td><td>2024-08-23</td><td>Flag</td><td><span class="pill-badge">Clear</span></td><td class="num">0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <h4>Ironclad Maritime Registry</h4>
+      <p>The official commercial vessel portal for registration, certification, voyage filing, compliance audit and fee administration.</p>
+      <p style="color:#2ABFBF;">Pier 14, Harbourmaster Annex<br>Operations 24/7 · UTC±00</p>
+    </div>
+    <div>
+      <h4>Services</h4>
+      <ul>
+        <li><a href="../vessel-registration/index.html">Vessel Registration</a></li>
+        <li><a href="../crew-certification/index.html">Crew Certification</a></li>
+        <li><a href="../voyage-manifest/index.html">Voyage Manifest</a></li>
+        <li><a href="#">Compliance Audit</a></li>
+        <li><a href="../fee-schedule/index.html">Fee Schedule</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Conventions</h4>
+      <ul>
+        <li>SOLAS 1974</li>
+        <li>MARPOL 73/78</li>
+        <li>STCW 1978</li>
+        <li>ISM Code</li>
+        <li>MLC 2006</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul>
+        <li>helpdesk@maritime.icm</li>
+        <li>+00 800 ICM-DUTY</li>
+        <li>Form Library</li>
+        <li>Audit Calendar</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2024 Ironclad Maritime Registry · All filings logged</span>
+    <span>System Build 12.4.7 · Last Sync 14:22 UTC</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "id": "synth-t5-ashen-meridian-verses-2521",
+  "tier": 5,
+  "genre": "poetry-collection",
+  "pages": [
+    "threshold",
+    "collection",
+    "about-the-poet",
+    "marginalia",
+    "correspondence"
+  ],
+  "palette_hint": "Deep charcoal background #1c1c1e with warm off-white text #f0ead6, rust-amber accent #c8622a, and muted sage #7a9e7e for decorative elements.",
+  "type_style": "Headings in Georgia serif at heavy weight 700, body in system-ui at weight 300 for lightness, pull quotes in italic Georgia 400, with tight letter-spacing -0.03em on large titles and loose 0.12em on section labels for deliberate contrast.",
+  "description": "Ashen Meridian is the digital home of poet Solenne Vray's debut collection 'The Hour That Eats Itself,' seventeen poems about industrial grief, inherited silence, and the geography of eastern French mill towns.",
+  "constraints": [
+    "Max content width 680px centered on all pages, with generous padding 48px top/bottom per section, creating a narrow manuscript feel.",
+    "Modular type scale: display title 4.2rem, section heading 2.1rem, sub-heading 1.3rem, body 1.05rem \u2014 all four sizes must appear on at least two pages.",
+    "Drop cap on the first poem stanza of every page that contains verse: ::first-letter styled at 3.8rem, float left, rust-amber #c8622a, font-weight 700, margin-right 0.1em.",
+    "Pull quotes extracted from poems must appear in italic Georgia, font-size 1.6rem, border-left 3px solid #c8622a, padding-left 24px, color #f0ead6, max-width 520px.",
+    "Section labels (e.g. 'I.', 'NOTES', 'LETTERS') rendered in uppercase, letter-spacing 0.18em, font-size 0.78rem, font-weight 700, color #7a9e7e, spaced 32px above the heading they precede."
+  ],
+  "page_specs": {
+    "threshold": "The landing page opens with the collection title 'The Hour That Eats Itself' in the 4.2rem display scale centered on a #1c1c1e background, followed by a single epigraph attributed to Simone Weil in italic pull-quote style. Below it, one complete poem titled 'Foundry, 1973' is presented with a rust-amber drop cap on its first stanza, the full text in body weight 300, and a sage-colored roman numeral 'I.' as section label above the poem title.",
+    "collection": "A numbered index of all seventeen poems displayed as a vertical list, each entry showing the poem's roman numeral in sage #7a9e7e at 0.78rem uppercase, the poem title in 1.3rem sub-heading weight 700, and a single italicized line excerpt beneath in weight 300. Three poems \u2014 'Slag Heap Elegy,' 'My Mother's Hands Are Trowels,' and 'The Canal in February' \u2014 are presented in full beneath the index, each separated by a thin 1px horizontal rule in #c8622a at 40% opacity, each with its own drop cap.",
+    "about-the-poet": "A portrait-free biography page for Solenne Vray, opening with section label 'THE POET' and a 2.1rem heading 'Solenne Vray, b. Mulhouse, 1981.' The body text in weight 300 describes her decade working as an industrial archivist before publishing poetry, her residency at the Abbaye de Fontevraud, and her concern with the untranslatable French word 'd\u00e9prise.' A pull quote reading 'I write toward the objects my grandmother could not name' appears mid-page, extracted from a 2023 interview with Revue Nu.",
+    "marginalia": "A page presenting the poet's working notes, draft variants, and crossed-out lines from the manuscript, framed as facsimile-style text blocks in a slightly smaller body size 0.92rem and weight 400 to distinguish them from finished verse. Section labels 'DRAFT I,' 'DRAFT II,' 'VARIANT' appear in sage with the standard letter-spacing treatment. One pull quote from a discarded stanza \u2014 'the furnace keeps no record of what it consumed' \u2014 appears in full pull-quote style. The page ends with a short note on the collection's title source: a phrase found in a 1961 shift-foreman's logbook in Thionville.",
+    "correspondence": "A page of three letters \u2014 one from Solenne to her late uncle, one from a reader in Strasbourg, and one unsent draft to an unnamed editor \u2014 presented as distinct text blocks each introduced by a sage section label ('LETTER I,' 'LETTER II,' 'LETTER III') and a sub-heading naming sender and approximate date. Body text in weight 300 at standard line-height 1.75, with each letter's closing salutation rendered in italic Georgia to visually mark the end of the document. A pull quote from the reader's letter \u2014 'Your Slag Heap Elegy made me sit down in the street' \u2014 appears before the final letter block."
+  }
+}

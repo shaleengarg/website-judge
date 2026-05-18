@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogue — Obsidian Fold</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:16px}
+  body{
+    background:#1a1a1a;
+    color:#f0ede6;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:1rem;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- NAV ---------- */
+  .nav-wrap{
+    border-bottom:1px solid #2a2a2a;
+    background:#1a1a1a;
+    position:sticky;top:0;z-index:50;
+  }
+  .nav{
+    max-width:1280px;margin:0 auto;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 24px;
+    gap:24px;flex-wrap:wrap;
+  }
+  .brand{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1.25rem;letter-spacing:0.02em;
+  }
+  .brand .dot{color:#c0512f}
+  .nav ul{
+    list-style:none;display:flex;gap:28px;flex-wrap:wrap;
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-weight:300;
+    font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;
+  }
+  .nav ul a{padding:6px 0;border-bottom:1px solid transparent;transition:.2s}
+  .nav ul a:hover{border-bottom-color:#c0512f}
+  .nav ul .active{color:#d4af6e;border-bottom:1px solid #d4af6e}
+
+  /* ---------- MASTERHEAD ---------- */
+  .masterhead{
+    max-width:1280px;margin:0 auto;
+    padding:64px 24px 32px;
+  }
+  .kicker{
+    font-family:system-ui,-apple-system,sans-serif;
+    font-weight:600;font-size:0.65rem;
+    letter-spacing:0.28em;text-transform:uppercase;
+    color:#d4af6e;
+    margin-bottom:18px;
+  }
+  .display{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:4.8rem;line-height:0.98;letter-spacing:-0.02em;
+    color:#f0ede6;
+  }
+  .display em{font-style:italic;color:#c0512f}
+  .subhead{
+    margin-top:24px;
+    font-family:Georgia,serif;font-size:1.25rem;font-weight:400;
+    color:#bcb6a6;max-width:780px;line-height:1.5;
+  }
+  .rule{
+    max-width:1280px;margin:48px auto 0;
+    padding:0 24px;
+  }
+  .rule hr{
+    border:0;border-top:1px solid #d4af6e;opacity:.5;
+  }
+
+  /* ---------- GRID MASTER ---------- */
+  .grid{
+    max-width:1280px;margin:0 auto;
+    display:grid;
+    grid-template-columns:200px 680px 280px;
+    gap:24px;
+    padding:48px 24px 96px;
+  }
+
+  /* ---------- MARGINALIA ---------- */
+  .marginalia{
+    font-family:system-ui,-apple-system,sans-serif;
+    font-size:0.65rem;
+    letter-spacing:0.12em;
+    color:#8a8070;
+    line-height:1.9;
+    text-transform:uppercase;
+    position:sticky;top:120px;
+    align-self:start;
+  }
+  .marginalia h4{
+    font-weight:600;color:#d4af6e;
+    margin-bottom:14px;
+    font-size:0.65rem;letter-spacing:0.2em;
+  }
+  .marginalia ul{list-style:none;margin-bottom:24px}
+  .marginalia li{
+    display:flex;justify-content:space-between;gap:8px;
+    border-bottom:1px dotted #2a2a2a;
+    padding:6px 0;
+  }
+  .marginalia li span:last-child{color:#c0512f;font-weight:600}
+  .margin-note{
+    margin-top:12px;
+    text-transform:none;letter-spacing:0.08em;
+    color:#6b6557;line-height:1.7;
+  }
+
+  /* ---------- MAIN COLUMN ---------- */
+  .main h1{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:3rem;line-height:1.05;
+    margin-bottom:24px;letter-spacing:-0.01em;
+  }
+  .main .caption-meta{
+    font-family:system-ui,sans-serif;font-weight:300;
+    font-size:0.8rem;letter-spacing:0.04em;color:#bcb6a6;
+    margin-bottom:32px;
+    padding-bottom:24px;border-bottom:1px solid #3a3a3a;
+  }
+  .main .caption-meta strong{color:#d4af6e;font-weight:600}
+
+  /* Object reproduction */
+  .object-repro{
+    display:grid;grid-template-columns:1fr 1fr;gap:24px;
+    margin:32px 0 48px;
+  }
+  .cover{
+    aspect-ratio:3/4;
+    background:
+      linear-gradient(135deg,#c0512f 0%,#7a2e15 45%,#1a1a1a 100%);
+    border:1px solid #3a3a3a;
+    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:space-between;
+    padding:22px;
+  }
+  .cover::after{
+    content:"";position:absolute;inset:14px;
+    border:1px solid rgba(212,175,110,.35);pointer-events:none;
+  }
+  .cover .tag{
+    font-family:system-ui,sans-serif;font-weight:600;
+    font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;
+    color:#f0ede6;
+  }
+  .cover .title{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1.875rem;line-height:1;color:#f0ede6;
+    text-shadow:0 2px 12px rgba(0,0,0,.4);
+  }
+  .cover .vol{
+    font-family:system-ui,sans-serif;font-weight:300;
+    font-size:0.8rem;letter-spacing:0.2em;color:#d4af6e;
+    text-transform:uppercase;
+  }
+  .spine{
+    background:
+      repeating-linear-gradient(180deg,#242424 0,#242424 22px,#1f1f1f 22px,#1f1f1f 44px);
+    border:1px solid #3a3a3a;
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .spine-text{
+    transform:rotate(-90deg);white-space:nowrap;
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1rem;letter-spacing:0.3em;color:#d4af6e;
+  }
+  .spine::before{
+    content:"OF · III";position:absolute;top:18px;left:50%;
+    transform:translateX(-50%);
+    font-family:system-ui,sans-serif;font-size:0.65rem;
+    letter-spacing:0.3em;color:#8a8070;
+  }
+
+  /* Lead paragraph + drop cap */
+  .lead{
+    font-family:Georgia,serif;font-size:1.125rem;line-height:1.7;
+    color:#e6e1d3;margin-bottom:32px;
+  }
+  .lead::first-letter{
+    font-size:4rem;float:left;font-weight:700;
+    color:#c0512f;line-height:0.8;margin-right:6px;
+    font-family:Georgia,serif;
+  }
+
+  /* Table of Contents - two column body */
+  .toc-wrap{
+    margin:48px 0;
+    padding:32px 0;
+    border-top:1px solid #3a3a3a;
+    border-bottom:1px solid #3a3a3a;
+  }
+  .toc-label{
+    font-family:system-ui,sans-serif;font-weight:600;
+    font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;
+    color:#d4af6e;margin-bottom:18px;
+  }
+  .toc-title{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1.875rem;margin-bottom:24px;
+  }
+  .toc{
+    column-count:2;column-gap:40px;
+    column-rule:1px solid #3a3a3a;
+    font-family:Georgia,serif;font-size:1rem;line-height:1.6;
+  }
+  .toc dl{margin:0;padding:0}
+  .toc dt{
+    font-family:system-ui,sans-serif;font-weight:600;
+    font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;
+    color:#8a8070;margin-top:14px;
+    break-after:avoid;
+  }
+  .toc dt:first-child{margin-top:0}
+  .toc dd{
+    margin:4px 0 8px;
+    display:flex;justify-content:space-between;gap:10px;
+    align-items:baseline;
+    break-inside:avoid;
+  }
+  .toc dd .ttl{flex:1}
+  .toc dd .dots{
+    flex:0 1 40px;
+    border-bottom:1px dotted #4a4a4a;
+    margin:0 6px;
+    transform:translateY(-4px);
+  }
+  .toc dd .pg{color:#d4af6e;font-weight:700;font-variant-numeric:tabular-nums}
+
+  /* Section essays */
+  .essay{margin-top:56px}
+  .essay h2{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1.875rem;line-height:1.15;
+    margin-bottom:8px;letter-spacing:-0.005em;
+  }
+  .essay .meta{
+    font-family:system-ui,sans-serif;font-weight:300;
+    font-size:0.8rem;letter-spacing:0.05em;color:#8a8070;
+    margin-bottom:20px;
+    padding-bottom:14px;border-bottom:1px solid #2a2a2a;
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  }
+  .essay .meta strong{color:#c0512f;font-weight:600}
+  .essay p{margin-bottom:18px}
+  .byline{
+    font-family:Georgia,serif;font-style:italic;
+    color:#d4af6e;margin-top:8px;
+    font-size:1rem;
+  }
+  .byline::before{content:"— ";color:#c0512f;font-style:normal}
+
+  /* Pull quote */
+  .pullquote{
+    font-family:Georgia,serif;
+    font-size:1.6rem;font-weight:700;
+    color:#d4af6e;line-height:1.3;
+    border-left:4px solid #c0512f;
+    padding-left:1.5rem;
+    margin:36px 0 36px -48px;
+  }
+  .pullquote .attr{
+    display:block;
+    font-family:system-ui,sans-serif;
+    font-size:0.65rem;font-weight:600;letter-spacing:0.24em;
+    text-transform:uppercase;color:#8a8070;
+    margin-top:14px;
+  }
+
+  /* Coda */
+  .coda{
+    margin-top:56px;padding-top:32px;
+    border-top:1px solid #3a3a3a;
+  }
+  .coda h3{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1.25rem;margin-bottom:10px;
+  }
+  .small-note{
+    font-family:system-ui,sans-serif;font-weight:300;
+    font-size:0.65rem;letter-spacing:0.12em;
+    color:#8a8070;line-height:1.8;text-transform:uppercase;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    font-family:Georgia,serif;
+    align-self:start;
+  }
+  .side-block{
+    background:#242424;
+    border:1px solid #2f2f2f;
+    padding:24px;
+    margin-bottom:24px;
+  }
+  .side-block.accent{
+    border-top:3px solid #c0512f;
+  }
+  .side-label{
+    font-family:system-ui,sans-serif;font-weight:600;
+    font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;
+    color:#d4af6e;margin-bottom:14px;
+  }
+  .side-block h3{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1.25rem;line-height:1.2;
+    margin-bottom:14px;
+  }
+  .side-dl{display:block}
+  .side-dl dt{
+    font-family:system-ui,sans-serif;font-weight:300;
+    font-size:0.8rem;letter-spacing:0.04em;color:#8a8070;
+    margin-top:14px;
+    text-transform:uppercase;letter-spacing:0.14em;font-size:0.65rem;
+  }
+  .side-dl dt:first-child{margin-top:0}
+  .side-dl dd{
+    font-family:Georgia,serif;font-size:1rem;
+    color:#f0ede6;line-height:1.5;
+    padding-bottom:10px;
+    border-bottom:1px solid #2f2f2f;
+  }
+  .side-dl dd:last-child{border-bottom:0}
+  .price{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1.875rem;color:#d4af6e;
+    line-height:1;display:block;
+  }
+  .price small{
+    display:block;
+    font-family:system-ui,sans-serif;font-weight:300;
+    font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;
+    color:#8a8070;margin-top:6px;
+  }
+  .order-btn{
+    display:block;text-align:center;
+    margin-top:18px;padding:14px;
+    background:#c0512f;color:#f0ede6;
+    font-family:system-ui,sans-serif;font-weight:600;
+    font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;
+  }
+  .order-btn .x{
+    display:block;font-family:Georgia,serif;font-style:italic;
+    font-weight:400;font-size:0.65rem;letter-spacing:0.1em;
+    color:#f0ede6cc;margin-top:4px;text-transform:none;
+  }
+  .stamp{
+    border:1px dashed #3a3a3a;
+    padding:18px;text-align:center;
+    margin-top:14px;
+  }
+  .stamp .num{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:3rem;color:#c0512f;line-height:1;
+  }
+  .stamp .cap{
+    font-family:system-ui,sans-serif;font-weight:300;
+    font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;
+    color:#8a8070;margin-top:8px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid #2a2a2a;
+    background:#141414;
+    margin-top:32px;
+  }
+  .foot{
+    max-width:1280px;margin:0 auto;padding:56px 24px 28px;
+    display:grid;grid-template-columns:200px 1fr 1fr 1fr;gap:24px;
+  }
+  .foot .col h5{
+    font-family:system-ui,sans-serif;font-weight:600;
+    font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;
+    color:#d4af6e;margin-bottom:14px;
+  }
+  .foot .col p,.foot .col li{
+    font-family:Georgia,serif;font-size:0.8rem;
+    color:#bcb6a6;line-height:1.7;
+  }
+  .foot .col ul{list-style:none}
+  .foot .col li a:hover{color:#c0512f}
+  .foot-brand{
+    font-family:Georgia,serif;font-weight:700;
+    font-size:1.25rem;color:#f0ede6;
+  }
+  .foot-brand span{color:#c0512f}
+  .foot-bottom{
+    max-width:1280px;margin:0 auto;
+    padding:18px 24px 32px;
+    border-top:1px solid #2a2a2a;
+    display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    font-family:system-ui,sans-serif;font-weight:300;
+    font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;
+    color:#6b6557;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:1180px){
+    .grid{grid-template-columns:160px 1fr 260px;}
+    .display{font-size:4rem}
+  }
+  @media (max-width:980px){
+    .grid{
+      grid-template-columns:120px 1fr;
+      grid-template-areas:
+        "margin main"
+        "side   side";
+    }
+    .marginalia{grid-area:margin}
+    .main{grid-area:main}
+    .sidebar{grid-area:side;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .side-block{margin-bottom:0}
+    .pullquote{margin-left:-24px}
+    .foot{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:680px){
+    html{font-size:15px}
+    .display{font-size:3rem;line-height:1.02}
+    .main h1{font-size:2.25rem}
+    .grid{
+      grid-template-columns:80px 1fr;
+      gap:16px;padding:32px 18px 64px;
+    }
+    .sidebar{grid-template-columns:1fr}
+    .nav{padding:16px 18px}
+    .nav ul{gap:14px;font-size:0.7rem;letter-spacing:0.12em}
+    .masterhead{padding:40px 18px 18px}
+    .object-repro{grid-template-columns:1fr 1fr;gap:14px}
+    .cover .title{font-size:1.4rem}
+    .toc{column-count:1;column-rule:0}
+    .pullquote{
+      font-size:1.25rem;margin-left:-16px;
+      padding-left:1rem;border-left-width:3px;
+    }
+    .foot{grid-template-columns:1fr;padding:36px 18px 20px}
+    .marginalia{position:static}
+  }
+  @media (max-width:430px){
+    .grid{grid-template-columns:1fr;}
+    .marginalia{
+      position:static;
+      border-bottom:1px solid #2a2a2a;padding-bottom:18px;
+    }
+    .pullquote{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav" aria-label="Primary">
+    <div class="brand">Obsidian<span class="dot">·</span>Fold</div>
+    <ul>
+      <li><a href="../manifesto/index.html">Manifesto</a></li>
+      <li><a href="../collection/index.html">Collection</a></li>
+      <li><a href="../artists/index.html">Artists</a></li>
+      <li><a class="active" href="#">Catalogue</a></li>
+      <li><a href="../visit/index.html">Visit</a></li>
+    </ul>
+  </nav>
+</div>
+
+<header class="masterhead">
+  <div class="kicker">Volume III · Printed Object · 2024</div>
+  <h1 class="display">The <em>Catalogue</em><br>as Archive.</h1>
+  <p class="subhead">A 192-page softbound publication accompanying Strata &amp; Sediment — three essays, twelve plates, four interviews, and the full edition register, risograph-printed in Rotterdam in a run of 375.</p>
+</header>
+
+<div class="rule"><hr></div>
+
+<section class="grid">
+
+  <!-- ============ LEFT MARGINALIA ============ -->
+  <aside class="marginalia" aria-label="Page-number cross-references">
+    <h4>§ Pagination</h4>
+    <ul>
+      <li><span>Colophon</span><span>002</span></li>
+      <li><span>Foreword</span><span>007</span></li>
+      <li><span>Essay I</span><span>014</span></li>
+      <li><span>Plates I–IV</span><span>032</span></li>
+      <li><span>Essay II</span><span>061</span></li>
+      <li><span>Plates V–VIII</span><span>078</span></li>
+      <li><span>Essay III</span><span>104</span></li>
+      <li><span>Plates IX–XII</span><span>122</span></li>
+      <li><span>Interviews</span><span>148</span></li>
+      <li><span>Register</span><span>176</span></li>
+      <li><span>Index</span><span>188</span></li>
+    </ul>
+    <p class="margin-note">Cross-ref. printed book OF—III, signatures of sixteen, sewn binding, head &amp; tail bands in burnt sienna thread.</p>
+    <p class="margin-note">See also: <span style="color:#d4af6e">Manifesto §3</span> on the cultural weight of the bound page.</p>
+  </aside>
+
+  <!-- ============ MAIN COLUMN ============ -->
+  <article class="main">
+    <h1>Strata &amp; Sediment, Vol. III — the printed companion.</h1>
+    <p class="caption-meta">
+      <strong>Editor</strong> J. van Doelen &nbsp;·&nbsp;
+      <strong>Designer</strong> Ines Brækhus &nbsp;·&nbsp;
+      <strong>Press</strong> Obsidian Fold Studio, Rotterdam &nbsp;·&nbsp;
+      <strong>Pages</strong> 192 &nbsp;·&nbsp;
+      <strong>Format</strong> 240 × 320 mm &nbsp;·&nbsp;
+      <strong>Issued</strong> March 2024
+    </p>
+
+    <!-- Object reproduction -->
+    <div class="object-repro" aria-label="Catalogue object reproduction">
+      <div class="cover">
+        <div class="tag">Obsidian Fold</div>
+        <div>
+          <div class="title">Strata &amp;<br>Sediment</div>
+          <div style="height:18px"></div>
+          <div class="vol">Volume · III</div>
+        </div>
+      </div>
+      <div class="spine"><span class="spine-text">STRATA &amp; SEDIMENT · III</span></div>
+    </div>
+
+    <!-- Lead paragraph -->
+    <p class="lead">This catalogue is not a record of the exhibition — it is a parallel exhibition. Printed on Munken Pure 120gsm with a six-pass risograph cover and a single letterpress folio at its center, Volume III treats its own materiality as primary text. The reader who finishes the book has read the work; the reader who finishes the work has only begun the book. We have arranged the two so that neither resolves the other.</p>
+
+    <!-- Table of Contents -->
+    <div class="toc-wrap">
+      <div class="toc-label">Reproduction · Table of Contents</div>
+      <div class="toc-title">Contents, in the order printed.</div>
+      <div class="toc">
+        <dl>
+          <dt>Front Matter</dt>
+          <dd><span class="ttl">Colophon &amp; Imprint</span><span class="dots"></span><span class="pg">002</span></dd>
+          <dd><span class="ttl">Editor's Foreword</span><span class="dots"></span><span class="pg">007</span></dd>
+          <dd><span class="ttl">A Note on the Paper</span><span class="dots"></span><span class="pg">010</span></dd>
+
+          <dt>I — Essays</dt>
+          <dd><span class="ttl">On Geological Patience</span><span class="dots"></span><span class="pg">014</span></dd>
+          <dd><span class="ttl">The Ethics of Edition</span><span class="dots"></span><span class="pg">061</span></dd>
+          <dd><span class="ttl">Ink as Archive</span><span class="dots"></span><span class="pg">104</span></dd>
+
+          <dt>II — Plates</dt>
+          <dd><span class="ttl">Holt — Tidal Strata I–IV</span><span class="dots"></span><span class="pg">032</span></dd>
+          <dd><span class="ttl">Bae — Compression Studies</span><span class="dots"></span><span class="pg">078</span></dd>
+          <dd><span class="ttl">Vael — The Folded Coast</span><span class="dots"></span><span class="pg">096</span></dd>
+          <dd><span class="ttl">Menon — Ledger of Soils</span><span class="dots"></span><span class="pg">122</span></dd>
+
+          <dt>III — Apparatus</dt>
+          <dd><span class="ttl">Four Studio Interviews</span><span class="dots"></span><span class="pg">148</span></dd>
+          <dd><span class="ttl">Edition Register</span><span class="dots"></span><span class="pg">176</span></dd>
+          <dd><span class="ttl">Glossary of Press Terms</span><span class="dots"></span><span class="pg">184</span></dd>
+          <dd><span class="ttl">Index of Names</span><span class="dots"></span><span class="pg">188</span></dd>
+          <dd><span class="ttl">Acknowledgements</span><span class="dots"></span><span class="pg">191</span></dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Essay 1 -->
+    <section class="essay">
+      <h2>On Geological Patience</h2>
+      <div class="meta">
+        <span><strong>Essay I</strong> · pages 014–029</span>
+        <span>Reading time approx. 22 minutes</span>
+      </div>
+      <p>The sediments we admire in the cliff face were not assembled by intention but by duration. A risograph print, pulled six passes deep, asks of the printer something analogous: a willingness to let the layers misregister, to permit the seventh second of drying time before the eighth pass is laid down. There is no shortcut to that minute. We can simulate the look of layered ink in software, but we cannot simulate the patience that produced the ink. The image, in the end, is a record of waiting — a small geology made flat.</p>
+      <p class="byline">J. van Doelen, Editor's introduction, p. 014</p>
+    </section>
+
+    <!-- Pull quote -->
+    <blockquote class="pullquote">
+      "A book is the slowest medium we have left. We are reluctant, here, to make it faster."
+      <span class="attr">From the Editor's Foreword · p. 008</span>
+    </blockquote>
+
+    <!-- Essay 2 -->
+    <section class="essay">
+      <h2>The Ethics of Edition</h2>
+      <div class="meta">
+        <span><strong>Essay II</strong> · pages 061–075</span>
+        <span>By Ines Brækhus, Curator</span>
+      </div>
+      <p>An edition is a promise about scarcity — but it is also a promise about distribution. To print 375 copies is to admit, plainly, that we expect 375 readers and no more. The mathematics is honest in a way the screen rarely is. Every numbered impression, signed and stamped at the back of this volume, is a record of a relationship: a print, a press, a paper, a person. The ethics begin in the count. To inflate the count is to dilute the relationship. To suppress it is to hide the labour. We have, in this third volume, decided to print the register in full.</p>
+      <p class="byline">Ines Brækhus, "The Ethics of Edition," p. 063</p>
+    </section>
+
+    <!-- Essay 3 -->
+    <section class="essay">
+      <h2>Ink as Archive</h2>
+      <div class="meta">
+        <span><strong>Essay III</strong> · pages 104–119</span>
+        <span>By Priya Menon, Contributing Artist</span>
+      </div>
+      <p>Soy-based risograph ink does not, in any meaningful sense, dry. It cures — slowly, over weeks, sometimes years — settling into the fibre of the page in a way that a museum conservator can date by touch. This is uncomfortable for the gallery and necessary for the work. The print continues to make itself after the printer has gone home. To treat ink as archive is to accept that the document is not finished when it leaves the press; it is finished, perhaps, never. The smudge on page 116 of your copy will not appear on mine. We have agreed, in advance, that this is good.</p>
+      <p class="byline">Priya Menon, "Ink as Archive," p. 107</p>
+    </section>
+
+    <!-- Pull quote 2 -->
+    <blockquote class="pullquote">
+      "We did not write a catalogue about the work. We made a second work, in paper, that happens to remember the first."
+      <span class="attr">Editorial Statement · Volume III</span>
+    </blockquote>
+
+    <!-- Coda -->
+    <section class="coda">
+      <h3>A note on the binding.</h3>
+      <p>The signatures are sewn rather than glued; the cover board is 2mm grey-brown chipboard, hand-wrapped in a single sheet of risograph-printed Munken stock. Each spine is numbered by hand in pencil at the head, between the band and the foredge. Where the pencil mark is faint, it has not been retouched.</p>
+      <p class="small-note">Set in Georgia &amp; system-ui · Composed in Rotterdam · Printed January–February 2024 · Bound March 2024</p>
+    </section>
+  </article>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" aria-label="Ordering information">
+    <div class="side-block accent">
+      <div class="side-label">Ordering · 2024</div>
+      <h3>Strata &amp; Sediment, Vol. III</h3>
+      <span class="price">€ 64,00<small>incl. VAT · shipping calculated separately</small></span>
+
+      <dl class="side-dl" style="margin-top:20px">
+        <dt>ISBN</dt><dd>978-94-93217-08-3</dd>
+        <dt>Edition</dt><dd>Print run of 375 numbered copies</dd>
+        <dt>Special Issue</dt><dd>1–25, signed by all four artists — € 180,00</dd>
+        <dt>Format</dt><dd>240 × 320 mm, 192 pp.</dd>
+        <dt>Paper</dt><dd>Munken Pure 120gsm interior; Munken 300gsm cover</dd>
+        <dt>Print</dt><dd>Six-colour risograph; single letterpress folio</dd>
+        <dt>Binding</dt><dd>Sewn signatures, soft cover, exposed thread</dd>
+        <dt>Languages</dt><dd>English &amp; Nederlands, parallel setting</dd>
+        <dt>Published</dt><dd>Obsidian Fold Editions · March 2024</dd>
+      </dl>
+
+      <a class="order-btn" href="#">Reserve a Copy
+        <span class="x">post or in-gallery collection · Vuurplaat 14</span>
+      </a>
+    </div>
+
+    <div class="side-block">
+      <div class="side-label">Edition Stamp</div>
+      <div class="stamp">
+        <div class="num">375</div>
+        <div class="cap">Total Impressions · Hand-Numbered</div>
+      </div>
+      <p style="margin-top:14px;font-size:0.8rem;color:#bcb6a6;line-height:1.55">
+        Numbers 001–025 reserved for the artists and the institutional archive. Numbers 026–375 are available to the public on a first-reserved basis. No second printing is planned.
+      </p>
+    </div>
+
+    <div class="side-block">
+      <div class="side-label">Stockists</div>
+      <dl class="side-dl">
+        <dt>Rotterdam</dt><dd>Obsidian Fold, Vuurplaat 14</dd>
+        <dt>Amsterdam</dt><dd>San Serriffe, Sint Annenstraat 30</dd>
+        <dt>Brussels</dt><dd>Tipi Bookshop, Rue de Stassart 89</dd>
+        <dt>Berlin</dt><dd>Motto Berlin, Skalitzer Str. 68</dd>
+        <dt>London</dt><dd>Donlon Books, 75 Broadway Market</dd>
+      </dl>
+    </div>
+  </aside>
+
+</section>
+
+<footer>
+  <div class="foot">
+    <div class="col">
+      <div class="foot-brand">Obsidian<span>·</span>Fold</div>
+      <p style="margin-top:14px">Contemporary print-art gallery. Risograph &amp; letterpress at architectural scale.</p>
+    </div>
+    <div class="col">
+      <h5>Visit</h5>
+      <p>Vuurplaat 14<br>3072 AP Rotterdam<br>Katendrecht</p>
+      <p style="margin-top:10px">Wed – Sun · 11 – 18h</p>
+    </div>
+    <div class="col">
+      <h5>Pages</h5>
+      <ul>
+        <li><a href="../manifesto/index.html">Manifesto</a></li>
+        <li><a href="../collection/index.html">Collection</a></li>
+        <li><a href="../artists/index.html">Artists</a></li>
+        <li><a href="#">Catalogue</a></li>
+        <li><a href="../visit/index.html">Visit</a></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h5>Contact</h5>
+      <p>studio@obsidianfold.nl<br>+31 (0)10 244 — 0817</p>
+      <p style="margin-top:10px">Press &amp; editions enquiries by appointment.</p>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2024 Obsidian Fold Editions · Rotterdam</span>
+    <span>ISBN 978-94-93217-08-3 · KvK 71 408 902</span>
+  </div>
+</footer>
+
+</body>
+</html>

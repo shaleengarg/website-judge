@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage Manifest — Ironclad Maritime Registry</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #0B1F3A; color: #E8EDF2; font-family: "Courier New", monospace; font-size: 13px; line-height: 1.5; }
+  a { color: #2ABFBF; text-decoration: none; }
+  a:hover { color: #F5A623; }
+
+  /* Header */
+  .site-header { background: #0D2647; border-bottom: 2px solid #F5A623; }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark { width: 38px; height: 38px; background: linear-gradient(135deg, #F5A623, #2ABFBF); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-weight: 700; color: #0B1F3A; font-size: 18px; }
+  .brand-text h1 { font-family: Georgia, serif; font-size: 18px; color: #E8EDF2; letter-spacing: 0.5px; }
+  .brand-text p { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #2ABFBF; }
+  .meta-strip { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #2ABFBF; }
+  .meta-strip span { color: #F5A623; }
+
+  /* Nav */
+  nav.primary { background: #0B1F3A; border-bottom: 1px solid #1E3A5F; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; flex-wrap: wrap; gap: 0; }
+  nav.primary a { padding: 14px 18px; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #E8EDF2; border-right: 1px solid #1E3A5F; }
+  nav.primary a:first-child { border-left: 1px solid #1E3A5F; }
+  nav.primary a:hover { background: #0D2647; color: #F5A623; }
+  nav.primary a.active { background: #0D2647; color: #F5A623; border-bottom: 2px solid #F5A623; }
+
+  /* Main */
+  main { max-width: 1200px; margin: 0 auto; padding: 32px 24px 48px; }
+
+  .page-title { font-family: Georgia, serif; font-size: 28px; font-weight: 700; color: #E8EDF2; margin-bottom: 6px; }
+  .page-title .accent { color: #F5A623; }
+  .breadcrumb { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #2ABFBF; margin-bottom: 4px; }
+  .page-sub { font-size: 12px; color: #8FA2B8; margin-bottom: 28px; max-width: 780px; }
+
+  /* Section header (small caps style) */
+  .section-header { font-family: Georgia, serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 2.5px; color: #F5A623; padding: 10px 0; border-bottom: 1px solid #1E3A5F; margin: 28px 0 18px; font-variant: small-caps; }
+  .section-header .num { display: inline-block; width: 22px; height: 22px; background: #2ABFBF; color: #0B1F3A; text-align: center; line-height: 22px; margin-right: 10px; border-radius: 3px; font-size: 12px; }
+
+  /* Form grid */
+  form { background: #0A1B33; border: 1px solid #1E3A5F; padding: 24px; border-radius: 4px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-3 .full { grid-column: 1 / -1; }
+  .grid-3 .span-2 { grid-column: span 2; }
+
+  .field { display: flex; flex-direction: column; }
+  label { font-family: "Courier New", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #E8EDF2; margin-bottom: 6px; }
+  .req::after { content: " *"; color: #E84040; font-size: 10px; }
+
+  input[type="text"], input[type="number"], input[type="email"], input[type="tel"], input[type="date"], input[type="datetime-local"], select, textarea {
+    background: #0D2647; border: 1px solid #2ABFBF; color: #E8EDF2; padding: 8px 12px; font-family: "Courier New", monospace; font-size: 13px; border-radius: 2px; outline: none; width: 100%;
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  input:focus, select:focus, textarea:focus { border-color: #F5A623; background: #102E54; }
+  input:required:invalid:not(:focus), select:required:invalid:not(:focus), textarea:required:invalid:not(:focus) { border: 2px solid #E84040; padding: 7px 11px; }
+  input:required:valid, select:required:valid, textarea:required:valid { border: 2px solid #2ABFBF; padding: 7px 11px; }
+
+  select { appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, #2ABFBF 50%), linear-gradient(135deg, #2ABFBF 50%, transparent 50%); background-position: calc(100% - 16px) 50%, calc(100% - 10px) 50%; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 30px; }
+
+  /* Checkboxes */
+  .check-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+  input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; background: #0D2647; border: 2px solid #2ABFBF; border-radius: 2px; position: relative; cursor: pointer; flex-shrink: 0; }
+  input[type="checkbox"]:checked::after { content: "✓"; position: absolute; top: -3px; left: 1px; color: #2ABFBF; font-size: 14px; font-weight: 700; }
+  .check-row label { margin-bottom: 0; text-transform: none; letter-spacing: 0.5px; font-size: 12px; cursor: pointer; }
+
+  /* Radios */
+  .radio-group { display: flex; flex-wrap: wrap; gap: 14px; padding: 6px 0; }
+  .radio-row { display: flex; align-items: center; gap: 8px; }
+  input[type="radio"] { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #0D2647; border: 2px solid #2ABFBF; position: relative; cursor: pointer; }
+  input[type="radio"]:checked::after { content: ""; position: absolute; width: 8px; height: 8px; background: #F5A623; border-radius: 50%; top: 2px; left: 2px; }
+  .radio-row label { margin-bottom: 0; font-size: 12px; }
+
+  /* Toggles */
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0D2647; border: 1px solid #1E3A5F; border-radius: 3px; }
+  .toggle-row label { margin-bottom: 0; }
+  .toggle { position: relative; width: 40px; height: 20px; display: inline-block; }
+  .toggle input { display: none; }
+  .toggle .slider { position: absolute; inset: 0; background: #3A5068; border-radius: 20px; cursor: pointer; transition: background .15s; }
+  .toggle .slider::after { content: ""; position: absolute; width: 16px; height: 16px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: left .15s; }
+  .toggle input:checked + .slider { background: #2ABFBF; }
+  .toggle input:checked + .slider::after { left: 22px; }
+
+  /* Form actions */
+  .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid #1E3A5F; flex-wrap: wrap; }
+  .btn { padding: 10px 22px; font-family: "Courier New", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; border-radius: 3px; cursor: pointer; border: 1px solid #2ABFBF; background: transparent; color: #2ABFBF; }
+  .btn-primary { background: #F5A623; border-color: #F5A623; color: #0B1F3A; font-weight: 700; }
+  .btn-primary:hover { background: #FFB940; }
+  .btn-secondary:hover { background: #0D2647; }
+
+  /* Stat cards */
+  .stat-strip { display: flex; gap: 14px; flex-wrap: wrap; margin: 40px 0 16px; }
+  .stat-card { width: 160px; flex: 0 0 160px; background: #0D2647; border: 2px solid #2ABFBF; border-radius: 12px; padding: 14px 12px; text-align: center; }
+  .stat-num { font-family: Georgia, serif; font-size: 28px; font-weight: 700; color: #F5A623; line-height: 1.1; }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: #E8EDF2; margin-top: 6px; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; border: 1px solid #1E3A5F; border-radius: 4px; margin-bottom: 32px; }
+  table.data { width: 100%; border-collapse: collapse; font-family: "Courier New", monospace; font-size: 12px; min-width: 900px; }
+  table.data thead th { background: #0D2647; color: #F5A623; text-transform: uppercase; letter-spacing: 1.2px; font-size: 11px; padding: 10px 12px; text-align: left; border: 1px solid #1E3A5F; position: sticky; top: 0; }
+  table.data tbody td { padding: 6px 12px; border: 1px solid #1E3A5F; }
+  table.data tbody tr:nth-child(odd) { background: #0B1F3A; }
+  table.data tbody tr:nth-child(even) { background: #0D2647; }
+  table.data .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .status { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .status.active { background: rgba(42,191,191,0.15); color: #2ABFBF; border: 1px solid #2ABFBF; }
+  .status.pending { background: rgba(245,166,35,0.15); color: #F5A623; border: 1px solid #F5A623; }
+  .status.complete { background: rgba(232,237,242,0.1); color: #E8EDF2; border: 1px solid #3A5068; }
+  .status.delayed { background: rgba(232,64,64,0.15); color: #E84040; border: 1px solid #E84040; }
+
+  .table-header { display: flex; justify-content: space-between; align-items: center; margin: 28px 0 12px; flex-wrap: wrap; gap: 10px; }
+  .table-title { font-family: Georgia, serif; font-size: 20px; font-weight: 700; color: #E8EDF2; }
+  .table-tools { display: flex; gap: 8px; flex-wrap: wrap; }
+  .table-tools input { width: 220px; }
+
+  /* Footer */
+  footer { background: #081628; border-top: 2px solid #F5A623; margin-top: 40px; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+  .footer-col h4 { font-family: Georgia, serif; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: #F5A623; margin-bottom: 12px; font-variant: small-caps; }
+  .footer-col ul { list-style: none; }
+  .footer-col li { padding: 4px 0; font-size: 11px; }
+  .footer-col p { font-size: 11px; color: #8FA2B8; line-height: 1.7; }
+  .footer-bottom { border-top: 1px solid #1E3A5F; padding: 14px 24px; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #8FA2B8; text-align: center; }
+  .footer-bottom span { color: #2ABFBF; }
+
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 .span-2 { grid-column: 1 / -1; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-3 .span-2 { grid-column: 1; }
+    .stat-card { flex: 1 1 calc(50% - 7px); width: auto; }
+    nav.primary a { padding: 12px 12px; font-size: 10px; letter-spacing: 1px; }
+    .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+    .page-title { font-size: 22px; }
+    main { padding: 20px 16px 32px; }
+    form { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">IM</div>
+      <div class="brand-text">
+        <h1>Ironclad Maritime Registry</h1>
+        <p>Office of Vessel Affairs &middot; Est. 1947</p>
+      </div>
+    </div>
+    <div class="meta-strip">
+      Session: <span>OP-44719</span> &nbsp;|&nbsp; Port: <span>HQ-DOCK-03</span> &nbsp;|&nbsp; UTC: <span>14:22:07</span>
+    </div>
+  </div>
+</header>
+
+<nav class="primary">
+  <div class="nav-inner">
+    <a href="../vessel-registration/index.html">Vessel Registration</a>
+    <a href="../crew-certification/index.html">Crew Certification</a>
+    <a href="#" class="active">Voyage Manifest</a>
+    <a href="../compliance-audit/index.html">Compliance Audit</a>
+    <a href="../fee-schedule/index.html">Fee Schedule</a>
+  </div>
+</nav>
+
+<main>
+  <div class="breadcrumb">Home / Operations / Voyage Manifest Filing</div>
+  <h2 class="page-title">Voyage <span class="accent">Manifest</span> Declaration</h2>
+  <p class="page-sub">File a pre-departure manifest under SOLAS Reg. V/28 and the Convention on Facilitation of Maritime Traffic (FAL). All fields marked with an asterisk must be completed before the harbour master will issue clearance.</p>
+
+  <form novalidate>
+
+    <div class="section-header"><span class="num">1</span>Voyage Details</div>
+    <div class="grid-3">
+      <div class="field">
+        <label class="req">Voyage Number</label>
+        <input type="text" required placeholder="VYG-2024-XXXX">
+      </div>
+      <div class="field">
+        <label class="req">Vessel IMO</label>
+        <select required>
+          <option value="">— Select Vessel —</option>
+          <option>9874523 — MV Northwind Star</option>
+          <option>9712044 — MV Cape Ironclad</option>
+          <option>9550911 — MV Helios Trader</option>
+          <option>9831006 — MV Pacific Sentinel</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Voyage Type</label>
+        <select>
+          <option>International</option>
+          <option>Cabotage</option>
+          <option>Coastal</option>
+          <option>Inland Waterway</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-header"><span class="num">2</span>Departure Port</div>
+    <div class="grid-3">
+      <div class="field">
+        <label class="req">Departure Port</label>
+        <input type="text" required placeholder="UN/LOCODE or name">
+      </div>
+      <div class="field">
+        <label class="req">Departure Country</label>
+        <select required>
+          <option value="">— Select Country —</option>
+          <option>Singapore</option>
+          <option>Panama</option>
+          <option>Liberia</option>
+          <option>Marshall Islands</option>
+          <option>Greece</option>
+          <option>United Kingdom</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="req">ETD (Local)</label>
+        <input type="datetime-local" required>
+      </div>
+    </div>
+
+    <div class="section-header"><span class="num">3</span>Arrival Port</div>
+    <div class="grid-3">
+      <div class="field">
+        <label class="req">Arrival Port</label>
+        <input type="text" required placeholder="UN/LOCODE or name">
+      </div>
+      <div class="field">
+        <label class="req">Arrival Country</label>
+        <select required>
+          <option value="">— Select Country —</option>
+          <option>Netherlands</option>
+          <option>Germany</option>
+          <option>United States</option>
+          <option>Japan</option>
+          <option>South Korea</option>
+          <option>United Arab Emirates</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="req">ETA (Local)</label>
+        <input type="datetime-local" required>
+      </div>
+    </div>
+
+    <div class="section-header"><span class="num">4</span>Cargo Declaration</div>
+    <div class="grid-3">
+      <div class="field">
+        <label class="req">Cargo Type</label>
+        <select required>
+          <option value="">— Select Cargo Class —</option>
+          <option>General Container</option>
+          <option>Bulk Dry</option>
+          <option>Bulk Liquid</option>
+          <option>Reefer</option>
+          <option>RoRo Vehicles</option>
+          <option>Project / Heavy Lift</option>
+          <option>None (Ballast)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>UN Number</label>
+        <input type="text" placeholder="e.g. UN1267">
+      </div>
+      <div class="field">
+        <label class="req">Total Cargo Weight (MT)</label>
+        <input type="number" required min="0" placeholder="0.00">
+      </div>
+      <div class="field full">
+        <label class="req">Cargo Description</label>
+        <textarea required placeholder="Itemized description, packing, marks, hazardous notes..."></textarea>
+      </div>
+      <div class="field">
+        <label>Number of Containers</label>
+        <input type="number" min="0" placeholder="TEU count">
+      </div>
+      <div class="field span-2">
+        <div class="toggle-row">
+          <label>Dangerous Goods on Board (IMDG)</label>
+          <span class="toggle"><input type="checkbox"><span class="slider"></span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header"><span class="num">5</span>Passenger Count &amp; Agent</div>
+    <div class="grid-3">
+      <div class="field">
+        <label class="req">Passenger Count</label>
+        <input type="number" required min="0" placeholder="0">
+      </div>
+      <div class="field">
+        <label class="req">Crew Aboard</label>
+        <input type="number" required min="0" placeholder="0">
+      </div>
+      <div class="field">
+        <div class="toggle-row">
+          <label>Pilot Required</label>
+          <span class="toggle"><input type="checkbox" checked><span class="slider"></span></span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="req">Local Agent Name</label>
+        <input type="text" required placeholder="Agent / Brokerage">
+      </div>
+      <div class="field">
+        <label class="req">Agent Contact</label>
+        <input type="tel" required placeholder="+00 000 000 0000">
+      </div>
+      <div class="field">
+        <div class="check-row">
+          <input type="checkbox" id="prc">
+          <label for="prc">Customs Pre-Clearance Filed</label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="sec">
+          <label for="sec">ISPS Security Notice Submitted</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary">Save Draft</button>
+      <button type="button" class="btn btn-secondary">Validate</button>
+      <button type="submit" class="btn btn-primary">Submit Manifest</button>
+    </div>
+  </form>
+
+  <!-- Stat Cards -->
+  <div class="stat-strip">
+    <div class="stat-card"><div class="stat-num">187</div><div class="stat-label">Active Voyages</div></div>
+    <div class="stat-card"><div class="stat-num">412</div><div class="stat-label">Completed This Month</div></div>
+    <div class="stat-card"><div class="stat-num">2.6M</div><div class="stat-label">Cargo Tonnage (MT)</div></div>
+    <div class="stat-card"><div class="stat-num">94</div><div class="stat-label">Vessels at Sea</div></div>
+  </div>
+
+  <div class="table-header">
+    <div class="table-title">Recent Voyage Manifests</div>
+    <div class="table-tools">
+      <input type="text" placeholder="Filter by voyage no., vessel, port...">
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data">
+      <thead>
+        <tr>
+          <th>Voyage No.</th>
+          <th>Vessel</th>
+          <th>Departure</th>
+          <th>Arrival</th>
+          <th>ETD</th>
+          <th>ETA</th>
+          <th>Cargo Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>VYG-2024-0418</td><td>MV Northwind Star</td><td>SGSIN</td><td>NLRTM</td><td>2024-03-02 04:00</td><td>2024-03-26 18:00</td><td>Container</td><td><span class="status active">At Sea</span></td></tr>
+        <tr><td>VYG-2024-0417</td><td>MV Cape Ironclad</td><td>USHOU</td><td>JPYOK</td><td>2024-03-02 09:30</td><td>2024-03-29 12:00</td><td>Bulk Liquid</td><td><span class="status active">At Sea</span></td></tr>
+        <tr><td>VYG-2024-0416</td><td>MV Helios Trader</td><td>GBSOU</td><td>DEHAM</td><td>2024-03-01 22:15</td><td>2024-03-03 06:00</td><td>RoRo</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0415</td><td>MV Pacific Sentinel</td><td>AEJEA</td><td>INNSA</td><td>2024-03-01 14:00</td><td>2024-03-05 08:00</td><td>General</td><td><span class="status pending">Loading</span></td></tr>
+        <tr><td>VYG-2024-0414</td><td>MV Aurora Belt</td><td>BRRIG</td><td>CNSHA</td><td>2024-02-29 03:45</td><td>2024-04-06 21:00</td><td>Bulk Dry</td><td><span class="status active">At Sea</span></td></tr>
+        <tr><td>VYG-2024-0413</td><td>MV Tidewatch</td><td>NOTRD</td><td>USNYC</td><td>2024-02-28 16:00</td><td>2024-03-10 04:00</td><td>Reefer</td><td><span class="status active">At Sea</span></td></tr>
+        <tr><td>VYG-2024-0412</td><td>MV Silverkeel</td><td>GRPIR</td><td>EGALY</td><td>2024-02-27 12:30</td><td>2024-03-01 09:00</td><td>Container</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0411</td><td>MV Coral Marshal</td><td>AUSYD</td><td>NZAKL</td><td>2024-02-26 18:00</td><td>2024-03-02 13:00</td><td>General</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0410</td><td>MV Lighthouse III</td><td>ESBCN</td><td>ITGOA</td><td>2024-02-26 05:00</td><td>2024-02-27 23:30</td><td>RoRo</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0409</td><td>MV Northwind Star</td><td>KRPUS</td><td>SGSIN</td><td>2024-02-25 11:00</td><td>2024-03-04 19:00</td><td>Container</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0408</td><td>MV Atlas Forge</td><td>PAPTY</td><td>CLVAP</td><td>2024-02-24 02:00</td><td>2024-03-08 14:00</td><td>Bulk Dry</td><td><span class="status delayed">Delayed</span></td></tr>
+        <tr><td>VYG-2024-0407</td><td>MV Brinemark</td><td>CAVAN</td><td>USOAK</td><td>2024-02-23 20:30</td><td>2024-02-27 07:00</td><td>Container</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0406</td><td>MV Helios Trader</td><td>NLRTM</td><td>GBFXT</td><td>2024-02-22 13:00</td><td>2024-02-23 22:00</td><td>Container</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0405</td><td>MV Cape Ironclad</td><td>SAJUB</td><td>USHOU</td><td>2024-02-22 06:00</td><td>2024-03-15 02:00</td><td>Bulk Liquid</td><td><span class="status active">At Sea</span></td></tr>
+        <tr><td>VYG-2024-0404</td><td>MV Polar Argo</td><td>ISREY</td><td>NOOSL</td><td>2024-02-21 17:15</td><td>2024-02-24 08:30</td><td>Reefer</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0403</td><td>MV Quartermast</td><td>VNSGN</td><td>HKHKG</td><td>2024-02-21 04:00</td><td>2024-02-23 11:00</td><td>General</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0402</td><td>MV Pacific Sentinel</td><td>OMSLL</td><td>AEJEA</td><td>2024-02-20 15:00</td><td>2024-02-23 06:30</td><td>Bulk Liquid</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0401</td><td>MV Lighthouse III</td><td>ITGOA</td><td>ESBCN</td><td>2024-02-19 21:00</td><td>2024-02-21 14:00</td><td>RoRo</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0400</td><td>MV Tidewatch</td><td>USNYC</td><td>JMKIN</td><td>2024-02-19 08:00</td><td>2024-02-23 19:30</td><td>Reefer</td><td><span class="status complete">Completed</span></td></tr>
+        <tr><td>VYG-2024-0399</td><td>MV Brinemark</td><td>USLAX</td><td>MXZLO</td><td>2024-02-18 23:45</td><td>2024-02-21 12:00</td><td>Container</td><td><span class="status delayed">Delayed</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>Ironclad Maritime Registry</h4>
+      <p>Pier 7, North Quay, Harbour Authority Building. The registry is a sovereign instrumentality maintaining the central record of commercial vessels, certified seafarers, and voyage manifests under multilateral maritime treaty obligations.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="../vessel-registration/index.html">Vessel Registration</a></li>
+        <li><a href="../crew-certification/index.html">Crew Certification</a></li>
+        <li><a href="#">Voyage Manifest</a></li>
+        <li><a href="../compliance-audit/index.html">Compliance Audit</a></li>
+        <li><a href="../fee-schedule/index.html">Fee Schedule</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">SOLAS Reg. V/28</a></li>
+        <li><a href="#">IMDG Code</a></li>
+        <li><a href="#">FAL Convention</a></li>
+        <li><a href="#">Port State Index</a></li>
+        <li><a href="#">UN/LOCODE List</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li>Duty Desk: +1 555 0144</li>
+        <li>Telex: 442 IRONCLAD</li>
+        <li>VHF Ch. 12 / 16</li>
+        <li>manifests@imr.gov</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 1947–2024 Ironclad Maritime Registry &nbsp;&middot;&nbsp; <span>Authorised by Treaty Annex IV</span> &nbsp;&middot;&nbsp; Confidential — Official Use Only
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notifications · Nexum Vault</title>
+<style>
+  .channel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+  .channel-card {
+    background: var(--panel-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+  }
+  .channel-card .ch-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+  }
+  .channel-card .ch-head .t { font-weight: 700; font-size: var(--fs-md); }
+  .channel-card .ch-head .d { font-size: var(--fs-xs); color: var(--ink-mute); }
+  .alert-list { display: flex; flex-direction: column; gap: var(--space-2); }
+  .alert-row {
+    display: flex; align-items: flex-start; gap: var(--space-3);
+    padding: var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--panel-3);
+  }
+  .alert-row .lbl { display: flex; flex-direction: column; gap: 2px; }
+  .alert-row .lbl .t { font-weight: 600; color: var(--ink); font-size: var(--fs-md); }
+  .alert-row .lbl small { color: var(--ink-mute); font-size: var(--fs-xs); }
+  .quiet-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-3); }
+  @media (max-width: 1100px) {
+    .channel-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 820px) {
+    .quiet-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">N</span>
+      <span class="brand-name">Nexum<span class="accent">Vault</span></span>
+    </div>
+    <div class="nav-section">Account</div>
+    <ul class="nav-list">
+      <li><a href="../profile/index.html"><span class="nav-ico">◐</span> Profile</a></li>
+      <li><a href="../security/index.html"><span class="nav-ico">⚿</span> Security</a></li>
+      <li><a href="../billing/index.html"><span class="nav-ico">$</span> Billing</a></li>
+      <li><a href="#" class="active"><span class="nav-ico">◈</span> Notifications</a></li>
+      <li><a href="../audit-log/index.html"><span class="nav-ico">≡</span> Audit Log</a></li>
+    </ul>
+    <div class="sidebar-foot">
+      Org: <strong style="color:var(--ink)">Halycon Labs</strong><br>
+      Plan: Enterprise · Region: EU-WEST
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="page-head">
+      <div class="page-head-title">
+        <div class="crumbs">
+          <a href="#">Settings</a><span class="sep">/</span><span>Notifications</span>
+        </div>
+        <h1>Notifications</h1>
+        <div class="page-sub">Choose what events you receive, where they go, and when. Delivery is best-effort with at-least-once semantics.</div>
+      </div>
+      <div class="actions">
+        <a href="#" class="btn btn-ghost btn-sm">Send test</a>
+        <a href="#" class="btn btn-primary btn-sm">Save changes</a>
+      </div>
+    </header>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="label">Active Rules</div>
+        <div class="value">17</div>
+        <div class="delta up">+2 since last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Last Sent</div>
+        <div class="value ink" style="font-size:var(--fs-xl)">12 min ago</div>
+        <div class="sub">login.new_device · email</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Suppressed (30d)</div>
+        <div class="value warn">428</div>
+        <div class="sub">quiet hours + dedupe</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Delivery Failures</div>
+        <div class="value danger">3</div>
+        <div class="delta down">pending retry</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Notification Rules</h2>
+          <div class="hint">Per-event subscriptions are evaluated before channel routing.</div>
+        </div>
+        <span class="badge ok"><span class="dot ok"></span>All systems delivering</span>
+      </div>
+
+      <fieldset>
+        <legend>Security Alerts</legend>
+        <div class="alert-list">
+          <label class="alert-row">
+            <input type="checkbox" checked>
+            <span class="lbl">
+              <span class="t">Login from new device</span>
+              <small>Triggered when an authenticated session originates from an unrecognised device fingerprint or IP geo.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox" checked>
+            <span class="lbl">
+              <span class="t">Password changed</span>
+              <small>Confirms a successful password rotation, including admin-initiated resets.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox" checked>
+            <span class="lbl">
+              <span class="t">MFA disabled</span>
+              <small>High-priority alert when any second-factor method is removed from the account.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox">
+            <span class="lbl">
+              <span class="t">API key rotated</span>
+              <small>Notifies the owner whenever a personal or service API key is regenerated or revoked.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox" checked>
+            <span class="lbl">
+              <span class="t">Suspicious activity</span>
+              <small>Risk engine flags such as impossible travel, brute force, or anomalous secret-read patterns.</small>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Billing Events</legend>
+        <div class="alert-list">
+          <label class="alert-row">
+            <input type="checkbox" checked>
+            <span class="lbl">
+              <span class="t">Invoice generated</span>
+              <small>Sent at the start of each billing cycle once the invoice PDF is finalised.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox" checked>
+            <span class="lbl">
+              <span class="t">Payment failed</span>
+              <small>Immediate alert on declined card, ACH return, or wire reversal.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox">
+            <span class="lbl">
+              <span class="t">Subscription renewed</span>
+              <small>Receipt notification after successful auto-renewal of the active plan.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox" checked>
+            <span class="lbl">
+              <span class="t">Trial expiring</span>
+              <small>Reminders at T-7, T-3, and T-1 days before trial conversion.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox" checked>
+            <span class="lbl">
+              <span class="t">Usage threshold reached</span>
+              <small>Fires when monthly secret-read or seat consumption crosses 80% of plan quota.</small>
+            </span>
+          </label>
+          <label class="alert-row">
+            <input type="checkbox">
+            <span class="lbl">
+              <span class="t">Overage incurred</span>
+              <small>Notifies billing contacts whenever metered usage exceeds the plan ceiling.</small>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Product Updates</legend>
+        <div class="form-row">
+          <div class="field">
+            <span class="field-label">Update cadence</span>
+            <div class="radio-list">
+              <label class="radio"><input type="radio" name="upd"><span class="lbl"><span>All updates</span><small>Every release note, including patch builds.</small></span></label>
+              <label class="radio"><input type="radio" name="upd" checked><span class="lbl"><span>Major only</span><small>Minor and major versions; no patches.</small></span></label>
+              <label class="radio"><input type="radio" name="upd"><span class="lbl"><span>None</span><small>Silence all product update emails.</small></span></label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="digest">Digest frequency</label>
+            <select id="digest">
+              <option>Real-time</option>
+              <option selected>Daily digest</option>
+              <option>Weekly digest (Mon 09:00)</option>
+              <option>Monthly digest (1st of month)</option>
+            </select>
+            <span class="help">Applies to non-critical product and roadmap notifications.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Delivery Channels</legend>
+        <div class="channel-grid">
+          <div class="channel-card">
+            <div class="ch-head">
+              <div><div class="t">Email</div><div class="d">Transactional + digest</div></div>
+              <span class="toggle"><input type="checkbox" checked></span>
+            </div>
+            <div class="field">
+              <label>Delivery address</label>
+              <input type="email" value="ops-alerts@halycon.internal">
+            </div>
+          </div>
+
+          <div class="channel-card">
+            <div class="ch-head">
+              <div><div class="t">SMS</div><div class="d">Critical alerts only</div></div>
+              <span class="toggle"><input type="checkbox" checked></span>
+            </div>
+            <div class="field">
+              <label>Mobile number</label>
+              <input type="tel" value="+44 7700 900142">
+            </div>
+          </div>
+
+          <div class="channel-card">
+            <div class="ch-head">
+              <div><div class="t">Webhook</div><div class="d">HMAC-signed POST</div></div>
+              <span class="toggle"><input type="checkbox" checked></span>
+            </div>
+            <div class="field">
+              <label>Endpoint URL</label>
+              <input type="text" class="mono" value="/internal/hooks/vault-events">
+            </div>
+            <div class="field">
+              <label>Signing secret</label>
+              <input type="password" class="mono" value="whsec_4f3b9a2d1c8e7f6a">
+              <span class="help">Used to sign the <code>X-Nexum-Signature</code> header.</span>
+            </div>
+          </div>
+
+          <div class="channel-card">
+            <div class="ch-head">
+              <div><div class="t">Slack</div><div class="d">#sec-alerts</div></div>
+              <span class="toggle"><input type="checkbox" checked></span>
+            </div>
+            <div class="field">
+              <label>Incoming webhook</label>
+              <input type="text" class="mono" value="slack://workspace/halycon/hook/T08XK">
+            </div>
+          </div>
+
+          <div class="channel-card">
+            <div class="ch-head">
+              <div><div class="t">In-app</div><div class="d">Bell + activity tray</div></div>
+              <span class="toggle"><input type="checkbox" checked></span>
+            </div>
+            <div class="field">
+              <span class="help">Delivered to all sessions of this account. Cannot be disabled for critical security events.</span>
+            </div>
+          </div>
+
+          <div class="channel-card">
+            <div class="ch-head">
+              <div><div class="t">Scheduling</div><div class="d">Digest + quiet hours</div></div>
+            </div>
+            <div class="quiet-grid">
+              <div class="field">
+                <label>Digest time</label>
+                <select>
+                  <option>06:00</option>
+                  <option>08:00</option>
+                  <option selected>09:00</option>
+                  <option>12:00</option>
+                  <option>18:00</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Quiet from</label>
+                <input type="time" value="22:00">
+              </div>
+              <div class="field">
+                <label>Quiet to</label>
+                <input type="time" value="07:00">
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost">Send test notification</button>
+        <span class="spacer"></span>
+        <button class="btn">Discard</button>
+        <button class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <h3>Notification History</h3>
+        <div class="tools">
+          <select aria-label="Filter channel" style="width:auto;">
+            <option>All channels</option>
+            <option>Email</option>
+            <option>SMS</option>
+            <option>Webhook</option>
+            <option>Slack</option>
+            <option>In-app</option>
+          </select>
+          <button class="btn btn-sm">Export CSV</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th class="mono left">Event ID</th>
+              <th>Event Type</th>
+              <th>Channel</th>
+              <th>Sent</th>
+              <th>Status</th>
+              <th class="num">Retries</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono left">evt_8f3a91c2</td><td>login.new_device</td><td>Email</td><td>2025-03-14 14:42:11</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a90b1</td><td>security.suspicious</td><td>Slack</td><td>2025-03-14 14:28:03</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8f47</td><td>billing.usage_threshold</td><td>Email</td><td>2025-03-14 13:55:00</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8e9d</td><td>mfa.disabled</td><td>SMS</td><td>2025-03-14 12:11:48</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8d22</td><td>webhook.rotated</td><td>Webhook</td><td>2025-03-14 11:48:30</td><td><span class="badge warn">Retrying</span></td><td class="num">2</td></tr>
+            <tr><td class="mono left">evt_8f3a8c14</td><td>billing.invoice</td><td>Email</td><td>2025-03-14 09:00:02</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8b08</td><td>product.update</td><td>In-app</td><td>2025-03-13 18:33:21</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8a7f</td><td>login.new_device</td><td>Email</td><td>2025-03-13 16:09:55</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8997</td><td>billing.payment_failed</td><td>SMS</td><td>2025-03-13 15:01:12</td><td><span class="badge danger">Failed</span></td><td class="num">4</td></tr>
+            <tr><td class="mono left">evt_8f3a8810</td><td>billing.payment_failed</td><td>Email</td><td>2025-03-13 15:01:09</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a87a2</td><td>security.api_key</td><td>Webhook</td><td>2025-03-13 12:42:00</td><td><span class="badge ok">Delivered</span></td><td class="num">1</td></tr>
+            <tr><td class="mono left">evt_8f3a8633</td><td>password.changed</td><td>Email</td><td>2025-03-13 10:15:44</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a85b1</td><td>security.suspicious</td><td>Slack</td><td>2025-03-12 23:58:19</td><td><span class="badge info">Suppressed</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a84a4</td><td>trial.expiring</td><td>Email</td><td>2025-03-12 19:00:00</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8395</td><td>login.new_device</td><td>In-app</td><td>2025-03-12 14:31:07</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8288</td><td>billing.overage</td><td>Webhook</td><td>2025-03-12 09:00:21</td><td><span class="badge warn">Retrying</span></td><td class="num">1</td></tr>
+            <tr><td class="mono left">evt_8f3a8174</td><td>product.update</td><td>Email</td><td>2025-03-12 09:00:00</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a8062</td><td>mfa.disabled</td><td>Slack</td><td>2025-03-11 21:14:55</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a7f51</td><td>security.suspicious</td><td>SMS</td><td>2025-03-11 17:42:38</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+            <tr><td class="mono left">evt_8f3a7e3d</td><td>billing.invoice</td><td>Webhook</td><td>2025-03-11 09:00:11</td><td><span class="badge ok">Delivered</span></td><td class="num">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-foot">
+        <div>Showing <strong>1–20</strong> of 1,284 events</div>
+        <div class="pager">
+          <span>Rows</span>
+          <select><option>20</option><option>50</option><option>100</option></select>
+          <button class="btn btn-sm">‹ Prev</button>
+          <button class="btn btn-sm">Next ›</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="app-foot">
+      <div>© 2025 Nexum Vault Inc. · Secrets management for regulated teams.</div>
+      <div class="links">
+        <a href="#">Status</a>
+        <a href="#">Docs</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+      <div class="build">build 6.18.2 · region eu-west-1</div>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

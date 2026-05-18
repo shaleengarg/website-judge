@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plastic Crisis · Deep Current</title>
+<style>
+  /* page-unique overrides */
+  .flow-wrap{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius-md);padding:var(--space-5);position:relative;overflow:hidden}
+  .flow-wrap svg{width:100%;height:auto;display:block}
+  .flow-flank{display:grid;grid-template-columns:1fr 2.4fr 1fr;gap:var(--space-5);align-items:start}
+  @media (max-width:1100px){.flow-flank{grid-template-columns:1fr}}
+  .ptype-row{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--space-3);margin-top:var(--space-4)}
+  .ptype-row > div{padding:var(--space-3);border-radius:var(--radius-sm);background:rgba(0,0,0,0.2);border-top:3px solid var(--c)}
+  .ptype-row b{display:block;font-family:var(--serif);font-size:var(--fs-lg);color:var(--ink)}
+  .ptype-row small{display:block;color:var(--ink-mute);margin-top:2px}
+  @media (max-width:900px){.ptype-row{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){.ptype-row{grid-template-columns:repeat(2,1fr)}}
+  .patch-list{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-3)}
+  @media (max-width:900px){.patch-list{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:480px){.patch-list{grid-template-columns:1fr}}
+  .patch{padding:var(--space-3);border:1px solid var(--line);border-radius:var(--radius-sm);background:rgba(0,0,0,0.2)}
+  .patch b{font-family:var(--serif);color:var(--accent-2);font-size:var(--fs-md);display:block}
+  .patch small{font-family:var(--mono);color:var(--ink-mute);display:block;margin-top:4px}
+  .patch span{font-size:var(--fs-xs);color:var(--ink-dim);display:block;margin-top:var(--space-2)}
+</style>
+</head>
+<body>
+<div class="site">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M2 38 Q12 28 22 38 T42 38 T62 38"/>
+        <path d="M2 46 Q12 36 22 46 T42 46 T62 46"/>
+        <path d="M2 54 Q12 44 22 54 T42 54 T62 54"/>
+        <circle cx="32" cy="20" r="6" fill="none" stroke="#00c9b1" stroke-width="2"/>
+      </svg>
+      <div>
+        <div class="brand-title">Deep Current</div>
+        <div class="brand-tag">Ocean Data · v4.2</div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Atlas</div>
+      <a href="../ocean-health/index.html" class="nav-link">Ocean Health</a>
+      <a href="../species-atlas/index.html" class="nav-link">Species Atlas</a>
+      <a href="../temperature-rise/index.html" class="nav-link">Temperature Rise</a>
+      <a href="#" class="nav-link active">Plastic Crisis</a>
+      <a href="../take-action/index.html" class="nav-link">Take Action</a>
+    </div>
+
+    <div class="depth-ruler">
+      <div class="depth-ruler-label">Depth Scale</div>
+      <svg viewBox="0 0 80 220" aria-hidden="true">
+        <defs>
+          <linearGradient id="rule" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#0a8aa0"/>
+            <stop offset="0.3" stop-color="#0a4870"/>
+            <stop offset="0.7" stop-color="#0a1f3c"/>
+            <stop offset="1" stop-color="#03070f"/>
+          </linearGradient>
+        </defs>
+        <rect x="14" y="6" width="22" height="208" fill="url(#rule)" stroke="#1f3a5f"/>
+        <g font-family="ui-monospace,Menlo,monospace" font-size="8" fill="#a8c5d0">
+          <line x1="36" y1="14" x2="46" y2="14" stroke="#1f3a5f"/><text x="50" y="17">0m</text>
+          <line x1="36" y1="50" x2="46" y2="50" stroke="#1f3a5f"/><text x="50" y="53">200</text>
+          <line x1="36" y1="92" x2="46" y2="92" stroke="#1f3a5f"/><text x="50" y="95">1k</text>
+          <line x1="36" y1="138" x2="46" y2="138" stroke="#1f3a5f"/><text x="50" y="141">4k</text>
+          <line x1="36" y1="180" x2="46" y2="180" stroke="#1f3a5f"/><text x="50" y="183">6k</text>
+          <line x1="36" y1="208" x2="46" y2="208" stroke="#ff6b47"/><text x="50" y="211" fill="#ff6b47">11k</text>
+        </g>
+        <circle cx="25" cy="50" r="2" fill="#00c9b1"/>
+        <circle cx="25" cy="92" r="2" fill="#00c9b1"/>
+        <circle cx="25" cy="180" r="2" fill="#ff6b47"/>
+      </svg>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <div class="topmeta">
+      <div class="topmeta-crumbs">
+        <span>Atlas</span><span class="sep">/</span><span class="text-accent">Plastic Crisis</span><span class="sep">/</span><span>Lifecycle Flow</span>
+      </div>
+      <div class="topmeta-status">Live · Updated 2024-Q4</div>
+    </div>
+
+    <!-- ===== Banner ===== -->
+    <header class="banner banner-warn">
+      <div class="banner-inner">
+        <div class="eyebrow eyebrow-warn" style="color:rgba(10,22,40,0.85)">Chapter 04 · Polymer Pollution</div>
+        <h1>The Plastic Crisis</h1>
+        <div class="banner-sub">8 million tons enter the ocean every year — tracing the river-to-seafloor lifecycle of marine plastic.</div>
+      </div>
+    </header>
+
+    <!-- ===== Intro callout + sources ===== -->
+    <section class="container stack">
+      <div class="grid-60-40">
+        <div class="stack">
+          <span class="eyebrow eyebrow-warn">Synthesis 2024</span>
+          <h3>From rivers and rigging to the abyssal plain.</h3>
+          <p class="text-dim">
+            Roughly <b class="text-warn">380 million tons</b> of plastic is produced each year. Of that, an estimated
+            <b class="text-warn">8 Mt</b> escapes containment and reaches the ocean — 80% via 1,000 high-discharge rivers,
+            18% from coastal dumping and tourism, and 2% from fisheries, shipping, and aquaculture gear. Once afloat,
+            currents sort the debris into five subtropical gyres before fragmentation and biofouling drag it down to
+            the seafloor, where the deepest microplastic was recovered at <b class="text-warn">10,975 m</b> in the
+            Mariana Trench.
+          </p>
+          <div class="sources">
+            <b>Sources</b>
+            <span>UNEP 2023</span>
+            <span>Jambeck et al. 2021</span>
+            <span>OECD Global Plastics Outlook</span>
+            <span>NOAA Marine Debris</span>
+            <span>The Ocean Cleanup</span>
+          </div>
+        </div>
+        <div class="callout callout-warn">
+          <div class="callout-title">⚠ Trajectory</div>
+          <p class="text-sm text-dim mb-0">Without intervention, plastic flux into the ocean is projected to
+            <b class="text-warn">triple by 2040</b>, reaching ~29 Mt/yr. The accumulated stock could exceed
+            <b class="text-warn">600 Mt</b> — outweighing the biomass of all wild marine vertebrates combined.</p>
+          <small class="text-mono">PROJ-REF · IPCC AR6 / Pew 2020</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Wavy divider ===== -->
+    <svg class="wave-divider divider-warn" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 30 Q100 5 200 30 T400 30 T600 30 T800 30 T1000 30 T1200 30"/>
+      <path d="M0 40 Q100 15 200 40 T400 40 T600 40 T800 40 T1000 40 T1200 40" opacity="0.5"/>
+      <path d="M0 50 Q100 25 200 50 T400 50 T600 50 T800 50 T1000 50 T1200 50" opacity="0.25"/>
+    </svg>
+
+    <!-- ===== Section header: lifecycle flow ===== -->
+    <div class="section-header section-header-warn">
+      <h2>Lifecycle of Ocean Plastic</h2>
+    </div>
+
+    <!-- ===== Flow diagram with flanking stat columns ===== -->
+    <section class="flow-flank">
+
+      <!-- LEFT: Production stats -->
+      <aside class="stat-col stat-col-warn">
+        <h5 class="text-warn" style="font-family:var(--serif)">Production</h5>
+        <div class="stat-row">
+          <span class="lbl">Annual output</span>
+          <span class="num">380<span class="stat-unit"> Mt</span></span>
+          <span class="ctx">Virgin plastic resin produced globally in 2023.</span>
+        </div>
+        <div class="stat-row">
+          <span class="lbl">Entering ocean</span>
+          <span class="num">8.0<span class="stat-unit"> Mt/yr</span></span>
+          <span class="ctx">≈ 22,000 metric tons per day — one truckload every minute.</span>
+        </div>
+        <div class="stat-row">
+          <span class="lbl">River-borne share</span>
+          <span class="num">80<span class="stat-unit"> %</span></span>
+          <span class="ctx">Routed via the top 1,000 polluting rivers, half from Asia.</span>
+        </div>
+        <div class="stat-row">
+          <span class="lbl">Recycled fraction</span>
+          <span class="num">9<span class="stat-unit"> %</span></span>
+          <span class="ctx">Only one-eleventh of waste ever made has been recycled.</span>
+        </div>
+        <div class="stat-row">
+          <span class="lbl">Single-use share</span>
+          <span class="num">40<span class="stat-unit"> %</span></span>
+          <span class="ctx">Packaging discarded within 12 months of manufacture.</span>
+        </div>
+      </aside>
+
+      <!-- CENTER: Flow diagram -->
+      <div class="flow-wrap">
+        <div class="fig-title">Plastic Flux — Source ▸ Gyre ▸ Seafloor</div>
+        <div class="fig-sub">Curved path widths scale with tonnage. Total flux: 8 Mt/yr.</div>
+
+        <svg viewBox="0 0 880 460" role="img" aria-label="Plastic lifecycle flow diagram">
+          <defs>
+            <linearGradient id="seaG" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#0a4870"/>
+              <stop offset="1" stop-color="#0a1628"/>
+            </linearGradient>
+            <linearGradient id="floor" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#152d52"/>
+              <stop offset="1" stop-color="#06101e"/>
+            </linearGradient>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 Z" fill="#ff6b47"/>
+            </marker>
+          </defs>
+
+          <!-- background ocean -->
+          <rect x="0" y="80" width="880" height="300" fill="url(#seaG)"/>
+          <path d="M0 380 Q220 360 440 380 T880 380 L880 460 L0 460 Z" fill="url(#floor)"/>
+
+          <!-- land mass left -->
+          <path d="M0 80 L0 200 Q60 190 90 175 Q130 158 110 120 Q90 90 60 90 Q30 90 0 80 Z" fill="#152d52" stroke="#1f3a5f"/>
+          <text x="40" y="150" class="ink-label" fill="#a8c5d0" font-family="Georgia" font-size="11" font-weight="700">LAND</text>
+
+          <!-- SOURCES (left column) -->
+          <g font-family="ui-monospace,monospace" font-size="10" fill="#e8f4f8">
+            <!-- River source -->
+            <g transform="translate(20,230)">
+              <rect x="0" y="0" width="86" height="32" rx="4" fill="#0f2240" stroke="#ff6b47"/>
+              <path d="M8 16 Q18 8 28 16 T48 16 T68 16" fill="none" stroke="#ff6b47" stroke-width="1.5"/>
+              <text x="43" y="48" text-anchor="middle" fill="#a8c5d0">Rivers · 6.4 Mt</text>
+            </g>
+            <!-- Coastal -->
+            <g transform="translate(20,295)">
+              <rect x="0" y="0" width="86" height="32" rx="4" fill="#0f2240" stroke="#ff6b47"/>
+              <circle cx="20" cy="16" r="6" fill="none" stroke="#ff6b47"/>
+              <path d="M30 22 L66 22 M30 14 L60 14" stroke="#ff6b47" stroke-width="1.5"/>
+              <text x="43" y="48" text-anchor="middle" fill="#a8c5d0">Coastal · 1.4 Mt</text>
+            </g>
+            <!-- Shipping -->
+            <g transform="translate(20,360)">
+              <rect x="0" y="0" width="86" height="32" rx="4" fill="#0f2240" stroke="#ff6b47"/>
+              <path d="M14 22 L72 22 L66 14 L20 14 Z" fill="none" stroke="#ff6b47" stroke-width="1.5"/>
+              <line x1="43" y1="14" x2="43" y2="6" stroke="#ff6b47"/>
+              <text x="43" y="48" text-anchor="middle" fill="#a8c5d0">Shipping · 0.2 Mt</text>
+            </g>
+          </g>
+
+          <!-- Five gyres (middle) -->
+          <g>
+            <!-- N Pacific (largest) -->
+            <circle cx="380" cy="170" r="44" fill="rgba(255,107,71,0.18)" stroke="#ff6b47" stroke-width="2"/>
+            <circle cx="380" cy="170" r="22" fill="rgba(255,107,71,0.3)"/>
+            <text x="380" y="167" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#ff6b47">N. PACIFIC</text>
+            <text x="380" y="180" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#e8f4f8">79,000 t</text>
+            <!-- S Pacific -->
+            <circle cx="330" cy="290" r="26" fill="rgba(255,107,71,0.14)" stroke="#ff6b47" stroke-width="1.5"/>
+            <text x="330" y="288" text-anchor="middle" font-family="Georgia" font-size="9" font-weight="700" fill="#ff6b47">S.PAC</text>
+            <text x="330" y="300" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8" fill="#a8c5d0">22kt</text>
+            <!-- N Atlantic -->
+            <circle cx="490" cy="220" r="30" fill="rgba(255,107,71,0.14)" stroke="#ff6b47" stroke-width="1.5"/>
+            <text x="490" y="218" text-anchor="middle" font-family="Georgia" font-size="9" font-weight="700" fill="#ff6b47">N.ATL</text>
+            <text x="490" y="230" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8" fill="#a8c5d0">31kt</text>
+            <!-- S Atlantic -->
+            <circle cx="450" cy="320" r="24" fill="rgba(255,107,71,0.12)" stroke="#ff6b47" stroke-width="1.5"/>
+            <text x="450" y="318" text-anchor="middle" font-family="Georgia" font-size="9" font-weight="700" fill="#ff6b47">S.ATL</text>
+            <text x="450" y="330" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8" fill="#a8c5d0">18kt</text>
+            <!-- Indian -->
+            <circle cx="560" cy="290" r="28" fill="rgba(255,107,71,0.14)" stroke="#ff6b47" stroke-width="1.5"/>
+            <text x="560" y="288" text-anchor="middle" font-family="Georgia" font-size="9" font-weight="700" fill="#ff6b47">INDIAN</text>
+            <text x="560" y="300" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8" fill="#a8c5d0">29kt</text>
+          </g>
+
+          <!-- Flow paths: sources → gyres (stroke width ∝ tonnage) -->
+          <g fill="none" stroke="#ff6b47" stroke-linecap="round" opacity="0.85">
+            <!-- Rivers (6.4Mt) - thick -->
+            <path d="M110 246 Q200 200 336 170" stroke-width="14" opacity="0.55" marker-end="url(#arr)"/>
+            <path d="M110 252 Q220 270 304 290" stroke-width="6" opacity="0.5" marker-end="url(#arr)"/>
+            <path d="M110 246 Q260 230 462 220" stroke-width="5" opacity="0.45" marker-end="url(#arr)"/>
+            <!-- Coastal (1.4Mt) -->
+            <path d="M110 311 Q210 320 426 320" stroke-width="5" opacity="0.5" marker-end="url(#arr)"/>
+            <path d="M110 311 Q220 305 532 290" stroke-width="4" opacity="0.45" marker-end="url(#arr)"/>
+            <!-- Shipping (0.2Mt) -->
+            <path d="M110 376 Q260 390 442 332" stroke-width="2" opacity="0.5" marker-end="url(#arr)"/>
+            <path d="M110 376 Q300 400 558 318" stroke-width="2" opacity="0.45" marker-end="url(#arr)"/>
+          </g>
+
+          <!-- Sinking flows: gyres → seafloor -->
+          <g fill="none" stroke="#00a895" stroke-dasharray="4 3" stroke-linecap="round" opacity="0.7">
+            <path d="M380 214 Q380 320 380 400" stroke-width="6"/>
+            <path d="M330 316 Q330 360 330 400" stroke-width="3"/>
+            <path d="M490 250 Q490 340 490 400" stroke-width="4"/>
+            <path d="M450 344 Q450 380 450 405" stroke-width="3"/>
+            <path d="M560 318 Q560 370 560 405" stroke-width="3"/>
+          </g>
+
+          <!-- Seafloor accumulation -->
+          <g>
+            <path d="M0 380 Q220 360 440 380 T880 380" fill="none" stroke="#1f3a5f" stroke-width="1"/>
+            <text x="440" y="425" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#e8f4f8">Seafloor Accumulation</text>
+            <text x="440" y="442" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#a8c5d0">~70% of all marine plastic eventually settles · 14 Mt stock estimated</text>
+            <!-- debris dots -->
+            <g fill="#ff6b47" opacity="0.85">
+              <circle cx="120" cy="402" r="2"/><circle cx="180" cy="408" r="1.5"/><circle cx="240" cy="404" r="2.5"/>
+              <circle cx="300" cy="412" r="2"/><circle cx="360" cy="406" r="2"/><circle cx="420" cy="414" r="1.5"/>
+              <circle cx="500" cy="408" r="2"/><circle cx="560" cy="412" r="2.5"/><circle cx="620" cy="404" r="2"/>
+              <circle cx="680" cy="410" r="1.5"/><circle cx="740" cy="406" r="2"/><circle cx="800" cy="414" r="2"/>
+            </g>
+          </g>
+
+          <!-- Legend -->
+          <g transform="translate(660,90)" font-family="ui-monospace,monospace" font-size="9" fill="#a8c5d0">
+            <rect x="0" y="0" width="200" height="74" fill="#0f2240" stroke="#1f3a5f" rx="4"/>
+            <text x="10" y="16" fill="#e8f4f8" font-weight="700">Flow Legend</text>
+            <line x1="10" y1="30" x2="40" y2="30" stroke="#ff6b47" stroke-width="6"/>
+            <text x="48" y="33">surface flux · tons/yr</text>
+            <line x1="10" y1="48" x2="40" y2="48" stroke="#00a895" stroke-width="4" stroke-dasharray="4 3"/>
+            <text x="48" y="51">sinking · long-term</text>
+            <circle cx="22" cy="64" r="6" fill="rgba(255,107,71,0.3)" stroke="#ff6b47"/>
+            <text x="48" y="68">gyre · accumulation zone</text>
+          </g>
+
+          <!-- Axis annotation -->
+          <text x="20" y="100" font-family="ui-monospace,monospace" font-size="9" fill="#6b8a96">SURFACE</text>
+          <text x="20" y="395" font-family="ui-monospace,monospace" font-size="9" fill="#6b8a96">SEAFLOOR ▸ 4,000m</text>
+        </svg>
+
+        <div class="legend mt-4">
+          <span class="legend-item"><span class="legend-swatch legend-swatch-warn"></span> Surface flux (Mt/yr)</span>
+          <span class="legend-item"><span class="legend-swatch-dash" style="border-top-color:#00a895"></span> Sinking pathway</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:rgba(255,107,71,0.35);border:1px solid #ff6b47"></span> Subtropical gyre</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#152d52"></span> Continental landmass</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Impact stats -->
+      <aside class="stat-col stat-col-warn">
+        <h5 class="text-warn" style="font-family:var(--serif)">Wildlife Impact</h5>
+        <div class="stat-row">
+          <span class="lbl">Seabirds killed/yr</span>
+          <span class="num">1.0<span class="stat-unit"> M</span></span>
+          <span class="ctx">90% of seabirds now have plastic in their digestive tract.</span>
+        </div>
+        <div class="stat-row">
+          <span class="lbl">Marine mammals/yr</span>
+          <span class="num">100<span class="stat-unit"> K</span></span>
+          <span class="ctx">Entanglement and gut blockage from ghost gear & macrolitter.</span>
+        </div>
+        <div class="stat-row">
+          <span class="lbl">Species affected</span>
+          <span class="num">700<span class="stat-unit"> +</span></span>
+          <span class="ctx">17% are IUCN-listed as near-threatened or worse.</span>
+        </div>
+        <div class="stat-row">
+          <span class="lbl">Microplastic/L</span>
+          <span class="num">8.3<span class="stat-unit"> particles</span></span>
+          <span class="ctx">Mean surface concentration across the 5 gyres.</span>
+        </div>
+        <div class="stat-row">
+          <span class="lbl">Deepest recovery</span>
+          <span class="num">10.9<span class="stat-unit"> km</span></span>
+          <span class="ctx">Mariana Trench, 2018 — amphipod gut contents.</span>
+        </div>
+      </aside>
+
+    </section>
+
+    <!-- ===== Five Garbage Patches ===== -->
+    <section class="container stack">
+      <span class="eyebrow eyebrow-warn">The Five Gyres</span>
+      <h4>Subtropical accumulation zones, ranked by debris density.</h4>
+      <div class="patch-list">
+        <div class="patch">
+          <b>N. Pacific</b>
+          <small>1.6M km² · 79,000 t</small>
+          <span>The Great Pacific Garbage Patch — twice the size of Texas; 1.8 trillion pieces.</span>
+        </div>
+        <div class="patch">
+          <b>N. Atlantic</b>
+          <small>1.1M km² · 31,000 t</small>
+          <span>Sargasso convergence; 200,000 pieces/km² near Bermuda.</span>
+        </div>
+        <div class="patch">
+          <b>Indian Ocean</b>
+          <small>0.9M km² · 29,000 t</small>
+          <span>Anchored between Madagascar and Australia; under-surveyed.</span>
+        </div>
+        <div class="patch">
+          <b>S. Pacific</b>
+          <small>2.6M km² · 22,000 t</small>
+          <span>Easter Island sector; lower density but vast extent.</span>
+        </div>
+        <div class="patch">
+          <b>S. Atlantic</b>
+          <small>0.8M km² · 18,000 t</small>
+          <span>Smallest gyre, dominated by Brazil & W. Africa coastal sources.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Icon cluster: Plastic items found ===== -->
+    <section class="container stack">
+      <span class="eyebrow eyebrow-warn">Common Debris</span>
+      <h4>What washes up — the 8 most-counted items in beach surveys.</h4>
+      <div class="icon-cluster">
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M18 6 H30 V12 L32 16 V40 Q32 44 28 44 H20 Q16 44 16 40 V16 L18 12 Z"/>
+            <circle cx="24" cy="9" r="1"/>
+            <line x1="16" y1="22" x2="32" y2="22"/>
+            <line x1="16" y1="30" x2="32" y2="30"/>
+          </svg>
+          <div class="icon-tile-stat">21%</div>
+          <div class="icon-tile-label">Bottles</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M8 16 L40 16 L36 40 L12 40 Z"/>
+            <line x1="8" y1="16" x2="40" y2="16"/>
+            <line x1="14" y1="22" x2="34" y2="22"/>
+            <circle cx="24" cy="28" r="2"/>
+          </svg>
+          <div class="icon-tile-stat">17%</div>
+          <div class="icon-tile-label">Bags</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="14" y="6" width="20" height="36" rx="2"/>
+            <line x1="18" y1="12" x2="30" y2="12"/>
+            <line x1="18" y1="20" x2="30" y2="20"/>
+            <circle cx="24" cy="32" r="3"/>
+          </svg>
+          <div class="icon-tile-stat">12%</div>
+          <div class="icon-tile-label">Wrappers</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="24" cy="14" r="4"/>
+            <path d="M22 18 L18 42 L30 42 L26 18"/>
+            <line x1="20" y1="28" x2="28" y2="28"/>
+          </svg>
+          <div class="icon-tile-stat">11%</div>
+          <div class="icon-tile-label">Cigarettes</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M18 6 L18 36 Q18 42 24 42 Q30 42 30 36 L30 6 Z"/>
+            <line x1="18" y1="14" x2="30" y2="14"/>
+            <circle cx="24" cy="22" r="2"/>
+          </svg>
+          <div class="icon-tile-stat">9%</div>
+          <div class="icon-tile-label">Straws</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M10 18 Q10 12 16 12 L32 12 Q38 12 38 18 L36 38 Q36 42 32 42 L16 42 Q12 42 12 38 Z"/>
+            <line x1="14" y1="18" x2="34" y2="18"/>
+            <line x1="22" y1="24" x2="26" y2="24"/>
+          </svg>
+          <div class="icon-tile-stat">8%</div>
+          <div class="icon-tile-label">Cups</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M6 24 Q14 16 24 16 Q34 16 42 24 Q34 32 24 32 Q14 32 6 24 Z"/>
+            <line x1="10" y1="20" x2="38" y2="28"/>
+            <line x1="10" y1="28" x2="38" y2="20"/>
+            <circle cx="24" cy="24" r="1.5"/>
+          </svg>
+          <div class="icon-tile-stat">7%</div>
+          <div class="icon-tile-label">Fishing Net</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="14" cy="14" r="3"/>
+            <circle cx="28" cy="20" r="2.5"/>
+            <circle cx="20" cy="32" r="3.5"/>
+            <circle cx="34" cy="34" r="2"/>
+            <circle cx="10" cy="36" r="2"/>
+            <circle cx="38" cy="12" r="2.5"/>
+          </svg>
+          <div class="icon-tile-stat">15%</div>
+          <div class="icon-tile-label">Microplastic</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Wavy divider 2 ===== -->
+    <svg class="wave-divider divider-warn wave-divider-fill" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 40 Q150 10 300 40 T600 40 T900 40 T1200 40 L1200 80 L0 80 Z"/>
+    </svg>
+
+    <!-- ===== Section header: polymer breakdown ===== -->
+    <div class="section-header section-header-warn">
+      <h2>Polymer Composition</h2>
+    </div>
+
+    <!-- ===== Stacked horizontal bar chart ===== -->
+    <section class="container stack">
+      <div class="row-between">
+        <div>
+          <span class="eyebrow eyebrow-warn">Plastic Types · 2023</span>
+          <h4 class="mt-2">Resin breakdown of ocean-bound plastic, by mass.</h4>
+        </div>
+        <span class="badge badge-warn badge-dot">7 polymer classes</span>
+      </div>
+
+      <figure>
+        <div class="fig-title">Composition of Marine Plastic Debris</div>
+        <div class="fig-sub">Stacked bar · % of total mass · n = 4.2M particles classified by FTIR spectroscopy</div>
+
+        <svg viewBox="0 0 880 200" role="img" aria-label="Stacked horizontal bar chart of plastic types">
+          <!-- Axis -->
+          <g font-family="ui-monospace,monospace" font-size="9" fill="#6b8a96">
+            <line x1="20" y1="120" x2="860" y2="120" stroke="#1f3a5f"/>
+            <line x1="20" y1="40" x2="20" y2="120" stroke="#1f3a5f"/>
+            <line x1="860" y1="40" x2="860" y2="120" stroke="#1f3a5f"/>
+            <text x="20" y="135">0%</text>
+            <text x="184" y="135">20%</text>
+            <text x="372" y="135">40%</text>
+            <text x="560" y="135">60%</text>
+            <text x="748" y="135">80%</text>
+            <text x="860" y="135" text-anchor="end">100%</text>
+            <line x1="184" y1="115" x2="184" y2="120" stroke="#1f3a5f"/>
+            <line x1="372" y1="115" x2="372" y2="120" stroke="#1f3a5f"/>
+            <line x1="560" y1="115" x2="560" y2="120" stroke="#1f3a5f"/>
+            <line x1="748" y1="115" x2="748" y2="120" stroke="#1f3a5f"/>
+          </g>
+
+          <!-- segments: total width 840 (20 to 860). PET 26, HDPE 18, PVC 10, LDPE 16, PP 21, PS 6, other 3 = 100 -->
+          <!-- widths: 218.4, 151.2, 84, 134.4, 176.4, 50.4, 25.2 -->
+          <g>
+            <rect x="20" y="50" width="218.4" height="60" fill="#ff6b47"/>
+            <rect x="238.4" y="50" width="151.2" height="60" fill="#d8553a"/>
+            <rect x="389.6" y="50" width="84" height="60" fill="#a8412c"/>
+            <rect x="473.6" y="50" width="134.4" height="60" fill="#7a3424"/>
+            <rect x="608" y="50" width="176.4" height="60" fill="#ff8b6a"/>
+            <rect x="784.4" y="50" width="50.4" height="60" fill="#5a2718"/>
+            <rect x="834.8" y="50" width="25.2" height="60" fill="#2d1810"/>
+          </g>
+
+          <!-- segment labels -->
+          <g font-family="ui-monospace,monospace" font-size="11" fill="#0a1628" font-weight="700" text-anchor="middle">
+            <text x="129" y="78">PET</text>
+            <text x="129" y="94" font-size="13">26%</text>
+            <text x="314" y="78" fill="#0a1628">HDPE</text>
+            <text x="314" y="94" font-size="13" fill="#0a1628">18%</text>
+            <text x="431" y="78" fill="#e8f4f8">PVC</text>
+            <text x="431" y="94" font-size="13" fill="#e8f4f8">10%</text>
+            <text x="540" y="78" fill="#e8f4f8">LDPE</text>
+            <text x="540" y="94" font-size="13" fill="#e8f4f8">16%</text>
+            <text x="696" y="78" fill="#0a1628">PP</text>
+            <text x="696" y="94" font-size="13" fill="#0a1628">21%</text>
+            <text x="809" y="78" fill="#e8f4f8">PS</text>
+            <text x="809" y="94" font-size="13" fill="#e8f4f8">6%</text>
+            <text x="847" y="94" fill="#e8f4f8" font-size="9">3%</text>
+          </g>
+
+          <!-- top tick labels with codes -->
+          <g font-family="ui-monospace,monospace" font-size="9" fill="#a8c5d0">
+            <text x="129" y="35" text-anchor="middle">①</text>
+            <text x="314" y="35" text-anchor="middle">②</text>
+            <text x="431" y="35" text-anchor="middle">③</text>
+            <text x="540" y="35" text-anchor="middle">④</text>
+            <text x="696" y="35" text-anchor="middle">⑤</text>
+            <text x="809" y="35" text-anchor="middle">⑥</text>
+            <text x="847" y="35" text-anchor="middle">⑦</text>
+          </g>
+
+          <!-- title strip -->
+          <text x="20" y="175" font-family="ui-monospace,monospace" font-size="10" fill="#6b8a96">SOURCE: UNEP · OCEAN CLEANUP · 2023 GLOBAL SURVEY · FTIR-CLASSIFIED · n=4,210,338</text>
+        </svg>
+
+        <figcaption>
+          <span>Polymer ID codes per ASTM D7611. Density determines whether a fragment floats or sinks: PET, PVC, PS &gt; seawater (1.025 g/cm³).</span>
+          <span class="source">[FIG · PLST-04]</span>
+        </figcaption>
+      </figure>
+
+      <!-- Polymer card row -->
+      <div class="ptype-row">
+        <div style="--c:#ff6b47"><b>PET</b><small>① Bottles, fibers</small><span class="text-xs text-mute">ρ 1.38 · sinks</span></div>
+        <div style="--c:#d8553a"><b>HDPE</b><small>② Caps, jugs</small><span class="text-xs text-mute">ρ 0.95 · floats</span></div>
+        <div style="--c:#a8412c"><b>PVC</b><small>③ Pipes, film</small><span class="text-xs text-mute">ρ 1.38 · sinks</span></div>
+        <div style="--c:#7a3424"><b>LDPE</b><small>④ Bags, wrap</small><span class="text-xs text-mute">ρ 0.92 · floats</span></div>
+        <div style="--c:#ff8b6a"><b>PP</b><small>⑤ Caps, rope</small><span class="text-xs text-mute">ρ 0.90 · floats</span></div>
+        <div style="--c:#5a2718"><b>PS</b><small>⑥ Foam, cutlery</small><span class="text-xs text-mute">ρ 1.05 · sinks</span></div>
+        <div style="--c:#2d1810"><b>Other</b><small>⑦ Mixed, ABS</small><span class="text-xs text-mute">variable</span></div>
+      </div>
+    </section>
+
+    <!-- ===== Data table ===== -->
+    <section class="container stack">
+      <span class="eyebrow eyebrow-warn">River Discharge Rankings</span>
+      <h4>Top 8 plastic-emitting rivers, by annual flux to ocean.</h4>
+      <div class="panel" style="padding:0">
+        <table class="data-table">
+          <thead>
+            <tr><th>Rank</th><th>River</th><th>Basin</th><th class="text-right">Discharge (t/yr)</th><th class="text-right">% Global</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>01</td><td>Pasig</td><td>Philippines</td><td class="num num-warn">63,700</td><td class="num num-warn">6.43</td></tr>
+            <tr><td>02</td><td>Tullahan</td><td>Philippines</td><td class="num num-warn">42,140</td><td class="num num-warn">4.25</td></tr>
+            <tr><td>03</td><td>Ulhas</td><td>India</td><td class="num num-warn">38,150</td><td class="num num-warn">3.85</td></tr>
+            <tr><td>04</td><td>Klang</td><td>Malaysia</td><td class="num num-warn">31,200</td><td class="num num-warn">3.15</td></tr>
+            <tr><td>05</td><td>Meycauayan</td><td>Philippines</td><td class="num num-warn">29,100</td><td class="num num-warn">2.93</td></tr>
+            <tr><td>06</td><td>Pampanga</td><td>Philippines</td><td class="num num-warn">26,800</td><td class="num num-warn">2.71</td></tr>
+            <tr><td>07</td><td>Libmanan</td><td>Philippines</td><td class="num num-warn">22,500</td><td class="num num-warn">2.27</td></tr>
+            <tr><td>08</td><td>Ganges</td><td>India / Bangladesh</td><td class="num num-warn">18,300</td><td class="num num-warn">1.85</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-mute">Source: Meijer et al., Science Advances (2021). The top 1,000 rivers carry ~80% of all river-borne ocean plastic; the top 8 alone account for ~27%.</p>
+    </section>
+
+    <!-- ===== Pull quote ===== -->
+    <section class="container">
+      <div class="pullquote">
+        By 2050, the ocean is projected to contain more plastic than fish by mass — unless we cut single-use production at source.
+        <cite>— Ellen MacArthur Foundation, The New Plastics Economy (revised 2024)</cite>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="container">
+      <div class="panel" style="display:flex;gap:var(--space-5);justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <div>
+          <h4 class="mb-2">Take measurable action.</h4>
+          <p class="text-dim text-sm mb-0">Six pledges, one progress chart, and a global protection timeline — see what works.</p>
+        </div>
+        <a href="../take-action/index.html" class="btn btn-primary btn-lg">Go to Action Hub</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-mast">Deep Current</div>
+        <p class="footer-blurb mt-3">Peer-reviewed ocean health data, visualized for climate researchers and educators. Open data, open methodology, no paywalls.</p>
+      </div>
+      <div class="footer-col">
+        <h6>Atlas</h6>
+        <ul>
+          <li><a href="../ocean-health/index.html">Ocean Health</a></li>
+          <li><a href="../species-atlas/index.html">Species Atlas</a></li>
+          <li><a href="../temperature-rise/index.html">Temperature Rise</a></li>
+          <li><a href="#">Plastic Crisis</a></li>
+          <li><a href="../take-action/index.html">Take Action</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Data</h6>
+        <ul>
+          <li><a href="#">Methodology</a></li>
+          <li><a href="#">Source Registry</a></li>
+          <li><a href="#">API · v4</a></li>
+          <li><a href="#">CSV Downloads</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Contact</h6>
+        <ul>
+          <li><a href="#">research@deepcurrent.org</a></li>
+          <li><a href="#">Newsletter</a></li>
+          <li><a href="#">Press Kit</a></li>
+          <li><a href="#">Citations</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Deep Current Foundation · CC-BY-4.0</span>
+      <span class="footer-iso">ISO-8601 · 2024-Q4 · v4.2.1</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

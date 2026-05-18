@@ -1,0 +1,29 @@
+{
+  "id": "synth-t8-folio-obscura-press-89f5",
+  "tier": 8,
+  "genre": "design-magazine",
+  "pages": [
+    "cover-story",
+    "type-lab",
+    "object-study",
+    "grid-dispatch",
+    "archive-index"
+  ],
+  "palette_hint": "Deep warm parchment #F5ECD7 background, near-black ink #1A1208 text, burnt sienna accent #C4561A and electric chartreuse #BFDB38 as secondary accent",
+  "type_style": "Georgia serif for display headings at heavy weight paired with system-ui sans at regular weight for body, creating a scholarly-editorial tension; 6 sizes from 11px captions to 72px hero numerals",
+  "description": "Folio Obscura is a quarterly design criticism magazine obsessed with the hidden logic of visual systems \u2014 covering typefaces, industrial objects, grid theory, and the archaeology of forgotten design movements.",
+  "constraints": [
+    "Global max-width 1320px, centered; inner content columns use a 12-unit grid with 24px gutters; sidebar always 280px wide pinned right at sticky top:80px on desktop",
+    "Color tokens applied as CSS custom properties: --ink:#1A1208, --parchment:#F5ECD7, --sienna:#C4561A, --chartreuse:#BFDB38, --mid-tone:#8C7B5E; no raw hex values outside :root declaration",
+    "Every page must include at least one inline SVG decorative element (ruled divider, spot illustration, or data glyph) drawn with stroke:#1A1208 and no fill or fill:none",
+    "Pull quotes must use Georgia, font-size:32px, line-height:1.25, left border 4px solid #C4561A, padding-left:28px, and appear in the main column breaking the text flow",
+    "All stat/data callout cards use a strict 3-column CSS grid with background:#1A1208, color:#F5ECD7, padding:24px, and chartreuse (#BFDB38) numerals at 48px font-size"
+  ],
+  "page_specs": {
+    "cover-story": "The lead feature on Swiss designer Rut Blees Luxemburg's 1997 series of nocturnal urban photography-as-grid-system, spanning a hero module with a large folio number '01' at 120px, a 3-column longform body with drop cap, a sticky sidebar listing 7 related essays with issue dates, a pull quote mid-article, a 4\u00d72 figure-caption gallery grid showing hypothetical grid overlays, a data callout strip with 3 stat cards (year, print run, influence score), and a ruled SVG timeline strip showing the designer's career milestones from 1989\u20132023.",
+    "type-lab": "A deep-dive laboratory page dissecting the anatomy of Berthold Akzidenz-Grotesk across 6 modules: a hero band with the word 'GROTESK' set at 96px with letterspacing:0.08em, a marginalia column annotating 11 distinct letterform features with hand-numbered SVG callout lines, a longform essay in two columns, a comparison table of 8 typeface variants with x-height ratios and optical size ranges, a pull quote on the nature of neutrality in type design, and a footer block with a specimen alphabet at 5 sizes rendered in a stacked grid.",
+    "object-study": "A close-reading of the 1969 Olivetti Divisumma 18 calculator designed by Mario Bellini, structured as an asymmetric layout with a full-bleed object-title module using a 72px italic numeral, a 2-column body with marginalia annotations in --mid-tone, a timeline strip of 6 Bellini industrial milestones, a 3\u00d73 figure-caption grid showing hypothetical detail views labeled by component (keycap, platen, housing), a data callout section with material weight, production year, and museum collection count, and a sidebar with a structured list of 9 comparative objects from the same era.",
+    "grid-dispatch": "A news-and-opinion dispatch page covering grid theory controversies, using 6 distinct modules: a masthead strip with issue number XXXVII and date in tabular figures, a 3-article horizontal card row each with category tag, headline, and 2-sentence abstract, a featured opinion piece in longform 2-column layout with a drop cap and two pull quotes, a sidebar with a ranked list of 10 grid systems scored on flexibility and dogmatism using inline chartreuse bar indicators, an SVG-illustrated explainer of the Muller-Brockmann field system, and a data-dense comparison table of 6 editorial grid frameworks with 7 attributes each.",
+    "archive-index": "A full archive index spanning all 37 issues of Folio Obscura, organized as a dense CSS grid of 37 issue cards (4 columns, auto rows) each showing volume number, season/year, cover theme, and lead contributor name; above the grid a filter taxonomy strip lists 12 thematic tags as bordered pill labels; a sticky left sidebar (240px) shows a decade-grouped vertical timeline with SVG dot markers; below the grid a statistics footer displays total word count published (4.2M), contributing designers (318), and countries represented (41) in the 3-card stat callout format; the page closes with a long horizontal marquee-style SVG ruled band engraved with all 37 issue titles in 11px uppercase."
+  }
+}

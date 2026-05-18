@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Studio — Oblique Flux</title>
+<style>
+  /* page-specific only */
+  .studio-meta {
+    display: flex;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .studio-meta .mt { display: flex; flex-direction: column; gap: 2px; }
+  .studio-meta .mt .k {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+  }
+  .studio-meta .mt .v {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--accent-1);
+    letter-spacing: 0.06em;
+  }
+  .col-label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--rule-soft);
+    display: flex;
+    justify-content: space-between;
+  }
+  .col-label .ct {
+    font-family: var(--mono);
+    color: var(--accent-1);
+    letter-spacing: 0.06em;
+  }
+  .philosophy-block .p-num {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: var(--accent-2);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+  .recognition-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+  }
+  .rec {
+    padding: var(--space-4);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+  }
+  .rec .yr {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: var(--accent-2);
+    letter-spacing: 0.08em;
+  }
+  .rec .nm {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: var(--fs-md);
+    margin: 4px 0 2px;
+    line-height: 1.2;
+  }
+  .rec .org {
+    font-size: var(--fs-xs);
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+  }
+  @media (max-width: 1100px) {
+    .recognition-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .recognition-grid { grid-template-columns: 1fr; }
+    .studio-meta { gap: var(--space-4); }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"></span>Oblique Flux</div>
+    <div class="brand-sub">Studio · Est. 2011</div>
+
+    <nav class="nav" aria-label="Primary">
+      <span class="nav-label">Index</span>
+      <a href="../work/index.html"><span>Work</span><span class="nav-num">01</span></a>
+      <a href="../services/index.html"><span>Services</span><span class="nav-num">02</span></a>
+      <a href="#" aria-current="page"><span>Studio</span><span class="nav-num">03</span></a>
+      <a href="../process/index.html"><span>Process</span><span class="nav-num">04</span></a>
+      <a href="../contact/index.html"><span>Contact</span><span class="nav-num">05</span></a>
+      <span class="nav-label">Elsewhere</span>
+      <a href="#"><span>Journal</span><span class="nav-num">↗</span></a>
+      <a href="#"><span>Press kit</span><span class="nav-num">↗</span></a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <strong>Oblique Flux Studio</strong><br>
+      Brand strategy &amp; digital experience for science, technology &amp; cultural institutions.<br><br>
+      NY · BER · MEL<br>
+      © 2024
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <header class="page-head">
+        <span class="eyebrow">03 — Studio</span>
+        <h1 class="page-title">A practice at the seam between institutions, ideas, and audiences.</h1>
+        <p class="page-lede">Oblique Flux is a thirteen-person studio working across brand systems, editorial, environmental graphics, and digital product for museums, research labs, foundations, and cultural agencies on three continents.</p>
+      </header>
+
+      <section class="studio-banner">
+        <p class="founding">We founded Oblique Flux in 2011 to make <em>complex public-interest work</em> legible — and to give scientific and cultural institutions a design language as rigorous as the ideas they hold.</p>
+        <div class="studio-meta">
+          <div class="mt"><span class="k">Founded</span><span class="v">2011 · Brooklyn, NY</span></div>
+          <div class="mt"><span class="k">Headcount</span><span class="v">14 across 3 cities</span></div>
+          <div class="mt"><span class="k">Engagements</span><span class="v">186 since founding</span></div>
+          <div class="mt"><span class="k">Sectors</span><span class="v">Science · Tech · Culture</span></div>
+        </div>
+      </section>
+
+      <div class="studio-layout">
+
+        <aside class="timeline-col">
+          <div class="col-label"><span>Milestones</span><span class="ct">2011–24</span></div>
+          <ol class="timeline">
+            <li><span class="yr">2011</span>Founded in a Greenpoint loft by Mara Eisen and Tomás Vidal.</li>
+            <li><span class="yr">2013</span>First museum identity for the Lowell Institute of Marine Sciences.</li>
+            <li><span class="yr">2015</span>Berlin office opens above a printers in Kreuzberg.</li>
+            <li><span class="yr">2016</span>Wins D&amp;AD Wood Pencil for the Helix Foundation report system.</li>
+            <li><span class="yr">2018</span>Releases the open-source <em>Tessera</em> wayfinding toolkit.</li>
+            <li><span class="yr">2019</span>Studio reaches twelve people; signs UN Global Compact.</li>
+            <li><span class="yr">2020</span>Pivots to remote-first; launches the Field Notes journal.</li>
+            <li><span class="yr">2021</span>Tenth anniversary monograph published with Park Books.</li>
+            <li><span class="yr">2022</span>Melbourne studio opens, led by Junko Asari.</li>
+            <li><span class="yr">2023</span>Climate Adaptation Atlas wins Brand New &amp; AIGA 50.</li>
+            <li><span class="yr">2024</span>Begins multi-year residency with the Wellcome Collection.</li>
+          </ol>
+        </aside>
+
+        <section class="philosophy">
+          <div class="col-label"><span>Philosophy</span><span class="ct">04 sections</span></div>
+
+          <div class="philosophy-block">
+            <span class="p-num">01 · Posture</span>
+            <h3>Clinical, but never cold.</h3>
+            <p>We treat each commission as a research problem first and a design problem second. That means long reading lists, stakeholder interviews that don't stop at the marketing team, and an insistence that the work answer to evidence rather than taste. The output is warm because the underlying clarity is real — not because we've decorated it to feel that way.</p>
+          </div>
+
+          <div class="philosophy-block">
+            <span class="p-num">02 · Scope</span>
+            <h3>One studio, one team, one signature.</h3>
+            <p>We don't run satellite production shops or hand strategy to one office and design to another. Every engagement is delivered by a single integrated team of three to six people, drawn from across our three offices, with the original strategists staying through launch. Continuity is how good thinking survives the contact with reality.</p>
+          </div>
+
+          <div class="philosophy-block">
+            <span class="p-num">03 · Method</span>
+            <h3>Make the language before you make the thing.</h3>
+            <p>Before any pixel or sample is produced, we work with clients to articulate the vocabulary of the project — what its principles are, who it is for, what it refuses to do. This shared language is the most durable artefact we leave behind, and it lets institutions make confident decisions long after the engagement closes.</p>
+          </div>
+
+          <div class="philosophy-block">
+            <span class="p-num">04 · Ethic</span>
+            <h3>Public-interest work, on public-interest terms.</h3>
+            <p>The majority of our clients are museums, research institutes, universities, and civic-tech non-profits. We publish our methods, release toolkits openly where we can, and reserve a fifth of our annual capacity for partners that cannot pay our standard rates. The discipline of design is most useful when it widens the circle of who gets to participate.</p>
+          </div>
+
+          <div class="callout callout-teal">
+            <div class="callout-title">House note</div>
+            <p class="mb-0">We sign work that we'd be willing to defend in a public seminar. If a brief or a stakeholder asks us to obscure rather than clarify, we say so early — and, occasionally, we walk away.</p>
+          </div>
+
+          <h3 class="section-heading sm">Recognition &amp; affiliations</h3>
+          <div class="recognition-grid">
+            <div class="rec"><div class="yr">2023</div><div class="nm">AIGA 50 Books / 50 Covers</div><div class="org">Climate Adaptation Atlas</div></div>
+            <div class="rec"><div class="yr">2022</div><div class="nm">Brand New Awards — Gold</div><div class="org">Helix Foundation</div></div>
+            <div class="rec"><div class="yr">2020</div><div class="nm">SEGD Honor Award</div><div class="org">Lowell Marine wayfinding</div></div>
+            <div class="rec"><div class="yr">2019</div><div class="nm">D&amp;AD Yellow Pencil</div><div class="org">Tessera open toolkit</div></div>
+          </div>
+        </section>
+
+        <aside class="team-col">
+          <div class="col-label"><span>Team</span><span class="ct">14</span></div>
+          <div class="team-grid">
+            <div class="team-card"><div class="monogram">ME</div><div><div class="tc-name">Mara Eisen</div><div class="tc-role">Co-founder, Strategy</div></div></div>
+            <div class="team-card"><div class="monogram">TV</div><div><div class="tc-name">Tomás Vidal</div><div class="tc-role">Co-founder, Design</div></div></div>
+            <div class="team-card"><div class="monogram">JA</div><div><div class="tc-name">Junko Asari</div><div class="tc-role">Director, Melbourne</div></div></div>
+            <div class="team-card"><div class="monogram">LH</div><div><div class="tc-name">Lior Hadad</div><div class="tc-role">Director, Berlin</div></div></div>
+            <div class="team-card"><div class="monogram">RC</div><div><div class="tc-name">Renata Couto</div><div class="tc-role">Principal, Editorial</div></div></div>
+            <div class="team-card"><div class="monogram">SP</div><div><div class="tc-name">Sami Parikh</div><div class="tc-role">Principal, UX</div></div></div>
+            <div class="team-card"><div class="monogram">EO</div><div><div class="tc-name">Esi Owusu</div><div class="tc-role">Research Lead</div></div></div>
+            <div class="team-card"><div class="monogram">KN</div><div><div class="tc-name">Kasper Nyborg</div><div class="tc-role">Senior Designer</div></div></div>
+            <div class="team-card"><div class="monogram">YT</div><div><div class="tc-name">Yuki Tanabe</div><div class="tc-role">Senior Designer</div></div></div>
+            <div class="team-card"><div class="monogram">DM</div><div><div class="tc-name">Devon Marsh</div><div class="tc-role">Motion &amp; Identity</div></div></div>
+            <div class="team-card"><div class="monogram">AC</div><div><div class="tc-name">Aniela Černá</div><div class="tc-role">Environmental</div></div></div>
+            <div class="team-card"><div class="monogram">BO</div><div><div class="tc-name">Beren Okafor</div><div class="tc-role">Content Strategist</div></div></div>
+            <div class="team-card"><div class="monogram">NF</div><div><div class="tc-name">Nadia Forte</div><div class="tc-role">Producer</div></div></div>
+            <div class="team-card"><div class="monogram">WS</div><div><div class="tc-name">Will Sato</div><div class="tc-role">Studio Manager</div></div></div>
+          </div>
+        </aside>
+
+      </div>
+
+      <footer class="footer">
+        <div>
+          <div class="brand" style="margin-bottom: var(--space-2);"><span class="brand-mark"></span>Oblique Flux</div>
+          <p class="text-dim text-sm" style="max-width: 38ch;">A boutique brand strategy and digital experience agency for science, technology, and cultural institutions.</p>
+        </div>
+        <div>
+          <h6>Site</h6>
+          <ul>
+            <li><a href="../work/index.html">Work</a></li>
+            <li><a href="../services/index.html">Services</a></li>
+            <li><a href="#">Studio</a></li>
+            <li><a href="../process/index.html">Process</a></li>
+            <li><a href="../contact/index.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h6>Offices</h6>
+          <ul>
+            <li>New York</li>
+            <li>Berlin</li>
+            <li>Melbourne</li>
+          </ul>
+        </div>
+        <div>
+          <h6>Elsewhere</h6>
+          <ul>
+            <li><a href="#">Journal</a></li>
+            <li><a href="#">Are.na</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-legal">
+          <span>© 2024 Oblique Flux Studio</span>
+          <span>Made between three time zones</span>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+</div>
+</body>
+</html>

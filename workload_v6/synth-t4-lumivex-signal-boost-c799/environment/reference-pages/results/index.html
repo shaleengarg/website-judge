@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Results — Lumivex</title>
+<style>
+  .results-hero { padding: 120px 0 80px; }
+  .roi-strip {
+    background: linear-gradient(90deg, #f59e0b 0%, #ec7e0a 35%, #9333ea 70%, #7c3aed 100%);
+    padding: 22px var(--gutter);
+    text-align: center;
+    color: #1a0a3d;
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: var(--fs-5);
+    letter-spacing: -0.01em;
+    position: relative;
+    overflow: hidden;
+  }
+  .roi-strip::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.25), transparent 50%);
+    pointer-events: none;
+  }
+  .roi-strip strong { font-size: var(--fs-6); }
+  .roi-strip .roi-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #1a0a3d;
+    margin: 0 16px;
+    vertical-align: middle;
+  }
+
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+  @media (max-width: 1024px) {
+    .testimonial-grid { grid-template-columns: 1fr; }
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+  @media (max-width: 1024px) { .case-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .case-grid { grid-template-columns: 1fr; } }
+
+  .case-cell {
+    background: var(--paper-lift);
+    border: 1px solid var(--accent-1-line);
+    border-radius: var(--r-card);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sub);
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .case-cell:hover { transform: translateY(-4px); box-shadow: var(--shadow-mid); }
+  .case-cell::after {
+    content: "";
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(124,58,237,0.18), transparent 70%);
+    filter: blur(20px);
+    pointer-events: none;
+  }
+  .case-co {
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: var(--fs-5);
+    margin-bottom: var(--space-2);
+  }
+  .case-metric {
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--accent-1);
+    margin: var(--space-4) 0 var(--space-2);
+  }
+  .case-cell.amber .case-metric { color: var(--accent-2); }
+  .case-desc { font-size: var(--fs-2); color: var(--ink-dim); }
+  .case-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .compare-card {
+    background: linear-gradient(160deg, rgba(124,58,237,0.12), rgba(245,158,11,0.04));
+    border: 1px solid var(--accent-1-line);
+    border-radius: var(--r-card);
+    padding: var(--space-7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-mid);
+    position: relative;
+    overflow: hidden;
+  }
+  .compare-card::before {
+    content: "";
+    position: absolute;
+    top: -100px; left: -100px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(124,58,237,0.35), transparent 70%);
+    filter: blur(40px);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .compare-legend {
+    display: flex;
+    gap: var(--space-5);
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-head);
+    font-size: var(--fs-2);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .legend-swatch {
+    width: 14px; height: 14px;
+    border-radius: 4px;
+  }
+  .legend-swatch.violet { background: var(--grad-violet); }
+  .legend-swatch.amber { background: var(--grad-amber); }
+
+  .compare-row {
+    margin-bottom: var(--space-5);
+    position: relative;
+  }
+  .compare-row:last-child { margin-bottom: 0; }
+  .compare-label {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: var(--fs-4);
+    margin-bottom: var(--space-3);
+    color: var(--ink);
+  }
+  .compare-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .compare-bar {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .cb-tag {
+    font-family: var(--font-head);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .cb-track {
+    height: 16px;
+    background: rgba(240,244,255,0.05);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+    border: 1px solid rgba(124,58,237,0.15);
+  }
+  .cb-fill {
+    height: 100%;
+    border-radius: var(--r-pill);
+  }
+  .cb-fill.before { background: var(--grad-amber); box-shadow: 0 0 16px rgba(245,158,11,0.5); }
+  .cb-fill.after { background: var(--grad-violet); box-shadow: 0 0 16px rgba(124,58,237,0.6); }
+  .cb-val {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: var(--fs-3);
+    color: var(--ink);
+    text-align: right;
+  }
+  @media (max-width: 600px) {
+    .compare-bar { grid-template-columns: 60px 1fr 60px; gap: var(--space-2); }
+    .cb-val { font-size: var(--fs-2); }
+  }
+
+  .results-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+  }
+  @media (max-width: 768px) { .results-summary { grid-template-columns: repeat(2, 1fr); } }
+
+  .industry-pill {
+    background: rgba(245,158,11,0.14);
+    color: var(--accent-2);
+    border: 1px solid rgba(245,158,11,0.3);
+  }
+
+  .quote-attrib-co {
+    font-family: var(--font-head);
+    font-weight: 800;
+    color: var(--accent-2);
+    font-size: var(--fs-2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../ignite/index.html" class="brand">
+      <span class="brand-dot"></span>
+      Lumivex
+    </a>
+    <ul class="nav-links">
+      <li><a href="../ignite/index.html">Ignite</a></li>
+      <li><a href="../platform/index.html">Platform</a></li>
+      <li><a href="#" class="active">Results</a></li>
+      <li><a href="../pricing/index.html">Pricing</a></li>
+      <li><a href="../onboard/index.html">Onboard</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="../onboard/index.html" class="btn btn-primary btn-sm">Start Free</a>
+    </div>
+  </div>
+</nav>
+
+<div class="full-bleed roi-strip">
+  <strong>2,300% average ROI</strong>
+  <span class="roi-dot"></span>
+  Reported by Lumivex customers in Q1 — verified by an independent third-party survey
+</div>
+
+<section class="hero results-hero">
+  <div class="container">
+    <div class="hero-inner">
+      <span class="badge badge-glass badge-dot">Customer Results · 2024 Cohort</span>
+      <h1 class="mt-5">The signal that <span class="text-amber">paid for itself</span> in 11 days.</h1>
+      <p class="lede mt-5">Growth teams using Lumivex don't just close more pipeline — they close it faster, at higher ACV, and against incumbents they used to lose to. Here is the receipt.</p>
+      <div class="results-summary">
+        <div class="stat"><div class="stat-num">2.3k%</div><div class="stat-label">Avg ROI</div></div>
+        <div class="stat"><div class="stat-num">11d</div><div class="stat-label">Payback</div></div>
+        <div class="stat"><div class="stat-num">3.1×</div><div class="stat-label">Pipe Velocity</div></div>
+        <div class="stat"><div class="stat-num">87%</div><div class="stat-label">Match Accuracy</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="sec-head center">
+      <span class="eyebrow">Voices from the Field</span>
+      <h2>What VPs are actually saying</h2>
+      <p class="subhead">Real quotes from real revenue leaders shipping with Lumivex today.</p>
+    </div>
+
+    <div class="testimonial-grid mt-7">
+      <div class="testimonial">
+        <p class="testimonial-quote">Lumivex flagged 14 enterprise accounts as buying-ready three weeks before they hit Gartner's radar. We closed seven of them at an average of $214K ACV. It is, full stop, the most asymmetric tool in my stack.</p>
+        <div class="testimonial-meta">
+          <div class="avatar">MR</div>
+          <div>
+            <div class="testimonial-name">Margot Rinehart</div>
+            <div class="testimonial-role">VP Growth · <span class="quote-attrib-co">Corvin Labs</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <p class="testimonial-quote">We replaced four point solutions with Lumivex's signal layer in 90 days. Our SDRs went from 11 meetings booked per week to 38, and our pipeline coverage ratio crossed 4× for the first time since 2021.</p>
+        <div class="testimonial-meta">
+          <div class="avatar">DK</div>
+          <div>
+            <div class="testimonial-name">Devon Kaur</div>
+            <div class="testimonial-role">VP Revenue Operations · <span class="quote-attrib-co">Stelka Ventures</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <p class="testimonial-quote">In healthcare, timing is everything — committees move fast or not at all. Lumivex tells us which hospital systems are actively re-evaluating, so we arrive with answers instead of cold outreach. Our win rate tripled.</p>
+        <div class="testimonial-meta">
+          <div class="avatar">JT</div>
+          <div>
+            <div class="testimonial-name">Jules Thackeray</div>
+            <div class="testimonial-role">VP Enterprise Sales · <span class="quote-attrib-co">Nuvaro Health</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Case Studies · Headline Numbers</span>
+      <h2>Nine companies. Nine receipts.</h2>
+      <p class="subhead muted">A snapshot of measurable outcomes across our 2024 customer cohort.</p>
+    </div>
+
+    <div class="case-grid mt-7">
+      <div class="case-cell">
+        <div class="flex-between"><div class="case-co">Corvin Labs</div></div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">DevTools</span></div>
+        <div class="case-metric">+412%</div>
+        <div class="case-desc">Qualified pipeline generated in two quarters</div>
+      </div>
+
+      <div class="case-cell amber">
+        <div class="case-co">Stelka Ventures</div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">FinTech</span></div>
+        <div class="case-metric">3.4×</div>
+        <div class="case-desc">SDR meeting-to-opportunity conversion lift</div>
+      </div>
+
+      <div class="case-cell">
+        <div class="case-co">Nuvaro Health</div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">Healthcare</span></div>
+        <div class="case-metric">$8.1M</div>
+        <div class="case-desc">New ARR sourced from intent signals in 9 months</div>
+      </div>
+
+      <div class="case-cell amber">
+        <div class="case-co">Halberd Logistics</div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">Supply Chain</span></div>
+        <div class="case-metric">−63%</div>
+        <div class="case-desc">Reduction in cost per qualified opportunity</div>
+      </div>
+
+      <div class="case-cell">
+        <div class="case-co">Prism &amp; Reed</div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">LegalTech</span></div>
+        <div class="case-metric">+217%</div>
+        <div class="case-desc">Enterprise win rate against incumbents</div>
+      </div>
+
+      <div class="case-cell amber">
+        <div class="case-co">Quoram AI</div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">Machine Learning</span></div>
+        <div class="case-metric">19 days</div>
+        <div class="case-desc">Average sales cycle, down from 71 days</div>
+      </div>
+
+      <div class="case-cell">
+        <div class="case-co">Brightmoor Retail</div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">eCommerce</span></div>
+        <div class="case-metric">$2.7M</div>
+        <div class="case-desc">Closed-won attributed to Slack Pulse alerts</div>
+      </div>
+
+      <div class="case-cell amber">
+        <div class="case-co">Tessar Cloud</div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">Infrastructure</span></div>
+        <div class="case-metric">5.8×</div>
+        <div class="case-desc">Outbound reply rate vs. previous quarter</div>
+      </div>
+
+      <div class="case-cell">
+        <div class="case-co">Aldrich &amp; Vale</div>
+        <div class="case-tags mt-3"><span class="tag industry-pill">Insurance</span></div>
+        <div class="case-metric">94%</div>
+        <div class="case-desc">Forecast accuracy on committed deals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Before vs After Lumivex</span>
+      <h2>The shape of a quarter, redrawn.</h2>
+      <p class="subhead muted">Median performance across customers 90 days before onboarding versus 90 days after going live.</p>
+    </div>
+
+    <div class="compare-card mt-7">
+      <div class="compare-legend">
+        <div class="legend-item"><span class="legend-swatch amber"></span> Before Lumivex</div>
+        <div class="legend-item"><span class="legend-swatch violet"></span> After Lumivex</div>
+        <div class="legend-item muted" style="margin-left:auto;">Source: Lumivex Customer Telemetry, Q1 2024</div>
+      </div>
+
+      <div class="compare-row">
+        <div class="compare-label">Qualified opportunities created per rep / month</div>
+        <div class="compare-bars">
+          <div class="compare-bar">
+            <span class="cb-tag">Before</span>
+            <div class="cb-track"><div class="cb-fill before" style="width: 22%;"></div></div>
+            <span class="cb-val">4.2</span>
+          </div>
+          <div class="compare-bar">
+            <span class="cb-tag">After</span>
+            <div class="cb-track"><div class="cb-fill after" style="width: 78%;"></div></div>
+            <span class="cb-val">14.8</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-row">
+        <div class="compare-label">Average sales-cycle length (days)</div>
+        <div class="compare-bars">
+          <div class="compare-bar">
+            <span class="cb-tag">Before</span>
+            <div class="cb-track"><div class="cb-fill before" style="width: 92%;"></div></div>
+            <span class="cb-val">71</span>
+          </div>
+          <div class="compare-bar">
+            <span class="cb-tag">After</span>
+            <div class="cb-track"><div class="cb-fill after" style="width: 31%;"></div></div>
+            <span class="cb-val">24</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-row">
+        <div class="compare-label">Win rate against named competitors</div>
+        <div class="compare-bars">
+          <div class="compare-bar">
+            <span class="cb-tag">Before</span>
+            <div class="cb-track"><div class="cb-fill before" style="width: 18%;"></div></div>
+            <span class="cb-val">14%</span>
+          </div>
+          <div class="compare-bar">
+            <span class="cb-tag">After</span>
+            <div class="cb-track"><div class="cb-fill after" style="width: 61%;"></div></div>
+            <span class="cb-val">47%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-row">
+        <div class="compare-label">Cost per qualified meeting (USD)</div>
+        <div class="compare-bars">
+          <div class="compare-bar">
+            <span class="cb-tag">Before</span>
+            <div class="cb-track"><div class="cb-fill before" style="width: 84%;"></div></div>
+            <span class="cb-val">$612</span>
+          </div>
+          <div class="compare-bar">
+            <span class="cb-tag">After</span>
+            <div class="cb-track"><div class="cb-fill after" style="width: 26%;"></div></div>
+            <span class="cb-val">$188</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-row">
+        <div class="compare-label">Pipeline coverage ratio (× quota)</div>
+        <div class="compare-bars">
+          <div class="compare-bar">
+            <span class="cb-tag">Before</span>
+            <div class="cb-track"><div class="cb-fill before" style="width: 38%;"></div></div>
+            <span class="cb-val">1.8×</span>
+          </div>
+          <div class="compare-bar">
+            <span class="cb-tag">After</span>
+            <div class="cb-track"><div class="cb-fill after" style="width: 88%;"></div></div>
+            <span class="cb-val">4.3×</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout mt-7">
+      <div class="flex-between flex-wrap">
+        <div>
+          <div class="eyebrow mb-0">See your own numbers</div>
+          <h4 class="mt-3 mb-0">Get a custom ROI projection from your CRM in under 10 minutes.</h4>
+        </div>
+        <div class="flex gap-3">
+          <a href="../onboard/index.html" class="btn btn-primary">Start Free Trial</a>
+          <a href="../pricing/index.html" class="btn btn-ghost">See Pricing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand"><span class="brand-dot"></span> Lumivex</div>
+      <p class="footer-tag">Signal intelligence for growth teams who refuse to wait for the hand-raise.</p>
+      <div class="socials mt-5">
+        <a href="#" class="social social-x" aria-label="Twitter"></a>
+        <a href="#" class="social social-in" aria-label="LinkedIn"></a>
+        <a href="#" class="social social-gh" aria-label="GitHub"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="../ignite/index.html">Ignite</a></li>
+        <li><a href="../platform/index.html">Platform</a></li>
+        <li><a href="#">Results</a></li>
+        <li><a href="../pricing/index.html">Pricing</a></li>
+        <li><a href="../onboard/index.html">Onboard</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Resources</h5>
+      <ul>
+        <li><a href="#">Docs</a></li>
+        <li><a href="#">Changelog</a></li>
+        <li><a href="#">Security</a></li>
+        <li><a href="#">Status</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2024 Lumivex, Inc. All signals reserved.</span>
+    <span class="footer-copy">SOC 2 Type II · GDPR · 99.9% Uptime</span>
+  </div>
+</footer>
+
+</body>
+</html>

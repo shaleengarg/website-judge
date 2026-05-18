@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Contributors — Chlorophyll Dispatch</title>
+<style>
+  .masthead-head {
+    max-width: var(--wrap);
+    margin: 0 auto;
+    padding: var(--space-7) var(--space-6) var(--space-5);
+  }
+  .masthead-head .display {
+    font-size: var(--fs-h1);
+    margin-bottom: var(--space-3);
+  }
+  .editor-note {
+    max-width: var(--wrap);
+    margin: var(--space-5) auto var(--space-8);
+    padding: 0 var(--space-6);
+  }
+  .editor-note .quote {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--accent-1);
+    line-height: 1.25;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: var(--space-6) 0;
+  }
+  .editor-note .quote::before {
+    content: "";
+    display: inline-block;
+    width: 60px;
+    height: 4px;
+    background: var(--accent-2);
+    vertical-align: middle;
+    margin-right: var(--space-4);
+    transform: translateY(-8px);
+  }
+  .editor-note .sig {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-top: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .masthead-stats {
+    max-width: var(--wrap);
+    margin: 0 auto var(--space-7);
+    padding: 0 var(--space-6);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .masthead-stats .cell {
+    padding: var(--space-4) 0;
+    border-right: 1px solid var(--rule);
+    padding-right: var(--space-4);
+  }
+  .masthead-stats .cell:last-child { border-right: none; }
+  .masthead-stats .num {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--accent-1);
+    line-height: 1;
+  }
+  .masthead-stats .lbl {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--mute);
+    margin-top: var(--space-2);
+  }
+  .tier-block { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--space-6); }
+  .tier-opener .tier-meta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--mute);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .colophon-box {
+    max-width: var(--wrap);
+    margin: var(--space-8) auto 0;
+    padding: var(--space-6);
+    background: var(--paper-alt);
+    border-top: 1px solid var(--rule);
+    border-bottom: 4px solid var(--accent-2);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-6);
+  }
+  .colophon-box h3 { margin-bottom: var(--space-3); }
+  @media (max-width: 1024px) {
+    .masthead-stats { grid-template-columns: repeat(2, 1fr); }
+    .masthead-stats .cell:nth-child(2) { border-right: none; }
+    .editor-note .quote { font-size: 28px; }
+    .colophon-box { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .masthead-stats { grid-template-columns: 1fr; }
+    .masthead-stats .cell { border-right: none; border-bottom: 1px solid var(--rule); }
+    .editor-note .quote { font-size: 22px; padding: var(--space-5) 0; }
+    .editor-note .quote::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="../cover-story/index.html" class="site-logo">Chlorophyll <em>Dispatch</em></a>
+    <ul>
+      <li><a href="../cover-story/index.html">Cover Story</a></li>
+      <li><a href="../deep-dive/index.html">Deep Dive</a></li>
+      <li><a href="../field-notes/index.html">Field Notes</a></li>
+      <li><a href="#">Contributors</a></li>
+      <li><a href="../archive/index.html">Archive</a></li>
+    </ul>
+    <span class="issue-tag">Vol. XII · No. 04</span>
+  </div>
+</nav>
+
+<header class="masthead-head">
+  <span class="section-label" style="margin-top:0">Masthead · Spring 2024</span>
+  <h1 class="display">The Hands Behind the Pages</h1>
+  <p class="lead" style="max-width:780px">Chlorophyll Dispatch is produced by twenty-four field journalists, scientists, illustrators and editors working across six continents. What follows is the standing masthead for the current editorial year, with beats, biographies and contribution counts as of the most recent press date.</p>
+</header>
+
+<section class="editor-note">
+  <div class="quote">
+    A magazine, like a forest, is held together by the people who notice the small things — the falling leaf, the missing bird, the headline nobody else thought to write. These twenty-four colleagues are the canopy and the understory of every issue we publish.
+  </div>
+  <div class="sig">
+    <span>— Maren Aldrick, Editor-in-Chief</span>
+    <span>Filed from Reykjavík · 14 March 2024</span>
+  </div>
+</section>
+
+<section class="masthead-stats">
+  <div class="cell"><div class="num">24</div><div class="lbl">Contributors</div></div>
+  <div class="cell"><div class="num">38</div><div class="lbl">Countries Reported</div></div>
+  <div class="cell"><div class="num">412</div><div class="lbl">Bylines To Date</div></div>
+  <div class="cell"><div class="num">11</div><div class="lbl">Years In Print</div></div>
+</section>
+
+<section class="tier-block">
+  <div class="tier-opener">
+    <h2>Senior Fellows</h2>
+    <span class="count">04 Members · Tier I</span>
+  </div>
+  <p class="caption" style="max-width:780px;margin-bottom:var(--space-5)">Long-form commissioning editors and contributing scientists who set the magazine's editorial direction and serve on the editorial board for terms of three to five years.</p>
+
+  <div class="contributor-grid">
+    <div class="contrib">
+      <h3>Dr. Ines Vasquez-Morell</h3>
+      <div class="title">Senior Fellow, Biogeochemistry</div>
+      <p class="bio">A peatland biogeochemist trained at Wageningen and Stanford, Vasquez-Morell directs our long-running carbon flux dossier and has reported from twenty-two boreal sites since joining the masthead. Her 2022 essay on rewetting protocols was anthologised in <em>Best American Science Writing</em>.</p>
+      <div class="meta"><span class="beat">Peat · Carbon · Soils</span><span class="badge">047 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Akira Ondaatje</h3>
+      <div class="title">Senior Fellow, Land Politics</div>
+      <p class="bio">A former parliamentary correspondent for <em>The Colombo Review</em>, Ondaatje covers land-tenure disputes, extractive concessions and indigenous sovereignty across South and Southeast Asia. His 2021 investigation into Sundarbans aquaculture leases prompted three regulatory reviews.</p>
+      <div class="meta"><span class="beat">Land Rights · Policy</span><span class="badge">063 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Prof. Helena Sørenson</h3>
+      <div class="title">Senior Fellow, Marine Systems</div>
+      <p class="bio">Sørenson holds the chair in Coastal Ecology at the University of Bergen and contributes our quarterly fjord dispatch. A veteran of fourteen North Atlantic research cruises, she writes with the unhurried clarity of someone who has spent her life waiting for tides.</p>
+      <div class="meta"><span class="beat">Oceans · Fjords · Kelp</span><span class="badge">029 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Tomás Berhane-Lago</h3>
+      <div class="title">Senior Fellow, Climate Justice</div>
+      <p class="bio">Berhane-Lago reports on the intersection of climate adaptation and human displacement, with extended assignments in the Sahel and the Horn of Africa. He co-edits our annual atlas of climate-vulnerable communities and lectures at the University of Addis Ababa.</p>
+      <div class="meta"><span class="beat">Migration · Drought</span><span class="badge">051 PIECES</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="tier-block">
+  <div class="tier-opener">
+    <h2>Staff Writers</h2>
+    <span class="count">06 Members · Tier II</span>
+  </div>
+  <p class="caption" style="max-width:780px;margin-bottom:var(--space-5)">Full-time editorial staff producing the core reporting and analysis across each quarterly issue, with rotating coverage of legislative beats and ecological assignments.</p>
+
+  <div class="contributor-grid">
+    <div class="contrib">
+      <h3>Marisol Kierney</h3>
+      <div class="title">Senior Staff Writer</div>
+      <p class="bio">A graduate of the Missouri School of Journalism, Kierney leads our agricultural-runoff investigations and authored this issue's deep dive on nitrogen cascades. Before joining the Dispatch in 2019, she covered municipal water systems for three regional dailies in the upper Midwest.</p>
+      <div class="meta"><span class="beat">Rivers · Agriculture</span><span class="badge">078 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Devan Okafor</h3>
+      <div class="title">Staff Writer, Forests</div>
+      <p class="bio">Okafor covers tropical forest policy and the global timber trade, splitting his reporting between Yaoundé and Brussels. His four-part series on Congo Basin certification schemes earned the 2023 Goldsmith Prize for environmental reporting and a citation from the European Forest Institute.</p>
+      <div class="meta"><span class="beat">Forests · Trade</span><span class="badge">042 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Rosa Lindqvist</h3>
+      <div class="title">Staff Writer, Pollinators</div>
+      <p class="bio">Lindqvist's beat encompasses insect decline, agricultural pesticides and the small-scale apiarists carrying on against them. A trained entomologist, she joined the magazine after eight years at the Swedish Museum of Natural History and reports primarily from northern Europe and the Baltic.</p>
+      <div class="meta"><span class="beat">Insects · Bees</span><span class="badge">036 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Caleb Rusch</h3>
+      <div class="title">Staff Writer, Energy</div>
+      <p class="bio">Rusch reports on grid transitions, lithium extraction and the contested geography of renewable build-out. He has filed from the salars of Bolivia, the wind corridors of Oaxaca and the rare-earth processing belt of Inner Mongolia, often on assignments lasting many weeks.</p>
+      <div class="meta"><span class="beat">Energy · Minerals</span><span class="badge">055 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Yusra Khattab</h3>
+      <div class="title">Staff Writer, Water</div>
+      <p class="bio">Based in Amman, Khattab covers transboundary water politics across the Levant, the Nile basin and the Tigris–Euphrates system. Her reporting blends hydrological detail with patient diplomatic shoe-leather, and her dispatches frequently set the agenda for our spring issues.</p>
+      <div class="meta"><span class="beat">Water · Borders</span><span class="badge">044 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Jonas Trembath</h3>
+      <div class="title">Staff Writer, Cities</div>
+      <p class="bio">Trembath writes about urban ecology, green-space politics and the strange botany of derelict industrial sites. A former planner, he is the magazine's most prolific essayist on what he calls the &ldquo;fourth-nature&rdquo; landscapes — feral, accidental and quietly thriving — found at the edges of large cities.</p>
+      <div class="meta"><span class="beat">Urban · Brownfields</span><span class="badge">061 PIECES</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="tier-block">
+  <div class="tier-opener">
+    <h2>Field Correspondents</h2>
+    <span class="count">10 Members · Tier III</span>
+  </div>
+  <p class="caption" style="max-width:780px;margin-bottom:var(--space-5)">Regional correspondents on rolling contract, filing dispatches from their resident bioregions and serving as the magazine's primary reporting network across six continents.</p>
+
+  <div class="contributor-grid">
+    <div class="contrib">
+      <h3>Pilar Echevarría</h3>
+      <div class="title">Correspondent, Patagonia</div>
+      <p class="bio">Echevarría files from the Aysén region, covering wool-economy collapse, glacial retreat and the long argument over hydropower in the Chilean fjords. A native of Coyhaique, she walks transects in winter that most reporters would not attempt in summer.</p>
+      <div class="meta"><span class="beat">Patagonia · Glaciers</span><span class="badge">019 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Ngozi Adeyemi</h3>
+      <div class="title">Correspondent, West Africa</div>
+      <p class="bio">Adeyemi reports from Lagos on coastal erosion, mangrove restoration and the politics of oil-spill remediation in the Niger Delta. Her reporting on the Ogoniland clean-up has been cited in two parliamentary inquiries and a federal-court remediation order.</p>
+      <div class="meta"><span class="beat">Coasts · Oil</span><span class="badge">023 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Henrik Aalto</h3>
+      <div class="title">Correspondent, Cairngorms</div>
+      <p class="bio">Aalto covers rewilding, deer-stalking economies and the slow return of the Caledonian pine forest. Based in Aviemore, he is the magazine's principal Highlands voice and contributes a recurring winter column on the language and folklore of Scots ecology.</p>
+      <div class="meta"><span class="beat">Highlands · Rewilding</span><span class="badge">017 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Sundara Pillai</h3>
+      <div class="title">Correspondent, Sundarbans</div>
+      <p class="bio">Pillai files from the Bangladesh–India border deltas, where she has spent a decade documenting tiger-conflict zones, salinity creep and the women-led oyster cooperatives reshaping the local economy. She writes in Bengali and English and translates much of her own work.</p>
+      <div class="meta"><span class="beat">Mangroves · Tigers</span><span class="badge">026 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Theodor Brâncuși</h3>
+      <div class="title">Correspondent, Carpathians</div>
+      <p class="bio">Brâncuși covers European old-growth forests, wolf range expansion and the political-ecology of EU forestry directives. A forester by training, he splits his time between Brașov and Vienna and has guided three of our editors through the Făgăraș Mountains on reporting trips.</p>
+      <div class="meta"><span class="beat">Old Growth · Wolves</span><span class="badge">021 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Mei-Lin Cho</h3>
+      <div class="title">Correspondent, Borneo</div>
+      <p class="bio">Cho reports from Kuching on palm-oil concessions, orangutan corridors and the legal-aid clinics defending Dayak land claims. Her long feature on the Penan blockades remains the most-read piece in the magazine's twelve-year archive of Southeast Asian reporting.</p>
+      <div class="meta"><span class="beat">Rainforest · Palm Oil</span><span class="badge">028 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Aleksei Bayanov</h3>
+      <div class="title">Correspondent, Aral Sea</div>
+      <p class="bio">Bayanov files from Nukus on the slow, contested restoration of the North Aral, the salt-storm public-health crisis in Karakalpakstan, and the post-Soviet hydrology of the Amu Darya. He reports in Russian, Karakalpak and Uzbek, often in the same week.</p>
+      <div class="meta"><span class="beat">Desert · Salinity</span><span class="badge">015 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Esi Bonsu</h3>
+      <div class="title">Correspondent, Congo Basin</div>
+      <p class="bio">Bonsu covers central African forest governance from Kinshasa, with a particular focus on community forestry concessions and the bushmeat trade. A former WCS researcher, she brings ecological fieldcraft to a beat dominated elsewhere by short, parachute reporting.</p>
+      <div class="meta"><span class="beat">Congo · Wildlife</span><span class="badge">020 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Wiremu Tāne</h3>
+      <div class="title">Correspondent, Aotearoa</div>
+      <p class="bio">Tāne reports from Whanganui on Māori-led conservation governance, kauri dieback and the legal personhood granted to rivers and mountains under co-management settlements. He is a contributing editor to our annual indigenous-tenure atlas.</p>
+      <div class="meta"><span class="beat">Pacific · Tenure</span><span class="badge">018 PIECES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Quinn Halverson</h3>
+      <div class="title">Correspondent, Great Plains</div>
+      <p class="bio">Halverson covers prairie restoration, bison reintroduction and the dryland agriculture transition across the American Midwest. Based on a fourth-generation Nebraska ranch, she writes with a granular feel for land economics that few outside the region manage to match.</p>
+      <div class="meta"><span class="beat">Prairie · Ranching</span><span class="badge">022 PIECES</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="tier-block">
+  <div class="tier-opener">
+    <h2>Illustrators</h2>
+    <span class="count">04 Members · Tier IV</span>
+  </div>
+  <p class="caption" style="max-width:780px;margin-bottom:var(--space-5)">The visual contributors who supply our cover plates, scientific diagrams, hand-rendered marginalia and the cartographic work that anchors every long-form feature.</p>
+
+  <div class="contributor-grid">
+    <div class="contrib">
+      <h3>Lila Henneberg</h3>
+      <div class="title">Lead Illustrator, Botanical</div>
+      <p class="bio">Henneberg works in graphite, watercolour and brown ink, producing the magazine's botanical plates and our quarterly cover illustration. A graduate of the Royal Botanic Garden Edinburgh's diploma programme, she keeps a working studio in a converted slate barn in north Wales.</p>
+      <div class="meta"><span class="beat">Botanical · Covers</span><span class="badge">038 PLATES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Otis Pemberton</h3>
+      <div class="title">Cartographer</div>
+      <p class="bio">Pemberton produces the magazine's hand-set maps, working from open-source spatial data and field sketches supplied by our correspondents. His cartography combines the typographic restraint of the Imperial Gazetteer with a contemporary attention to indigenous place-naming and contested borders.</p>
+      <div class="meta"><span class="beat">Maps · GIS</span><span class="badge">049 MAPS</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Saskia Vuong</h3>
+      <div class="title">Diagrammer, Scientific</div>
+      <p class="bio">Vuong renders our scientific diagrams, food webs and biogeochemical cycle charts. Trained as an architect, she brings an unusual fluency in section-cut perspective to ecological subjects, and has developed the Dispatch's distinctive notation system for stratigraphic illustrations.</p>
+      <div class="meta"><span class="beat">Diagrams · Science</span><span class="badge">032 FIGURES</span></div>
+    </div>
+    <div class="contrib">
+      <h3>Felix Aragão</h3>
+      <div class="title">Marginalia Artist</div>
+      <p class="bio">Aragão produces the small ornamental species-portraits that recur in the marginalia of every feature — moths, mosses, mussels and the occasional reluctant amphibian. He works in dip-pen at 1:1 scale and posts each piece to our Lisbon office in a small flat envelope.</p>
+      <div class="meta"><span class="beat">Marginalia · Ink</span><span class="badge">214 PIECES</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="colophon-box">
+  <div>
+    <span class="section-label" style="margin-top:0">Colophon</span>
+    <h3>How the issue is made</h3>
+  </div>
+  <div>
+    <p class="caption">Chlorophyll Dispatch is set in Georgia for display, system-ui for body text and a monospaced face for marginalia. Each issue is edited from offices in Reykjavík, Lisbon and Montréal, printed on FSC-certified uncoated stock, and bound in signatures of sixteen pages. Editorial enquiries and pitches may be addressed to the relevant tier-lead at the email on the masthead page of the print edition.</p>
+    <p class="small">Submissions are read on a rolling basis. Field correspondents are commissioned annually each January; staff positions open as they arise. The magazine accepts no advertising and is supported entirely by reader subscriptions and the Aldrick-Lago Foundation for Independent Environmental Journalism.</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <div class="footer-tagline">Chlorophyll Dispatch — long-form journalism from the living world.</div>
+      <p class="caption" style="margin-top:var(--space-3)">Quarterly print and digital editions since 2013. Reader-supported, advertising-free, independently edited.</p>
+    </div>
+    <div>
+      <h4>Sections</h4>
+      <ul>
+        <li><a href="../cover-story/index.html">Cover Story</a></li>
+        <li><a href="../deep-dive/index.html">Deep Dive</a></li>
+        <li><a href="../field-notes/index.html">Field Notes</a></li>
+        <li><a href="#">Contributors</a></li>
+        <li><a href="../archive/index.html">Archive</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Offices</h4>
+      <ul>
+        <li>Reykjavík — Editorial</li>
+        <li>Lisbon — Design</li>
+        <li>Montréal — Subscriptions</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>pitches@chlorophyll.press</li>
+        <li>letters@chlorophyll.press</li>
+        <li>subscriptions@chlorophyll.press</li>
+      </ul>
+    </div>
+  </div>
+  <div class="colophon">© MMXXIV Chlorophyll Dispatch · Vol. XII · No. 04 · Printed on uncoated stock</div>
+</footer>
+
+</body>
+</html>

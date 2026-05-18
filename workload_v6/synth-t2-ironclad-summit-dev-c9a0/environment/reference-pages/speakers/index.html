@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Speakers — Ironclad Summit 2025</title>
+<style>
+  .speakers-intro { max-width: 760px; }
+  .speaker-card .avatar { background: #D0CBC0; }
+  .keynote-stack { display: grid; gap: var(--space-4); }
+  .keynote-card .eyebrow { display: block; margin-bottom: 4px; }
+  .keynote-meta { color: var(--ink-soft); font-size: var(--fs-sm); }
+  @media (max-width: 520px) {
+    .keynote-card { grid-template-columns: 1fr; }
+    .keynote-card .avatar-lg { width: 72px; height: 72px; font-size: var(--fs-xl); }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <div class="brand"><span class="brand-mark">▮</span> Ironclad Summit</div>
+    <ul class="nav-links">
+      <li><a href="../home/index.html">Home</a></li>
+      <li><a href="../schedule/index.html">Schedule</a></li>
+      <li><a href="../speakers/index.html" class="active">Speakers</a></li>
+      <li><a href="../venue/index.html">Venue</a></li>
+      <li><a href="../register/index.html">Register</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container">
+
+  <section class="section">
+    <span class="kicker-bar"></span>
+    <div class="eyebrow">Voices of the Summit</div>
+    <h1>Speakers &amp; Practitioners</h1>
+    <p class="lede speakers-intro">
+      Our speaker roster is curated by working engineers, not committees. We prioritize
+      practitioner experience over academic credentials: every talk this year comes
+      from someone who has shipped, broken, and rebuilt the systems they're describing.
+      Expect concrete war stories, postmortems, and architectures you can take home on Monday.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="section-heading">The 2025 Lineup</h2>
+
+    <div class="card-grid">
+
+      <article class="speaker-card">
+        <div class="avatar">DH</div>
+        <h3 class="speaker-name">Dana Halverson</h3>
+        <div class="speaker-role">Principal SRE · GridForge</div>
+        <p class="speaker-abstract">Walks through a four-region failover redesign that cut MTTR by 78%. Includes the parts that didn't work.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">MO</div>
+        <h3 class="speaker-name">Marcus Okafor</h3>
+        <div class="speaker-role">Staff Engineer · PulseLabs</div>
+        <p class="speaker-abstract">A field guide to debugging kernel-level packet drops on commodity NICs. Real captures, real numbers, no marketing.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">SR</div>
+        <h3 class="speaker-name">Sofia Reinhardt</h3>
+        <div class="speaker-role">Platform Lead · Alloy Systems</div>
+        <p class="speaker-abstract">How a 200-engineer org migrated off a monorepo without freezing the trunk. Lessons in incremental tooling.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">JT</div>
+        <h3 class="speaker-name">Jian Tao</h3>
+        <div class="speaker-role">Distinguished Engineer · CoreStack</div>
+        <p class="speaker-abstract">Capacity modeling when your traffic graph has fractal seasonality. Practical math for honest forecasts.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">EB</div>
+        <h3 class="speaker-name">Elena Bauer</h3>
+        <div class="speaker-role">Hardware Architect · Ironvault</div>
+        <p class="speaker-abstract">Designing a custom storage chassis for sustained 40GB/s writes. Thermals, vibration, and the BOM behind it.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">RP</div>
+        <h3 class="speaker-name">Rahul Pillai</h3>
+        <div class="speaker-role">Infra Director · Tangent IO</div>
+        <p class="speaker-abstract">A six-quarter retrospective on multi-tenant noisy-neighbor isolation. What worked, what we ripped out.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">KW</div>
+        <h3 class="speaker-name">Kira Whitmore</h3>
+        <div class="speaker-role">Senior Engineer · GridForge</div>
+        <p class="speaker-abstract">Building observability that survives the outage it's meant to diagnose. Patterns for out-of-band telemetry.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">NA</div>
+        <h3 class="speaker-name">Noah Ardelean</h3>
+        <div class="speaker-role">Embedded Lead · PulseLabs</div>
+        <p class="speaker-abstract">Pushing real-time inference onto $4 microcontrollers. Quantization tradeoffs and a brutally honest power budget.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">YM</div>
+        <h3 class="speaker-name">Yuki Matsuda</h3>
+        <div class="speaker-role">Database Engineer · CoreStack</div>
+        <p class="speaker-abstract">Replacing a 12-year-old sharding layer without a maintenance window. The dual-write playbook, with receipts.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">PG</div>
+        <h3 class="speaker-name">Priya Ghosh</h3>
+        <div class="speaker-role">Reliability Lead · Alloy Systems</div>
+        <p class="speaker-abstract">Error budgets as a negotiation tool, not a scoreboard. How to keep product teams honest without becoming the police.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">TC</div>
+        <h3 class="speaker-name">Theo Calder</h3>
+        <div class="speaker-role">Network Engineer · Ironvault</div>
+        <p class="speaker-abstract">BGP route leaks in practice: three incidents, three root causes, and the guardrails we now run on every edge.</p>
+      </article>
+
+      <article class="speaker-card">
+        <div class="avatar">AL</div>
+        <h3 class="speaker-name">Amelia Larsson</h3>
+        <div class="speaker-role">Security Engineer · Tangent IO</div>
+        <p class="speaker-abstract">Threat modeling for control planes that touch physical infrastructure. A pragmatic checklist that survived an audit.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Keynote Spotlight</h2>
+
+    <div class="keynote-stack">
+
+      <article class="keynote-card">
+        <div class="avatar avatar-lg">DH</div>
+        <div>
+          <span class="eyebrow">Day 1 Opening Keynote · Wed Oct 9, 9:00 AM</span>
+          <h3 class="speaker-name" style="font-size: var(--fs-xl);">Dana Halverson</h3>
+          <div class="speaker-role">Principal Site Reliability Engineer · GridForge</div>
+          <div class="talk-title">Designing for Failure at Scale</div>
+          <p>
+            After a decade running multi-region infrastructure, Dana argues that "resilience" is a
+            misleading word — what we actually want is graceful degradation under conditions
+            nobody designed for. This keynote walks through three real incidents and the
+            architectural patterns that turned each one into a non-event by the second year.
+          </p>
+          <p class="keynote-meta"><span class="pill">Keynote</span> &nbsp; Hall A — Main Stage &nbsp;·&nbsp; 50 min + Q&amp;A</p>
+        </div>
+      </article>
+
+      <article class="keynote-card">
+        <div class="avatar avatar-lg">JT</div>
+        <div>
+          <span class="eyebrow">Day 2 Opening Keynote · Thu Oct 10, 9:00 AM</span>
+          <h3 class="speaker-name" style="font-size: var(--fs-xl);">Jian Tao</h3>
+          <div class="speaker-role">Distinguished Engineer · CoreStack</div>
+          <div class="talk-title">The Hidden Cost of Eventual Consistency</div>
+          <p>
+            Eventual consistency is the default escape hatch for distributed systems — but the
+            bill arrives slowly, in support tickets, reconciliation jobs, and 3 AM pages. Jian
+            unpacks the operational debt that compounds quietly behind "AP" systems, and
+            offers a decision framework for when stronger guarantees are worth the latency.
+          </p>
+          <p class="keynote-meta"><span class="pill">Keynote</span> &nbsp; Hall A — Main Stage &nbsp;·&nbsp; 50 min + Q&amp;A</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">▮ Ironclad Summit</div>
+      <p class="footer-tagline">Two days of deep systems engineering — Pittsburgh, PA.</p>
+      <p>October 9–10, 2025 · David L. Lawrence Convention Center</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../home/index.html">Home</a></li>
+        <li><a href="../schedule/index.html">Schedule</a></li>
+        <li><a href="../speakers/index.html">Speakers</a></li>
+        <li><a href="../venue/index.html">Venue</a></li>
+        <li><a href="../register/index.html">Register</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>hello@ironcladsummit.io</li>
+        <li>register@ironcladsummit.io</li>
+        <li>@ironcladsummit</li>
+        <li>mastodon: @ironclad@infra.social</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <span>© 2025 Ironclad Summit. All rights reserved.</span>
+    <span>Pittsburgh, PA</span>
+  </div>
+</footer>
+
+</body>
+</html>

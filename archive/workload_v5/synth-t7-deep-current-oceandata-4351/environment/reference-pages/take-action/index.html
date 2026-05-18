@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Take Action — Deep Current</title>
+<style>
+  /* page-unique only */
+  .vessel-hero{position:relative;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,#1a0a2e 0%,#3d1845 25%,#8a3d52 55%,#d8704a 80%,#ffb37a 100%)}
+  .vessel-hero svg{display:block;width:100%;height:auto}
+  .vessel-overlay{position:absolute;left:var(--space-7);bottom:var(--space-6);max-width:520px;z-index:3}
+  .vessel-overlay h1{color:var(--paper);text-shadow:0 4px 24px rgba(0,0,0,0.6);font-size:var(--fs-4xl)}
+  .vessel-overlay p{color:rgba(10,22,40,0.85);font-weight:600;margin-top:var(--space-3)}
+  .action-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:var(--space-6)}
+  @media (max-width:1100px){.action-grid{grid-template-columns:1fr}}
+  .pledge-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-5)}
+  @media (max-width:560px){.pledge-grid{grid-template-columns:1fr}}
+  .pledge-card{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--space-5);display:flex;flex-direction:column;gap:var(--space-3);box-shadow:var(--shadow-card);position:relative;overflow:hidden}
+  .pledge-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent-1),transparent)}
+  .pledge-badge{width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(0,201,177,0.18),rgba(0,201,177,0.04));border:1px solid rgba(0,201,177,0.3);display:flex;align-items:center;justify-content:center}
+  .pledge-badge svg{width:48px;height:48px}
+  .pledge-title{font-family:var(--serif);font-size:var(--fs-md);font-weight:700;color:var(--ink);line-height:1.2}
+  .pledge-desc{font-size:13px;color:var(--ink-dim);line-height:1.5;flex:1}
+  .pledge-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:var(--ls-wide);padding-top:var(--space-2);border-top:1px dashed var(--line)}
+  .pledge-meta b{color:var(--accent-1)}
+  .ms-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-3);font-size:11px}
+  @media (max-width:480px){.ms-grid{grid-template-columns:1fr}}
+  .ms-row{display:flex;gap:var(--space-3);align-items:flex-start}
+  .ms-year{font-family:var(--mono);color:var(--accent-1);font-weight:600;flex:0 0 50px}
+  .ms-text{color:var(--ink-dim);line-height:1.4}
+  .ms-text b{display:block;color:var(--ink);font-family:var(--serif);font-size:13px;margin-bottom:2px}
+</style>
+</head>
+<body>
+<div class="site">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M4 32 Q12 20 20 32 T36 32 T52 32 T68 32"/>
+        <path d="M4 42 Q12 30 20 42 T36 42 T52 42 T68 42"/>
+        <path d="M4 22 Q12 10 20 22 T36 22 T52 22 T68 22"/>
+      </svg>
+      <div>
+        <div class="brand-title">Deep Current</div>
+        <div class="brand-tag">Ocean Data Atlas</div>
+      </div>
+    </div>
+
+    <nav class="nav-section" aria-label="Primary">
+      <div class="nav-label">Sections</div>
+      <a class="nav-link" href="../ocean-health/index.html">Ocean Health</a>
+      <a class="nav-link" href="../species-atlas/index.html">Species Atlas</a>
+      <a class="nav-link" href="../temperature-rise/index.html">Temperature Rise</a>
+      <a class="nav-link" href="../plastic-crisis/index.html">Plastic Crisis</a>
+      <a class="nav-link active" href="#">Take Action</a>
+    </nav>
+
+    <div class="depth-ruler">
+      <div class="depth-ruler-label">Depth Scale</div>
+      <svg viewBox="0 0 80 320" aria-hidden="true">
+        <defs>
+          <linearGradient id="dr" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5fb4d9"/>
+            <stop offset="20%" stop-color="#1f6a99"/>
+            <stop offset="45%" stop-color="#0f3a66"/>
+            <stop offset="75%" stop-color="#061a33"/>
+            <stop offset="100%" stop-color="#020812"/>
+          </linearGradient>
+        </defs>
+        <rect x="18" y="10" width="20" height="300" fill="url(#dr)" stroke="#1f3a5f"/>
+        <g stroke="#6b8a96" stroke-width="1">
+          <line x1="38" y1="10" x2="48" y2="10"/>
+          <line x1="38" y1="70" x2="48" y2="70"/>
+          <line x1="38" y1="130" x2="48" y2="130"/>
+          <line x1="38" y1="190" x2="48" y2="190"/>
+          <line x1="38" y1="250" x2="48" y2="250"/>
+          <line x1="38" y1="310" x2="48" y2="310"/>
+        </g>
+        <g font-family="ui-monospace,monospace" font-size="8" fill="#a8c5d0">
+          <text x="52" y="13">0m</text>
+          <text x="52" y="73">200</text>
+          <text x="52" y="133">1k</text>
+          <text x="52" y="193">4k</text>
+          <text x="52" y="253">6k</text>
+          <text x="52" y="313">11k</text>
+        </g>
+        <circle cx="28" cy="70" r="2" fill="#00c9b1"/>
+        <circle cx="28" cy="190" r="2" fill="#00c9b1"/>
+      </svg>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <div class="topmeta">
+      <div class="topmeta-crumbs">
+        <span>Deep Current</span><span class="sep">/</span><span>Engage</span><span class="sep">/</span><span class="text-accent">Take Action</span>
+      </div>
+      <div class="topmeta-status">Live · Updated 2024-Q3</div>
+    </div>
+
+    <!-- ============ HERO: Research vessel ============ -->
+    <section class="vessel-hero" aria-label="Research vessel at sunrise">
+      <svg viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <radialGradient id="sun" cx="0.78" cy="0.55" r="0.18">
+            <stop offset="0%" stop-color="#ffefb0"/>
+            <stop offset="55%" stop-color="#ffb37a" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#ffb37a" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3a2548"/>
+            <stop offset="40%" stop-color="#152d52"/>
+            <stop offset="100%" stop-color="#0a1628"/>
+          </linearGradient>
+          <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a3a5c"/>
+            <stop offset="100%" stop-color="#08111f"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Sun -->
+        <circle cx="940" cy="265" r="62" fill="#ffe3a8" opacity="0.95"/>
+        <rect x="0" y="0" width="1200" height="480" fill="url(#sun)"/>
+
+        <!-- Distant clouds (path-built) -->
+        <path d="M80 120 Q130 100 180 120 Q220 105 260 125 Q300 115 340 130 Q300 145 240 140 Q180 145 120 138 Q90 135 80 120 Z" fill="rgba(255,255,255,0.18)"/>
+        <path d="M520 90 Q580 70 640 88 Q700 76 760 95 Q700 110 620 105 Q560 108 520 90 Z" fill="rgba(255,255,255,0.14)"/>
+        <path d="M1020 140 Q1070 125 1120 140 Q1160 132 1190 148 Q1140 158 1080 155 Q1040 153 1020 140 Z" fill="rgba(255,255,255,0.12)"/>
+
+        <!-- Distant land silhouette -->
+        <path d="M0 305 L120 290 L220 300 L320 285 L420 295 L0 295 Z" fill="rgba(10,22,40,0.5)"/>
+        <path d="M780 310 L880 295 L980 305 L1080 290 L1200 300 L1200 310 Z" fill="rgba(10,22,40,0.5)"/>
+
+        <!-- Horizon sea -->
+        <rect x="0" y="305" width="1200" height="175" fill="url(#sea)"/>
+
+        <!-- Sun glitter on water -->
+        <g stroke="#ffd28a" stroke-width="1.5" opacity="0.55">
+          <line x1="820" y1="315" x2="1060" y2="315"/>
+          <line x1="850" y1="325" x2="1030" y2="325"/>
+          <line x1="870" y1="335" x2="1010" y2="335"/>
+          <line x1="880" y1="345" x2="1000" y2="345"/>
+          <line x1="890" y1="358" x2="990" y2="358"/>
+          <line x1="900" y1="372" x2="980" y2="372"/>
+        </g>
+
+        <!-- Wake waves behind vessel -->
+        <path d="M280 360 Q360 350 440 360 T600 360" stroke="#5fe6d4" stroke-width="2" fill="none" opacity="0.6"/>
+        <path d="M260 380 Q360 368 460 380 T620 380" stroke="#a8c5d0" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M240 400 Q360 388 480 400 T660 400" stroke="#a8c5d0" stroke-width="1.2" fill="none" opacity="0.4"/>
+        <path d="M220 420 Q360 408 500 420 T700 420" stroke="#a8c5d0" stroke-width="1" fill="none" opacity="0.3"/>
+
+        <!-- ===== VESSEL ===== -->
+        <g transform="translate(420,250)">
+          <!-- Hull lower -->
+          <path d="M0 100 Q20 130 100 132 L320 132 Q380 130 410 100 L380 95 L40 95 Z" fill="url(#hull)" stroke="#00c9b1" stroke-width="1.5"/>
+          <!-- Waterline stripe -->
+          <path d="M10 100 L405 100" stroke="#ff6b47" stroke-width="2"/>
+          <!-- Hull upper -->
+          <rect x="40" y="70" width="340" height="28" fill="#e8f4f8" stroke="#1f3a5f"/>
+          <!-- Portholes -->
+          <circle cx="80" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="110" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="140" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="170" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="200" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="230" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="260" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="290" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="320" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+          <circle cx="350" cy="84" r="4" fill="#0a1628" stroke="#00c9b1"/>
+
+          <!-- Bridge/superstructure -->
+          <path d="M120 70 L120 30 L260 30 L260 70 Z" fill="#152d52" stroke="#1f3a5f"/>
+          <rect x="135" y="40" width="22" height="14" fill="#ffd28a" opacity="0.8"/>
+          <rect x="165" y="40" width="22" height="14" fill="#ffd28a" opacity="0.8"/>
+          <rect x="195" y="40" width="22" height="14" fill="#ffd28a" opacity="0.8"/>
+          <rect x="225" y="40" width="22" height="14" fill="#ffd28a" opacity="0.8"/>
+
+          <!-- Crow's nest cabin -->
+          <rect x="180" y="0" width="40" height="32" fill="#08111f" stroke="#00c9b1"/>
+          <rect x="188" y="8" width="10" height="10" fill="#ffd28a"/>
+          <rect x="202" y="8" width="10" height="10" fill="#ffd28a"/>
+
+          <!-- Mast -->
+          <line x1="200" y1="0" x2="200" y2="-90" stroke="#e8f4f8" stroke-width="2.5"/>
+          <!-- Cross spar -->
+          <line x1="165" y1="-50" x2="235" y2="-50" stroke="#e8f4f8" stroke-width="2"/>
+          <!-- Radar dish -->
+          <ellipse cx="200" cy="-95" rx="14" ry="5" fill="#e8f4f8" stroke="#00c9b1"/>
+          <line x1="200" y1="-95" x2="200" y2="-105" stroke="#00c9b1" stroke-width="1.5"/>
+          <circle cx="200" cy="-107" r="2" fill="#ff6b47"/>
+          <!-- Antennas -->
+          <line x1="170" y1="-50" x2="170" y2="-72" stroke="#00c9b1" stroke-width="1.2"/>
+          <line x1="230" y1="-50" x2="230" y2="-72" stroke="#00c9b1" stroke-width="1.2"/>
+          <!-- Flag -->
+          <path d="M200 -90 L218 -85 L200 -80 Z" fill="#00c9b1"/>
+
+          <!-- Funnel -->
+          <rect x="270" y="10" width="28" height="40" fill="#ff6b47" stroke="#1f3a5f"/>
+          <rect x="270" y="10" width="28" height="6" fill="#0a1628"/>
+          <!-- Smoke -->
+          <path d="M284 10 Q280 -4 290 -12 Q298 -22 286 -34 Q278 -44 290 -54" stroke="#a8c5d0" stroke-width="2" fill="none" opacity="0.6"/>
+
+          <!-- A-frame crane (research) at stern -->
+          <line x1="340" y1="70" x2="360" y2="20" stroke="#e8f4f8" stroke-width="2"/>
+          <line x1="370" y1="70" x2="360" y2="20" stroke="#e8f4f8" stroke-width="2"/>
+          <line x1="360" y1="20" x2="360" y2="-2" stroke="#e8f4f8" stroke-width="2"/>
+          <!-- Winch cable -->
+          <line x1="360" y1="20" x2="360" y2="95" stroke="#00c9b1" stroke-width="1"/>
+          <!-- CTD instrument package -->
+          <rect x="354" y="95" width="12" height="14" fill="#152d52" stroke="#00c9b1"/>
+          <circle cx="360" cy="102" r="2" fill="#00c9b1"/>
+
+          <!-- Bow rail -->
+          <line x1="10" y1="70" x2="40" y2="70" stroke="#e8f4f8" stroke-width="1.5"/>
+          <line x1="10" y1="70" x2="14" y2="95" stroke="#e8f4f8" stroke-width="1.2"/>
+          <!-- Anchor -->
+          <path d="M28 90 L28 105 M22 102 Q28 110 34 102" stroke="#00c9b1" stroke-width="1.5" fill="none"/>
+        </g>
+
+        <!-- Birds -->
+        <path d="M150 180 Q160 170 170 180 Q180 170 190 180" stroke="#0a1628" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M220 210 Q228 202 236 210 Q244 202 252 210" stroke="#0a1628" stroke-width="1.2" fill="none" opacity="0.5"/>
+        <path d="M780 195 Q788 187 796 195 Q804 187 812 195" stroke="#0a1628" stroke-width="1.2" fill="none" opacity="0.5"/>
+      </svg>
+
+      <div class="vessel-overlay">
+        <div class="eyebrow" style="color:#ffe3a8">— Chapter 05 · Engagement</div>
+        <h1>Take Action.<br>Turn data into tide.</h1>
+        <p>Six evidence-backed pledges, one global protection target, and a timeline of treaties that prove change is possible.</p>
+      </div>
+    </section>
+
+    <div class="sources">
+      <b>Source consortium:</b>
+      <span>IUCN</span><span>UNEP</span><span>NOAA</span><span>IPCC AR6</span><span>UN Treaty Series</span><span>Marine Conservation Institute</span>
+    </div>
+
+    <!-- ============ SECTION HEADER ============ -->
+    <div class="section-header">
+      <h2>Six Pledges · One Ocean</h2>
+    </div>
+
+    <p class="container-narrow text-dim" style="font-size:var(--fs-md)">
+      Each pledge below is calibrated against peer-reviewed mitigation pathways. Effort scores reflect the magnitude of measurable impact when adopted at the household, institutional, or policy scale.
+    </p>
+
+    <!-- ============ ACTION GRID ============ -->
+    <div class="action-grid">
+
+      <!-- LEFT: pledge cards -->
+      <div class="pledge-grid">
+
+        <!-- PLEDGE 1 -->
+        <article class="pledge-card">
+          <div class="pledge-badge">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="20" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <path d="M14 18 L34 18 L32 38 L16 38 Z" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <path d="M19 18 L19 14 L29 14 L29 18" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <line x1="18" y1="24" x2="20" y2="34" stroke="#00c9b1" stroke-width="1.2"/>
+              <line x1="24" y1="24" x2="24" y2="34" stroke="#00c9b1" stroke-width="1.2"/>
+              <line x1="30" y1="24" x2="28" y2="34" stroke="#00c9b1" stroke-width="1.2"/>
+              <path d="M8 10 L12 6 L16 10" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <circle cx="12" cy="8" r="1.2" fill="#00c9b1"/>
+              <path d="M36 8 Q40 12 36 16" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="badge badge-dot">Lifestyle</div>
+            <h3 class="pledge-title mt-2">Reduce single-use plastic</h3>
+          </div>
+          <p class="pledge-desc">Refuse, refill, repair. A typical household avoids ~38 kg of plastic per year by swapping six common single-use items for durable alternatives.</p>
+          <a class="btn btn-primary btn-sm" href="#">Take this pledge</a>
+          <div class="pledge-meta"><span>Effort · <b>LOW</b></span><span>Impact · <b>HIGH</b></span></div>
+        </article>
+
+        <!-- PLEDGE 2 -->
+        <article class="pledge-card">
+          <div class="pledge-badge">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="20" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <path d="M12 28 Q18 22 24 28 T36 28" stroke="#00c9b1" stroke-width="1.5" fill="none"/>
+              <path d="M12 34 Q18 28 24 34 T36 34" stroke="#00c9b1" stroke-width="1.2" fill="none"/>
+              <path d="M22 8 L24 14 L30 14 L25 18 L27 24 L22 20 L17 24 L19 18 L14 14 L20 14 Z" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+              <circle cx="22" cy="14" r="1.5" fill="#00c9b1"/>
+              <line x1="6" y1="18" x2="10" y2="18" stroke="#00c9b1" stroke-width="1.2"/>
+              <line x1="38" y1="18" x2="42" y2="18" stroke="#00c9b1" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="badge badge-dot">Policy</div>
+            <h3 class="pledge-title mt-2">Support Marine Protected Areas</h3>
+          </div>
+          <p class="pledge-desc">Petition national delegates to ratify the High Seas Treaty and commit to 30×30. Fully protected zones recover biomass by 4–6× within a decade.</p>
+          <a class="btn btn-primary btn-sm" href="#">Sign petition</a>
+          <div class="pledge-meta"><span>Effort · <b>MED</b></span><span>Impact · <b>CRITICAL</b></span></div>
+        </article>
+
+        <!-- PLEDGE 3 -->
+        <article class="pledge-card">
+          <div class="pledge-badge">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="20" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <path d="M10 26 Q14 22 20 24 Q26 22 32 26 Q36 28 38 26 L38 30 Q34 34 28 32 Q22 34 16 32 Q12 30 10 30 Z" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <path d="M38 28 L42 26 L42 30 Z" fill="#00c9b1"/>
+              <circle cx="14" cy="27" r="1" fill="#00c9b1"/>
+              <path d="M16 16 L20 12 L24 16 L20 20 Z" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+              <path d="M28 14 L32 10 L36 14 L32 18 Z" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+              <line x1="8" y1="38" x2="40" y2="38" stroke="#00c9b1" stroke-width="1" stroke-dasharray="2 2"/>
+              <text x="24" y="44" text-anchor="middle" font-size="4" fill="#00c9b1" font-family="ui-monospace">MSC</text>
+            </svg>
+          </div>
+          <div>
+            <div class="badge badge-dot">Diet</div>
+            <h3 class="pledge-title mt-2">Eat sustainable seafood</h3>
+          </div>
+          <p class="pledge-desc">Use MSC, ASC, or Seafood Watch certifications. Avoid bluefin, orange roughy, and trawl-caught shrimp. Sustainable choices cut bycatch impact by 70%.</p>
+          <a class="btn btn-primary btn-sm" href="#">Get the guide</a>
+          <div class="pledge-meta"><span>Effort · <b>LOW</b></span><span>Impact · <b>MED</b></span></div>
+        </article>
+
+        <!-- PLEDGE 4 -->
+        <article class="pledge-card">
+          <div class="pledge-badge">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="20" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <circle cx="24" cy="24" r="12" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+              <path d="M24 12 L24 36" stroke="#00c9b1" stroke-width="1"/>
+              <path d="M12 24 L36 24" stroke="#00c9b1" stroke-width="1"/>
+              <path d="M16 16 Q24 22 32 16" stroke="#00c9b1" stroke-width="1" fill="none"/>
+              <path d="M16 32 Q24 26 32 32" stroke="#00c9b1" stroke-width="1" fill="none"/>
+              <circle cx="24" cy="24" r="3" fill="#00c9b1"/>
+              <path d="M40 8 L36 12 L40 12 L40 16" stroke="#00c9b1" stroke-width="1.5" fill="none"/>
+              <circle cx="40" cy="8" r="1.5" fill="#00c9b1"/>
+            </svg>
+          </div>
+          <div>
+            <div class="badge badge-dot">Climate</div>
+            <h3 class="pledge-title mt-2">Offset your carbon</h3>
+          </div>
+          <p class="pledge-desc">Calculate your annual footprint and offset via verified blue-carbon projects — mangrove and seagrass restoration sequesters 4× more carbon per hectare than forests.</p>
+          <a class="btn btn-primary btn-sm" href="#">Calculate footprint</a>
+          <div class="pledge-meta"><span>Effort · <b>LOW</b></span><span>Impact · <b>HIGH</b></span></div>
+        </article>
+
+        <!-- PLEDGE 5 -->
+        <article class="pledge-card">
+          <div class="pledge-badge">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="20" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <path d="M8 36 Q12 30 16 34 Q20 28 24 34 Q28 28 32 34 Q36 30 40 36 L40 40 L8 40 Z" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <path d="M14 30 Q14 24 18 22 Q22 24 22 30" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+              <path d="M26 30 Q26 22 32 18 Q36 22 34 30" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+              <circle cx="20" cy="14" r="2" fill="none" stroke="#00c9b1" stroke-width="1"/>
+              <circle cx="30" cy="10" r="1.5" fill="none" stroke="#00c9b1" stroke-width="1"/>
+              <circle cx="12" cy="20" r="1" fill="#00c9b1"/>
+              <circle cx="38" cy="22" r="1" fill="#00c9b1"/>
+              <path d="M18 22 L18 18" stroke="#00c9b1" stroke-width="1"/>
+              <path d="M32 18 L32 14" stroke="#00c9b1" stroke-width="1"/>
+            </svg>
+          </div>
+          <div>
+            <div class="badge badge-dot">Donate</div>
+            <h3 class="pledge-title mt-2">Fund reef restoration</h3>
+          </div>
+          <p class="pledge-desc">Coral nurseries can outplant 30,000+ fragments per hectare per year. A monthly donation of $15 supports one square meter of recovering reef.</p>
+          <a class="btn btn-primary btn-sm" href="#">Donate monthly</a>
+          <div class="pledge-meta"><span>Effort · <b>LOW</b></span><span>Impact · <b>HIGH</b></span></div>
+        </article>
+
+        <!-- PLEDGE 6 -->
+        <article class="pledge-card">
+          <div class="pledge-badge">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="20" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <rect x="16" y="14" width="16" height="22" rx="2" fill="none" stroke="#00c9b1" stroke-width="1.5"/>
+              <circle cx="24" cy="20" r="3" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+              <line x1="20" y1="26" x2="28" y2="26" stroke="#00c9b1" stroke-width="1"/>
+              <line x1="20" y1="29" x2="28" y2="29" stroke="#00c9b1" stroke-width="1"/>
+              <line x1="20" y1="32" x2="26" y2="32" stroke="#00c9b1" stroke-width="1"/>
+              <path d="M32 14 L36 10 L40 14" fill="none" stroke="#00c9b1" stroke-width="1.2"/>
+              <line x1="36" y1="10" x2="36" y2="20" stroke="#00c9b1" stroke-width="1.2"/>
+              <path d="M8 30 Q12 28 14 32" stroke="#00c9b1" stroke-width="1.2" fill="none"/>
+              <circle cx="10" cy="34" r="1.5" fill="#00c9b1"/>
+            </svg>
+          </div>
+          <div>
+            <div class="badge badge-dot">Volunteer</div>
+            <h3 class="pledge-title mt-2">Join citizen science</h3>
+          </div>
+          <p class="pledge-desc">Contribute via Reef Check, eBird Pelagic, or iNaturalist. Volunteer-collected data underpins 22% of peer-reviewed marine biodiversity papers.</p>
+          <a class="btn btn-primary btn-sm" href="#">Find a project</a>
+          <div class="pledge-meta"><span>Effort · <b>MED</b></span><span>Impact · <b>HIGH</b></span></div>
+        </article>
+
+      </div>
+
+      <!-- RIGHT: progress + timeline + form -->
+      <aside class="stack-lg">
+
+        <!-- ===== Radial 30x30 progress ===== -->
+        <div class="radial-wrap">
+          <div class="eyebrow">30×30 Global MPA Target</div>
+          <svg viewBox="0 0 240 240" aria-hidden="true">
+            <defs>
+              <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#5fe6d4"/>
+                <stop offset="100%" stop-color="#00c9b1"/>
+              </linearGradient>
+            </defs>
+            <!-- Outer ticks -->
+            <g stroke="#1f3a5f" stroke-width="1">
+              <line x1="120" y1="14" x2="120" y2="22"/>
+              <line x1="226" y1="120" x2="218" y2="120"/>
+              <line x1="120" y1="226" x2="120" y2="218"/>
+              <line x1="14" y1="120" x2="22" y2="120"/>
+            </g>
+            <!-- Track -->
+            <circle cx="120" cy="120" r="92" fill="none" stroke="#152d52" stroke-width="18"/>
+            <!-- Target band (30%) - subtle teal ring -->
+            <circle cx="120" cy="120" r="92" fill="none" stroke="#1f3a5f" stroke-width="18"
+              stroke-dasharray="173.4 404.6" stroke-dashoffset="0" transform="rotate(-90 120 120)" opacity="0.6"/>
+            <!-- Achieved (8% of 360 = 28.8deg arc; circumference 578.05; 8/100 = 46.24) -->
+            <circle cx="120" cy="120" r="92" fill="none" stroke="url(#rg)" stroke-width="18"
+              stroke-dasharray="46.24 531.81" stroke-dashoffset="0" transform="rotate(-90 120 120)" stroke-linecap="round"/>
+            <!-- Inner ring -->
+            <circle cx="120" cy="120" r="68" fill="none" stroke="#1f3a5f" stroke-width="1" stroke-dasharray="2 4"/>
+            <!-- Center -->
+            <text x="120" y="112" text-anchor="middle" font-family="Georgia,serif" font-size="48" font-weight="700" fill="#00c9b1">8%</text>
+            <text x="120" y="134" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#a8c5d0" letter-spacing="2">PROTECTED</text>
+            <text x="120" y="150" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#6b8a96" letter-spacing="2">TARGET · 30% BY 2030</text>
+            <!-- Marker at 30% mark -->
+            <g transform="rotate(18 120 120)">
+              <line x1="120" y1="20" x2="120" y2="40" stroke="#ff6b47" stroke-width="2"/>
+              <circle cx="120" cy="20" r="3" fill="#ff6b47"/>
+            </g>
+          </svg>
+          <div class="row gap-4 mt-2" style="flex-wrap:wrap;justify-content:center">
+            <div class="text-center">
+              <div class="text-mono text-xs text-mute">CURRENT</div>
+              <div class="text-accent text-serif text-xl">8.16%</div>
+            </div>
+            <div class="text-center">
+              <div class="text-mono text-xs text-mute">GAP</div>
+              <div class="text-warn text-serif text-xl">21.84%</div>
+            </div>
+            <div class="text-center">
+              <div class="text-mono text-xs text-mute">DEADLINE</div>
+              <div class="text-serif text-xl">2030</div>
+            </div>
+          </div>
+          <div class="legend" style="width:100%;justify-content:center">
+            <div class="legend-item"><span class="legend-swatch"></span>Fully protected</div>
+            <div class="legend-item"><span class="legend-swatch" style="background:#152d52"></span>Pledged · pending</div>
+            <div class="legend-item"><span class="legend-swatch" style="background:#ff6b47"></span>30% goal marker</div>
+          </div>
+        </div>
+
+        <!-- ===== Vertical Timeline ===== -->
+        <div class="panel">
+          <div class="eyebrow">Protection Milestones</div>
+          <h3 class="text-serif text-xl mb-3" style="font-size:24px">A half-century of treaties</h3>
+
+          <svg viewBox="0 0 320 460" aria-hidden="true" style="width:100%;height:auto">
+            <defs>
+              <linearGradient id="tl" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#00c9b1"/>
+                <stop offset="100%" stop-color="#1f3a5f"/>
+              </linearGradient>
+            </defs>
+            <!-- Spine -->
+            <line x1="60" y1="20" x2="60" y2="440" stroke="url(#tl)" stroke-width="3"/>
+
+            <!-- Node 1: 1972 MARPOL -->
+            <circle cx="60" cy="30" r="8" fill="#0a1628" stroke="#00c9b1" stroke-width="2"/>
+            <circle cx="60" cy="30" r="2.5" fill="#00c9b1"/>
+            <text x="80" y="28" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">1972</text>
+            <text x="80" y="42" font-family="Georgia,serif" font-size="12" fill="#e8f4f8" font-weight="700">MARPOL Convention</text>
+            <text x="80" y="55" font-family="system-ui" font-size="10" fill="#a8c5d0">Pollution from ships regulated.</text>
+
+            <!-- Node 2: 1982 UNCLOS -->
+            <circle cx="60" cy="80" r="8" fill="#0a1628" stroke="#00c9b1" stroke-width="2"/>
+            <circle cx="60" cy="80" r="2.5" fill="#00c9b1"/>
+            <text x="80" y="78" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">1982</text>
+            <text x="80" y="92" font-family="Georgia,serif" font-size="12" fill="#e8f4f8" font-weight="700">UNCLOS adopted</text>
+            <text x="80" y="105" font-family="system-ui" font-size="10" fill="#a8c5d0">Law of the Sea framework established.</text>
+
+            <!-- Node 3: 1986 Whaling Moratorium -->
+            <circle cx="60" cy="130" r="8" fill="#0a1628" stroke="#00c9b1" stroke-width="2"/>
+            <circle cx="60" cy="130" r="2.5" fill="#00c9b1"/>
+            <text x="80" y="128" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">1986</text>
+            <text x="80" y="142" font-family="Georgia,serif" font-size="12" fill="#e8f4f8" font-weight="700">Whaling moratorium</text>
+            <text x="80" y="155" font-family="system-ui" font-size="10" fill="#a8c5d0">IWC bans commercial whaling.</text>
+
+            <!-- Node 4: 1992 CBD -->
+            <circle cx="60" cy="180" r="8" fill="#0a1628" stroke="#00c9b1" stroke-width="2"/>
+            <circle cx="60" cy="180" r="2.5" fill="#00c9b1"/>
+            <text x="80" y="178" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">1992</text>
+            <text x="80" y="192" font-family="Georgia,serif" font-size="12" fill="#e8f4f8" font-weight="700">Convention on Biological Diversity</text>
+            <text x="80" y="205" font-family="system-ui" font-size="10" fill="#a8c5d0">196 parties pledge to conserve biodiversity.</text>
+
+            <!-- Node 5: 2006 Papahānaumokuākea -->
+            <circle cx="60" cy="230" r="8" fill="#0a1628" stroke="#00c9b1" stroke-width="2"/>
+            <circle cx="60" cy="230" r="2.5" fill="#00c9b1"/>
+            <text x="80" y="228" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">2006</text>
+            <text x="80" y="242" font-family="Georgia,serif" font-size="12" fill="#e8f4f8" font-weight="700">Papahānaumokuākea MPA</text>
+            <text x="80" y="255" font-family="system-ui" font-size="10" fill="#a8c5d0">1.5M km² Pacific monument declared.</text>
+
+            <!-- Node 6: 2015 Paris Agreement -->
+            <circle cx="60" cy="280" r="8" fill="#0a1628" stroke="#00c9b1" stroke-width="2"/>
+            <circle cx="60" cy="280" r="2.5" fill="#00c9b1"/>
+            <text x="80" y="278" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">2015</text>
+            <text x="80" y="292" font-family="Georgia,serif" font-size="12" fill="#e8f4f8" font-weight="700">Paris Agreement</text>
+            <text x="80" y="305" font-family="system-ui" font-size="10" fill="#a8c5d0">1.5°C target — ocean implications binding.</text>
+
+            <!-- Node 7: 2022 Kunming-Montréal -->
+            <circle cx="60" cy="330" r="8" fill="#0a1628" stroke="#00c9b1" stroke-width="2"/>
+            <circle cx="60" cy="330" r="2.5" fill="#00c9b1"/>
+            <text x="80" y="328" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">2022</text>
+            <text x="80" y="342" font-family="Georgia,serif" font-size="12" fill="#e8f4f8" font-weight="700">Kunming-Montréal 30×30</text>
+            <text x="80" y="355" font-family="system-ui" font-size="10" fill="#a8c5d0">Global biodiversity framework adopted.</text>
+
+            <!-- Node 8: 2023 High Seas Treaty -->
+            <circle cx="60" cy="395" r="10" fill="#ff6b47" stroke="#ff6b47" stroke-width="2"/>
+            <circle cx="60" cy="395" r="3" fill="#0a1628"/>
+            <text x="80" y="393" font-family="ui-monospace" font-size="11" fill="#ff6b47" font-weight="700">2023</text>
+            <text x="80" y="407" font-family="Georgia,serif" font-size="13" fill="#e8f4f8" font-weight="700">High Seas Treaty</text>
+            <text x="80" y="420" font-family="system-ui" font-size="10" fill="#a8c5d0">First legal framework for international waters.</text>
+            <text x="80" y="433" font-family="ui-monospace" font-size="9" fill="#ff6b47">RATIFICATION · IN PROGRESS</text>
+
+            <!-- Decorative anchor at base -->
+            <circle cx="60" cy="450" r="5" fill="none" stroke="#1f3a5f" stroke-width="1"/>
+          </svg>
+        </div>
+
+        <!-- ===== Contact Form ===== -->
+        <div class="panel">
+          <div class="eyebrow">Stay In Current</div>
+          <h3 class="text-serif text-xl mb-3" style="font-size:24px">Brief our team</h3>
+          <p class="text-sm text-dim mb-4">Researchers, educators, and policy advisors — share your context and we'll route you to the right working group within 5 business days.</p>
+
+          <form>
+            <div class="field">
+              <label for="nm">Full name<span class="req">*</span></label>
+              <input id="nm" type="text" placeholder="Dr. Maren Holst" required>
+            </div>
+            <div class="field">
+              <label for="em">Institutional email<span class="req">*</span></label>
+              <input id="em" type="email" placeholder="m.holst@oceanlab.org" required>
+            </div>
+            <div class="field">
+              <label for="rl">Role</label>
+              <select id="rl">
+                <option>Climate researcher</option>
+                <option>Marine biologist</option>
+                <option>Educator / curriculum</option>
+                <option>Policy advisor</option>
+                <option>Journalist</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="ms">Message<span class="req">*</span></label>
+              <textarea id="ms" placeholder="Outline your data needs, collaboration request, or speaking inquiry…" required></textarea>
+              <div class="field-help">Markdown supported · 1500 char max</div>
+            </div>
+            <label class="checkbox">
+              <input type="checkbox" checked>
+              <span>Subscribe to the quarterly <b>Deep Current</b> briefing — peer-reviewed updates, no marketing.</span>
+            </label>
+            <button class="btn btn-primary btn-lg" type="submit">Send to working group</button>
+            <small class="text-mute">By submitting you accept the <a href="#">data handling policy</a>. We never share contact details.</small>
+          </form>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- ============ WAVY DIVIDER ============ -->
+    <svg class="wave-divider wave-divider-fill" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 40 Q100 10 200 40 T400 40 T600 40 T800 40 T1000 40 T1200 40 L1200 80 L0 80 Z"/>
+      <path d="M0 50 Q100 20 200 50 T400 50 T600 50 T800 50 T1000 50 T1200 50" />
+    </svg>
+
+    <!-- ============ ICON CLUSTER: 8 Action levers ============ -->
+    <div class="section-header">
+      <h3>Eight Levers of Change</h3>
+    </div>
+
+    <p class="container-narrow text-dim">Where individual choice meets systemic policy. Each lever links to evidence-graded pathways in the Deep Current methods archive.</p>
+
+    <div class="icon-cluster" style="grid-template-columns:repeat(8,1fr)">
+      <!-- 1 Refuse -->
+      <div class="icon-tile">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="18" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="11" y1="11" x2="37" y2="37" stroke="currentColor" stroke-width="2"/>
+          <path d="M16 20 L32 20 L30 32 L18 32 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="20" y1="20" x2="20" y2="16" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="28" y1="20" x2="28" y2="16" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        <div class="icon-tile-stat">−38kg</div>
+        <div class="icon-tile-label">Refuse plastic</div>
+      </div>
+      <!-- 2 Restore -->
+      <div class="icon-tile">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 38 L24 20" stroke="currentColor" stroke-width="2"/>
+          <path d="M24 26 Q16 22 14 14 Q22 14 24 22" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M24 22 Q32 20 34 12 Q26 12 24 20" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <ellipse cx="24" cy="40" rx="10" ry="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="24" cy="40" r="1" fill="currentColor"/>
+        </svg>
+        <div class="icon-tile-stat">4×</div>
+        <div class="icon-tile-label">Blue carbon</div>
+      </div>
+      <!-- 3 Petition -->
+      <div class="icon-tile">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="12" y="10" width="20" height="28" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="16" y1="16" x2="28" y2="16" stroke="currentColor" stroke-width="1"/>
+          <line x1="16" y1="20" x2="28" y2="20" stroke="currentColor" stroke-width="1"/>
+          <line x1="16" y1="24" x2="28" y2="24" stroke="currentColor" stroke-width="1"/>
+          <path d="M32 32 L40 24 L42 26 L34 34 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="40" cy="24" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="icon-tile-stat">30%</div>
+        <div class="icon-tile-label">MPA target</div>
+      </div>
+      <!-- 4 Volunteer -->
+      <div class="icon-tile">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M12 40 Q12 28 24 28 Q36 28 36 40" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="38" cy="14" r="3" fill="none" stroke="currentColor" stroke-width="1"/>
+          <circle cx="10" cy="14" r="3" fill="none" stroke="currentColor" stroke-width="1"/>
+          <line x1="24" y1="22" x2="24" y2="28" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        <div class="icon-tile-stat">22%</div>
+        <div class="icon-tile-label">Citizen data</div>
+      </div>
+      <!-- 5 Donate -->
+      <div class="icon-tile">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 38 L10 24 Q6 18 12 14 Q18 10 24 18 Q30 10 36 14 Q42 18 38 24 Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="3" fill="currentColor"/>
+          <line x1="24" y1="14" x2="24" y2="20" stroke="currentColor" stroke-width="1"/>
+          <line x1="20" y1="24" x2="28" y2="24" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        <div class="icon-tile-stat">$15</div>
+        <div class="icon-tile-label">Reef m²/mo</div>
+      </div>
+      <!-- 6 Educate -->
+      <div class="icon-tile">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M8 20 L24 12 L40 20 L24 28 Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M14 23 L14 32 Q24 38 34 32 L34 23" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="40" y1="20" x2="40" y2="30" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="40" cy="32" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="icon-tile-stat">K-12</div>
+        <div class="icon-tile-label">Curriculum</div>
+      </div>
+      <!-- 7 Vote -->
+      <div class="icon-tile">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="10" y="20" width="28" height="18" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M16 20 L16 14 L32 14 L32 20" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="24" y1="20" x2="24" y2="26" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M20 28 L23 31 L29 25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="14" cy="32" r="1" fill="currentColor"/>
+        </svg>
+        <div class="icon-tile-stat">2024</div>
+        <div class="icon-tile-label">Vote ocean</div>
+      </div>
+      <!-- 8 Divest -->
+      <div class="icon-tile">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="14" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <text x="24" y="29" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="700" fill="currentColor">$</text>
+          <path d="M14 14 L34 34" stroke="currentColor" stroke-width="2"/>
+          <circle cx="8" cy="8" r="2" fill="none" stroke="currentColor"/>
+          <circle cx="40" cy="40" r="2" fill="none" stroke="currentColor"/>
+        </svg>
+        <div class="icon-tile-stat">$2T</div>
+        <div class="icon-tile-label">Divestment</div>
+      </div>
+    </div>
+
+    <!-- ============ DATA VISUALIZATION: Pledge Adoption Bars ============ -->
+    <div class="section-header">
+      <h3>Pledge Adoption · 2024</h3>
+    </div>
+
+    <figure>
+      <div class="fig-title">Self-reported adoption rate across Deep Current community (n = 42,318)</div>
+      <div class="fig-sub">Bars indicate the percentage of surveyed participants who have made each pledge in the last 12 months. All indicators trending positive — colored teal per the editorial style guide.</div>
+
+      <svg viewBox="0 0 900 320" aria-hidden="true">
+        <!-- Grid lines -->
+        <g stroke="#1f3a5f" stroke-width="1">
+          <line x1="160" y1="20" x2="160" y2="280"/>
+          <line x1="280" y1="20" x2="280" y2="280" stroke-dasharray="2 4"/>
+          <line x1="400" y1="20" x2="400" y2="280" stroke-dasharray="2 4"/>
+          <line x1="520" y1="20" x2="520" y2="280" stroke-dasharray="2 4"/>
+          <line x1="640" y1="20" x2="640" y2="280" stroke-dasharray="2 4"/>
+          <line x1="760" y1="20" x2="760" y2="280" stroke-dasharray="2 4"/>
+          <line x1="880" y1="20" x2="880" y2="280" stroke-dasharray="2 4"/>
+        </g>
+        <!-- X axis labels -->
+        <g font-family="ui-monospace,monospace" font-size="10" fill="#6b8a96" text-anchor="middle">
+          <text x="160" y="300">0%</text>
+          <text x="280" y="300">20</text>
+          <text x="400" y="300">40</text>
+          <text x="520" y="300">60</text>
+          <text x="640" y="300">80</text>
+          <text x="760" y="300">100</text>
+        </g>
+
+        <!-- Bar rows -->
+        <!-- 1 Reduce plastic 68% -->
+        <g>
+          <text x="150" y="44" text-anchor="end" font-family="system-ui" font-size="12" fill="#e8f4f8" font-weight="600">Reduce single-use plastic</text>
+          <rect x="160" y="32" width="720" height="20" fill="#0a1628" stroke="#1f3a5f"/>
+          <rect x="160" y="32" width="408" height="20" fill="#00c9b1"/>
+          <text x="578" y="46" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">68%</text>
+        </g>
+        <!-- 2 Support MPAs 41% -->
+        <g>
+          <text x="150" y="78" text-anchor="end" font-family="system-ui" font-size="12" fill="#e8f4f8" font-weight="600">Support MPA legislation</text>
+          <rect x="160" y="66" width="720" height="20" fill="#0a1628" stroke="#1f3a5f"/>
+          <rect x="160" y="66" width="246" height="20" fill="#00c9b1"/>
+          <text x="416" y="80" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">41%</text>
+        </g>
+        <!-- 3 Sustainable seafood 54% -->
+        <g>
+          <text x="150" y="112" text-anchor="end" font-family="system-ui" font-size="12" fill="#e8f4f8" font-weight="600">Sustainable seafood only</text>
+          <rect x="160" y="100" width="720" height="20" fill="#0a1628" stroke="#1f3a5f"/>
+          <rect x="160" y="100" width="324" height="20" fill="#00c9b1"/>
+          <text x="494" y="114" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">54%</text>
+        </g>
+        <!-- 4 Carbon offset 29% -->
+        <g>
+          <text x="150" y="146" text-anchor="end" font-family="system-ui" font-size="12" fill="#e8f4f8" font-weight="600">Offset annual carbon</text>
+          <rect x="160" y="134" width="720" height="20" fill="#0a1628" stroke="#1f3a5f"/>
+          <rect x="160" y="134" width="174" height="20" fill="#00c9b1"/>
+          <text x="344" y="148" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">29%</text>
+        </g>
+        <!-- 5 Reef donation 36% -->
+        <g>
+          <text x="150" y="180" text-anchor="end" font-family="system-ui" font-size="12" fill="#e8f4f8" font-weight="600">Reef restoration donation</text>
+          <rect x="160" y="168" width="720" height="20" fill="#0a1628" stroke="#1f3a5f"/>
+          <rect x="160" y="168" width="216" height="20" fill="#00c9b1"/>
+          <text x="386" y="182" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">36%</text>
+        </g>
+        <!-- 6 Citizen science 19% -->
+        <g>
+          <text x="150" y="214" text-anchor="end" font-family="system-ui" font-size="12" fill="#e8f4f8" font-weight="600">Citizen science contribution</text>
+          <rect x="160" y="202" width="720" height="20" fill="#0a1628" stroke="#1f3a5f"/>
+          <rect x="160" y="202" width="114" height="20" fill="#00c9b1"/>
+          <text x="284" y="216" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">19%</text>
+        </g>
+        <!-- 7 Vote ocean 73% -->
+        <g>
+          <text x="150" y="248" text-anchor="end" font-family="system-ui" font-size="12" fill="#e8f4f8" font-weight="600">Vote for ocean-aligned policy</text>
+          <rect x="160" y="236" width="720" height="20" fill="#0a1628" stroke="#1f3a5f"/>
+          <rect x="160" y="236" width="438" height="20" fill="#00c9b1"/>
+          <text x="608" y="250" font-family="ui-monospace" font-size="11" fill="#00c9b1" font-weight="600">73%</text>
+        </g>
+
+        <!-- Avg reference line -->
+        <line x1="430" y1="20" x2="430" y2="270" stroke="#5fe6d4" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+        <text x="430" y="16" text-anchor="middle" font-family="ui-monospace" font-size="9" fill="#5fe6d4">avg 45.7%</text>
+      </svg>
+
+      <figcaption>
+        <span>Survey conducted Mar–Jun 2024 across 64 countries · weighted by region.</span>
+        <span class="source">SRC · DC-COMMUNITY-2024</span>
+      </figcaption>
+    </figure>
+
+    <!-- ============ CALLOUT + PULLQUOTE ============ -->
+    <div class="grid-2">
+      <div class="callout">
+        <div class="callout-title">What "30×30" actually means</div>
+        <p class="text-sm text-dim mb-0">Protect at least 30% of land and ocean by 2030, with effective management of biodiversity hotspots. Today, only 2.9% of the ocean is fully protected from extractive activity — the rest is paper-protected at best.</p>
+      </div>
+      <div class="callout callout-warn">
+        <div class="callout-title">Window is closing</div>
+        <p class="text-sm text-dim mb-0">At current ratification rates, the High Seas Treaty enters force in late 2025. Coastal states must ratify before COP30 to keep the 30×30 timeline credible.</p>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      The data does not need our optimism. It needs our action — measured, repeated, and shared.
+      <cite>— Dr. Annaliese Cordero, Editor-in-chief · Deep Current</cite>
+    </div>
+
+    <!-- ============ FINAL CTA BANNER ============ -->
+    <div class="banner">
+      <div class="banner-inner">
+        <h2>Ready? Pick one pledge.<br>Start this week.</h2>
+        <p class="banner-sub">One pledge per person · one habit per month · compounded across 8 billion neighbors.</p>
+        <div class="row gap-3 mt-4" style="flex-wrap:wrap">
+          <a class="btn btn-primary btn-lg" href="#" style="background:var(--paper);color:var(--accent-1);border-color:var(--paper)">Make a pledge</a>
+          <a class="btn btn-ghost btn-lg" href="../ocean-health/index.html" style="color:var(--paper);border-color:var(--paper)">Back to dashboard</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-mast">Deep Current</div>
+        <p class="footer-blurb mt-2">An interactive infographic atlas of peer-reviewed ocean health data — for climate researchers, educators, and the curious.</p>
+        <p class="footer-blurb mt-2 text-mono text-xs">v4.2 · CC BY-SA 4.0 · ISO 19115 compliant</p>
+      </div>
+      <div class="footer-col">
+        <h6>Atlas</h6>
+        <ul>
+          <li><a href="../ocean-health/index.html">Ocean Health</a></li>
+          <li><a href="../species-atlas/index.html">Species Atlas</a></li>
+          <li><a href="../temperature-rise/index.html">Temperature Rise</a></li>
+          <li><a href="../plastic-crisis/index.html">Plastic Crisis</a></li>
+          <li><a href="#">Take Action</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Data</h6>
+        <ul>
+          <li><a href="#">Methods archive</a></li>
+          <li><a href="#">Citation guide</a></li>
+          <li><a href="#">API · OpenData</a></li>
+          <li><a href="#">Source consortium</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Engage</h6>
+        <ul>
+          <li><a href="#">Quarterly briefing</a></li>
+          <li><a href="#">Educator toolkit</a></li>
+          <li><a href="#">Press inquiries</a></li>
+          <li><a href="#">Working groups</a></li>
+          <li><a href="#">Contact desk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Deep Current Research Collective</span>
+      <span class="footer-iso">42°N 71°W · UPDATED 2024-09-18</span>
+      <span>Privacy · Accessibility · Style guide</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

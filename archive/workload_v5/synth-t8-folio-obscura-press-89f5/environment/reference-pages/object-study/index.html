@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Object Study — Olivetti Divisumma 18 · Folio Obscura</title>
+<style>
+  .object-title{
+    border-top:3px solid var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding:var(--space-7) var(--space-5);
+    margin:0 calc(var(--space-5) * -1) var(--space-7);
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:var(--space-6);
+    align-items:end;
+  }
+  .object-title .numeral{
+    font-family:var(--serif);
+    font-style:italic;
+    font-weight:900;
+    font-size:72px;
+    line-height:0.95;
+    color:var(--sienna);
+    letter-spacing:-0.02em;
+  }
+  .object-title h1{font-size:var(--fs-display);margin:var(--space-3) 0 0}
+  .object-title .meta{
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:var(--mid-tone);
+    text-align:right;
+    line-height:1.7;
+    min-width:200px;
+  }
+  .object-title .meta b{display:block;color:var(--ink);font-family:var(--serif);font-style:normal;font-size:14px;letter-spacing:0;text-transform:none;font-weight:700;margin-top:6px}
+
+  .object-hero-frame{
+    background:linear-gradient(135deg,#C4561A 0%,#8C7B5E 60%,#1A1208 100%);
+    border:1px solid var(--ink);
+    aspect-ratio:16/7;
+    margin:var(--space-6) 0 var(--space-7);
+    position:relative;
+    overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .object-hero-frame .keypad{
+    display:grid;
+    grid-template-columns:repeat(5,46px);
+    grid-template-rows:repeat(4,46px);
+    gap:8px;
+    transform:rotate(-4deg);
+  }
+  .object-hero-frame .keypad span{
+    background:var(--parchment);
+    border:1px solid var(--ink);
+    border-radius:6px 6px 14px 14px;
+    box-shadow:0 4px 0 var(--ink);
+  }
+  .object-hero-frame .keypad span.accent{background:var(--chartreuse)}
+  .object-hero-frame .keypad span.dark{background:var(--ink)}
+  .object-hero-frame .tag-overlay{
+    position:absolute;top:var(--space-4);left:var(--space-4);
+    font-family:var(--mono);font-size:11px;letter-spacing:0.14em;
+    color:var(--parchment);text-transform:uppercase;
+  }
+  .object-hero-frame .tag-overlay-right{
+    position:absolute;bottom:var(--space-4);right:var(--space-4);
+    font-family:var(--mono);font-size:11px;letter-spacing:0.14em;
+    color:var(--parchment);text-transform:uppercase;
+    text-align:right;line-height:1.6;
+  }
+
+  .study-body{
+    column-count:2;
+    column-gap:var(--space-7);
+    column-rule:1px solid var(--rule);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.65;
+  }
+  .study-body p{margin:0 0 var(--space-4);break-inside:avoid-column}
+  .study-body .margin-note{
+    break-inside:avoid;
+    border-top:1px solid var(--rule-strong);
+    padding-top:var(--space-2);
+    margin:var(--space-4) 0;
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:13px;
+    line-height:1.45;
+    color:var(--mid-tone);
+  }
+  .study-body .margin-note .n{
+    display:inline-block;
+    background:var(--ink);
+    color:var(--chartreuse);
+    font-family:var(--mono);
+    font-style:normal;
+    font-size:10px;
+    padding:2px 6px;
+    margin-right:6px;
+    letter-spacing:0.08em;
+    vertical-align:middle;
+  }
+
+  .detail-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:var(--gutter);
+    margin:var(--space-7) 0;
+  }
+  .detail-grid .figure .frame{
+    aspect-ratio:1/1;
+    background:#E8DCBE;
+    position:relative;
+  }
+  .detail-grid .figure .frame.keycap{background:radial-gradient(circle at 35% 30%, #F5ECD7 0%, #D6C49A 50%, #8C7B5E 100%)}
+  .detail-grid .figure .frame.platen{background:repeating-linear-gradient(90deg,#1A1208 0,#1A1208 3px,#3A2E1E 3px,#3A2E1E 7px)}
+  .detail-grid .figure .frame.housing{background:linear-gradient(180deg,#C4561A 0%,#8B3C12 100%)}
+  .detail-grid .figure .frame.casing{background:linear-gradient(135deg,#1A1208 0%,#3A2E1E 100%)}
+  .detail-grid .figure .frame.lever{background:linear-gradient(45deg,#8C7B5E,#F5ECD7,#8C7B5E)}
+  .detail-grid .figure .frame.imprint{background:#F5ECD7;border:1px solid var(--ink)}
+  .detail-grid .figure .frame.foot{background:radial-gradient(ellipse at center,#1A1208 30%,#5A4830 100%)}
+  .detail-grid .figure .frame.dial{background:conic-gradient(from 0deg,#C4561A,#BFDB38,#1A1208,#C4561A)}
+  .detail-grid .figure .frame.cable{background:linear-gradient(180deg,#8C7B5E 0%,#1A1208 100%)}
+  .detail-grid .figure .frame .ovl{
+    position:absolute;bottom:8px;left:8px;
+    font-family:var(--mono);font-size:10px;letter-spacing:0.12em;
+    color:var(--parchment);text-transform:uppercase;
+    background:rgba(26,18,8,0.7);padding:2px 6px;
+  }
+  .detail-grid .figure .frame.imprint .ovl{color:var(--ink);background:rgba(245,236,215,0.85);border:1px solid var(--ink)}
+
+  .comparative .side-list .ttl{font-size:14px}
+  .comparative .side-list li .yr{font-family:var(--mono);font-size:11px;color:var(--sienna);font-weight:700;letter-spacing:0.1em}
+
+  .section-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    border-bottom:1px solid var(--ink);
+    padding-bottom:var(--space-2);
+    margin:var(--space-7) 0 var(--space-5);
+  }
+  .section-head h2{margin:0;font-size:28px}
+  .section-head .ref{font-family:var(--mono);font-size:11px;color:var(--mid-tone);letter-spacing:0.14em;text-transform:uppercase}
+
+  .spot-row{display:flex;align-items:center;gap:var(--space-5);margin:var(--space-5) 0}
+  .spot-row svg{flex-shrink:0}
+  .spot-row p{margin:0;font-family:var(--serif);font-size:18px;line-height:1.4;font-style:italic;color:var(--mid-tone)}
+
+  @media (max-width:1024px){
+    .object-title{grid-template-columns:1fr}
+    .object-title .meta{text-align:left}
+    .detail-grid{grid-template-columns:repeat(2,1fr)}
+    .study-body{column-count:1}
+  }
+  @media (max-width:768px){
+    .object-title .numeral{font-size:54px}
+    .detail-grid{grid-template-columns:1fr}
+    .object-hero-frame{aspect-ratio:4/3}
+    .object-hero-frame .keypad{grid-template-columns:repeat(5,32px);grid-template-rows:repeat(4,32px)}
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a class="brand" href="../cover-story/index.html">
+      Folio Obscura
+      <small>Quarterly · Design Criticism</small>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../cover-story/index.html">Cover Story</a></li>
+      <li><a href="../type-lab/index.html">Type Lab</a></li>
+      <li><a href="../object-study/index.html" class="active">Object Study</a></li>
+      <li><a href="../grid-dispatch/index.html">Grid Dispatch</a></li>
+      <li><a href="../archive-index/index.html">Archive Index</a></li>
+    </ul>
+    <span class="nav-issue">ISSUE XXXVII · WINTER</span>
+  </div>
+</nav>
+
+<div class="layout">
+  <main class="main">
+
+    <div class="masthead">
+      <span>Object Study № 04</span>
+      <span>Filed: Industrial Objects / Calcolatrice</span>
+      <span>Pages 042 — 058</span>
+    </div>
+
+    <!-- Full-bleed object title module -->
+    <header class="object-title">
+      <div>
+        <span class="kicker">Close Reading · Mario Bellini, 1969</span>
+        <div class="numeral">№ 18</div>
+        <h1>The Divisumma That Learned to Breathe</h1>
+        <p class="lead" style="max-width:640px;margin-top:var(--space-4)">A study of the Olivetti Divisumma 18 — its rubber membrane, its tropical-arc housing, and the moment industrial design conceded that machines could be soft.</p>
+      </div>
+      <div class="meta">
+        Object<b>Divisumma 18</b>
+        Designer<b>Mario Bellini</b>
+        Manufacturer<b>Ing. C. Olivetti & C., S.p.A.</b>
+        Origin<b>Ivrea, Italy</b>
+        Period<b>1969 — 1976</b>
+      </div>
+    </header>
+
+    <!-- Hero "image" -->
+    <figure class="figure" style="margin:0">
+      <div class="object-hero-frame">
+        <span class="tag-overlay">Plate I · Object in Plan</span>
+        <div class="keypad" aria-hidden="true">
+          <span></span><span></span><span></span><span class="accent"></span><span class="dark"></span>
+          <span></span><span></span><span></span><span class="accent"></span><span class="dark"></span>
+          <span></span><span></span><span></span><span class="dark"></span><span class="dark"></span>
+          <span class="dark"></span><span></span><span></span><span class="dark"></span><span class="accent"></span>
+        </div>
+        <span class="tag-overlay-right">Yellow membrane · ABS housing<br>Photographed under raking light</span>
+      </div>
+      <figcaption><b>Fig. 0 · Olivetti Divisumma 18, electronic printing calculator.</b> Hypothetical study photograph, three-quarter dorsal view, c. 1971.</figcaption>
+    </figure>
+
+    <!-- Decorative SVG rule -->
+    <svg class="svg-rule" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="12" x2="1200" y2="12"/>
+      <circle cx="20" cy="12" r="4"/>
+      <circle cx="600" cy="12" r="6"/>
+      <circle cx="1180" cy="12" r="4"/>
+      <line x1="300" y1="4" x2="300" y2="20"/>
+      <line x1="900" y1="4" x2="900" y2="20"/>
+      <polyline points="580,4 600,18 620,4"/>
+    </svg>
+
+    <!-- 2-column body with marginalia annotations -->
+    <section class="study-body">
+      <p><span style="font-family:var(--serif);font-weight:900;float:left;font-size:64px;line-height:0.8;padding:6px 8px 0 0;color:var(--sienna)">T</span>here is, in the lower drawer of every serious design archive, a small yellow brick that hums when you touch it. The Divisumma 18, released by Olivetti in 1969 and designed by Mario Bellini at the age of thirty-three, is not a calculator so much as a thesis on what a machine should feel like to a hand that has never operated one.</p>
+
+      <p>Bellini's first move was a refusal. He refused the rigid plastic keycap. He refused the chrome bezel. He refused the carriage return as a lever that announced itself with metallic violence. In their place: a continuous sheet of yellow polyurethane stretched like skin over the keyboard, dimpled into thirty-eight individual depressions, each one rising slightly above the next in a soft topographic field.</p>
+
+      <div class="margin-note"><span class="n">01</span>The membrane was vulcanized in a single pour. Bellini reportedly insisted on a single piece because, in his words, "a hand does not negotiate with seams."</div>
+
+      <p>The housing — a single arc of injection-molded ABS in a chromatic key Olivetti would later call <em>giallo Bellini</em> — broke decisively with the rectilinear logic of the Programma 101 (Sottsass, 1965) that preceded it on the company's catalogue. Where Sottsass had drawn a confident horizontal slab, Bellini drew a wedge that leaned toward the operator, as if the object itself were performing a small bow.</p>
+
+      <p>This was not, as later commentators have suggested, a concession to ergonomics in the contemporary clinical sense. Ergonomics in 1969 was still, in Italy, largely a manufacturing concern — how to arrange a line, not a wrist. Bellini's wedge was rhetorical. It announced that the machine had a front and a back, a public face and a service rear.</p>
+
+      <div class="margin-note"><span class="n">02</span>Compare the Programma 101's bilateral symmetry. The Divisumma 18 is the first Olivetti object that <em>faces you</em>.</div>
+
+      <p class="pullquote">The Divisumma 18 is the moment Italian industrial design stopped imitating the machine and started imitating the body that would touch it.<cite>— Vanni Pasca, in <em>Domus</em>, March 1972</cite></p>
+
+      <p>The printing mechanism — a small thermal head that scrolled a forty-character paper tape across the rear platen — was hidden inside the housing in a way that no previous Olivetti calculating machine had attempted. Earlier models displayed their mechanisms as proof of their seriousness. The Divisumma 18 concealed them as proof of its sophistication. To watch the tape emerge from the rear slot was to watch a thought leave the object.</p>
+
+      <p>The display itself was a single line of green vacuum-fluorescent digits, recessed eleven millimeters into the housing and angled at fifteen degrees from horizontal. The recession was not decorative. It controlled glare under the overhead fluorescent lighting that was, by 1970, standard in every Milanese accounting office.</p>
+
+      <div class="margin-note"><span class="n">03</span>The 15° display angle was a contested decision. Olivetti's engineers wanted 22°; Bellini won by demonstrating that 15° matched the natural neck-flex of a seated bookkeeper.</div>
+
+      <p>What the Divisumma 18 inaugurated, and what its descendants — the Logos 50, the Lexikon 82, eventually the Praxis 35 — would refine and ultimately exhaust, was a particular conviction: that the surface of an industrial object is not its boundary but its argument. Touch it, and you have been argued with.</p>
+
+      <p>By 1976 the line was discontinued. The membrane, prone to yellowing in direct sun, had begun to fade in display windows across Europe. The wedge — by then widely imitated, badly, by competitors from Casio to Sharp — had ceased to read as radical. The object retreated into the museum collection from which it has not since emerged.</p>
+    </section>
+
+    <!-- Spot illustration row -->
+    <div class="spot-row">
+      <svg class="svg-spot" viewBox="0 0 120 120" aria-hidden="true">
+        <rect x="14" y="40" width="92" height="62" rx="6"/>
+        <line x1="14" y1="62" x2="106" y2="62"/>
+        <circle cx="30" cy="78" r="4"/>
+        <circle cx="46" cy="78" r="4"/>
+        <circle cx="62" cy="78" r="4"/>
+        <circle cx="78" cy="78" r="4"/>
+        <circle cx="94" cy="78" r="4"/>
+        <circle cx="30" cy="92" r="4"/>
+        <circle cx="46" cy="92" r="4"/>
+        <circle cx="62" cy="92" r="4"/>
+        <circle cx="78" cy="92" r="4"/>
+        <circle cx="94" cy="92" r="4"/>
+        <line x1="40" y1="14" x2="80" y2="14"/>
+        <polyline points="40,14 60,30 80,14"/>
+      </svg>
+      <p>"A machine that is shaped like the hand that will touch it has already conceded that it works for the hand, not against it." — Bellini, in conversation with Hans-Ulrich Obrist, 2003.</p>
+    </div>
+
+    <!-- Bellini Timeline -->
+    <div class="section-head">
+      <h2>Six Milestones · Bellini in Industry</h2>
+      <span class="ref">1963 — 2017</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <span class="yr">1963</span>
+        <span class="ev">Joins Olivetti as chief design consultant under Roberto Olivetti.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="yr">1969</span>
+        <span class="ev">Releases Divisumma 18 and Logos 27 in the same catalogue cycle.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="yr">1972</span>
+        <span class="ev">Cab armchair for Cassina; the leather is the structure.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="yr">1979</span>
+        <span class="ev">Editor-in-chief of <em>Domus</em>; reframes the magazine around object criticism.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="yr">1987</span>
+        <span class="ev">Persol 649 redesign — the Bellini bridge becomes a default in eyewear.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="yr">2017</span>
+        <span class="ev">Retrospective at the Triennale di Milano: <em>Mario Bellini · Italian Beauty</em>.</span>
+      </div>
+    </div>
+
+    <!-- Stat callout -->
+    <div class="section-head">
+      <h2>Object Vital Statistics</h2>
+      <span class="ref">Source · Olivetti Archive, Ivrea</span>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-card">
+        <div class="stat-num">1.84<span style="font-size:20px;color:var(--parchment);opacity:0.6;margin-left:6px">kg</span></div>
+        <div class="stat-label">Material Weight</div>
+        <div class="stat-note">ABS housing, polyurethane membrane, steel chassis, lead-acid backup cell.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1969</div>
+        <div class="stat-label">Year of First Production</div>
+        <div class="stat-note">Released Q3 at the Salone della Meccanica, Milan; discontinued 1976.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">27</div>
+        <div class="stat-label">Museum Collections Holding</div>
+        <div class="stat-note">Incl. MoMA NY, Triennale Milano, V&A London, Vitra Design Museum.</div>
+      </div>
+    </div>
+
+    <!-- 3x3 figure-caption grid -->
+    <div class="section-head">
+      <h2>Detail Views · Nine Components</h2>
+      <span class="ref">Plates II — X</span>
+    </div>
+
+    <div class="detail-grid">
+      <figure class="figure">
+        <div class="frame keycap"><span class="ovl">Plate II</span></div>
+        <figcaption><b>Keycap, numeric '7'</b>Polyurethane dome, 14mm Ø, 3.2mm rise. Note halo of yellowing at perimeter.</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="frame platen"><span class="ovl">Plate III</span></div>
+        <figcaption><b>Platen, rear printer</b>Vulcanized rubber roller with grooved index, 92mm width, in-line with paper feed.</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="frame housing"><span class="ovl">Plate IV</span></div>
+        <figcaption><b>Housing, lateral arc</b>Injection-molded ABS in <em>giallo Bellini</em>; single-shot mold, no visible seam.</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="frame casing"><span class="ovl">Plate V</span></div>
+        <figcaption><b>Underside casing</b>Matte black ABS, four rubber feet, service-screw access. Serial number stamped at center.</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="frame lever"><span class="ovl">Plate VI</span></div>
+        <figcaption><b>Carriage lever</b>Brushed aluminum, 38mm; the only metal exposed to the user. Cold to the touch.</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="frame imprint"><span class="ovl">Plate VII</span></div>
+        <figcaption><b>Imprint, brand mark</b>"olivetti divisumma 18" set in Helvetica 8pt, debossed into the upper-right shoulder.</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="frame foot"><span class="ovl">Plate VIII</span></div>
+        <figcaption><b>Rubber foot, dorsal</b>Conical, 18mm Ø; deliberately oversized to absorb impact of carriage return.</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="frame dial"><span class="ovl">Plate IX</span></div>
+        <figcaption><b>Mode selector dial</b>Three positions: NORM, MEM, PRT. Detents calibrated to give audible click at 22°.</figcaption>
+      </figure>
+      <figure class="figure">
+        <div class="frame cable"><span class="ovl">Plate X</span></div>
+        <figcaption><b>Power cable, integral</b>Rubber-sheathed, non-detachable. Olivetti policy until 1974; later abandoned.</figcaption>
+      </figure>
+    </div>
+
+    <!-- Closing decorative SVG -->
+    <svg class="svg-rule" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true" style="height:32px">
+      <line x1="0" y1="8" x2="1200" y2="8"/>
+      <line x1="0" y1="20" x2="1200" y2="20"/>
+      <rect x="100" y="2" width="60" height="24"/>
+      <rect x="220" y="2" width="60" height="24"/>
+      <rect x="340" y="2" width="60" height="24"/>
+      <line x1="500" y1="14" x2="1100" y2="14"/>
+      <circle cx="1150" cy="14" r="6"/>
+    </svg>
+
+    <p class="caption" style="text-align:right">End of Object Study № 04 · continued in Issue XXXVIII as <em>The Logos 27 Question</em></p>
+
+  </main>
+
+  <!-- Sidebar -->
+  <aside class="sidebar sticky comparative">
+    <div class="caption">Filed Under</div>
+    <h3 style="margin-top:var(--space-2);font-size:20px">Comparative Objects · 1965–1972</h3>
+    <p class="small muted" style="margin-bottom:var(--space-5)">Nine industrial objects from the same era, selected for typological or formal proximity to the Divisumma 18.</p>
+
+    <ul class="side-list">
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1965</span> · Olivetti</span>
+          <span class="ttl">Programma 101 — Pier Giacomo Sottsass</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1966</span> · Braun</span>
+          <span class="ttl">ET 22 Pocket Calculator — Dieter Rams</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1968</span> · Olivetti</span>
+          <span class="ttl">Valentine Typewriter — Sottsass / King</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1969</span> · Olivetti</span>
+          <span class="ttl">Logos 27 Printing Calculator — Bellini</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1969</span> · Brionvega</span>
+          <span class="ttl">TS 502 Radio — Zanuso / Sapper</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1970</span> · Kartell</span>
+          <span class="ttl">4867 Stacking Chair — Joe Colombo</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1971</span> · Sharp</span>
+          <span class="ttl">EL-8 Compet — Kazuo Tajima</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1971</span> · Olivetti</span>
+          <span class="ttl">Lettera 36 Portable — Bellini</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="ref"><span class="yr">1972</span> · Cassina</span>
+          <span class="ttl">Cab 412 Armchair — Mario Bellini</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="note-box" style="margin-top:var(--space-6)">
+      <div class="caption" style="margin-bottom:var(--space-2)">Editor's Note</div>
+      <p style="margin:0;font-size:13px;line-height:1.5">All nine objects share a common ABS-or-polymer housing strategy. Six predate or coincide with the Divisumma 18; three are subsequent rebuttals.</p>
+    </div>
+
+    <svg class="svg-spot" viewBox="0 0 120 120" aria-hidden="true" style="margin:var(--space-6) auto 0">
+      <circle cx="60" cy="60" r="48"/>
+      <circle cx="60" cy="60" r="32"/>
+      <circle cx="60" cy="60" r="16"/>
+      <line x1="12" y1="60" x2="108" y2="60"/>
+      <line x1="60" y1="12" x2="60" y2="108"/>
+      <polyline points="40,40 60,20 80,40"/>
+    </svg>
+    <p class="caption center" style="margin-top:var(--space-2)">Object Glyph № 04</p>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div>
+      <h4>Folio Obscura</h4>
+      <p class="colophon">A quarterly journal of design criticism — published from a small room above a bookbinder in Antwerp since 2014.</p>
+    </div>
+    <div>
+      <h4>Sections</h4>
+      <a href="../cover-story/index.html">Cover Story</a>
+      <a href="../type-lab/index.html">Type Lab</a>
+      <a href="../object-study/index.html">Object Study</a>
+      <a href="../grid-dispatch/index.html">Grid Dispatch</a>
+      <a href="../archive-index/index.html">Archive Index</a>
+    </div>
+    <div>
+      <h4>Editorial</h4>
+      <a href="#">Masthead</a>
+      <a href="#">Contributors</a>
+      <a href="#">Submissions</a>
+      <a href="#">Ethics</a>
+    </div>
+    <div>
+      <h4>Subscribe</h4>
+      <a href="#">Print Quarterly</a>
+      <a href="#">Digital Companion</a>
+      <a href="#">Back Issues</a>
+      <a href="#">Library Rates</a>
+    </div>
+    <div class="legal">
+      <span>© MMXXIV Folio Obscura Press · ISSN 2049-7732</span>
+      <span>Set in Georgia & System Sans · Issue XXXVII</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

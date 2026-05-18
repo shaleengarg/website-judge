@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Against Smooth Surfaces — Forma Negra Review, Vol. 12</title>
+<style>
+  .feature-hero{background:var(--ink);color:var(--bg);padding:var(--s6) 0 var(--s5);position:relative;overflow:hidden}
+  .feature-hero .meta-row{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(245,242,236,0.25);padding-bottom:var(--s2);margin-bottom:var(--s4);font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.15em;color:var(--yellow)}
+  .feature-hero h1{color:var(--bg);max-width:1100px}
+  .feature-hero .deck{color:rgba(245,242,236,0.75);font-family:var(--serif);font-style:italic;font-size:var(--fs-h3);line-height:1.4;margin-top:var(--s3);max-width:780px}
+  .feature-hero .byline-row{display:flex;flex-wrap:wrap;gap:var(--s5);margin-top:var(--s5);padding-top:var(--s3);border-top:1px solid rgba(245,242,236,0.25)}
+  .feature-hero .byline-row div{font-family:var(--mono);font-size:var(--fs-mono);color:rgba(245,242,236,0.6);text-transform:uppercase;letter-spacing:0.15em}
+  .feature-hero .byline-row div b{display:block;color:var(--bg);font-weight:400;font-family:var(--sans);font-size:var(--fs-caption);letter-spacing:0.05em;text-transform:none;margin-top:6px}
+  .feature-hero .hero-accent{position:absolute;right:var(--gutter-outer);top:var(--s4);width:160px;height:160px;opacity:0.9}
+  .feature-body{padding:var(--s6) 0}
+  .feature-body .cols-3{font-size:var(--fs-body);line-height:1.65}
+  .feature-body .cols-3 p{margin-bottom:var(--s2)}
+  .feature-body h2.section-mark{font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.2em;color:var(--rust);margin:var(--s4) 0 var(--s2);break-after:avoid}
+  .feature-body h3.subhead{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.25;margin:var(--s3) 0 var(--s2);break-after:avoid}
+  .figstrip{background:var(--bg-alt);padding:var(--s5) 0;margin:var(--s6) 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule)}
+  .figstrip .figcap-grid{margin:var(--s3) 0 0}
+  .figstrip .fig:nth-child(2n) .fig{background:var(--rust)}
+  .figstrip figure:nth-child(1) .fig{background:linear-gradient(135deg,var(--ink) 0%,var(--ink) 50%,var(--slate) 50%,var(--slate) 100%)}
+  .figstrip figure:nth-child(2) .fig{background:repeating-linear-gradient(45deg,var(--ink),var(--ink) 4px,var(--bg) 4px,var(--bg) 8px)}
+  .figstrip figure:nth-child(3) .fig{background:var(--rust);background-image:radial-gradient(circle at 30% 30%,var(--yellow) 12%,transparent 12%),radial-gradient(circle at 70% 60%,var(--bg) 8%,transparent 8%)}
+  .figstrip figure:nth-child(4) .fig{background:repeating-linear-gradient(0deg,var(--slate),var(--slate) 6px,var(--bg-alt) 6px,var(--bg-alt) 7px)}
+  .figstrip figure:nth-child(5) .fig{background:var(--yellow);background-image:linear-gradient(45deg,var(--ink) 25%,transparent 25%,transparent 75%,var(--ink) 75%),linear-gradient(45deg,var(--ink) 25%,transparent 25%,transparent 75%,var(--ink) 75%);background-size:20px 20px;background-position:0 0,10px 10px}
+  .figstrip figure:nth-child(6) .fig{background:var(--ink);background-image:radial-gradient(var(--bg) 1px,transparent 1px);background-size:8px 8px}
+  .pullquote-mid{margin:var(--s4) 0;break-inside:avoid}
+  .stat-card .num{font-size:44px}
+  .stat-card{border:1px solid var(--rule);border-top:2px solid var(--ink)}
+  .related-list li b{display:block;font-family:var(--serif);font-weight:700;font-size:14px;color:var(--ink);margin-bottom:2px}
+  .related-list li span{font-family:var(--mono);font-size:10px;color:var(--slate);text-transform:uppercase;letter-spacing:0.1em}
+  .closing{padding:var(--s5) 0 var(--s6);border-top:2px solid var(--ink)}
+  .closing .endmark{display:inline-block;width:14px;height:14px;background:var(--rust);margin-left:var(--s1);vertical-align:middle}
+  .author-bio{display:grid;grid-template-columns:120px 1fr;gap:var(--s4);padding:var(--s4);background:var(--bg-alt);border-left:4px solid var(--rust);margin-top:var(--s5)}
+  .author-bio .portrait{background:var(--ink);aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:var(--yellow);font-family:var(--serif);font-weight:700;font-size:48px}
+  @media (max-width:640px){
+    .author-bio{grid-template-columns:1fr}
+    .feature-hero .hero-accent{display:none}
+    .feature-hero .byline-row{gap:var(--s3)}
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="../cover/index.html" class="logo">Forma Negra<span class="dot">.</span> Review</a>
+    <ul>
+      <li><a href="../cover/index.html">Cover</a></li>
+      <li><a href="../feature/index.html" style="color:var(--rust)">Feature</a></li>
+      <li><a href="../critique/index.html">Critique</a></li>
+      <li><a href="../typographica/index.html">Typographica</a></li>
+      <li><a href="../archive/index.html">Archive</a></li>
+    </ul>
+    <span class="issue-tag">Vol. 12 / Friction</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="feature-hero full-bleed">
+  <div class="container">
+    <div class="meta-row">
+      <span>Section 02 — Lead Essay</span>
+      <span>Pages 024 – 047</span>
+      <span>Reading Time · 38 min</span>
+    </div>
+    <div class="eyebrow" style="color:var(--yellow)">The Friction Issue · Feature</div>
+    <h1 class="h1" style="font-size:var(--fs-display);line-height:1.02">Against Smooth Surfaces: Texture as Argument in Post-Digital Graphic Design</h1>
+    <p class="deck">A reckoning with the seamless, the gradient, and the rendered — and an argument that the next graphic vocabulary will be one that resists the swipe, the polish, and the algorithmic mean.</p>
+    <div class="byline-row">
+      <div>By<b>Ines Marquard</b></div>
+      <div>Photography<b>Studio Halbschatten</b></div>
+      <div>Filed<b>March 2024 · Berlin</b></div>
+      <div>Issue<b>Vol. 12 · No. 02</b></div>
+    </div>
+  </div>
+  <svg class="hero-accent" viewBox="0 0 160 160" aria-hidden="true">
+    <rect x="4" y="4" width="152" height="152" fill="none" stroke="#D4E04A" stroke-width="1"/>
+    <line x1="4" y1="4" x2="156" y2="156" stroke="#D4E04A" stroke-width="1"/>
+    <line x1="156" y1="4" x2="4" y2="156" stroke="#C4421A" stroke-width="1"/>
+    <circle cx="80" cy="80" r="40" fill="none" stroke="#D4E04A" stroke-width="1"/>
+    <circle cx="80" cy="80" r="20" fill="#C4421A"/>
+  </svg>
+</header>
+
+<!-- BODY -->
+<section class="feature-body">
+  <div class="container">
+
+    <div class="layout-feature">
+
+      <!-- MAIN COLUMN -->
+      <article>
+
+        <div class="cols-3 dropcap">
+          <p>The promise of post-digital graphic design was supposed to be liberation: a return to material thinking after two decades of pixel-flat orthodoxy, a re-engagement with the hand, the press, the photocopier, the misregister. What we received instead was a vocabulary of texture as decoration — grain layered onto vector, noise applied as filter, the rusticity of imperfection reduced to a checkbox in a panel labeled "Effects." This essay is an argument for texture as argument: not as styling, but as the load-bearing structure of a graphic claim.</p>
+
+          <p>Consider, briefly, the genealogy. The Swiss grid was never neutral; its smoothness was a politics. Wim Crouwel's New Alphabet, often misread today as a celebration of the machine, was in fact a polemic about the violence of constraint — a typeface that hurt to read because it had to.</p>
+
+          <p>By the late 1990s, the dominant rhetoric of digital interface design had collapsed all friction into the singular category of "bad UX." This was, and remains, a category error. Friction is not the opposite of usability; friction is the texture of attention.</p>
+
+          <h2 class="section-mark">§ 01 — The Surface Question</h2>
+
+          <p>Walk through any contemporary design biennial and you will encounter the same palette of textures used to signal authenticity: risograph bleed, halftone overlay, photocopy ghost, paper grain. These signs are not neutral. They are deployed precisely because the underlying work is, in every material sense, frictionless — vector files, screen-rendered, never touched.</p>
+
+          <p>The texture, in such cases, performs a kind of forensic alibi. It testifies to a labor that did not happen. It is the graphic equivalent of distressed denim: a manufactured indexical sign of wear that has been engineered to bypass actual wear.</p>
+
+          <div class="pullquote pullquote-mid">
+            "Smooth surfaces lie about the conditions of their making. Rough surfaces are not honest by default — but they at least permit the question to be asked."
+            <cite>— I.M., on the politics of finish</cite>
+          </div>
+
+          <p>The critical question is not whether a designer uses noise, grain, or grit, but whether the texture indexes a real material decision. Did the surface emerge from the process, or was it applied to it? This is the central distinction the post-digital discourse has refused to make, because making it implicates almost every studio working today.</p>
+
+          <h3 class="subhead">A short taxonomy of false friction</h3>
+
+          <p>I propose three categories. The first: <em>cosmetic friction</em>, in which texture is layered on as the final pass — the noise filter, the grain overlay, the simulated misregistration. The second: <em>nostalgic friction</em>, in which the visual codes of an earlier production technology are reproduced wholesale, regardless of whether the underlying object justifies them. The third, and rarest: <em>structural friction</em>, in which the texture is a consequence of the production system itself.</p>
+
+          <p>Only the third has anything to say. The first two are quotations of arguments that other designers, in other decades, were entitled to make.</p>
+
+          <h2 class="section-mark">§ 02 — Materiality as Method</h2>
+
+          <p>Among the studios I surveyed — forty-seven of them, distributed across Berlin, Mexico City, Seoul, and Lisbon — only a small minority described their relationship to texture as <em>methodological</em>. The majority described it as <em>aesthetic</em>. This distinction, while it may seem semantic, is the entire essay.</p>
+
+          <p>A methodological relationship to texture means that the surface of the work is determined by the constraints and possibilities of its production. A risograph print looks the way it does because of the drum, the ink viscosity, the registration tolerance. To reproduce that look in CMYK offset is not homage; it is theft of an argument the original technology was making about color, opacity, and labor.</p>
+
+          <p>The studios working methodologically with texture are, almost without exception, the ones still operating their own production equipment. Hato Press in London. Tan & Loose in Chicago. Idea Books' in-house bindery. These are not nostalgic operations; they are studios whose graphic vocabulary is constrained, in productive ways, by what their machines can and cannot do.</p>
+
+          <h3 class="subhead">The argument from constraint</h3>
+
+          <p>Constraint, in the post-digital condition, is not a given. It is a choice. To work within constraint today is to refuse the infinite resolution and infinite palette of the screen, and to accept — politically, not merely aesthetically — the limits of a particular material situation.</p>
+
+          <p>This refusal is the only available foundation for a graphic claim that is not immediately recuperable as content. Every other gesture has been absorbed.</p>
+        </div>
+
+        <!-- FULL-BLEED FIG STRIP -->
+        <div class="figstrip full-bleed">
+          <div class="container">
+            <div class="section-head">
+              <span class="label">Plate 01 — Field Specimens</span>
+              <span class="count">Fig. 1 – 6</span>
+            </div>
+            <div class="figcap-grid">
+              <figure><div class="fig"></div><figcaption><b>Fig. 1</b> Halbschatten Studio, untitled risograph, 2022. Drum mis-registration as structural decision.</figcaption></figure>
+              <figure><div class="fig"></div><figcaption><b>Fig. 2</b> Detail from <em>Atlas of Coarse Things</em> (Lisbon, 2021). Letterpress, blind impression.</figcaption></figure>
+              <figure><div class="fig"></div><figcaption><b>Fig. 3</b> Poster for Seoul Type Week, 2023. Two-color overprint, hand-pulled.</figcaption></figure>
+              <figure><div class="fig"></div><figcaption><b>Fig. 4</b> Photocopy degradation, fourth generation. Found archive, Mexico City.</figcaption></figure>
+              <figure><div class="fig"></div><figcaption><b>Fig. 5</b> Halftone exercise, 65 lpi, Hato Press workshop, October 2023.</figcaption></figure>
+              <figure><div class="fig"></div><figcaption><b>Fig. 6</b> Test sheet, Tan &amp; Loose, illustrating intentional ink starvation.</figcaption></figure>
+            </div>
+          </div>
+        </div>
+
+        <!-- SVG DECORATIVE DIVIDER -->
+        <svg class="divider-svg" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="0" y1="12" x2="1200" y2="12" stroke="#1A1814" stroke-width="1"/>
+          <line x1="0" y1="6" x2="1200" y2="6" stroke="#C8C4BB" stroke-width="1"/>
+          <line x1="0" y1="18" x2="1200" y2="18" stroke="#C8C4BB" stroke-width="1"/>
+          <circle cx="200" cy="12" r="4" fill="#C4421A"/>
+          <circle cx="400" cy="12" r="4" fill="#1A1814"/>
+          <rect x="596" y="4" width="8" height="16" fill="#D4E04A"/>
+          <circle cx="800" cy="12" r="4" fill="#1A1814"/>
+          <circle cx="1000" cy="12" r="4" fill="#C4421A"/>
+        </svg>
+
+        <div class="cols-3">
+          <h2 class="section-mark">§ 03 — The Algorithmic Mean</h2>
+
+          <p>There is a second, more urgent force pressing on the surface: the algorithmic mean. Generative tools trained on the entire indexed corpus of contemporary graphic design produce, by their nature, the median output of that corpus. The texture they generate is the average of every texture they have ingested — a kind of texture-flavored smoothness, indistinguishable in its sameness.</p>
+
+          <p>This is not a technology problem. It is a problem of what the texture is for. If the texture is for signaling — for marking the work as belonging to a current taste — then the algorithmic mean serves that function perfectly. If the texture is for arguing, then the algorithmic mean is its negation.</p>
+
+          <p>The studios I spoke to who were most resistant to generative tools were not resistant on craft grounds. They were resistant because they understood, correctly, that the argument a piece of design makes is partly an argument against the median. To accept the median as your starting surface is to forfeit the argument before it begins.</p>
+
+          <h3 class="subhead">Three propositions</h3>
+
+          <p>First: that texture is not a finish but a foundation. The graphic argument begins with the substrate, not with the typography. Second: that the choice of constraint is the most political decision a designer makes — more political than the choice of subject, more political than the choice of typeface. Third: that the post-digital is not behind us; it has not yet begun. What we have lived through is the digital's long and exhausting last gasp.</p>
+
+          <div class="pullquote pullquote-mid pullquote-right">
+            "To work within constraint today is to refuse the infinite resolution of the screen, and to accept the limits of a particular material situation."
+            <cite>— Marquard, § 02</cite>
+          </div>
+
+          <p>The next graphic vocabulary will be one in which the surface is no longer decorative. It will be one in which the question "how was this made?" is not rhetorical but answerable, and the answer is legible in the work itself — not by simulation, but by inheritance.</p>
+
+          <p>Whether this vocabulary will emerge from the studios I have named, or from somewhere else entirely, is unanswerable. What is answerable is the question of where it will not come from. It will not come from the smooth.</p>
+        </div>
+
+        <!-- AUTHOR BIO -->
+        <div class="author-bio">
+          <div class="portrait">IM</div>
+          <div>
+            <div class="eyebrow">Contributor</div>
+            <h3 class="h3" style="margin-bottom:var(--s1)">Ines Marquard</h3>
+            <p style="font-size:var(--fs-caption);line-height:1.6;color:var(--slate)">Marquard is a critic and theorist based in Berlin, where she directs the research program at the Institute for Material Practice. Her book <em>Coarse Reading</em> was published by Spector in 2022. She is a contributing editor at Forma Negra Review.</p>
+          </div>
+        </div>
+
+        <div class="closing">
+          <p style="font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.15em;color:var(--slate)">End of feature · § 03 closes<span class="endmark"></span></p>
+        </div>
+
+      </article>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar sticky">
+
+        <h4>Marginalia</h4>
+        <ol class="marginalia">
+          <li>Crouwel's "New Alphabet" (1967) — see Vol. 04 supplement, p. 112.</li>
+          <li>Bierut, on the recuperation of grain as decoration, 2019 lecture.</li>
+          <li>The forty-seven studios were surveyed Sept 2023 – Feb 2024.</li>
+          <li>Hato Press archive: drum specifications and ink data on file.</li>
+          <li>Spector Books edition, <em>Coarse Reading</em>, ISBN 978-3-95905.</li>
+          <li>Compare Reas &amp; Fry on procedural surface, <em>Form+Code</em> p. 88.</li>
+        </ol>
+
+        <div class="stat-cluster" style="margin-top:var(--s4)">
+          <div class="stat-card">
+            <div class="num">47<span style="font-size:24px;color:var(--rust)">%</span></div>
+            <div class="label">Of surveyed studios deploy texture as styling, not method</div>
+          </div>
+          <div class="stat-card">
+            <div class="num">12</div>
+            <div class="label">Major exhibitions cited in primary research, 2018 – 2024</div>
+          </div>
+          <div class="stat-card">
+            <div class="num">1993</div>
+            <div class="label">Origin year of the term "post-digital" in graphic practice</div>
+          </div>
+        </div>
+
+        <h4 style="margin-top:var(--s4)">Related</h4>
+        <ul class="related-list">
+          <li><b>The Grain Beneath the Grid</b><span>Vol. 09 · pp. 56 – 71</span></li>
+          <li><b>Risograph as Argument</b><span>Vol. 10 · pp. 22 – 38</span></li>
+          <li><b>Crouwel, Revisited</b><span>Vol. 07 · pp. 104 – 119</span></li>
+          <li><b>Against the Median</b><span>Vol. 11 · pp. 80 – 95</span></li>
+          <li><b>Notes on Misregister</b><span>Vol. 08 · pp. 12 – 19</span></li>
+        </ul>
+
+        <div style="margin-top:var(--s4);padding:var(--s3);background:var(--ink);color:var(--bg)">
+          <div class="mono-label" style="color:var(--yellow)">Cite as</div>
+          <p style="font-family:var(--mono);font-size:10px;line-height:1.5;color:var(--bg);margin-top:var(--s2)">Marquard, I. (2024). "Against Smooth Surfaces." <em>Forma Negra Review</em>, 12(2), 24–47.</p>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="section-head" style="margin-bottom:var(--s3)">
+      <span class="label">Issue Index — Vol. 12</span>
+      <span class="count">14 Sections · 087 Articles</span>
+    </div>
+    <div class="issue-index">
+      <div class="col">
+        <h5>Editorial</h5>
+        <ul>
+          <li>Cover<span class="num">01</span></li>
+          <li>Masthead<span class="num">02</span></li>
+          <li>Editor's Note<span class="num">03</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Features</h5>
+        <ul>
+          <li>Lead Essay<span class="num">04</span></li>
+          <li>Long Read<span class="num">06</span></li>
+          <li>Field Report<span class="num">05</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Critique</h5>
+        <ul>
+          <li>Reviews<span class="num">09</span></li>
+          <li>Compare<span class="num">03</span></li>
+          <li>Footnotes<span class="num">14</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Typographica</h5>
+        <ul>
+          <li>Specimens<span class="num">07</span></li>
+          <li>Glossary<span class="num">18</span></li>
+          <li>Pairings<span class="num">05</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Archive</h5>
+        <ul>
+          <li>Volumes<span class="num">12</span></li>
+          <li>Errata<span class="num">04</span></li>
+          <li>Index<span class="num">01</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-mark">
+      <span class="logotype">Forma Negra Review</span>
+      <span>ISSN 2147 – 8830</span>
+      <span>© MMXXIV Biannual</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

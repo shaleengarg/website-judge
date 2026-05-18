@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Mission — Brackwater Marsh Conservancy</title>
+<style>
+  .hero-mission {
+    background:
+      linear-gradient(135deg, rgba(27,44,37,0.92), rgba(27,44,37,0.78)),
+      repeating-linear-gradient(90deg, #3a7d5e 0 2px, transparent 2px 28px),
+      repeating-linear-gradient(180deg, #2a4a3a 0 1px, transparent 1px 18px);
+  }
+  .founder {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--space-4);
+    align-items: center;
+    margin-top: var(--space-5);
+    padding: var(--space-4);
+    background: rgba(255,255,255,0.06);
+    border-left: 3px solid var(--accent-1);
+    border-radius: var(--radius-sm);
+    max-width: 720px;
+  }
+  .founder-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #b85c1a, #3a7d5e);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-weight: 700; font-size: 28px;
+    color: #fff;
+  }
+  .founder-text { color: #d6e6df; font-size: var(--fs-sm); margin: 0; }
+  .pillar-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .pillar {
+    background: var(--white);
+    border-top: 4px solid var(--accent-1);
+    padding: var(--space-4);
+    border-radius: var(--radius-sm);
+  }
+  .pillar h4 { color: var(--accent-2); margin-bottom: var(--space-2); }
+  .pillar p { font-size: var(--fs-sm); margin: 0; }
+  @media (max-width: 720px) {
+    .pillar-list { grid-template-columns: 1fr; }
+    .founder { grid-template-columns: 1fr; text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Brackwater Marsh Conservancy</a>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Mission</a></li>
+      <li><a href="../wetlands/index.html">Wetlands</a></li>
+      <li><a href="../volunteer/index.html">Volunteer</a></li>
+      <li><a href="../grants/index.html">Grants</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero hero-mission">
+  <div class="hero-inner">
+    <div class="eyebrow">Our Mission &middot; Est. 2009</div>
+    <h1>Restoring the Gulf's Living Edge</h1>
+    <p>Founded in 2009 by coastal ecologist Dr. Renata Solís following the catastrophic erosion of the Nueces Bay shoreline, Brackwater Marsh Conservancy is a Gulf Coast nonprofit dedicated to restoring tidal wetlands and the communities that depend on them. We work where freshwater meets the sea — the brackish, breathing frontier of the continent.</p>
+    <div class="founder">
+      <div class="founder-avatar">RS</div>
+      <p class="founder-text"><strong style="color:#fff;">Dr. Renata Solís</strong> — Founder &amp; Executive Director. Marine ecologist, Texas A&amp;M-Corpus Christi alumna, and lifelong advocate for the brackish ecotone.</p>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="section">
+    <div class="eyebrow">By the Numbers</div>
+    <h2 class="section-title">Fifteen Years of Coastal Stewardship</h2>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-num">14,200</div>
+        <div class="stat-label">Acres Restored</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">38</div>
+        <div class="stat-label">Partner Organizations</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">$2.1M</div>
+        <div class="stat-label">Distributed in Grants</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">Mission Statement</div>
+    <h2 class="section-title">Why Tidal Wetlands Matter</h2>
+
+    <div class="split">
+      <div class="split-text">
+        <h3>The Pulse of the Estuary</h3>
+        <p>Tidal wetlands are the most productive ecosystems on Earth, exchanging nutrients, sediment, and life between river and sea twice each day. Along the Gulf Coast, they shelter juvenile shrimp and redfish, anchor sediment against storm surge, and sequester carbon at rates that outpace tropical forests.</p>
+        <p>Yet for every acre we protect, another is lost to subsidence, salinization, or development. Brackwater Marsh Conservancy exists to reverse that math — one restored bayou, one replanted Spartina plug, one community partnership at a time.</p>
+      </div>
+      <aside class="split-aside">
+        <h3>Ecological Snapshot</h3>
+        <div class="kv"><div class="k">Region</div><div>Western Gulf of Mexico</div></div>
+        <div class="kv"><div class="k">Range</div><div>Brownsville, TX to Pensacola, FL</div></div>
+        <div class="kv"><div class="k">Habitats</div><div>Mangrove, salt marsh, brackish, cypress</div></div>
+        <div class="kv"><div class="k">Indicator Species</div><div>Roseate spoonbill, diamondback terrapin</div></div>
+        <div class="kv"><div class="k">Carbon Stored</div><div>~1.4M metric tons CO₂e</div></div>
+      </aside>
+    </div>
+
+    <div class="split split-reverse">
+      <div class="split-text">
+        <h3>The Rising Threat</h3>
+        <p>The Texas and Louisiana coasts are subsiding while seas rise — a double squeeze that pushes salt water into freshwater swamps and drowns marshes faster than they can accrete. Hurricanes Harvey, Ida, and Beryl each rewrote the shoreline in ways that took decades to occur naturally.</p>
+        <p>Our restoration work is calibrated to this acceleration. We plant for the marsh of 2055, not 1985, building elevation gradients and freshwater refugia that give wildlife room to migrate upslope as the Gulf encroaches.</p>
+      </div>
+      <aside class="split-aside">
+        <h3>Sea-Level Pressure</h3>
+        <div class="kv"><div class="k">Gulf SLR Rate</div><div>~6.5 mm/year</div></div>
+        <div class="kv"><div class="k">Subsidence</div><div>up to 12 mm/yr (Houston-Galveston)</div></div>
+        <div class="kv"><div class="k">Marsh Loss</div><div>~25 sq mi / year (LA)</div></div>
+        <div class="kv"><div class="k">Storm Surge Buffer</div><div>1 acre marsh = $8,200 / yr protection</div></div>
+      </aside>
+    </div>
+
+    <div class="split">
+      <div class="split-text">
+        <h3>The Three-Pillar Strategy</h3>
+        <p>Brackwater's work rests on three interlocking pillars. Each reinforces the others: restored marsh becomes a living classroom; educated citizens become informed advocates; advocacy unlocks the public funding and policy that scales restoration.</p>
+        <p>We refuse to treat any single pillar as sufficient. A planted shoreline without community ownership erodes. A trained student without habitat to study disengages. A policy without science behind it collapses.</p>
+        <div class="pillar-list">
+          <div class="pillar">
+            <h4>Restoration</h4>
+            <p>Replanting native grasses, removing invasives, and reopening tidal flow on the ground, parcel by parcel.</p>
+          </div>
+          <div class="pillar">
+            <h4>Education</h4>
+            <p>K–12 curriculum, field labs, and adult workshops that turn estuary literacy into civic action.</p>
+          </div>
+          <div class="pillar">
+            <h4>Advocacy</h4>
+            <p>Coalition work with municipal, state, and tribal partners to defend wetland law and funding.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="split-aside">
+        <h3>This Year's Focus</h3>
+        <p style="font-size:var(--fs-sm);margin-bottom:var(--space-3);">Our 2024 operating plan concentrates resources on three high-leverage initiatives identified by the board last November.</p>
+        <ul style="font-size:var(--fs-sm);padding-left:18px;margin:0;">
+          <li>Aransas-Copano living shoreline expansion (320 acres)</li>
+          <li>Estuary Education Initiative roll-out in 14 school districts</li>
+          <li>Coastal Resilience Fellowship cohort #3</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">From the Founder</div>
+    <div class="pullquote">
+      "A marsh is not a place. It is a conversation between freshwater and salt, between mud and air, between us and what we choose to remember. Our job is to keep that conversation going."
+      <div class="caption mt-4">— Dr. Renata Solís, Founder</div>
+    </div>
+    <div class="callout">
+      <strong>Join the work.</strong> Whether you have an hour, a skill, or a dollar — there is a place for you on the marsh. Explore <a href="../volunteer/index.html">volunteer roles</a>, our <a href="../grants/index.html">grant programs</a>, or simply <a href="../contact/index.html">say hello</a>.
+      <div class="mt-4"><a href="../contact/index.html" class="btn">Get Involved</a> &nbsp; <a href="../wetlands/index.html" class="btn-ghost">Explore Our Wetlands</a></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <h4>Brackwater Marsh</h4>
+      <p>A Gulf Coast nonprofit restoring tidal wetlands since 2009. Corpus Christi, Texas.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="index.html">Mission</a></li>
+        <li><a href="../wetlands/index.html">Wetlands</a></li>
+        <li><a href="../volunteer/index.html">Volunteer</a></li>
+        <li><a href="../grants/index.html">Grants</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Headquarters</h4>
+      <p>418 Shoreline Blvd<br>Corpus Christi, TX 78401<br>(361) 555-0142<br>hello@brackwatermarsh.org</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2024 Brackwater Marsh Conservancy &middot; 501(c)(3) nonprofit &middot; EIN 27-1849562</div>
+</footer>
+
+</body>
+</html>

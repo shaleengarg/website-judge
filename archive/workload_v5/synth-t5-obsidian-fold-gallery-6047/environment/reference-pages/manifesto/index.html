@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manifesto — Obsidian Fold</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; }
+
+  body {
+    background: #1a1a1a;
+    color: #f0ede6;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- NAV ---------- */
+  .nav {
+    border-bottom: 1px solid #3a3a3a;
+    background: #1a1a1a;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+  }
+  .brand span { color: #c0512f; }
+  .nav ul {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+  }
+  .nav ul a { color: #f0ede6; padding: 4px 0; border-bottom: 1px solid transparent; transition: border 0.2s; }
+  .nav ul a:hover { border-bottom-color: #c0512f; }
+  .nav ul a.active { color: #d4af6e; border-bottom-color: #c0512f; }
+
+  /* ---------- LAYOUT GRID ---------- */
+  .grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 32px 96px;
+    display: grid;
+    grid-template-columns: 200px 680px 280px;
+    column-gap: 24px;
+  }
+
+  /* ---------- MARGINALIA ---------- */
+  .marginalia {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: #8a8070;
+    line-height: 1.9;
+    font-weight: 300;
+    position: sticky;
+    top: 120px;
+    align-self: start;
+    text-transform: uppercase;
+  }
+  .marginalia .foot { margin-bottom: 28px; }
+  .marginalia .foot strong {
+    display: block;
+    color: #c0512f;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.18em;
+  }
+
+  /* ---------- MAIN ---------- */
+  .main { min-width: 0; }
+
+  .eyebrow {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: #d4af6e;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 28px;
+    border-top: 1px solid #d4af6e;
+    padding-top: 16px;
+    display: inline-block;
+  }
+
+  .display {
+    font-family: Georgia, serif;
+    font-size: 4.8rem;
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+    color: #f0ede6;
+  }
+  .display em { color: #c0512f; font-style: normal; }
+
+  .deck {
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    line-height: 1.55;
+    color: #d4af6e;
+    font-weight: 400;
+    font-style: italic;
+    border-bottom: 1px solid #3a3a3a;
+    padding-bottom: 40px;
+    margin-bottom: 56px;
+    max-width: 580px;
+  }
+
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.05;
+    margin-top: 64px;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-family: Georgia, serif;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-top: 56px;
+    margin-bottom: 20px;
+    letter-spacing: -0.005em;
+  }
+  h2 .num {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: #c0512f;
+    display: block;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  h3 {
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 28px;
+    margin-bottom: 12px;
+  }
+
+  .main p {
+    margin-bottom: 1.2em;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .lead::first-letter {
+    font-size: 4rem;
+    float: left;
+    font-weight: 700;
+    color: #c0512f;
+    line-height: 0.8;
+    margin-right: 6px;
+    margin-top: 4px;
+    font-family: Georgia, serif;
+  }
+
+  .pullquote {
+    font-family: Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #d4af6e;
+    line-height: 1.3;
+    border-left: 4px solid #c0512f;
+    padding-left: 1.5rem;
+    margin: 48px 0 48px -48px;
+  }
+  .pullquote cite {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8070;
+    font-style: normal;
+    margin-top: 16px;
+  }
+
+  .caption {
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    color: #8a8070;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .colophon {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid #3a3a3a;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .colophon .small {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a8070;
+    font-weight: 600;
+  }
+
+  .swatch {
+    height: 220px;
+    background: linear-gradient(135deg, #c0512f 0%, #6b2a1a 45%, #1a1a1a 100%);
+    margin: 40px 0 16px;
+    position: relative;
+    border-radius: 2px;
+  }
+  .swatch::after {
+    content: "PLATE 001 / SOY INK ON 280GSM";
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: #d4af6e;
+    font-weight: 600;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar {
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: #f0ede6;
+    font-weight: 300;
+  }
+  .side-title {
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f0ede6;
+    border-bottom: 1px solid #d4af6e;
+    padding-bottom: 10px;
+    margin-bottom: 24px;
+  }
+  .side-sub {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c0512f;
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+  .timeline { position: relative; padding-left: 18px; border-left: 1px solid #3a3a3a; }
+  .t-item { margin-bottom: 26px; position: relative; }
+  .t-item::before {
+    content: "";
+    position: absolute;
+    left: -23px;
+    top: 6px;
+    width: 9px;
+    height: 9px;
+    background: #c0512f;
+    border-radius: 50%;
+  }
+  .t-year {
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #d4af6e;
+    line-height: 1;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .t-body {
+    font-size: 0.8rem;
+    color: #f0ede6;
+    line-height: 1.55;
+  }
+  .t-body .tag {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a8070;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    border-top: 1px solid #3a3a3a;
+    background: #141414;
+    padding: 56px 32px 40px;
+    margin-top: 40px;
+  }
+  .foot-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 200px 680px 280px;
+    column-gap: 24px;
+  }
+  .foot-brand {
+    font-family: Georgia, serif;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .foot-brand span { color: #c0512f; display: block; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; font-family: system-ui, sans-serif; margin-top: 10px; color: #d4af6e; }
+  .foot-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .foot-cols h4 {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #c0512f;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .foot-cols p, .foot-cols a {
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #f0ede6;
+    font-weight: 300;
+    display: block;
+  }
+  .foot-bottom {
+    max-width: 1280px;
+    margin: 48px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid #2a2a2a;
+    display: flex;
+    justify-content: space-between;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8070;
+    font-weight: 600;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1180px) {
+    .grid {
+      grid-template-columns: 160px 1fr 240px;
+      padding: 56px 28px 80px;
+    }
+    .foot-grid { grid-template-columns: 160px 1fr 240px; }
+    .display { font-size: 4rem; }
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 140px 1fr;
+      grid-template-areas:
+        "margin main"
+        "side   side";
+      row-gap: 56px;
+    }
+    .marginalia { grid-area: margin; }
+    .main { grid-area: main; }
+    .sidebar { grid-area: side; padding-top: 24px; border-top: 1px solid #3a3a3a; }
+    .foot-grid {
+      grid-template-columns: 140px 1fr;
+    }
+    .foot-cols { grid-column: 1 / -1; margin-top: 24px; }
+    .display { font-size: 3.4rem; }
+    .pullquote { margin-left: -24px; }
+  }
+
+  @media (max-width: 560px) {
+    .nav-inner { padding: 18px 20px; }
+    .nav ul { gap: 16px; font-size: 0.65rem; }
+    .grid {
+      grid-template-columns: 80px 1fr;
+      padding: 40px 20px 64px;
+      column-gap: 16px;
+    }
+    .foot-grid { grid-template-columns: 80px 1fr; padding: 0; }
+    .foot-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .display { font-size: 2.6rem; line-height: 1.02; }
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.6rem; }
+    .pullquote {
+      font-size: 1.3rem;
+      margin-left: -8px;
+      padding-left: 1rem;
+    }
+    .deck { font-size: 1.05rem; }
+    footer { padding: 40px 20px 32px; }
+    .marginalia { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../manifesto/index.html">Obsidian<span>·</span>Fold</a>
+    <ul>
+      <li><a class="active" href="../manifesto/index.html">Manifesto</a></li>
+      <li><a href="../collection/index.html">Collection</a></li>
+      <li><a href="../artists/index.html">Artists</a></li>
+      <li><a href="../catalogue/index.html">Catalogue</a></li>
+      <li><a href="../visit/index.html">Visit</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="grid">
+
+  <aside class="marginalia" aria-label="Curatorial footnotes">
+    <div class="foot">
+      <strong>§1 — Ink</strong>
+      Risograph ink is soy-based; its imprecision is its honesty. Each pass leaves a register of its own gesture.
+    </div>
+    <div class="foot">
+      <strong>§2 — Weight</strong>
+      Paper of 280gsm or greater is selected for its resistance to the gesture. The sheet must push back.
+    </div>
+    <div class="foot">
+      <strong>§3 — Edition</strong>
+      Editions are capped at 45. Beyond that number, the stencil itself begins to lie.
+    </div>
+    <div class="foot">
+      <strong>§4 — Light</strong>
+      Pigment fades at a published rate. The collector inherits a clock as much as an image.
+    </div>
+    <div class="foot">
+      <strong>§5 — Touch</strong>
+      No work in this gallery is laminated, sealed, or screened behind glass thicker than 2mm. The work breathes.
+    </div>
+  </aside>
+
+  <article class="main">
+    <span class="eyebrow">Manifesto / Vol. III / 2024</span>
+
+    <h1 class="display">Pressure Makes <em>Permanence.</em></h1>
+
+    <p class="deck">A statement on the cultural necessity of physical print in the era of the disposable image — issued from Vuurplaat 14, Rotterdam.</p>
+
+    <h2><span class="num">I — On the Material Argument</span>Against the Frictionless Image</h2>
+
+    <p class="lead">We founded Obsidian Fold in a converted harbor warehouse because we believed, then as now, that an image which costs nothing to make and nothing to destroy will, in the long run, mean nothing at all. The digital photograph is a remarkable instrument; we use them ourselves, daily, for documentation. But the digital photograph is also a frictionless object. It accumulates by the billion in server farms outside Dublin and Reykjavík, lit by hydroelectric current, glanced at for less than two seconds, and replaced by the next. Friction is what gives an image its weight. A risograph print, a letterpress sheet, a stone lithograph — these are objects that resisted their own making.</p>
+
+    <p>The print artist negotiates with the press. The press resists. The ink resists. The paper, particularly at 280gsm and above, resists more stubbornly than any of them. What emerges is a record of that negotiation: misregistration where the second pass arrived a millimeter early, a halo of yellow where the drum was warm, a faint ghost on the verso where the previous sheet had not quite dried. These are not flaws. They are the print's testimony that it was made by a person, in a room, on a Tuesday, using equipment that had its own opinions.</p>
+
+    <blockquote class="pullquote">
+      The smudge is not an error. It is evidence.
+      <cite>— from the founding charter, 2017</cite>
+    </blockquote>
+
+    <p>It is fashionable, in certain quarters, to describe this preference as nostalgia. We reject the framing. Nostalgia is a longing for what cannot return; what we practice is a refusal to abandon what has not yet left. The risograph machine in our basement was manufactured in 2009. The Vandercook proof press upstairs was manufactured in 1962. Both continue to make new objects, today, this morning. There is nothing nostalgic about a tool that still works.</p>
+
+    <div class="swatch" role="img" aria-label="Burnt sienna ink gradient sample"></div>
+    <p class="caption">Plate 001 — Soy-based sienna #c0512f, single-pass risograph proof on Munken Pure 300gsm, taken from the studio register on 12 March 2024.</p>
+
+    <h2><span class="num">II — On Duration</span>What Outlives the Maker</h2>
+
+    <p class="lead">Permanence is an unfashionable word. The contemporary art market has, for decades, rewarded the ephemeral, the performative, the dematerialized. We do not argue against those modes. We argue that a culture which produces only ephemera will not be legible to itself in fifty years' time. Someone — some institution, some private collector, some patient curator working under a different sun — must continue to produce objects designed to be opened in 2074 and read clearly. The acid-free cotton-rag paper we use carries a manufacturer's archival rating of 250 years. We take that figure seriously, and so should everyone who buys from us.</p>
+
+    <p>What we sell is not, finally, an image. The image is freely reproducible; we will email you a high-resolution scan if you ask. What we sell is duration. We sell the certainty that the physical sheet in your hands was pulled from the press by a named individual, on a documented date, in an edition whose size is finite and verifiable. The print bears a chop-mark, a pencil signature, and an edition number in the form 14/45. These marks are not decoration. They are the print's claim on the future.</p>
+
+    <blockquote class="pullquote">
+      We print on paper that outlives its makers.
+      <cite>— curatorial position, restated 2024</cite>
+    </blockquote>
+
+    <p>Each of the artists represented by Obsidian Fold has been asked, in writing, to confirm that they understand and accept this premise. None has declined. The work they produce here is work they expect to be looked at long after they are gone. This is, we think, a form of seriousness that the present moment underrates.</p>
+
+    <h2><span class="num">III — On the Room</span>The Gallery as Slow Instrument</h2>
+
+    <p class="lead">A gallery is not a website. We say this as people who maintain a website. The gallery is a room with a ceiling height of 6.4 metres, a poured concrete floor, north-facing windows, and lights that have been calibrated, at considerable expense, to a colour temperature of 4100K. You cannot scroll past a print hung in such a room. You can only walk toward it, stand at the distance the work requires, and remain there until the work releases you. The average visitor to Obsidian Fold spends 41 minutes on the gallery floor. The average visitor to a comparable image online spends, by independent measurement, 1.8 seconds.</p>
+
+    <p>We do not say this to shame the online viewer. We say it to explain why we have, for seven years now, insisted on the room. The room is a slow instrument. It enforces the duration the work was made for. To remove the work from the room — to compress it to a 2400-pixel JPEG and float it on a feed — is not to make the work more accessible. It is to make it inaudible. The work is still there; only its frequency has been lost.</p>
+
+    <p>What follows on the other pages of this site — the current collection, the artists, the printed catalogue, the visiting information — should be read in the light of these three commitments. Friction. Duration. The room. If any one of them seems to you an affectation, we have failed to make our case, and we ask you to write to us so we can try again. — <em>The curatorial team, Obsidian Fold, October 2024.</em></p>
+
+    <div class="colophon">
+      <span class="small">Filed under: Curatorial / Manifesto</span>
+      <span class="small">Set in Georgia &amp; System UI</span>
+      <span class="small">Rotterdam — 51.9°N 4.5°E</span>
+    </div>
+  </article>
+
+  <aside class="sidebar" aria-label="Gallery timeline">
+    <div class="side-sub">Timeline</div>
+    <h3 class="side-title">Founding Moments, 2017–2024</h3>
+    <div class="timeline">
+      <div class="t-item">
+        <span class="t-year">2017</span>
+        <div class="t-body">
+          <span class="tag">March / Inception</span>
+          Lease signed on a 340m² warehouse bay at Vuurplaat 14, Katendrecht district. First risograph (an RZ-1070) installed in August.
+        </div>
+      </div>
+      <div class="t-item">
+        <span class="t-year">2018</span>
+        <div class="t-body">
+          <span class="tag">Inaugural / Print I</span>
+          First public exhibition, <em>Fold I: A Survey of Pressure</em>, opened 4 May with twelve works by seven artists across two continents.
+        </div>
+      </div>
+      <div class="t-item">
+        <span class="t-year">2019</span>
+        <div class="t-body">
+          <span class="tag">Press / Vandercook</span>
+          Acquired a 1962 Vandercook SP-15 proof press from a closed printshop in Antwerp. Letterpress program launched in autumn.
+        </div>
+      </div>
+      <div class="t-item">
+        <span class="t-year">2020</span>
+        <div class="t-body">
+          <span class="tag">Closure / Reissue</span>
+          Gallery floor closed for fourteen weeks. Edition reissue program established to support resident artists through the period.
+        </div>
+      </div>
+      <div class="t-item">
+        <span class="t-year">2021</span>
+        <div class="t-body">
+          <span class="tag">Catalogue / Vol. I</span>
+          First printed catalogue, <em>Strata &amp; Sediment Vol. I</em>, released in an edition of 300. Sold out within nine months.
+        </div>
+      </div>
+      <div class="t-item">
+        <span class="t-year">2022</span>
+        <div class="t-body">
+          <span class="tag">Roster / Expansion</span>
+          Permanent roster expanded to four artists: Maren Holt, Soo-Jin Bae, Darius Vael, Priya Menon. Residency program formalised.
+        </div>
+      </div>
+      <div class="t-item">
+        <span class="t-year">2023</span>
+        <div class="t-body">
+          <span class="tag">Award / Stedelijk</span>
+          Shortlisted, Stedelijk Print Foundation Award for Small Institutional Practice. Acquisition by Boijmans Van Beuningen.
+        </div>
+      </div>
+      <div class="t-item">
+        <span class="t-year">2024</span>
+        <div class="t-body">
+          <span class="tag">Current / Vol. III</span>
+          Strata &amp; Sediment Vol. III opens 11 October. Catalogue released in a print run of 375 copies, numbered and signed.
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      Obsidian<br>Fold.
+      <span>Rotterdam · Est. 2017</span>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <h4>Address</h4>
+        <p>Vuurplaat 14<br>3072 AS Rotterdam<br>Katendrecht</p>
+      </div>
+      <div>
+        <h4>Hours</h4>
+        <p>Wed – Sat / 11:00 – 18:00<br>Sun / 12:00 – 17:00<br>Mon &amp; Tue / by appointment</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="#">studio@obsidianfold.nl</a>
+        <a href="#">+31 10 842 1170</a>
+        <a href="#">Press &amp; Acquisitions</a>
+      </div>
+    </div>
+    <div></div>
+    <div class="foot-cols" style="grid-column: 1 / -1; margin-top: 8px;">
+      <div>
+        <h4>Navigate</h4>
+        <a href="../manifesto/index.html">Manifesto</a>
+        <a href="../collection/index.html">Collection</a>
+        <a href="../artists/index.html">Artists</a>
+        <a href="../catalogue/index.html">Catalogue</a>
+        <a href="../visit/index.html">Visit</a>
+      </div>
+      <div>
+        <h4>Current</h4>
+        <p>Strata &amp; Sediment, Vol. III<br>11 October 2024 — 16 February 2025</p>
+      </div>
+      <div>
+        <h4>Newsletter</h4>
+        <p>Quarterly, printed, posted. Subscriptions €18 per year, four issues.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2024 Stichting Obsidian Fold · KvK 69842117</span>
+    <span>Printed in the Netherlands</span>
+  </div>
+</footer>
+
+</body>
+</html>

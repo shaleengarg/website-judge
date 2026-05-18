@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Archive — Forma Negra Review</title>
+<style>
+  .archive-hero{background:var(--ink);color:var(--bg);padding:var(--s5) var(--gutter-outer)}
+  .archive-hero .inner{max-width:var(--max-w);margin:0 auto}
+  .cover-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--s2);margin-top:var(--s4)}
+  .cover-tile{aspect-ratio:3/4;position:relative;display:flex;align-items:flex-end;padding:var(--s2);border:1px solid rgba(245,242,236,0.2);overflow:hidden}
+  .cover-tile .vol-num{font-family:var(--mono);font-size:40px;font-weight:700;line-height:1;color:var(--bg)}
+  .cover-tile .vol-year{position:absolute;top:var(--s2);left:var(--s2);font-family:var(--mono);font-size:var(--fs-mono);letter-spacing:0.15em;color:var(--bg);opacity:0.7}
+  .cover-tile:nth-child(1){background:var(--rust)}
+  .cover-tile:nth-child(2){background:var(--slate)}
+  .cover-tile:nth-child(3){background:var(--ink);border-color:var(--yellow)}
+  .cover-tile:nth-child(3) .vol-num{color:var(--yellow)}
+  .cover-tile:nth-child(4){background:var(--bg);color:var(--ink)}
+  .cover-tile:nth-child(4) .vol-num,.cover-tile:nth-child(4) .vol-year{color:var(--ink)}
+  .cover-tile:nth-child(5){background:var(--yellow)}
+  .cover-tile:nth-child(5) .vol-num,.cover-tile:nth-child(5) .vol-year{color:var(--ink)}
+  .cover-tile:nth-child(6){background:var(--slate)}
+  .cover-tile:nth-child(7){background:var(--ink)}
+  .cover-tile:nth-child(8){background:var(--rust)}
+  .cover-tile:nth-child(9){background:var(--bg);color:var(--ink);border-color:var(--rule)}
+  .cover-tile:nth-child(9) .vol-num,.cover-tile:nth-child(9) .vol-year{color:var(--ink)}
+  .cover-tile:nth-child(10){background:var(--slate)}
+  .cover-tile:nth-child(11){background:var(--yellow)}
+  .cover-tile:nth-child(11) .vol-num,.cover-tile:nth-child(11) .vol-year{color:var(--ink)}
+  .cover-tile:nth-child(12){background:var(--ink);border:2px solid var(--rust)}
+  .cover-tile:nth-child(12) .vol-num{color:var(--rust)}
+  .cover-tile .current-flag{position:absolute;top:var(--s2);right:var(--s2);font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;background:var(--rust);color:var(--bg);padding:2px 6px}
+
+  .timeline-strip{padding:var(--s5) 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);overflow-x:auto}
+  .timeline-strip svg{display:block;min-width:1200px;width:100%}
+
+  .archive-table-wrap{overflow-x:auto}
+  .archive-table{width:100%;border-collapse:collapse;font-size:var(--fs-caption);min-width:880px}
+  .archive-table th,.archive-table td{padding:var(--s2);text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+  .archive-table thead th{background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.12em;font-weight:400;border-bottom:2px solid var(--ink)}
+  .archive-table tbody tr:nth-child(odd){background:var(--bg)}
+  .archive-table tbody tr:nth-child(even){background:var(--bg-alt)}
+  .archive-table tbody tr.current{background:var(--yellow-20);border-left:2px solid var(--rust)}
+  .archive-table tbody tr.current td:first-child{border-left:2px solid var(--rust);padding-left:calc(var(--s2) - 2px);font-weight:700}
+  .archive-table td.vol{font-family:var(--mono);font-weight:700;color:var(--ink)}
+  .archive-table td.num{font-family:var(--mono);text-align:right}
+  .archive-table td.theme{font-family:var(--serif);font-style:italic;font-size:var(--fs-body);line-height:1.3}
+  .archive-table td.essay{font-family:var(--serif);font-weight:700}
+
+  .layout-archive-page{display:grid;grid-template-columns:1fr 240px;gap:var(--gutter-inner);padding:var(--s5) var(--gutter-outer);max-width:var(--max-w);margin:0 auto}
+
+  .barchart-custom{display:flex;align-items:flex-end;gap:6px;height:140px;padding:var(--s2);border:1px solid var(--rule);background:var(--bg)}
+  .barchart-custom .bar{flex:1;position:relative;background:var(--ink)}
+  .barchart-custom .bar span{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:var(--slate)}
+  .barchart-custom .bar:nth-child(12){background:var(--rust)}
+  .barchart-custom .bar:nth-child(odd){background:var(--slate)}
+  .barchart-custom .bar:nth-child(12){background:var(--rust)}
+
+  .pullquote-archive{margin:var(--s5) 0}
+
+  @media (max-width:1024px){
+    .cover-grid{grid-template-columns:repeat(4,1fr)}
+    .layout-archive-page{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    .cover-grid{grid-template-columns:repeat(3,1fr);gap:var(--s1)}
+    .cover-tile .vol-num{font-size:24px}
+    .archive-hero{padding:var(--s4) var(--gutter-outer)}
+    .layout-archive-page{padding:var(--s3) var(--gutter-outer)}
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="../cover/index.html" class="logo">Forma Negra<span class="dot">.</span> Review</a>
+    <ul>
+      <li><a href="../cover/index.html">Cover</a></li>
+      <li><a href="../feature/index.html">Feature</a></li>
+      <li><a href="../critique/index.html">Critique</a></li>
+      <li><a href="../typographica/index.html">Typographica</a></li>
+      <li><a href="#" aria-current="page" style="color:var(--rust)">Archive</a></li>
+    </ul>
+    <span class="issue-tag">Vol. 12 — Friction</span>
+  </div>
+</nav>
+
+<!-- HERO: full-bleed catalog of 12 covers -->
+<section class="archive-hero full-bleed">
+  <div class="inner">
+    <div class="eyebrow" style="color:var(--yellow)">§ Archive — 2013→2024</div>
+    <h1 class="h1" style="color:var(--bg);max-width:900px">Twelve Volumes of Forma Negra Review. A complete bibliographic index of the journal, 2013 through the present.</h1>
+    <p class="caption" style="color:var(--bg);opacity:0.7;max-width:680px;margin-top:var(--s3)">Every issue published since founding — covers, themes, contributors, print metrics. Volume 12, the Friction Issue, is the current edition.</p>
+
+    <div class="cover-grid">
+      <div class="cover-tile"><span class="vol-year">2013·SS</span><span class="vol-num">01</span></div>
+      <div class="cover-tile"><span class="vol-year">2013·AW</span><span class="vol-num">02</span></div>
+      <div class="cover-tile"><span class="vol-year">2014·SS</span><span class="vol-num">03</span></div>
+      <div class="cover-tile"><span class="vol-year">2014·AW</span><span class="vol-num">04</span></div>
+      <div class="cover-tile"><span class="vol-year">2015·AW</span><span class="vol-num">05</span></div>
+      <div class="cover-tile"><span class="vol-year">2016·SS</span><span class="vol-num">06</span></div>
+      <div class="cover-tile"><span class="vol-year">2017·SS</span><span class="vol-num">07</span></div>
+      <div class="cover-tile"><span class="vol-year">2018·AW</span><span class="vol-num">08</span></div>
+      <div class="cover-tile"><span class="vol-year">2020·SS</span><span class="vol-num">09</span></div>
+      <div class="cover-tile"><span class="vol-year">2021·AW</span><span class="vol-num">10</span></div>
+      <div class="cover-tile"><span class="vol-year">2023·SS</span><span class="vol-num">11</span></div>
+      <div class="cover-tile"><span class="current-flag">Current</span><span class="vol-year">2024·AW</span><span class="vol-num">12</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE STRIP SVG -->
+<section class="timeline-strip">
+  <div class="container">
+    <div class="section-head" style="margin-bottom:var(--s3)">
+      <span class="label">↳ Chronology</span>
+      <span class="count">12 nodes / 11 yrs</span>
+    </div>
+    <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMid meet" class="svg-accent" role="img" aria-label="Volume chronology">
+      <line x1="40" y1="60" x2="1160" y2="60" stroke="#1A1814" stroke-width="1"/>
+      <line x1="40" y1="60" x2="1160" y2="60" stroke="#C4421A" stroke-width="2" stroke-dasharray="2 6"/>
+      <!-- 12 nodes -->
+      <g font-family="Courier New, monospace" font-size="11" fill="#1A1814">
+        <!-- v1 -->
+        <circle cx="60" cy="60" r="7" fill="#F5F2EC" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="60" y="80" transform="rotate(45 60 80)">2013 · Origins</text>
+        <!-- v2 -->
+        <circle cx="160" cy="60" r="7" fill="#F5F2EC" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="160" y="80" transform="rotate(45 160 80)">2013 · Grid</text>
+        <!-- v3 -->
+        <circle cx="260" cy="60" r="7" fill="#D4E04A" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="260" y="80" transform="rotate(45 260 80)">2014 · Vernacular</text>
+        <!-- v4 -->
+        <circle cx="360" cy="60" r="7" fill="#F5F2EC" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="360" y="80" transform="rotate(45 360 80)">2014 · Paper</text>
+        <!-- v5 -->
+        <circle cx="460" cy="60" r="7" fill="#F5F2EC" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="460" y="80" transform="rotate(45 460 80)">2015 · Signage</text>
+        <!-- v6 -->
+        <circle cx="560" cy="60" r="7" fill="#C4421A" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="560" y="80" transform="rotate(45 560 80)">2016 · Erasure</text>
+        <!-- v7 -->
+        <circle cx="660" cy="60" r="7" fill="#F5F2EC" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="660" y="80" transform="rotate(45 660 80)">2017 · Translation</text>
+        <!-- v8 -->
+        <circle cx="760" cy="60" r="7" fill="#F5F2EC" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="760" y="80" transform="rotate(45 760 80)">2018 · Apparatus</text>
+        <!-- v9 -->
+        <circle cx="860" cy="60" r="7" fill="#D4E04A" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="860" y="80" transform="rotate(45 860 80)">2020 · Silence</text>
+        <!-- v10 -->
+        <circle cx="960" cy="60" r="7" fill="#F5F2EC" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="960" y="80" transform="rotate(45 960 80)">2021 · Repair</text>
+        <!-- v11 -->
+        <circle cx="1060" cy="60" r="7" fill="#F5F2EC" stroke="#1A1814" stroke-width="1.5"/>
+        <text x="1060" y="80" transform="rotate(45 1060 80)">2023 · Surface</text>
+        <!-- v12 current -->
+        <circle cx="1140" cy="60" r="10" fill="#C4421A" stroke="#1A1814" stroke-width="2"/>
+        <circle cx="1140" cy="60" r="3" fill="#F5F2EC"/>
+        <text x="1140" y="80" transform="rotate(45 1140 80)" font-weight="700">2024 · Friction ★</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- MAIN: table + sticky sidebar -->
+<section class="layout-archive-page">
+  <main>
+    <div class="section-head">
+      <span class="label">⌗ Bibliographic Index</span>
+      <span class="count">012 / 012 vols</span>
+    </div>
+
+    <div class="archive-table-wrap">
+      <table class="archive-table">
+        <thead>
+          <tr>
+            <th>Vol.</th>
+            <th>Year</th>
+            <th>Theme</th>
+            <th>Lead Essay</th>
+            <th>Cover Designer</th>
+            <th>Pages</th>
+            <th>Print Run</th>
+            <th>Digital Views</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="vol">01</td><td class="num">2013</td>
+            <td class="theme">Origins</td>
+            <td class="essay">On the Black Square</td>
+            <td>I. Volkov</td>
+            <td class="num">128</td><td class="num">2,400</td><td class="num">38,210</td>
+          </tr>
+          <tr>
+            <td class="vol">02</td><td class="num">2013</td>
+            <td class="theme">The Grid</td>
+            <td class="essay">After Müller-Brockmann</td>
+            <td>M. Adachi</td>
+            <td class="num">144</td><td class="num">2,800</td><td class="num">41,002</td>
+          </tr>
+          <tr>
+            <td class="vol">03</td><td class="num">2014</td>
+            <td class="theme">Vernacular Type</td>
+            <td class="essay">Signs Outside the Canon</td>
+            <td>P. Costanza</td>
+            <td class="num">160</td><td class="num">3,200</td><td class="num">52,477</td>
+          </tr>
+          <tr>
+            <td class="vol">04</td><td class="num">2014</td>
+            <td class="theme">Paper as Argument</td>
+            <td class="essay">Weight, Tooth, Memory</td>
+            <td>L. Brenner</td>
+            <td class="num">152</td><td class="num">3,400</td><td class="num">47,889</td>
+          </tr>
+          <tr>
+            <td class="vol">05</td><td class="num">2015</td>
+            <td class="theme">Signage Systems</td>
+            <td class="essay">Wayfinding in Ruin</td>
+            <td>R. Okwuosa</td>
+            <td class="num">168</td><td class="num">3,600</td><td class="num">61,330</td>
+          </tr>
+          <tr>
+            <td class="vol">06</td><td class="num">2016</td>
+            <td class="theme">Erasure</td>
+            <td class="essay">The Politics of Whitespace</td>
+            <td>S. Halász</td>
+            <td class="num">176</td><td class="num">4,000</td><td class="num">68,914</td>
+          </tr>
+          <tr>
+            <td class="vol">07</td><td class="num">2017</td>
+            <td class="theme">Translation</td>
+            <td class="essay">Latin / Han / Devanagari</td>
+            <td>K. Devraj</td>
+            <td class="num">192</td><td class="num">4,200</td><td class="num">74,206</td>
+          </tr>
+          <tr>
+            <td class="vol">08</td><td class="num">2018</td>
+            <td class="theme">The Apparatus</td>
+            <td class="essay">On Machines That Set Type</td>
+            <td>F. Lindqvist</td>
+            <td class="num">184</td><td class="num">4,500</td><td class="num">80,557</td>
+          </tr>
+          <tr>
+            <td class="vol">09</td><td class="num">2020</td>
+            <td class="theme">Silence</td>
+            <td class="essay">A Year Without Print</td>
+            <td>M. Adachi</td>
+            <td class="num">208</td><td class="num">4,200</td><td class="num">112,440</td>
+          </tr>
+          <tr>
+            <td class="vol">10</td><td class="num">2021</td>
+            <td class="theme">Repair</td>
+            <td class="essay">Mending the Archive</td>
+            <td>J. Pereira</td>
+            <td class="num">216</td><td class="num">5,000</td><td class="num">128,991</td>
+          </tr>
+          <tr>
+            <td class="vol">11</td><td class="num">2023</td>
+            <td class="theme">Surface Tension</td>
+            <td class="essay">Post-Digital Materiality</td>
+            <td>R. Okwuosa</td>
+            <td class="num">232</td><td class="num">5,400</td><td class="num">141,808</td>
+          </tr>
+          <tr class="current">
+            <td class="vol">12</td><td class="num">2024</td>
+            <td class="theme">The Friction Issue</td>
+            <td class="essay">Against Smooth Surfaces</td>
+            <td>P. Costanza</td>
+            <td class="num">248</td><td class="num">5,800</td><td class="num">62,114</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pullquote pullquote-archive">
+      “An archive is not a memory but an argument — a slow accumulation of formal positions, bound and dated.”
+      <cite>— Editorial Note, Vol. 10</cite>
+    </div>
+
+    <!-- Decorative SVG accent -->
+    <svg class="divider-svg" viewBox="0 0 1200 24" preserveAspectRatio="none" role="img" aria-label="Decorative rule">
+      <line x1="0" y1="12" x2="1200" y2="12" stroke="#1A1814" stroke-width="1"/>
+      <circle cx="200" cy="12" r="4" fill="#C4421A"/>
+      <circle cx="600" cy="12" r="6" fill="#D4E04A" stroke="#1A1814" stroke-width="1"/>
+      <circle cx="1000" cy="12" r="4" fill="#4A5568"/>
+      <rect x="395" y="6" width="12" height="12" fill="none" stroke="#1A1814" stroke-width="1"/>
+      <rect x="795" y="6" width="12" height="12" fill="none" stroke="#1A1814" stroke-width="1"/>
+    </svg>
+
+    <div class="grid grid-3" style="margin-top:var(--s4)">
+      <div>
+        <h3 class="mono-label">Catalog Note 01</h3>
+        <p class="caption" style="margin-top:var(--s2)">Volumes 01–04 are out of print. Library copies held at the Bibliothèque Forney (Paris), Letterform Archive (San Francisco), and the Bauhaus-Archiv (Berlin).</p>
+      </div>
+      <div>
+        <h3 class="mono-label">Catalog Note 02</h3>
+        <p class="caption" style="margin-top:var(--s2)">A scanning project for volumes 01–06 was completed in 2022. Digital facsimiles are accessible to institutional subscribers via the Forma Negra reading-room portal.</p>
+      </div>
+      <div>
+        <h3 class="mono-label">Catalog Note 03</h3>
+        <p class="caption" style="margin-top:var(--s2)">Volume 09 (Silence, 2020) was the only edition published outside the biannual rhythm, released as a slim 64-page foldout under pandemic conditions.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- STICKY SIDEBAR -->
+  <aside class="sticky">
+    <div class="sidebar">
+      <h4>Subscription Metrics</h4>
+
+      <div class="stat-cluster stack-2" style="margin-top:var(--s3)">
+        <div class="stat-card">
+          <div class="num">42,000</div>
+          <div class="label">Print Subscribers</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">180</div>
+          <div class="label">Countries Reached</div>
+        </div>
+        <div class="stat-card" style="background:var(--yellow-20)">
+          <div class="num">97%</div>
+          <div class="label">Renewal Rate (2024)</div>
+        </div>
+      </div>
+
+      <h4 style="margin-top:var(--s5)">Print Run / Volume</h4>
+      <div class="barchart-custom" style="margin-top:var(--s3)">
+        <div class="bar" style="height:38%"><span>01</span></div>
+        <div class="bar" style="height:44%"><span>02</span></div>
+        <div class="bar" style="height:52%"><span>03</span></div>
+        <div class="bar" style="height:55%"><span>04</span></div>
+        <div class="bar" style="height:58%"><span>05</span></div>
+        <div class="bar" style="height:64%"><span>06</span></div>
+        <div class="bar" style="height:68%"><span>07</span></div>
+        <div class="bar" style="height:73%"><span>08</span></div>
+        <div class="bar" style="height:68%"><span>09</span></div>
+        <div class="bar" style="height:81%"><span>10</span></div>
+        <div class="bar" style="height:87%"><span>11</span></div>
+        <div class="bar" style="height:94%"><span>12</span></div>
+      </div>
+      <p class="caption" style="margin-top:var(--s3)">Print runs have grown ≈ 2.4× since founding. Volume 12 is the largest edition to date.</p>
+
+      <h4 style="margin-top:var(--s5)">Order Back Issues</h4>
+      <ul class="related-list" style="margin-top:var(--s2)">
+        <li>Vol. 11 — Surface Tension</li>
+        <li>Vol. 10 — Repair</li>
+        <li>Vol. 08 — The Apparatus</li>
+        <li>Vol. 07 — Translation</li>
+        <li>Institutional bundle (07–12)</li>
+      </ul>
+
+      <p class="mono-label" style="margin-top:var(--s4);color:var(--rust)">↳ press@formanegra.review</p>
+    </div>
+  </aside>
+</section>
+
+<!-- FOOTER: 5-column issue index strip -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="section-head">
+      <span class="label">Issue Index — Vol. 12</span>
+      <span class="count">14 sections / 248 pp.</span>
+    </div>
+
+    <div class="issue-index">
+      <div class="col">
+        <h5>Cover</h5>
+        <ul>
+          <li><span>Editor's Letter</span><span class="num">01</span></li>
+          <li><span>Masthead</span><span class="num">02</span></li>
+          <li><span>Contributors</span><span class="num">03</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Feature</h5>
+        <ul>
+          <li><span>Lead Essay</span><span class="num">01</span></li>
+          <li><span>Field Notes</span><span class="num">04</span></li>
+          <li><span>Interview</span><span class="num">02</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Critique</h5>
+        <ul>
+          <li><span>Reviews</span><span class="num">03</span></li>
+          <li><span>Comparative Table</span><span class="num">01</span></li>
+          <li><span>Letters</span><span class="num">06</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Typographica</h5>
+        <ul>
+          <li><span>Specimens</span><span class="num">03</span></li>
+          <li><span>Glossary</span><span class="num">18</span></li>
+          <li><span>Anatomy</span><span class="num">01</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Archive</h5>
+        <ul>
+          <li><span>Volume Catalog</span><span class="num">12</span></li>
+          <li><span>Errata</span><span class="num">07</span></li>
+          <li><span>Colophon</span><span class="num">01</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-mark">
+      <span class="logotype">Forma Negra Review</span>
+      <span>Vol. 12 — MMXXIV</span>
+      <span>© 2013–2024 · ISSN 2049-0813</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

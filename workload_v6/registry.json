@@ -1,0 +1,74 @@
+{
+  "tasks": [
+    {
+      "id": "synth-t1-copper-kettle-suppers-16cf",
+      "tier": 1,
+      "genre": "recipe-card",
+      "description": "Copper Kettle Suppers is a single-recipe showcase site presenting a definitive slow-braised lamb shank with white bean ragout, walking visitors through every detail from pantry list to plating notes.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t1-maren-solvik-design-a2db",
+      "tier": 1,
+      "genre": "portfolio",
+      "description": "The personal portfolio of Maren Solvik, a Norwegian-born graphic designer specializing in brand identity and print work for cultural institutions.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-brackwater-marsh-conservancy-945d",
+      "tier": 2,
+      "genre": "nonprofit",
+      "description": "Brackwater Marsh Conservancy is a Gulf Coast nonprofit dedicated to restoring tidal wetlands, educating the public about estuarine ecosystems, and funding community-led habitat projects.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-ironclad-summit-dev-c9a0",
+      "tier": 2,
+      "genre": "conference",
+      "description": "Ironclad Summit is a two-day systems engineering and infrastructure conference held annually in Pittsburgh, PA, featuring deep-dive technical talks, workshops, and a hardware expo.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t3-oblique-flux-studio-dcf5",
+      "tier": 3,
+      "genre": "agency",
+      "description": "Oblique Flux Studio is a boutique brand strategy and digital experience agency specializing in science, technology, and cultural institutions.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t4-lumivex-signal-boost-c799",
+      "tier": 4,
+      "genre": "marketing-landing",
+      "description": "Lumivex is a B2B signal-intelligence platform that helps growth teams identify high-intent leads before competitors do, marketed through a richly decorated five-page landing site.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t5-chlorophyll-dispatch-weekly-5325",
+      "tier": 5,
+      "genre": "magazine-feature",
+      "description": "Chlorophyll Dispatch is a premium long-form environmental journalism magazine covering ecological science, land politics, and biodiversity stories from the field.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t6-nexum-vault-settings-e99e",
+      "tier": 6,
+      "genre": "account-settings",
+      "description": "Nexum Vault is a fictional enterprise secrets-management platform offering exhaustive account settings across profile identity, multi-factor security, subscription billing, granular notification preferences, and a full tamper-evident audit log.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t7-deep-current-oceandata-64e3",
+      "tier": 7,
+      "genre": "infographic",
+      "description": "Deep Current is an interactive infographic journal translating NOAA and peer-reviewed ocean science into dense, visually rich data stories spanning coral bleaching, plastic accumulation, sea temperature anomalies, and conservation response zones.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t8-forma-negra-review-11da",
+      "tier": 8,
+      "genre": "design-magazine",
+      "description": "Forma Negra Review is a biannual critical design journal covering graphic systems, spatial typography, and material culture, presented as a dense multi-module web edition with the visual weight of a printed broadsheet.",
+      "n_pages": 5
+    }
+  ]
+}

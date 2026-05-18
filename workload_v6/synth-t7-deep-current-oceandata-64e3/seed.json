@@ -1,0 +1,29 @@
+{
+  "id": "synth-t7-deep-current-oceandata-64e3",
+  "tier": 7,
+  "genre": "infographic",
+  "pages": [
+    "ocean-health",
+    "coral-systems",
+    "plastic-tides",
+    "temperature-rise",
+    "action-atlas"
+  ],
+  "palette_hint": "Deep navy #0a1628 background, off-white #e8f4f8 body text, electric teal #00d4c8 and coral-orange #ff6b47 as primary accents",
+  "type_style": "Headings in Georgia serif bold at large weights for gravitas, body in system-ui sans-serif at 400/500 weight, data labels in monospace courier for scientific credibility",
+  "description": "Deep Current is an interactive infographic journal translating NOAA and peer-reviewed ocean science into dense, visually rich data stories spanning coral bleaching, plastic accumulation, sea temperature anomalies, and conservation response zones.",
+  "constraints": [
+    "Max content width 1200px centered on all pages; left sidebar 260px fixed for navigation and data key, main content area 880px with 40px gap",
+    "Each page header uses a full-width SVG wave divider (at least 3 layered path shapes) transitioning from #0a1628 to a page-specific accent zone color",
+    "All infographic diagrams must be rendered entirely in inline SVG with explicit viewBox attributes; no raster image fallbacks; minimum 6 distinct SVG figures per page",
+    "Data callout boxes use clip-path polygon cuts (parallelogram shape, 8deg skew) with teal #00d4c8 left border 4px and semi-transparent #00d4c820 fill on #0d1f3c panel background",
+    "Sticky left sidebar maintains position during scroll with 20px padding, lists page sections as SVG icon + label pairs, and displays a live depth-scale bar (purely decorative CSS/SVG gradient strip)"
+  ],
+  "page_specs": {
+    "ocean-health": "The landing infographic page presents a full ocean-health scorecard for 2024, with a large central SVG gauge/dial showing an overall Ocean Health Index of 62/100 rendered using arc paths and radial tick marks, surrounded by six category sub-dials (Biodiversity, Clean Waters, Food Provision, Carbon Storage, Coastal Protection, Tourism) each built from concentric SVG ellipses and colored arc segments. Below the dials, a multi-column grid of 12 stat cards each containing a sparkline SVG polyline shows decade trends for metrics like dissolved oxygen (ml/L), pH levels (8.04\u21927.92), and phytoplankton density. A decorative SVG seafloor illustration spanning the page footer shows silhouetted coral, fish schools as polygon clusters, and kelp forests as bezier path fronds.",
+    "coral-systems": "This page maps the world's major coral reef systems using an SVG-based stylized flat-projection world map (all land masses as polygon paths, reef zones as filled ellipse clusters in amber #ffb347) with annotated callout lines to six reef profiles: Great Barrier Reef, Mesoamerican, Coral Triangle, Red Sea, Florida Keys, and New Caledonia. Each reef profile panel below the map contains a stacked bar chart (SVG rect elements) comparing live coral cover percentages across 1980, 2000, 2010, and 2024, color-coded from healthy green #4ecb71 to bleached white #f0f0f0 to dead grey #555. A sidebar legend uses custom SVG icons (stylized coral branch paths, sea anemone circle clusters, urchin polygon spikes) to identify ecosystem component types.",
+    "plastic-tides": "The plastic pollution page opens with an isometric SVG illustration of ocean gyres as swirling path shapes with embedded debris icons (bottle outlines, microplastic dots as circles, fishing net grid polygons) scaled to represent the five major garbage patches by mass. Below, a Sankey-style flow diagram built from SVG path bezier curves shows plastic entering the ocean from 10 source categories (single-use packaging 34%, fishing gear 18%, textile microfibres 12%, etc.) flowing into three ocean depth zones. A donut chart SVG shows plastic type breakdown (PET, HDPE, PP, PS, other) with each segment as a path arc, and annotation spokes as SVG lines with circle endpoints. Data panels use the parallelogram clip-path treatment with statistics like 11 million metric tons entering oceans annually and 51 trillion microplastic particles currently in circulation.",
+    "temperature-rise": "This page visualizes sea surface temperature anomalies from 1880 to 2024 using a large SVG area chart with a filled path showing deviation from the 20th-century baseline, colored dynamically from cool blue #4a90d9 below zero to deep red #c0392b for +1.5\u00b0C anomaly years, with the 2023 record spike (+0.9\u00b0C above prior record) highlighted via a vertical SVG line and starburst polygon annotation. A secondary section shows ocean heat content in the top 2000m as a layered SVG area chart with four ocean basin lines (Pacific, Atlantic, Indian, Southern) in distinct accent colors. Thermocline depth cross-section diagrams use SVG gradient fills and horizontal band rects to illustrate stratification changes between 1990 and 2024, with isothermal contour lines as SVG path curves.",
+    "action-atlas": "The final page presents a conservation response atlas with an SVG grid-map of 48 Marine Protected Areas worldwide, each shown as a hexagonal polygon colored by protection level (fully protected teal, partially protected amber, paper park red). A radial SVG diagram in the page center shows the UN 30x30 target progress: concentric ring arcs representing current coverage (8.2% fully protected) versus 2030 goal (30%), with country contribution wedge segments as pie-slice paths. Below, a horizontal timeline built from SVG paths and milestone circles (with polygon arrow connectors) traces key ocean policy events from UNCLOS 1982 to the 2023 High Seas Treaty. Six action-category icons (SVG illustrations: sailing vessel, mangrove tree, research buoy, fishing hook, factory smokestack, community hands) anchor a call-to-action grid with organization partnership stats."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-maren-solvik-design-a2db",
+  "tier": 1,
+  "genre": "portfolio",
+  "pages": [
+    "work",
+    "about",
+    "process",
+    "clients",
+    "contact"
+  ],
+  "palette_hint": "Off-white background #F5F2ED, near-black text #1A1A18, accent coral #E8502A and muted sage #7A9E7E.",
+  "type_style": "Headings in Georgia serif bold for warmth, body in system-ui at 400 weight, overall feel is editorial and calm.",
+  "description": "The personal portfolio of Maren Solvik, a Norwegian-born graphic designer specializing in brand identity and print work for cultural institutions.",
+  "constraints": [
+    "All content centered in a single column, max-width 680px, with 24px horizontal padding on each side.",
+    "Horizontal rules (#C8C4BC, 1px solid) separate every major section on every page.",
+    "Accent coral #E8502A used exclusively for links, active labels, and call-to-action buttons; sage #7A9E7E used for category tags and subtitles only.",
+    "Buttons are solid coral (#E8502A) with #F5F2ED text, 12px top/bottom padding, 24px left/right padding, no border-radius.",
+    "Body font-size 17px with line-height 1.7; h1 at 2.4rem, h2 at 1.6rem, h3 at 1.2rem, all in Georgia."
+  ],
+  "page_specs": {
+    "work": "Hero section names Maren Solvik and lists her design specialisms in two lines. Below the first rule, six project entries are listed vertically \u2014 each entry shows a project title in h2 (e.g. 'Trondheim Jazz Festival 2023 Identity'), a sage-colored category tag (e.g. 'Brand Identity'), a 2-sentence project description, and a coral 'View Project' button. A footer with copyright and nav links closes the page.",
+    "about": "A short hero with the heading 'About Maren' and a one-line subtitle in sage. A 180-word biography follows, covering her education at Oslo National Academy of the Arts, her seven years working in Bergen, and her current Berlin studio. A 'Skills & Tools' section lists ten specific items (e.g. 'InDesign CC', 'Risograph printing', 'Brand strategy workshops') as plain paragraph lines, followed by a 'Currently reading' aside and the standard footer.",
+    "process": "Hero heading 'How I Work' with a two-sentence intro explaining her research-first philosophy. Four numbered process stages follow as h3 headings with a short paragraph each: '01 Discovery', '02 Concept Development', '03 Refinement', '04 Delivery'. Each stage is separated by a thin rule. A closing paragraph invites prospective clients to get in touch, with a coral button linking to the contact page, then the footer.",
+    "clients": "Hero states 'Clients & Collaborators' with a sage subtitle 'Selected partners, 2017\u2013present'. A list of sixteen real-feeling client names (e.g. 'Norsk Folkemuseum', 'Fabel Forlag', 'Studio Helio Berlin', 'Vestland Teater') is displayed as plain h3 entries separated by thin rules, each paired with a one-line description of the engagement type and year. The footer appears after the final rule.",
+    "contact": "Hero heading 'Get in Touch' and a 3-sentence paragraph describing her availability, typical project timeline, and preference for email-first contact. A structured block lists her email address, Berlin studio address (fictional but specific: Weserstra\u00dfe 114, 12045 Berlin), and response time note, each on its own labeled line. A 'Download CV' coral button and a 'LinkedIn' coral button are stacked vertically. The page ends with a brief note about her availability for 2025 projects and the footer."
+  }
+}

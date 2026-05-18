@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Luminos</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #0B0E1A; color: #E8EAF2; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  @media (min-width: 768px) { .container { padding: 0 48px; } }
+
+  /* NAV */
+  .nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(11,14,26,0.75); border-bottom: 1px solid rgba(124,58,237,0.18); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .logo { font-weight: 900; letter-spacing: -0.03em; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+  .logo-dot { width: 14px; height: 14px; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #00D9C0); box-shadow: 0 0 18px rgba(0,217,192,0.6); }
+  .nav-links { display: none; gap: 28px; font-size: 14px; }
+  .nav-links a { color: #B8BCD0; transition: color .2s; }
+  .nav-links a:hover { color: #E8EAF2; }
+  .nav-links a.active { color: #E8EAF2; }
+  .nav-cta { display: none; padding: 10px 20px; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #00D9C0); color: #fff; font-weight: 600; font-size: 14px; box-shadow: 0 8px 32px rgba(124,58,237,0.35); }
+  .nav-toggle { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+  .nav-toggle span { width: 24px; height: 2px; background: #E8EAF2; }
+  @media (min-width: 880px) {
+    .nav-links { display: flex; }
+    .nav-cta { display: inline-block; }
+    .nav-toggle { display: none; }
+  }
+
+  /* HERO / HEADER */
+  .pricing-hero { position: relative; padding: 96px 0 48px; text-align: center; overflow: hidden; }
+  .pricing-hero::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(124,58,237,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .eyebrow { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #C9B8F2; margin-bottom: 24px; position: relative; }
+  h1.section-title { font-family: system-ui, -apple-system, sans-serif; font-weight: 900; font-size: clamp(40px, 6vw, 64px); letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 20px; position: relative; display: inline-block; }
+  h1.section-title::before {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: -16px; width: 48px; height: 2px;
+    background: linear-gradient(90deg, #7C3AED, #7C3AED);
+  }
+  .sub { max-width: 620px; margin: 36px auto 0; color: #B8BCD0; font-size: 18px; }
+
+  /* BILLING TOGGLE */
+  .billing { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 48px; position: relative; z-index: 2; }
+  .billing label.opt { font-size: 14px; color: #B8BCD0; font-weight: 600; cursor: pointer; transition: color .2s; }
+  .toggle { position: relative; width: 64px; height: 32px; }
+  .toggle input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 2; }
+  .toggle .track {
+    position: absolute; inset: 0; border-radius: 999px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(124,58,237,0.4);
+    transition: background .25s;
+  }
+  .toggle .thumb {
+    position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 999px;
+    background: linear-gradient(135deg, #7C3AED, #00D9C0);
+    transition: transform .25s; box-shadow: 0 4px 12px rgba(0,217,192,0.4);
+  }
+  .toggle input:checked + .track { background: rgba(0,217,192,0.15); }
+  .toggle input:checked + .track + .thumb { transform: translateX(32px); }
+
+  .save-pill { display: inline-block; padding: 4px 10px; border-radius: 4px; background: rgba(0,217,192,0.15); color: #00D9C0; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; margin-left: 8px; }
+
+  /* Price visibility hack via :checked */
+  .price .monthly { display: inline; }
+  .price .annual { display: none; }
+  .period .monthly-p { display: inline; }
+  .period .annual-p { display: none; }
+  #billing-toggle:checked ~ .pricing-section .price .monthly { display: none; }
+  #billing-toggle:checked ~ .pricing-section .price .annual { display: inline; }
+  #billing-toggle:checked ~ .pricing-section .period .monthly-p { display: none; }
+  #billing-toggle:checked ~ .pricing-section .period .annual-p { display: inline; }
+  #billing-toggle:checked ~ .pricing-hero label[for="billing-toggle"].opt-annual { color: #E8EAF2; }
+  #billing-toggle:not(:checked) ~ .pricing-hero label[for="billing-toggle"].opt-monthly { color: #E8EAF2; }
+
+  /* PRICING SECTION */
+  .pricing-section { position: relative; padding: 64px 0 96px; }
+  .pricing-section::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(124,58,237,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .pricing-wrap { position: relative; border-radius: 24px; padding: 8px; }
+  .grid {
+    display: grid; grid-template-columns: 1fr; gap: 24px;
+    position: relative;
+  }
+  @media (min-width: 820px) {
+    .grid { grid-template-columns: 1fr 1fr; gap: 32px; align-items: stretch; }
+  }
+
+  .card {
+    background: #12172B; border-radius: 12px; padding: 36px 32px;
+    border: 1px solid rgba(124,58,237,0.18);
+    box-shadow: 0 2px 8px rgba(124,58,237,0.15);
+    position: relative; transition: box-shadow .3s, transform .3s;
+    display: flex; flex-direction: column;
+  }
+  .card:hover { box-shadow: 0 8px 32px rgba(124,58,237,0.35); }
+  .card.popular {
+    box-shadow: 0 24px 64px rgba(0,217,192,0.20);
+    border: 1px solid rgba(0,217,192,0.35);
+  }
+  .badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    padding: 8px 18px; border-radius: 999px;
+    background: linear-gradient(135deg, #7C3AED, #00D9C0);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    box-shadow: 0 8px 20px rgba(124,58,237,0.4);
+  }
+  .tier-name { font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #00D9C0; margin-bottom: 8px; }
+  .card.popular .tier-name { color: #C9B8F2; }
+  .tier-tag { color: #B8BCD0; font-size: 14px; margin-bottom: 24px; min-height: 44px; }
+  .price-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+  .price { font-family: system-ui, sans-serif; font-weight: 900; font-size: 64px; letter-spacing: -0.04em; line-height: 1; }
+  .period { color: #B8BCD0; font-size: 14px; }
+  .billed-as { color: #8A91A8; font-size: 13px; margin-bottom: 28px; min-height: 20px; }
+
+  .cta-btn {
+    display: block; width: 100%; text-align: center;
+    padding: 14px 24px; border-radius: 999px; font-weight: 700; font-size: 15px;
+    transition: transform .2s, box-shadow .2s; margin-bottom: 28px;
+  }
+  .cta-primary {
+    background: linear-gradient(135deg, #7C3AED, #00D9C0); color: #fff;
+    box-shadow: 0 24px 64px rgba(0,217,192,0.20);
+  }
+  .cta-primary:hover { transform: translateY(-2px); }
+  .cta-ghost {
+    background: transparent; color: #E8EAF2;
+    border: 1px solid rgba(232,234,242,0.25);
+  }
+  .cta-ghost:hover { border-color: #00D9C0; color: #00D9C0; }
+
+  .features-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .features-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: #D5D8E8; }
+  .check {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 999px;
+    background: rgba(0,217,192,0.12); color: #00D9C0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900;
+  }
+  .divider { height: 1px; background: rgba(124,58,237,0.18); margin: 0 0 28px; }
+
+  /* FAQ / COMPARE STRIP */
+  .compare {
+    margin-top: 64px;
+    background: #12172B; border-radius: 24px; padding: 40px 32px;
+    border: 1px solid rgba(124,58,237,0.18);
+    position: relative;
+  }
+  .compare h2 { font-family: system-ui; font-weight: 800; font-size: 28px; letter-spacing: -0.02em; margin-bottom: 8px; position: relative; display: inline-block; }
+  .compare h2::before { content: ""; position: absolute; bottom: -10px; left: 0; width: 48px; height: 2px; background: #7C3AED; }
+  .compare p { color: #B8BCD0; margin-top: 20px; max-width: 720px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .chip { padding: 6px 12px; border-radius: 4px; background: rgba(124,58,237,0.12); color: #C9B8F2; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; border: 1px solid rgba(124,58,237,0.25); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid rgba(124,58,237,0.18); padding: 56px 0 40px; margin-top: 64px; background: #0B0E1A; }
+  .foot-grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
+  @media (min-width: 720px) { .foot-grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+  .foot-col h4 { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A91A8; margin-bottom: 16px; font-weight: 700; }
+  .foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .foot-col a { color: #B8BCD0; font-size: 14px; }
+  .foot-col a:hover { color: #00D9C0; }
+  .foot-about { color: #B8BCD0; font-size: 14px; max-width: 280px; margin-top: 14px; }
+  .foot-bottom { border-top: 1px solid rgba(124,58,237,0.12); margin-top: 40px; padding-top: 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: #8A91A8; font-size: 13px; }
+
+  /* Hide checkbox visually but keep for sibling state */
+  #billing-toggle { position: absolute; opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../hero/index.html" class="logo"><span class="logo-dot"></span>Luminos</a>
+    <div class="nav-links">
+      <a href="../hero/index.html">Hero</a>
+      <a href="../features/index.html">Features</a>
+      <a href="../how-it-works/index.html">How it works</a>
+      <a href="#" class="active">Pricing</a>
+      <a href="../early-access/index.html">Early Access</a>
+    </div>
+    <a href="../early-access/index.html" class="nav-cta">Start Free Trial</a>
+    <div class="nav-toggle"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- The hidden checkbox lives at body level so :checked ~ siblings can flip prices -->
+<input type="checkbox" id="billing-toggle">
+
+<!-- PRICING HERO -->
+<header class="pricing-hero">
+  <div class="container">
+    <span class="eyebrow">Pricing</span>
+    <h1 class="section-title">Pay for polish, not<br>per word.</h1>
+    <p class="sub">Two simple tiers built for product teams that ship constantly. Cancel anytime. Volume discounts at 25+ seats.</p>
+
+    <div class="billing">
+      <label for="billing-toggle" class="opt opt-monthly">Monthly</label>
+      <div class="toggle">
+        <label for="billing-toggle" style="position:absolute;inset:0;cursor:pointer;z-index:3;"></label>
+        <span class="track"></span>
+        <span class="thumb"></span>
+      </div>
+      <label for="billing-toggle" class="opt opt-annual">Annual <span class="save-pill">SAVE 20%</span></label>
+    </div>
+  </div>
+</header>
+
+<!-- PRICING CARDS -->
+<section class="pricing-section">
+  <div class="container">
+    <div class="pricing-wrap">
+      <div class="grid">
+
+        <!-- CREW -->
+        <article class="card">
+          <div class="tier-name">Crew</div>
+          <p class="tier-tag">For small product squads getting their first changelogs out the door.</p>
+          <div class="price-row">
+            <span class="price">$<span class="monthly">29</span><span class="annual">23</span></span>
+            <span class="period">/seat/<span class="monthly-p">month</span><span class="annual-p">month</span></span>
+          </div>
+          <p class="billed-as"><span class="monthly">Billed monthly</span><span class="annual">Billed annually — $276/seat/year</span></p>
+          <a href="../early-access/index.html" class="cta-btn cta-ghost">Start with Crew</a>
+          <div class="divider"></div>
+          <ul class="features-list">
+            <li><span class="check">✓</span> Auto-draft release notes from up to 50 Jira tickets / month</li>
+            <li><span class="check">✓</span> Notion &amp; Linear two-way sync</li>
+            <li><span class="check">✓</span> 3 tone presets (Casual, Formal, Hype)</li>
+            <li><span class="check">✓</span> One-click Markdown &amp; HTML export</li>
+            <li><span class="check">✓</span> 5 saved templates per workspace</li>
+            <li><span class="check">✓</span> Email &amp; community support</li>
+          </ul>
+        </article>
+
+        <!-- STUDIO -->
+        <article class="card popular">
+          <span class="badge">★ Most Popular</span>
+          <div class="tier-name">Studio</div>
+          <p class="tier-tag">For product orgs running parallel releases, customer comms, and a brand voice to protect.</p>
+          <div class="price-row">
+            <span class="price">$<span class="monthly">79</span><span class="annual">63</span></span>
+            <span class="period">/seat/<span class="monthly-p">month</span><span class="annual-p">month</span></span>
+          </div>
+          <p class="billed-as"><span class="monthly">Billed monthly</span><span class="annual">Billed annually — $756/seat/year</span></p>
+          <a href="../early-access/index.html" class="cta-btn cta-primary">Get Studio</a>
+          <div class="divider"></div>
+          <ul class="features-list">
+            <li><span class="check">✓</span> Unlimited Jira, Notion, GitHub &amp; Confluence sources</li>
+            <li><span class="check">✓</span> Custom tone calibration sliders + brand voice memory</li>
+            <li><span class="check">✓</span> One-click publish to Confluence, Intercom &amp; Mailchimp</li>
+            <li><span class="check">✓</span> Customer email generation with merge fields</li>
+            <li><span class="check">✓</span> SSO/SAML, audit logs &amp; role-based access</li>
+            <li><span class="check">✓</span> Priority Slack support with 2-hour SLA</li>
+          </ul>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- COMPARE STRIP -->
+    <div class="compare">
+      <h2>Need something bigger?</h2>
+      <p>Enterprise plans add dedicated infra, custom data residency (EU, US, APAC), private model fine-tuning on your historical release notes, and a named CSM. Talk to us about volume pricing past 25 seats.</p>
+      <div class="chips">
+        <span class="chip">SOC 2 Type II</span>
+        <span class="chip">GDPR</span>
+        <span class="chip">Custom DPA</span>
+        <span class="chip">99.95% SLA</span>
+        <span class="chip">Private VPC</span>
+        <span class="chip">Audit Logs</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <div class="logo"><span class="logo-dot"></span>Luminos</div>
+        <p class="foot-about">The AI writing copilot that turns messy Notion docs and Jira tickets into polished release notes in seconds.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="../hero/index.html">Overview</a></li>
+          <li><a href="../features/index.html">Features</a></li>
+          <li><a href="../how-it-works/index.html">How it works</a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="../early-access/index.html">Early Access</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">DPA</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2025 Luminos AI, Inc. All rights reserved.</span>
+      <span>Made for product teams who ship on Fridays.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

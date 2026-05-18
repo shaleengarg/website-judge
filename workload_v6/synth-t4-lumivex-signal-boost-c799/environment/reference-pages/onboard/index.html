@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Onboard — Lumivex</title>
+<style>
+  .onboard-hero {
+    position: relative;
+    padding: 100px 0 60px;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(124,58,237,0.28), transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(245,158,11,0.14), transparent 55%),
+      var(--grad-hero);
+    overflow: hidden;
+  }
+  .onboard-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none;
+  }
+  .onboard-hero > * { position: relative; z-index: 1; }
+  .onboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: var(--space-8);
+    align-items: start;
+    padding-top: var(--space-7);
+  }
+  @media (max-width: 900px) {
+    .onboard-grid { grid-template-columns: 1fr; gap: var(--space-7); }
+  }
+  .form-card { position: relative; }
+  .form-card::after {
+    content: "";
+    position: absolute;
+    bottom: -60px;
+    left: -60px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(245,158,11,0.18), transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .trust-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+  }
+  @media (max-width: 640px) {
+    .trust-row { grid-template-columns: 1fr; }
+  }
+  .tl-aside {
+    position: sticky;
+    top: 100px;
+  }
+  @media (max-width: 900px) {
+    .tl-aside { position: static; }
+  }
+  .check-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .check-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--fs-3);
+    color: var(--ink-dim);
+  }
+  .check-list li::before {
+    content: "✓";
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent-2-soft);
+    color: var(--accent-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: 12px;
+    border: 1px solid rgba(245,158,11,0.35);
+  }
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  @media (max-width: 540px) {
+    .form-grid-2 { grid-template-columns: 1fr; }
+  }
+  .form-foot {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--accent-1-line);
+    font-size: var(--fs-2);
+    color: var(--ink-faint);
+    line-height: 1.6;
+  }
+  .legal-link { color: var(--accent-2); }
+  .secure-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-head);
+    font-size: var(--fs-1);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: var(--space-3);
+  }
+  .secure-tag::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 12px var(--accent-2);
+  }
+  .ascii-arrow {
+    color: var(--accent-1);
+    font-family: var(--font-mono);
+  }
+  .below-strip {
+    margin-top: var(--space-8);
+    background:
+      linear-gradient(90deg, rgba(124,58,237,0.18), rgba(245,158,11,0.12));
+    border: 1px solid var(--accent-1-line);
+    border-radius: var(--r-card);
+    padding: var(--space-6);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  @media (max-width: 768px) {
+    .below-strip { grid-template-columns: 1fr; }
+  }
+  .est-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--accent-2-soft);
+    color: var(--accent-2);
+    border-radius: var(--r-pill);
+    font-family: var(--font-head);
+    font-size: var(--fs-1);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+    border: 1px solid rgba(245,158,11,0.35);
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../ignite/index.html" class="brand">
+      <span class="brand-dot"></span>
+      Lumivex
+    </a>
+    <ul class="nav-links">
+      <li><a href="../ignite/index.html">Ignite</a></li>
+      <li><a href="../platform/index.html">Platform</a></li>
+      <li><a href="../results/index.html">Results</a></li>
+      <li><a href="../pricing/index.html">Pricing</a></li>
+      <li><a href="#" class="active">Onboard</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="../pricing/index.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="#signup" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<header class="onboard-hero full-bleed">
+  <div class="container">
+    <div class="sec-head">
+      <span class="badge badge-amber badge-dot" style="margin-bottom: var(--space-4);">Onboarding · 48-hour activation</span>
+      <h1 style="max-width: 880px;">Live in <span class="text-amber">48 hours</span>. Pipeline in <span class="text-violet">two weeks</span>.</h1>
+      <p class="lede" style="max-width: 720px; margin-top: var(--space-4);">
+        No long implementation. No services contracts. Connect your CRM, draw your ICP, set the signal thresholds that matter — and let Lumivex hand your reps a working queue by Friday.
+      </p>
+    </div>
+
+    <div class="onboard-grid">
+
+      <aside class="tl-aside">
+        <div class="secure-tag">Your 4-step path</div>
+        <h3 style="margin-bottom: var(--space-6);">From signup to first signal.</h3>
+
+        <div class="timeline">
+
+          <div class="tl-step">
+            <div class="tl-num">1</div>
+            <div class="tl-title">Connect your CRM</div>
+            <p class="tl-desc">One-click OAuth into Salesforce, HubSpot, Pipedrive, or Attio. We mirror accounts, opportunities and owner mappings in under three minutes.</p>
+            <div class="caption" style="margin-top: var(--space-2);">⏱ ~ 3 minutes</div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-num">2</div>
+            <div class="tl-title">Define your ICP</div>
+            <p class="tl-desc">Use the visual ICP builder to set firmographics, tech-stack signals, and exclusion rules. Import an existing target list to seed the model.</p>
+            <div class="caption" style="margin-top: var(--space-2);">⏱ ~ 20 minutes</div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-num">3</div>
+            <div class="tl-title">Set signal thresholds</div>
+            <p class="tl-desc">Choose which intent signals trigger an alert — funding events, hiring spikes, vendor churn, web sessions. Pick a scoring floor and routing rules.</p>
+            <div class="caption" style="margin-top: var(--space-2);">⏱ ~ 30 minutes</div>
+          </div>
+
+          <div class="tl-step">
+            <div class="tl-num">4</div>
+            <div class="tl-title">Go live in 48 hours</div>
+            <p class="tl-desc">A solutions engineer reviews your config, validates routing, and flips the switch. Your first qualified signals land in Slack and your CRM the same day.</p>
+            <div class="caption" style="margin-top: var(--space-2);">⏱ ~ 48 hours end-to-end</div>
+          </div>
+
+        </div>
+      </aside>
+
+      <section id="signup" class="card-glass card-lifted form-card">
+        <span class="badge badge-violet" style="margin-bottom: var(--space-3);">Free · No credit card</span>
+        <h3 class="mb-3">Claim your free signals.</h3>
+        <p class="muted" style="margin-bottom: var(--space-5);">
+          Start a 14-day trial with 250 fully enriched signals on your domain. Talk to your reps about real accounts — not theoretical ones.
+        </p>
+
+        <form>
+          <div class="form-field">
+            <label class="form-label" for="email">Work Email</label>
+            <input class="form-input" id="email" type="email" placeholder="you@company.com" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="company">Company Name</label>
+              <input class="form-input" id="company" type="text" placeholder="Acme, Inc." />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="team">Team Size</label>
+              <select class="form-select" id="team">
+                <option>1 – 10 reps</option>
+                <option>11 – 50 reps</option>
+                <option>51 – 200 reps</option>
+                <option>201 – 500 reps</option>
+                <option>500+ reps</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="crm">Primary CRM</label>
+            <select class="form-select" id="crm">
+              <option>Salesforce</option>
+              <option>HubSpot</option>
+              <option>Pipedrive</option>
+              <option>Attio</option>
+              <option>Other / None yet</option>
+            </select>
+            <div class="form-help">We'll auto-detect routing rules from your CRM on connect.</div>
+          </div>
+
+          <a href="#" class="btn btn-primary btn-lg btn-block" style="margin-top: var(--space-5);">
+            Claim Your Free Signals <span class="ascii-arrow">→</span>
+          </a>
+
+          <ul class="check-list">
+            <li>250 enriched account signals, on us</li>
+            <li>Live Slack + CRM delivery on day one</li>
+            <li>Cancel anytime — no implementation fees, ever</li>
+          </ul>
+
+          <div class="form-foot">
+            By creating an account you agree to Lumivex's <a class="legal-link" href="#">Terms of Service</a> and <a class="legal-link" href="#">Privacy Policy</a>. We never sell your data. Signals are processed in the EU and US.
+          </div>
+        </form>
+      </section>
+
+    </div>
+
+    <div class="below-strip">
+      <div>
+        <span class="est-badge">Heads up</span>
+        <h4 style="margin: 0 0 var(--space-2);">Most teams see their first qualified signal within 6 working hours.</h4>
+        <p class="muted mb-0">A named onboarding lead walks you through CRM mapping, ICP review, and Slack routing on a single 45-minute call. After that — you're driving.</p>
+      </div>
+      <div class="flex gap-3" style="justify-content: flex-end; flex-wrap: wrap;">
+        <a href="../platform/index.html" class="btn btn-ghost">See the platform</a>
+        <a href="#signup" class="btn btn-amber">Start now</a>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+
+    <div class="sec-head center">
+      <span class="eyebrow">Trust & Compliance</span>
+      <h2>Built for serious revenue teams.</h2>
+      <p class="lede" style="max-width: 680px; margin: var(--space-3) auto 0;">Every signal Lumivex serves is sourced, processed, and routed under enterprise-grade controls. The receipts:</p>
+    </div>
+
+    <div class="trust-row">
+
+      <div class="trust" style="justify-content: flex-start; padding: var(--space-5);">
+        <div class="trust-icon">SOC</div>
+        <div>
+          <div class="trust-label">SOC 2 Type II</div>
+          <div class="caption" style="margin-top: 2px;">Audited annually · Drata</div>
+        </div>
+      </div>
+
+      <div class="trust" style="justify-content: flex-start; padding: var(--space-5);">
+        <div class="trust-icon" style="background: var(--grad-amber); color: #1a0a3d;">GDPR</div>
+        <div>
+          <div class="trust-label">GDPR Compliant</div>
+          <div class="caption" style="margin-top: 2px;">EU data residency available</div>
+        </div>
+      </div>
+
+      <div class="trust" style="justify-content: flex-start; padding: var(--space-5);">
+        <div class="trust-icon">99.9</div>
+        <div>
+          <div class="trust-label">99.9% Uptime</div>
+          <div class="caption" style="margin-top: 2px;">Public status · last 365 days</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<section class="section-sm">
+  <div class="container">
+    <div class="callout flex-between" style="flex-wrap: wrap;">
+      <div>
+        <div class="eyebrow" style="margin-bottom: var(--space-2);">Still evaluating?</div>
+        <h4 class="mb-0">Talk to a signal architect — 20 minutes, no slides.</h4>
+      </div>
+      <div class="flex gap-3">
+        <a href="../pricing/index.html" class="btn btn-ghost">Compare plans</a>
+        <a href="#" class="btn btn-primary">Book a call</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer full-bleed">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand"><span class="brand-dot"></span> Lumivex</div>
+      <p class="footer-tag">Signal intelligence for growth teams who refuse to wait for the hand-raise.</p>
+      <div class="socials" style="margin-top: var(--space-4);">
+        <a href="#" class="social social-x" aria-label="X"></a>
+        <a href="#" class="social social-in" aria-label="LinkedIn"></a>
+        <a href="#" class="social social-gh" aria-label="GitHub"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="../ignite/index.html">Ignite</a></li>
+        <li><a href="../platform/index.html">Platform</a></li>
+        <li><a href="../results/index.html">Results</a></li>
+        <li><a href="../pricing/index.html">Pricing</a></li>
+        <li><a href="#">Onboard</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Customers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Resources</h5>
+      <ul>
+        <li><a href="#">Docs</a></li>
+        <li><a href="#">API Reference</a></li>
+        <li><a href="#">Trust Center</a></li>
+        <li><a href="#">Status</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Lumivex Signal Systems, Inc. All rights reserved.</div>
+    <div class="footer-copy">Made in NYC · Berlin · Singapore</div>
+  </div>
+</footer>
+
+</body>
+</html>

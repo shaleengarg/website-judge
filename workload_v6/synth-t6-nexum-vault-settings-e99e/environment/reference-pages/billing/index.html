@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Billing — Nexum Vault</title>
+<style>
+  .billing-grid { display: grid; grid-template-columns: 1fr 360px; gap: var(--space-6); align-items: start; }
+  .plan-card {
+    background: linear-gradient(135deg, #1a2438 0%, #111926 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-5);
+  }
+  .plan-card .tier {
+    font-family: var(--font-head);
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    color: var(--accent-1);
+    letter-spacing: -0.01em;
+  }
+  .plan-card .price {
+    font-family: var(--font-mono);
+    font-size: var(--fs-lg);
+    color: var(--ink);
+    margin-top: var(--space-1);
+  }
+  .plan-card .price small { color: var(--ink-mute); font-size: var(--fs-xs); }
+  .plan-card .feat { list-style: none; padding: 0; margin: var(--space-4) 0 0; font-size: var(--fs-sm); color: var(--ink-dim); display: flex; flex-direction: column; gap: 6px; }
+  .plan-card .feat li::before { content: "✓"; color: var(--accent-1); margin-right: 8px; font-weight: 700; }
+  .usage-row { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border); }
+  .usage-item .lbl-row { display: flex; justify-content: space-between; font-size: var(--fs-xs); color: var(--ink-mute); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .usage-item .lbl-row .v { color: var(--ink); font-family: var(--font-mono); text-transform: none; letter-spacing: normal; }
+
+  .card-preview {
+    background: linear-gradient(135deg, #1d3a4a 0%, #0c2230 60%, #00604f 100%);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    color: var(--ink);
+    height: 180px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    margin-bottom: var(--space-5);
+  }
+  .card-preview .chip { width: 36px; height: 26px; border-radius: 4px; background: linear-gradient(135deg, #d9b770, #8a6f30); }
+  .card-preview .num { font-family: var(--font-mono); font-size: var(--fs-lg); letter-spacing: 0.12em; }
+  .card-preview .meta { display: flex; justify-content: space-between; font-size: var(--fs-xs); color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-preview .meta .v { color: var(--ink); font-family: var(--font-mono); }
+
+  .form-row.cols-card { display: grid; grid-template-columns: 1fr 120px 120px 100px; gap: var(--space-3); }
+  .form-row.cols-addr { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-3); }
+  .radio-list.pdf { gap: var(--space-3); }
+  @media (max-width: 1100px) {
+    .billing-grid { grid-template-columns: 1fr; }
+    .form-row.cols-card, .form-row.cols-addr { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .form-row.cols-card, .form-row.cols-addr { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">N</span>
+      <span class="brand-name">Nexum<span class="accent">Vault</span></span>
+    </div>
+    <div class="nav-section">Account</div>
+    <ul class="nav-list">
+      <li><a href="../profile/index.html"><span class="nav-ico">◷</span> Profile</a></li>
+      <li><a href="../security/index.html"><span class="nav-ico">⛨</span> Security</a></li>
+      <li><a href="#" class="active"><span class="nav-ico">▤</span> Billing</a></li>
+      <li><a href="../notifications/index.html"><span class="nav-ico">◉</span> Notifications</a></li>
+      <li><a href="../audit-log/index.html"><span class="nav-ico">≡</span> Audit Log</a></li>
+    </ul>
+    <div class="sidebar-foot">
+      Workspace: <strong style="color:var(--ink-dim)">acme-prod</strong><br>
+      Region: eu-west-2<br>
+      v4.18.2-stable
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-head">
+      <div class="page-head-title">
+        <div class="crumbs">
+          <a href="#">Settings</a><span class="sep">/</span><span>Billing</span>
+        </div>
+        <h1>Billing &amp; Subscription</h1>
+        <div class="page-sub">Manage your plan, payment method, invoices, and tax preferences.</div>
+      </div>
+      <div class="actions">
+        <a class="btn btn-ghost" href="#">Download W-9</a>
+        <a class="btn btn-primary" href="#">Upgrade plan</a>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="label">Current Plan</div>
+        <div class="value ink">Scale</div>
+        <div class="sub">Tier 3 • Annual contract</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Monthly Spend</div>
+        <div class="value">$2,840</div>
+        <div class="delta up">▲ 4.2% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Next Invoice</div>
+        <div class="value ink">Mar 01</div>
+        <div class="sub">Issues in 11 days</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Accrued Overages</div>
+        <div class="value warn">$184.20</div>
+        <div class="sub">API calls + storage</div>
+      </div>
+    </div>
+
+    <div class="billing-grid">
+      <div>
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Payment Method</h2>
+            <span class="hint">PCI-DSS Tier 1 • encrypted via Vault HSM</span>
+          </div>
+
+          <div class="card-preview">
+            <div class="row between" style="align-items:flex-start;">
+              <div class="chip"></div>
+              <div class="badge ok">Default</div>
+            </div>
+            <div>
+              <div class="num">•••• •••• •••• 4291</div>
+              <div class="meta" style="margin-top:8px;">
+                <span>Cardholder<br><span class="v">M. CHEN</span></span>
+                <span>Expires<br><span class="v">08 / 27</span></span>
+                <span>Network<br><span class="v">VISA</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Card Details</div>
+            <div class="form-row cols-1">
+              <div class="field">
+                <label for="cardholder">Cardholder name</label>
+                <input id="cardholder" type="text" value="Marcus Chen">
+              </div>
+            </div>
+            <div class="form-row cols-card">
+              <div class="field">
+                <label for="cardnum">Card number</label>
+                <input id="cardnum" class="mono" type="text" value="4929 0421 8810 4291">
+              </div>
+              <div class="field">
+                <label for="expm">Expiry month</label>
+                <select id="expm">
+                  <option>01 — Jan</option><option>02 — Feb</option><option>03 — Mar</option>
+                  <option>04 — Apr</option><option>05 — May</option><option>06 — Jun</option>
+                  <option>07 — Jul</option><option selected>08 — Aug</option><option>09 — Sep</option>
+                  <option>10 — Oct</option><option>11 — Nov</option><option>12 — Dec</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="expy">Expiry year</label>
+                <select id="expy">
+                  <option>2025</option><option>2026</option><option selected>2027</option>
+                  <option>2028</option><option>2029</option><option>2030</option><option>2031</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cvv">CVV</label>
+                <input id="cvv" class="mono" type="password" value="••••" maxlength="4">
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Billing Address</div>
+            <div class="form-row cols-1">
+              <div class="field">
+                <label for="addr1">Address line 1</label>
+                <input id="addr1" type="text" value="1144 Market Street, Suite 1900">
+              </div>
+            </div>
+            <div class="form-row cols-1">
+              <div class="field">
+                <label for="addr2">Address line 2 <span class="text-mute">(optional)</span></label>
+                <input id="addr2" type="text" value="Attn: Finance Department">
+              </div>
+            </div>
+            <div class="form-row cols-addr">
+              <div class="field">
+                <label for="city">City</label>
+                <input id="city" type="text" value="San Francisco">
+              </div>
+              <div class="field">
+                <label for="state">State / Province</label>
+                <select id="state">
+                  <option>Alabama</option><option>Alaska</option><option>Arizona</option>
+                  <option selected>California</option><option>Colorado</option>
+                  <option>New York</option><option>Texas</option><option>Washington</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="zip">Postal code</label>
+                <input id="zip" class="mono" type="text" value="94103">
+              </div>
+            </div>
+            <div class="form-row cols-1">
+              <div class="field">
+                <label for="country">Country</label>
+                <select id="country">
+                  <option>Australia</option><option>Canada</option><option>France</option>
+                  <option>Germany</option><option>Japan</option>
+                  <option>United Kingdom</option><option selected>United States</option>
+                </select>
+              </div>
+            </div>
+            <label class="check" style="margin-top:var(--space-2);">
+              <input type="checkbox" checked>
+              <span class="lbl">
+                <span>Set as default payment method</span>
+                <small>This card will be used for all future charges, renewals, and overage settlements.</small>
+              </span>
+            </label>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-danger" type="button">Remove card</button>
+            <div class="spacer"></div>
+            <button class="btn" type="button">Cancel</button>
+            <button class="btn btn-primary" type="submit">Save payment method</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Invoice Preferences</h2>
+            <span class="hint">Applied to all future invoices</span>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="invemail">Invoice email</label>
+              <input id="invemail" type="email" value="finance@acme.example">
+              <div class="help">Comma-separate to send to multiple recipients.</div>
+            </div>
+            <div class="field">
+              <label for="po">PO number</label>
+              <input id="po" class="mono" type="text" value="PO-2025-00482">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="vat">VAT / Tax ID</label>
+              <input id="vat" class="mono" type="text" value="US-94-3217788">
+            </div>
+            <div class="field">
+              <label for="invlang">Invoice language</label>
+              <select id="invlang">
+                <option selected>English (US)</option>
+                <option>English (UK)</option>
+                <option>Deutsch</option>
+                <option>Français</option>
+                <option>Español</option>
+                <option>日本語</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label">PDF format</span>
+            <div class="radio-list inline pdf">
+              <label class="radio"><input type="radio" name="pdf" checked><span class="lbl"><span>PDF/A-3 (archival)</span><small>Recommended for audit trail</small></span></label>
+              <label class="radio"><input type="radio" name="pdf"><span class="lbl"><span>PDF 1.7 (standard)</span><small>Smaller file size</small></span></label>
+              <label class="radio"><input type="radio" name="pdf"><span class="lbl"><span>ZUGFeRD 2.1</span><small>EU e-invoicing</small></span></label>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="toggle-row">
+            <div class="meta">
+              <span class="t">Auto-pay invoices</span>
+              <span class="d">Automatically charge the default payment method on the due date.</span>
+            </div>
+            <label class="toggle"><input type="checkbox" checked></label>
+          </div>
+
+          <div class="form-row mt-4">
+            <div class="field">
+              <label for="alert">Spending alert threshold</label>
+              <div class="input-prefix-wrap">
+                <span class="prefix">$</span>
+                <input id="alert" class="mono" type="number" value="3500" min="0">
+              </div>
+              <div class="help">Notify finance contacts when projected monthly spend exceeds this amount.</div>
+            </div>
+            <div class="field">
+              <label for="alertemail">Alert email</label>
+              <input id="alertemail" type="email" value="billing-alerts@acme.example">
+            </div>
+          </div>
+
+          <div class="btn-row right">
+            <button class="btn" type="button">Reset</button>
+            <button class="btn btn-primary" type="submit">Save preferences</button>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="plan-card">
+          <div class="row between">
+            <div>
+              <div class="tier">Scale</div>
+              <div class="price">$2,400 <small>/ month, billed annually</small></div>
+            </div>
+            <span class="badge ok">Active</span>
+          </div>
+          <ul class="feat">
+            <li>Unlimited secrets &amp; vaults</li>
+            <li>50 team members included</li>
+            <li>10M API calls / month</li>
+            <li>Dynamic credentials &amp; rotation</li>
+            <li>SOC 2 + HIPAA reports</li>
+            <li>24/7 priority support</li>
+          </ul>
+          <div class="usage-row">
+            <div class="usage-item">
+              <div class="lbl-row"><span>API Calls</span><span class="v">8.4M / 10M</span></div>
+              <div class="bar"><span style="width:84%;"></span></div>
+            </div>
+            <div class="usage-item">
+              <div class="lbl-row"><span>Storage</span><span class="v">42 / 100 GB</span></div>
+              <div class="bar"><span style="width:42%;"></span></div>
+            </div>
+            <div class="usage-item">
+              <div class="lbl-row"><span>Seats</span><span class="v">38 / 50</span></div>
+              <div class="bar"><span style="width:76%;"></span></div>
+            </div>
+            <div class="usage-item">
+              <div class="lbl-row"><span>Dynamic Creds</span><span class="v">1.2M / 1M</span></div>
+              <div class="bar warn"><span style="width:100%;"></span></div>
+            </div>
+          </div>
+          <div class="btn-row" style="margin-top:var(--space-4);padding-top:var(--space-3);">
+            <button class="btn btn-sm">Compare plans</button>
+            <button class="btn btn-sm btn-primary">Upgrade</button>
+          </div>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">Overage threshold reached</div>
+          You have exceeded your monthly dynamic credentials quota. Overages are billed at $0.0008 per credential issued.
+        </div>
+
+        <div class="panel" style="padding: var(--space-5);">
+          <h3 style="margin-bottom: var(--space-4);">Billing Contacts</h3>
+          <div class="row gap-3" style="margin-bottom: var(--space-3);">
+            <div class="avatar sm">MC</div>
+            <div class="col gap-1" style="flex:1; min-width:0;">
+              <div class="fw-600 text-sm">Marcus Chen</div>
+              <div class="text-xs text-mute">marcus.chen@acme.example • Primary</div>
+            </div>
+          </div>
+          <div class="row gap-3" style="margin-bottom: var(--space-3);">
+            <div class="avatar sm" style="background:linear-gradient(135deg,#f5a623,#a05c00);">RP</div>
+            <div class="col gap-1" style="flex:1; min-width:0;">
+              <div class="fw-600 text-sm">Rena Patel</div>
+              <div class="text-xs text-mute">rena.patel@acme.example • Finance</div>
+            </div>
+          </div>
+          <div class="row gap-3">
+            <div class="avatar sm" style="background:linear-gradient(135deg,#4ea1f3,#1d4d8c);">DK</div>
+            <div class="col gap-1" style="flex:1; min-width:0;">
+              <div class="fw-600 text-sm">Dmitri Kovac</div>
+              <div class="text-xs text-mute">dmitri.k@acme.example • Backup</div>
+            </div>
+          </div>
+          <button class="btn btn-sm w-full" style="margin-top:var(--space-4);">+ Add contact</button>
+        </div>
+      </aside>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <div>
+          <h3>Invoice History</h3>
+          <div class="text-xs text-mute" style="margin-top:4px;">Showing 25 most recent invoices • Jan 2023 – Feb 2025</div>
+        </div>
+        <div class="tools">
+          <button class="btn btn-sm">Export CSV</button>
+          <button class="btn btn-sm">Filter</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Invoice #</th>
+              <th>Issue date</th>
+              <th>Due date</th>
+              <th class="num">Amount</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono left">INV-2025-0218</td><td>Feb 01, 2025</td><td>Mar 01, 2025</td><td class="num">$2,840.20</td><td><span class="badge pending">Pending</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2025-0184</td><td>Jan 01, 2025</td><td>Jan 31, 2025</td><td class="num">$2,724.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-1142</td><td>Dec 01, 2024</td><td>Dec 31, 2024</td><td class="num">$2,612.50</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-1098</td><td>Nov 01, 2024</td><td>Dec 01, 2024</td><td class="num">$2,400.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-1041</td><td>Oct 01, 2024</td><td>Oct 31, 2024</td><td class="num">$2,488.75</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0987</td><td>Sep 01, 2024</td><td>Sep 30, 2024</td><td class="num">$2,520.10</td><td><span class="badge overdue">Overdue</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0921</td><td>Aug 01, 2024</td><td>Aug 31, 2024</td><td class="num">$2,400.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0864</td><td>Jul 01, 2024</td><td>Jul 31, 2024</td><td class="num">$2,400.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0802</td><td>Jun 01, 2024</td><td>Jun 30, 2024</td><td class="num">$2,400.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0748</td><td>May 01, 2024</td><td>May 31, 2024</td><td class="num">$2,388.40</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0691</td><td>Apr 01, 2024</td><td>Apr 30, 2024</td><td class="num">$2,400.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0634</td><td>Mar 01, 2024</td><td>Mar 31, 2024</td><td class="num">$2,400.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0577</td><td>Feb 01, 2024</td><td>Mar 02, 2024</td><td class="num">$2,210.25</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2024-0512</td><td>Jan 01, 2024</td><td>Jan 31, 2024</td><td class="num">$2,210.25</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-1488</td><td>Dec 01, 2023</td><td>Dec 31, 2023</td><td class="num">$2,210.25</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-1421</td><td>Nov 01, 2023</td><td>Dec 01, 2023</td><td class="num">$2,180.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-1358</td><td>Oct 01, 2023</td><td>Oct 31, 2023</td><td class="num">$2,180.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-1294</td><td>Sep 01, 2023</td><td>Sep 30, 2023</td><td class="num">$2,180.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-1238</td><td>Aug 01, 2023</td><td>Aug 31, 2023</td><td class="num">$2,180.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-1177</td><td>Jul 01, 2023</td><td>Jul 31, 2023</td><td class="num">$1,840.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-1118</td><td>Jun 01, 2023</td><td>Jun 30, 2023</td><td class="num">$1,840.00</td><td><span class="badge fail">Failed</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-1055</td><td>May 01, 2023</td><td>May 31, 2023</td><td class="num">$1,840.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-0994</td><td>Apr 01, 2023</td><td>Apr 30, 2023</td><td class="num">$1,840.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-0931</td><td>Mar 01, 2023</td><td>Mar 31, 2023</td><td class="num">$1,420.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+            <tr><td class="mono left">INV-2023-0872</td><td>Feb 01, 2023</td><td>Feb 28, 2023</td><td class="num">$1,420.00</td><td><span class="badge paid">Paid</span></td><td class="text-right"><a href="#">Download</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-foot">
+        <div>Showing <strong>1–25</strong> of <strong>87</strong> invoices</div>
+        <div class="pager">
+          <label class="text-xs text-mute">Rows:</label>
+          <select><option>25</option><option>50</option><option>100</option></select>
+          <button class="btn btn-sm" disabled>‹ Prev</button>
+          <span class="text-xs">Page 1 / 4</span>
+          <button class="btn btn-sm">Next ›</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="app-foot">
+      <div>© 2025 Nexum Vault, Inc. · All invoices retained for 7 years per SOC 2 requirements.</div>
+      <div class="links">
+        <a href="#">Tax docs</a>
+        <a href="#">Service agreement</a>
+        <a href="#">Refund policy</a>
+        <a href="#">Status</a>
+      </div>
+      <div class="build">build 4.18.2 · eu-west-2</div>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

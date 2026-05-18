@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Archive Index — Folio Obscura</title>
+<style>
+  .archive-layout{
+    display:grid;
+    grid-template-columns:240px 1fr;
+    gap:var(--space-7);
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:var(--space-6) var(--space-5);
+  }
+  .archive-side{position:sticky;top:80px;align-self:start}
+  .issue-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:var(--gutter);
+  }
+  .marquee-band{
+    border-top:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+    padding:var(--space-4) 0;
+    overflow:hidden;
+    margin-top:var(--space-7);
+    background:var(--parchment);
+  }
+  .marquee-band svg{width:100%;height:64px;display:block}
+  .marquee-band svg text{font-family:system-ui,-apple-system,sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;fill:#1A1208}
+  .marquee-band svg line{stroke:#1A1208;fill:none;stroke-width:1}
+  .filter-strip{
+    border-top:2px solid var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding:var(--space-5) 0;
+    margin-bottom:var(--space-6);
+  }
+  .archive-hero{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:end;
+    gap:var(--space-5);
+    padding:var(--space-7) 0 var(--space-5);
+    border-bottom:3px double var(--ink);
+  }
+  @media (max-width:1024px){
+    .archive-layout{grid-template-columns:1fr}
+    .archive-side{position:static}
+    .issue-grid{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width:768px){
+    .issue-grid{grid-template-columns:repeat(2,1fr)}
+    .archive-hero{grid-template-columns:1fr}
+  }
+  @media (max-width:480px){
+    .issue-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="../cover-story/index.html" class="brand">Folio Obscura<small>Quarterly Design Criticism</small></a>
+    <ul class="nav-links">
+      <li><a href="../cover-story/index.html">Cover Story</a></li>
+      <li><a href="../type-lab/index.html">Type Lab</a></li>
+      <li><a href="../object-study/index.html">Object Study</a></li>
+      <li><a href="../grid-dispatch/index.html">Grid Dispatch</a></li>
+      <li><a href="../archive-index/index.html" class="active">Archive Index</a></li>
+    </ul>
+    <span class="nav-issue">№ XXXVII · MMXXIV</span>
+  </div>
+</nav>
+
+<div class="container">
+  <section class="archive-hero">
+    <div>
+      <span class="kicker">Section VII · The Stacks</span>
+      <h1 class="display" style="margin-bottom:var(--space-3)">The Complete Archive</h1>
+      <p class="lead" style="max-width:62ch;margin-bottom:0">Thirty-seven issues of Folio Obscura, indexed by season and stratified by the hidden logic of the moment in which each volume was set, printed, and bound.</p>
+    </div>
+    <div class="folio" style="line-height:0.9">37</div>
+  </section>
+
+  <div class="filter-strip">
+    <div class="flex-between" style="margin-bottom:var(--space-3)">
+      <span class="caption">Filter by thematic taxonomy — 12 tags</span>
+      <span class="caption muted tabular">001 — 037</span>
+    </div>
+    <div class="pill-row" style="margin:0">
+      <a href="#" class="pill active">All Issues</a>
+      <a href="#" class="pill">Typography</a>
+      <a href="#" class="pill">Grid Theory</a>
+      <a href="#" class="pill">Industrial Object</a>
+      <a href="#" class="pill">Swiss School</a>
+      <a href="#" class="pill">Vernacular</a>
+      <a href="#" class="pill">Print Production</a>
+      <a href="#" class="pill">Signage</a>
+      <a href="#" class="pill">Bauhaus &amp; After</a>
+      <a href="#" class="pill">Color Systems</a>
+      <a href="#" class="pill">Forgotten Movements</a>
+      <a href="#" class="pill">Manifestos</a>
+      <a href="#" class="pill">Critique</a>
+    </div>
+  </div>
+</div>
+
+<div class="archive-layout">
+
+  <aside class="archive-side">
+    <span class="caption" style="display:block;margin-bottom:var(--space-3)">Decades Indexed</span>
+    <h3 style="margin-bottom:var(--space-5)">Periodisation</h3>
+
+    <svg class="svg-rule" viewBox="0 0 240 24" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="12" x2="240" y2="12"/>
+      <circle cx="20" cy="12" r="3"/>
+      <circle cx="80" cy="12" r="3"/>
+      <circle cx="140" cy="12" r="3"/>
+      <circle cx="200" cy="12" r="3"/>
+      <line x1="20" y1="4" x2="20" y2="20"/>
+      <line x1="200" y1="4" x2="200" y2="20"/>
+    </svg>
+
+    <ul class="vtimeline">
+      <li>
+        <span class="decade">2024 ›</span>
+        <span class="entry">Vols 35–37 · current cycle</span>
+      </li>
+      <li>
+        <span class="decade">2020s</span>
+        <span class="entry">Vols 25–34 · ten issues</span>
+      </li>
+      <li>
+        <span class="decade">2010s</span>
+        <span class="entry">Vols 15–24 · ten issues</span>
+      </li>
+      <li>
+        <span class="decade">2000s</span>
+        <span class="entry">Vols 05–14 · ten issues</span>
+      </li>
+      <li>
+        <span class="decade">1990s</span>
+        <span class="entry">Vols 01–04 · founding</span>
+      </li>
+    </ul>
+
+    <div class="note-box" style="margin-top:var(--space-6)">
+      <strong style="font-family:var(--serif)">Editorial note.</strong>
+      <p style="margin:var(--space-2) 0 0;font-size:12px">Volumes 01–04 (1996–1998) were hand-bound in editions of 600 and remain partially unscanned. Microfilm copies held at Basel.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div class="flex-between" style="margin-bottom:var(--space-5)">
+      <h2 style="margin:0">All Issues · 1996 — Present</h2>
+      <span class="caption tabular">Showing 37 of 37</span>
+    </div>
+
+    <div class="issue-grid">
+
+      <a href="#" class="issue-card"><span class="vol">№ 37</span><span class="season">Winter 2024</span><span class="theme">The Hidden Logic of Nocturnal Cities</span><span class="contributor">— R. Blees Luxemburg</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 36</span><span class="season">Autumn 2024</span><span class="theme">Grotesk: An Anatomy</span><span class="contributor">— H. Berthold Estate</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 35</span><span class="season">Summer 2024</span><span class="theme">Calculators &amp; Care</span><span class="contributor">— M. Bellini</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 34</span><span class="season">Spring 2024</span><span class="theme">Field Systems Revisited</span><span class="contributor">— J. Müller-Brockmann</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 33</span><span class="season">Winter 2023</span><span class="theme">The Manifesto Problem</span><span class="contributor">— E. Lupton</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 32</span><span class="season">Autumn 2023</span><span class="theme">Wayfinding in Ruin</span><span class="contributor">— M. Vignelli</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 31</span><span class="season">Summer 2023</span><span class="theme">Paper, Pulp, Politics</span><span class="contributor">— A. Twemlow</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 30</span><span class="season">Spring 2023</span><span class="theme">Color as Argument</span><span class="contributor">— J. Albers Foundation</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 29</span><span class="season">Winter 2022</span><span class="theme">The Margins, Reclaimed</span><span class="contributor">— S. Heller</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 28</span><span class="season">Autumn 2022</span><span class="theme">Sub-Industrial Letterforms</span><span class="contributor">— J. Hoefler</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 27</span><span class="season">Summer 2022</span><span class="theme">Vernacular Atlases</span><span class="contributor">— C. Bantjes</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 26</span><span class="season">Spring 2022</span><span class="theme">Tabular Figures &amp; Power</span><span class="contributor">— K. Sahre</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 25</span><span class="season">Winter 2021</span><span class="theme">Pneumatic Modernism</span><span class="contributor">— D. Rams</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 24</span><span class="season">Autumn 2021</span><span class="theme">The Catalogue as Form</span><span class="contributor">— I. Chermayeff</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 23</span><span class="season">Summer 2021</span><span class="theme">After the Grid</span><span class="contributor">— K. Hyland</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 22</span><span class="season">Spring 2021</span><span class="theme">Reading the Spine</span><span class="contributor">— I. Boom</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 21</span><span class="season">Winter 2020</span><span class="theme">Sign, Notation, Score</span><span class="contributor">— K. Knowlton</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 20</span><span class="season">Autumn 2020</span><span class="theme">Lost Movements: Ulm</span><span class="contributor">— O. Aicher</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 19</span><span class="season">Summer 2020</span><span class="theme">The Domestic Brochure</span><span class="contributor">— P. Bil'ak</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 18</span><span class="season">Spring 2020</span><span class="theme">Italics, Slanted Thinking</span><span class="contributor">— M. Carter</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 17</span><span class="season">Winter 2019</span><span class="theme">Bauhaus Aftershocks</span><span class="contributor">— L. Moholy-Nagy Estate</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 16</span><span class="season">Autumn 2019</span><span class="theme">The Politics of the Cap-Height</span><span class="contributor">— J. Hochuli</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 15</span><span class="season">Summer 2019</span><span class="theme">Tactile Specimens</span><span class="contributor">— R. Bringhurst</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 14</span><span class="season">Spring 2019</span><span class="theme">Form Without Author</span><span class="contributor">— Anon. collective</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 13</span><span class="season">Winter 2018</span><span class="theme">Engineered Italics</span><span class="contributor">— Z. Licko</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 12</span><span class="season">Autumn 2018</span><span class="theme">Pictograms Under Pressure</span><span class="contributor">— L. Vignelli</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 11</span><span class="season">Summer 2018</span><span class="theme">The Honest Folio</span><span class="contributor">— D. Crouwel</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 10</span><span class="season">Spring 2018</span><span class="theme">Decade Anniversary Issue</span><span class="contributor">— Editors</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 09</span><span class="season">Winter 2017</span><span class="theme">Concrete Poetry, Concrete Type</span><span class="contributor">— A. de Campos</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 08</span><span class="season">Autumn 2017</span><span class="theme">On Whitespace</span><span class="contributor">— J. Maeda</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 07</span><span class="season">Summer 2017</span><span class="theme">Letterpress, After Letterpress</span><span class="contributor">— A. Kitching</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 06</span><span class="season">Spring 2017</span><span class="theme">Maps That Lie Beautifully</span><span class="contributor">— D. Wood</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 05</span><span class="season">Winter 2016</span><span class="theme">The Manual as Monument</span><span class="contributor">— P. Rand Estate</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 04</span><span class="season">Autumn 1998</span><span class="theme">Founding Document, Pt. IV</span><span class="contributor">— Editors</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 03</span><span class="season">Summer 1997</span><span class="theme">Of Rules and Rulers</span><span class="contributor">— Editors</span></a>
+      <a href="#" class="issue-card"><span class="vol">№ 02</span><span class="season">Winter 1996</span><span class="theme">A Quiet Polemic</span><span class="contributor">— Editors</span></a>
+
+      <a href="#" class="issue-card"><span class="vol">№ 01</span><span class="season">Spring 1996</span><span class="theme">Inaugural: The Hidden Logic</span><span class="contributor">— Founding Editors</span></a>
+
+    </div>
+
+    <svg class="svg-rule" viewBox="0 0 1000 24" preserveAspectRatio="none" aria-hidden="true" style="margin-top:var(--space-7)">
+      <line x1="0" y1="6" x2="1000" y2="6"/>
+      <line x1="0" y1="18" x2="1000" y2="18"/>
+      <line x1="500" y1="0" x2="500" y2="24"/>
+      <circle cx="500" cy="12" r="4"/>
+    </svg>
+
+    <section style="margin-top:var(--space-6)">
+      <span class="kicker">Archive Statistics · 1996 — 2024</span>
+      <h2>The Numbers Beneath the Stack</h2>
+      <div class="stat-strip">
+        <div class="stat-card">
+          <div class="stat-num">4.2M</div>
+          <div class="stat-label">Total Words Published</div>
+          <div class="stat-note">Across 37 print volumes &amp; 11 special supplements.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">318</div>
+          <div class="stat-label">Contributing Designers</div>
+          <div class="stat-note">Critics, typographers, photographers &amp; theorists.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">41</div>
+          <div class="stat-label">Countries Represented</div>
+          <div class="stat-note">From the Helvetic plateau to the Pacific archipelagos.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="container">
+  <div class="marquee-band" aria-label="Engraved index of all 37 issue titles">
+    <svg viewBox="0 0 2400 64" preserveAspectRatio="xMinYMid meet">
+      <line x1="0" y1="2" x2="2400" y2="2"/>
+      <line x1="0" y1="62" x2="2400" y2="62"/>
+      <line x1="0" y1="32" x2="2400" y2="32" stroke-dasharray="2 6"/>
+      <text x="10"   y="22">№37 NOCTURNAL CITIES</text>
+      <text x="210"  y="22">№36 GROTESK</text>
+      <text x="340"  y="22">№35 CALCULATORS &amp; CARE</text>
+      <text x="555"  y="22">№34 FIELD SYSTEMS</text>
+      <text x="720"  y="22">№33 MANIFESTO PROBLEM</text>
+      <text x="930"  y="22">№32 WAYFINDING IN RUIN</text>
+      <text x="1140" y="22">№31 PAPER PULP POLITICS</text>
+      <text x="1360" y="22">№30 COLOR AS ARGUMENT</text>
+      <text x="1570" y="22">№29 MARGINS RECLAIMED</text>
+      <text x="1780" y="22">№28 SUB-INDUSTRIAL LETTERS</text>
+      <text x="2030" y="22">№27 VERNACULAR ATLASES</text>
+      <text x="2230" y="22">№26 TABULAR FIGURES</text>
+
+      <text x="10"   y="50">№25 PNEUMATIC MODERNISM</text>
+      <text x="230"  y="50">№24 CATALOGUE AS FORM</text>
+      <text x="430"  y="50">№23 AFTER THE GRID</text>
+      <text x="595"  y="50">№22 READING THE SPINE</text>
+      <text x="775"  y="50">№21 SIGN NOTATION SCORE</text>
+      <text x="985"  y="50">№20 LOST MOVEMENTS: ULM</text>
+      <text x="1205" y="50">№19 DOMESTIC BROCHURE</text>
+      <text x="1410" y="50">№18 ITALICS SLANTED THINKING</text>
+      <text x="1645" y="50">№17 BAUHAUS AFTERSHOCKS</text>
+      <text x="1850" y="50">№16 POLITICS OF CAP-HEIGHT</text>
+      <text x="2080" y="50">№15 TACTILE SPECIMENS</text>
+      <text x="2260" y="50">№14 FORM WITHOUT AUTHOR</text>
+
+      <text x="10"   y="60" opacity="0">·</text>
+    </svg>
+    <svg viewBox="0 0 2400 32" preserveAspectRatio="xMinYMid meet" style="height:32px;margin-top:4px">
+      <line x1="0" y1="2" x2="2400" y2="2"/>
+      <text x="10"   y="20">№13 ENGINEERED ITALICS</text>
+      <text x="220"  y="20">№12 PICTOGRAMS UNDER PRESSURE</text>
+      <text x="500"  y="20">№11 THE HONEST FOLIO</text>
+      <text x="690"  y="20">№10 DECADE ANNIVERSARY</text>
+      <text x="895"  y="20">№09 CONCRETE POETRY CONCRETE TYPE</text>
+      <text x="1205" y="20">№08 ON WHITESPACE</text>
+      <text x="1370" y="20">№07 LETTERPRESS AFTER LETTERPRESS</text>
+      <text x="1660" y="20">№06 MAPS THAT LIE BEAUTIFULLY</text>
+      <text x="1900" y="20">№05 MANUAL AS MONUMENT</text>
+      <text x="2105" y="20">№04 FOUNDING DOC IV</text>
+      <text x="2270" y="20">№03 RULES &amp; RULERS</text>
+    </svg>
+    <svg viewBox="0 0 2400 32" preserveAspectRatio="xMinYMid meet" style="height:32px">
+      <line x1="0" y1="30" x2="2400" y2="30"/>
+      <text x="10"  y="20">№02 A QUIET POLEMIC</text>
+      <text x="230" y="20">№01 INAUGURAL — THE HIDDEN LOGIC OF VISUAL SYSTEMS</text>
+      <text x="700" y="20">— FOLIO OBSCURA QUARTERLY · MCMXCVI — MMXXIV · COMPLETE INDEX —</text>
+    </svg>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div>
+      <h4>Folio Obscura</h4>
+      <p class="colophon">A quarterly periodical of design criticism, set in Georgia &amp; system grotesks, printed in editions of 2,400 on uncoated parchment stock.</p>
+    </div>
+    <div>
+      <h4>Sections</h4>
+      <a href="../cover-story/index.html">Cover Story</a>
+      <a href="../type-lab/index.html">Type Lab</a>
+      <a href="../object-study/index.html">Object Study</a>
+      <a href="../grid-dispatch/index.html">Grid Dispatch</a>
+      <a href="../archive-index/index.html">Archive Index</a>
+    </div>
+    <div>
+      <h4>Editorial</h4>
+      <a href="#">Masthead</a>
+      <a href="#">Submissions</a>
+      <a href="#">Style Guide</a>
+      <a href="#">Errata</a>
+    </div>
+    <div>
+      <h4>Subscribe</h4>
+      <a href="#">Print Quarterly</a>
+      <a href="#">Digital Folio</a>
+      <a href="#">Institutional</a>
+      <a href="#">Back Issues</a>
+    </div>
+    <div class="legal">
+      <span>© MCMXCVI — MMXXIV Folio Obscura Press</span>
+      <span>Issue № XXXVII · Winter Edition</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

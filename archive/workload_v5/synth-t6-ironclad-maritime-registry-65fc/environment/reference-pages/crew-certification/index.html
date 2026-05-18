@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crew Certification — Ironclad Maritime Registry</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0B1F3A;
+    color: #E8EDF2;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  a { color: #2ABFBF; text-decoration: none; }
+  a:hover { color: #F5A623; }
+
+  /* Layout */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header / Nav */
+  header.site {
+    background: #08172B;
+    border-bottom: 2px solid #F5A623;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-mark {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #F5A623, #2ABFBF);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: #0B1F3A;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .brand-text h1 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+  }
+  .brand-text .sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #2ABFBF;
+  }
+  nav.primary ul {
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  nav.primary a {
+    display: block;
+    padding: 8px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #E8EDF2;
+    border: 1px solid transparent;
+  }
+  nav.primary a:hover {
+    border-color: #2ABFBF;
+    color: #2ABFBF;
+  }
+  nav.primary a.active {
+    background: #0D2647;
+    border: 1px solid #F5A623;
+    color: #F5A623;
+  }
+
+  /* Page Title */
+  .page-head {
+    padding: 32px 0 24px;
+    border-bottom: 1px solid #1E3A5F;
+    margin-bottom: 32px;
+  }
+  .page-head h2 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: #E8EDF2;
+    margin-bottom: 8px;
+  }
+  .page-head .crumbs {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #6E8AAB;
+  }
+  .page-head .crumbs span.cur { color: #F5A623; }
+
+  /* Section headers */
+  .section {
+    background: #0A1B33;
+    border: 1px solid #1E3A5F;
+    border-radius: 4px;
+    margin-bottom: 24px;
+  }
+  .section-head {
+    padding: 14px 20px;
+    border-bottom: 1px solid #1E3A5F;
+    background: #0D2647;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-head h3 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #F5A623;
+    font-variant: small-caps;
+  }
+  .section-head .sec-no {
+    font-size: 11px;
+    color: #2ABFBF;
+    letter-spacing: 2px;
+  }
+  .section-body {
+    padding: 20px;
+  }
+
+  /* Form grid */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .field { display: flex; flex-direction: column; }
+  .field.span-2 { grid-column: span 2; }
+  .field.span-3 { grid-column: span 3; }
+
+  label.lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #B5C4D6;
+    margin-bottom: 6px;
+    font-family: 'Courier New', monospace;
+  }
+  label.lbl .req {
+    color: #E84040;
+    font-size: 10px;
+    margin-left: 4px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="number"],
+  select,
+  textarea {
+    padding: 8px 12px;
+    background: #0D2647;
+    border: 1px solid #2ABFBF;
+    color: #E8EDF2;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    border-radius: 2px;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #F5A623;
+    box-shadow: 0 0 0 2px rgba(245, 166, 35, 0.2);
+  }
+  input:required:invalid:not(:focus),
+  select:required:invalid:not(:focus),
+  textarea:required:invalid:not(:focus) {
+    border: 2px solid #E84040;
+  }
+  input:required:valid,
+  select:required:valid,
+  textarea:required:valid {
+    border: 2px solid #2ABFBF;
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #2ABFBF 50%), linear-gradient(135deg, #2ABFBF 50%, transparent 50%);
+    background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 30px;
+  }
+
+  /* Radio groups */
+  .radio-group, .check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #0D2647;
+    border: 1px solid #2ABFBF;
+    border-radius: 2px;
+  }
+  .radio-group.row, .check-group.row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .radio-item, .check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  /* Custom radio */
+  .radio-item input[type="radio"] {
+    appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid #2ABFBF;
+    background: #0D2647;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .radio-item input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    width: 8px; height: 8px;
+    background: #F5A623;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  /* Custom checkbox */
+  .check-item input[type="checkbox"] {
+    appearance: none;
+    width: 16px; height: 16px;
+    border: 2px solid #2ABFBF;
+    background: #0D2647;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .check-item input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: #2ABFBF;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    top: -2px; left: 1px;
+  }
+
+  /* Toggle */
+  .toggle {
+    display: inline-block;
+    width: 40px; height: 20px;
+    background: #3A5068;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .toggle input { display: none; }
+  .toggle .slider {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: left 0.2s, background 0.2s;
+  }
+  .toggle input:checked ~ .slider {
+    left: 22px;
+  }
+  .toggle input:checked + .track {
+    background: #2ABFBF;
+  }
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #0D2647;
+    border: 1px solid #2ABFBF;
+    border-radius: 2px;
+    font-size: 12px;
+  }
+
+  /* Form actions */
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 20px 0 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 10px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 2px;
+    border: 1px solid #2ABFBF;
+    background: transparent;
+    color: #2ABFBF;
+  }
+  .btn.primary {
+    background: #F5A623;
+    border-color: #F5A623;
+    color: #0B1F3A;
+    font-weight: 700;
+  }
+  .btn:hover { opacity: 0.85; }
+
+  /* Stat cards */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 32px 0 16px;
+  }
+  .stat-card {
+    background: #0D2647;
+    border: 2px solid #2ABFBF;
+    border-radius: 12px;
+    padding: 18px 16px;
+    text-align: center;
+    min-width: 0;
+  }
+  .stat-card .num {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    color: #F5A623;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .stat-card .lbl-s {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #B5C4D6;
+    margin-top: 8px;
+  }
+
+  /* Table */
+  .table-wrap {
+    background: #0A1B33;
+    border: 1px solid #1E3A5F;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .table-head-bar {
+    padding: 14px 20px;
+    background: #0D2647;
+    border-bottom: 1px solid #1E3A5F;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .table-head-bar h3 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #F5A623;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-variant: small-caps;
+  }
+  .table-tools {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .table-tools input[type="text"] {
+    width: 200px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .table-scroll { overflow-x: auto; }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    min-width: 800px;
+  }
+  table.data thead th {
+    position: sticky;
+    top: 0;
+    background: #0D2647;
+    color: #F5A623;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+    padding: 10px 12px;
+    border: 1px solid #1E3A5F;
+    border-bottom: 2px solid #F5A623;
+  }
+  table.data tbody td {
+    padding: 6px 12px;
+    border: 1px solid #1E3A5F;
+    color: #E8EDF2;
+  }
+  table.data tbody tr:nth-child(odd) td { background: #0B1F3A; }
+  table.data tbody tr:nth-child(even) td { background: #0D2647; }
+  table.data td.num { text-align: right; }
+  th.num { text-align: right !important; }
+  .status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+  .status.active { background: rgba(42,191,191,0.15); color: #2ABFBF; border: 1px solid #2ABFBF; }
+  .status.expiring { background: rgba(245,166,35,0.15); color: #F5A623; border: 1px solid #F5A623; }
+  .status.expired { background: rgba(232,64,64,0.15); color: #E84040; border: 1px solid #E84040; }
+  .status.pending { background: rgba(110,138,171,0.15); color: #B5C4D6; border: 1px solid #6E8AAB; }
+
+  /* Footer */
+  footer.site {
+    background: #08172B;
+    border-top: 2px solid #F5A623;
+    margin-top: 48px;
+    padding: 32px 0 16px;
+    color: #B5C4D6;
+    font-size: 11px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+    padding: 0 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .footer-grid h4 {
+    font-family: Georgia, serif;
+    font-size: 12px;
+    color: #F5A623;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    font-variant: small-caps;
+  }
+  .footer-grid ul { list-style: none; }
+  .footer-grid li { padding: 4px 0; }
+  .footer-grid a { color: #B5C4D6; }
+  .footer-grid a:hover { color: #2ABFBF; }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 24px auto 0;
+    padding: 16px 24px 0;
+    border-top: 1px solid #1E3A5F;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #6E8AAB;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .field.span-2, .field.span-3 { grid-column: span 2; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .field.span-2, .field.span-3 { grid-column: span 1; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr; }
+    .page-head h2 { font-size: 24px; }
+    nav.primary ul { width: 100%; }
+    nav.primary a { padding: 6px 8px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">IM</div>
+      <div class="brand-text">
+        <h1>Ironclad Maritime Registry</h1>
+        <div class="sub">Directorate of Shipping &amp; Seafarer Affairs</div>
+      </div>
+    </div>
+    <nav class="primary">
+      <ul>
+        <li><a href="../vessel-registration/index.html">Vessel Registration</a></li>
+        <li><a href="#" class="active">Crew Certification</a></li>
+        <li><a href="../voyage-manifest/index.html">Voyage Manifest</a></li>
+        <li><a href="../compliance-audit/index.html">Compliance Audit</a></li>
+        <li><a href="../fee-schedule/index.html">Fee Schedule</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="page-head">
+    <div class="crumbs">Home &nbsp;/&nbsp; Seafarer Services &nbsp;/&nbsp; <span class="cur">Crew Certification</span></div>
+    <h2>Crew Certification Application</h2>
+    <p style="margin-top:8px;color:#B5C4D6;font-size:12px;">Submit STCW credentials, medical fitness records, and endorsements for licensed seafarers. All fields marked with <span style="color:#E84040;">*</span> are required by Section 14(b) of the Maritime Code.</p>
+  </div>
+
+  <form novalidate>
+
+    <!-- SECTION 1: Seafarer Details -->
+    <div class="section">
+      <div class="section-head">
+        <h3>§ 1 — Seafarer Details</h3>
+        <div class="sec-no">5 / 16 fields</div>
+      </div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div class="field span-2">
+            <label class="lbl">Full Legal Name <span class="req">*</span></label>
+            <input type="text" required placeholder="Surname, Given Names">
+          </div>
+          <div class="field">
+            <label class="lbl">Date of Birth <span class="req">*</span></label>
+            <input type="date" required>
+          </div>
+          <div class="field">
+            <label class="lbl">Nationality <span class="req">*</span></label>
+            <select required>
+              <option value="">— Select Country —</option>
+              <option>Panama</option>
+              <option>Liberia</option>
+              <option>Marshall Islands</option>
+              <option>Greece</option>
+              <option>Philippines</option>
+              <option>Norway</option>
+              <option>United Kingdom</option>
+              <option>Singapore</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="lbl">Seafarer ID No. <span class="req">*</span></label>
+            <input type="text" required placeholder="SID-00000000" pattern="SID-[0-9]{8}">
+          </div>
+          <div class="field">
+            <label class="lbl">Rank / Position <span class="req">*</span></label>
+            <select required>
+              <option value="">— Select Rank —</option>
+              <option>Master</option>
+              <option>Chief Officer</option>
+              <option>Second Officer</option>
+              <option>Third Officer</option>
+              <option>Chief Engineer</option>
+              <option>Second Engineer</option>
+              <option>Able Seaman</option>
+              <option>Ordinary Seaman</option>
+              <option>Bosun</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Certificate Information -->
+    <div class="section">
+      <div class="section-head">
+        <h3>§ 2 — Certificate Information</h3>
+        <div class="sec-no">6 / 16 fields</div>
+      </div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div class="field">
+            <label class="lbl">STCW Certificate No. <span class="req">*</span></label>
+            <input type="text" required placeholder="STCW-A-II/1-XXXXX">
+          </div>
+          <div class="field">
+            <label class="lbl">Issue Date <span class="req">*</span></label>
+            <input type="date" required>
+          </div>
+          <div class="field">
+            <label class="lbl">Expiry Date <span class="req">*</span></label>
+            <input type="date" required>
+          </div>
+          <div class="field span-2">
+            <label class="lbl">Issuing Authority <span class="req">*</span></label>
+            <input type="text" required placeholder="e.g. Maritime &amp; Coastguard Agency (UK)">
+          </div>
+          <div class="field">
+            <label class="lbl">Endorsement Type <span class="req">*</span></label>
+            <div class="radio-group row">
+              <label class="radio-item"><input type="radio" name="endorsement" value="original" required><span>Original</span></label>
+              <label class="radio-item"><input type="radio" name="endorsement" value="renewal"><span>Renewal</span></label>
+              <label class="radio-item"><input type="radio" name="endorsement" value="duplicate"><span>Duplicate</span></label>
+            </div>
+          </div>
+          <div class="field span-3">
+            <label class="lbl">Additional Endorsements</label>
+            <div class="check-group row">
+              <label class="check-item"><input type="checkbox" name="gmdss"><span>GMDSS Radio Operator Endorsement (Reg. IV/2)</span></label>
+              <label class="check-item"><input type="checkbox" name="tanker"><span>Tanker Endorsement — Oil / Chemical / Liquefied Gas</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Medical Fitness -->
+    <div class="section">
+      <div class="section-head">
+        <h3>§ 3 — Medical Fitness</h3>
+        <div class="sec-no">5 / 16 fields</div>
+      </div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div class="field">
+            <label class="lbl">Medical Grade <span class="req">*</span></label>
+            <div class="radio-group row">
+              <label class="radio-item"><input type="radio" name="grade" value="A" required><span>A — Fit</span></label>
+              <label class="radio-item"><input type="radio" name="grade" value="B"><span>B — Restricted</span></label>
+              <label class="radio-item"><input type="radio" name="grade" value="C"><span>C — Unfit</span></label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="lbl">Examining Doctor <span class="req">*</span></label>
+            <input type="text" required placeholder="Dr. Surname">
+          </div>
+          <div class="field">
+            <label class="lbl">Medical Cert. Issue Date <span class="req">*</span></label>
+            <input type="date" required>
+          </div>
+          <div class="field span-3">
+            <label class="lbl">Clinic / Hospital Address <span class="req">*</span></label>
+            <textarea required placeholder="Approved Maritime Medical Practitioner — full address including postal code and country"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn">Save Draft</button>
+      <button type="button" class="btn">Validate Form</button>
+      <button type="submit" class="btn primary">Submit Application</button>
+    </div>
+  </form>
+
+  <!-- Stat Cards -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num">14,827</div>
+      <div class="lbl-s">Total Certified</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">312</div>
+      <div class="lbl-s">Expiring in 30 Days</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">87</div>
+      <div class="lbl-s">Expired</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">46</div>
+      <div class="lbl-s">Awaiting Approval</div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-wrap">
+    <div class="table-head-bar">
+      <h3>Current Certifications Register</h3>
+      <div class="table-tools">
+        <input type="text" placeholder="Search by SID, name, cert no.">
+        <button type="button" class="btn">Export CSV</button>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr>
+            <th>Seafarer ID</th>
+            <th>Full Name</th>
+            <th>Rank</th>
+            <th>Certificate No.</th>
+            <th>Issue Date</th>
+            <th>Expiry Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>SID-10042881</td><td>ALVAREZ, MIGUEL R.</td><td>Master</td><td>STCW-A-II/2-44219</td><td>2021-03-14</td><td>2026-03-13</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10043112</td><td>BAUTISTA, JOSE M.</td><td>Chief Officer</td><td>STCW-A-II/1-58820</td><td>2020-11-02</td><td>2025-11-01</td><td><span class="status expiring">Expiring</span></td></tr>
+          <tr><td>SID-10043567</td><td>CHEN, WEI</td><td>Second Engineer</td><td>STCW-A-III/2-71334</td><td>2019-07-28</td><td>2024-07-27</td><td><span class="status expired">Expired</span></td></tr>
+          <tr><td>SID-10044001</td><td>DELACROIX, PIERRE</td><td>Third Officer</td><td>STCW-A-II/3-88112</td><td>2022-09-19</td><td>2027-09-18</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10044328</td><td>EVANGELISTA, R.</td><td>Bosun</td><td>STCW-A-II/4-09223</td><td>2023-01-11</td><td>2028-01-10</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10044519</td><td>FERREIRA, LUIS</td><td>Chief Engineer</td><td>STCW-A-III/1-33218</td><td>2021-05-22</td><td>2026-05-21</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10044812</td><td>GHOSH, ARJUN</td><td>Able Seaman</td><td>STCW-A-II/5-44991</td><td>2020-08-04</td><td>2025-08-03</td><td><span class="status expiring">Expiring</span></td></tr>
+          <tr><td>SID-10045003</td><td>HANSEN, OLE T.</td><td>Master</td><td>STCW-A-II/2-12907</td><td>2018-12-30</td><td>2023-12-29</td><td><span class="status expired">Expired</span></td></tr>
+          <tr><td>SID-10045270</td><td>IGNATIEV, DMITRI</td><td>Second Officer</td><td>STCW-A-II/1-66520</td><td>2022-04-17</td><td>2027-04-16</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10045444</td><td>JOHANSSON, ERIK</td><td>Chief Officer</td><td>STCW-A-II/2-77821</td><td>2023-06-08</td><td>2028-06-07</td><td><span class="status pending">Pending</span></td></tr>
+          <tr><td>SID-10045722</td><td>KOWALSKI, JAN</td><td>Third Engineer</td><td>STCW-A-III/3-88990</td><td>2021-10-25</td><td>2026-10-24</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10046011</td><td>LOPEZ, CARLOS A.</td><td>Ordinary Seaman</td><td>STCW-A-II/5-10054</td><td>2024-02-14</td><td>2029-02-13</td><td><span class="status pending">Pending</span></td></tr>
+          <tr><td>SID-10046288</td><td>MENDOZA, ANGEL</td><td>Master</td><td>STCW-A-II/2-22118</td><td>2019-09-09</td><td>2024-09-08</td><td><span class="status expired">Expired</span></td></tr>
+          <tr><td>SID-10046501</td><td>NAKAMURA, KENJI</td><td>Chief Engineer</td><td>STCW-A-III/1-55677</td><td>2020-03-21</td><td>2025-03-20</td><td><span class="status expiring">Expiring</span></td></tr>
+          <tr><td>SID-10046773</td><td>OKAFOR, CHIKE</td><td>Second Officer</td><td>STCW-A-II/1-93221</td><td>2022-11-30</td><td>2027-11-29</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10047099</td><td>PETROV, IVAN S.</td><td>Able Seaman</td><td>STCW-A-II/5-18820</td><td>2021-07-12</td><td>2026-07-11</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10047344</td><td>QURESHI, FAIZ A.</td><td>Third Officer</td><td>STCW-A-II/3-40221</td><td>2023-08-19</td><td>2028-08-18</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10047612</td><td>RAMIREZ, SANTIAGO</td><td>Bosun</td><td>STCW-A-II/4-55661</td><td>2020-12-05</td><td>2025-12-04</td><td><span class="status expiring">Expiring</span></td></tr>
+          <tr><td>SID-10047891</td><td>SVENSSON, MATS</td><td>Chief Officer</td><td>STCW-A-II/2-66442</td><td>2021-02-28</td><td>2026-02-27</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10048122</td><td>TANAKA, HIROSHI</td><td>Second Engineer</td><td>STCW-A-III/2-77118</td><td>2019-05-16</td><td>2024-05-15</td><td><span class="status expired">Expired</span></td></tr>
+          <tr><td>SID-10048390</td><td>UDDIN, RAHMAN</td><td>Able Seaman</td><td>STCW-A-II/5-99003</td><td>2024-04-02</td><td>2029-04-01</td><td><span class="status pending">Pending</span></td></tr>
+          <tr><td>SID-10048611</td><td>VELASQUEZ, JUAN</td><td>Master</td><td>STCW-A-II/2-33991</td><td>2022-06-25</td><td>2027-06-24</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10048902</td><td>WONG, KAI MING</td><td>Third Engineer</td><td>STCW-A-III/3-44520</td><td>2023-10-11</td><td>2028-10-10</td><td><span class="status active">Active</span></td></tr>
+          <tr><td>SID-10049188</td><td>YAMAMOTO, SORA</td><td>Ordinary Seaman</td><td>STCW-A-II/5-61120</td><td>2020-09-22</td><td>2025-09-21</td><td><span class="status expiring">Expiring</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site">
+  <div class="footer-grid">
+    <div>
+      <h4>Ironclad Maritime Registry</h4>
+      <p style="font-size:11px;line-height:1.6;">An accredited flag-state authority issuing vessel registrations, STCW endorsements, voyage clearances, and statutory compliance certificates for commercial operators worldwide.</p>
+      <p style="margin-top:10px;font-size:10px;color:#6E8AAB;">Statutory Office · Quay 14, Port Authority Complex · ZIP 02144</p>
+    </div>
+    <div>
+      <h4>Services</h4>
+      <ul>
+        <li><a href="../vessel-registration/index.html">Vessel Registration</a></li>
+        <li><a href="#">Crew Certification</a></li>
+        <li><a href="../voyage-manifest/index.html">Voyage Manifest</a></li>
+        <li><a href="../compliance-audit/index.html">Compliance Audit</a></li>
+        <li><a href="../fee-schedule/index.html">Fee Schedule</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">STCW Convention</a></li>
+        <li><a href="#">MARPOL Annexes</a></li>
+        <li><a href="#">SOLAS Chapter IX</a></li>
+        <li><a href="#">Circulars &amp; Notices</a></li>
+        <li><a href="#">Form Templates</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>Switchboard: +1 (000) 555-0140</li>
+        <li>Crew Desk: crew@iron-mr.gov</li>
+        <li>24/7 PSC Hotline: 0800-PSC-DUTY</li>
+        <li>Office Hours 08:00–18:00 UTC</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2025 Ironclad Maritime Registry · All filings governed by Maritime Code Title 46</div>
+    <div>v 4.2.7 · Build IMR-CC-0825</div>
+  </div>
+</footer>
+
+</body>
+</html>

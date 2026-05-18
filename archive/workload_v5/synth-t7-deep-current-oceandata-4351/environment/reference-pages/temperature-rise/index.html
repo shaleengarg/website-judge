@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="UTF-8">
+<title>Temperature Rise — Deep Current</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  /* page-unique overrides only */
+  .temp-hero{display:grid;grid-template-columns:1fr 200px;gap:var(--space-5);align-items:start}
+  @media(max-width:900px){.temp-hero{grid-template-columns:1fr}}
+  .anomaly-fig svg{width:100%;height:auto;max-width:900px}
+  .region-chart{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);padding:var(--space-3)}
+  .region-chart svg{width:100%;height:auto}
+  .region-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--space-2)}
+  .region-name{font-family:var(--serif);font-weight:700;font-size:var(--fs-md);color:var(--ink)}
+  .region-delta{font-family:var(--mono);font-size:var(--fs-sm);color:var(--accent-2);font-weight:600}
+  .therm-fill{transition:height .4s ease}
+  .marker-label{font-family:var(--sans);font-size:9px;fill:var(--ink-dim)}
+  .marker-label-warn{fill:var(--accent-2)}
+  .marker-label-good{fill:var(--accent-1)}
+</style>
+</head>
+<body>
+<div class="site">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M2 32 Q10 22 18 32 T34 32 T50 32 T62 32"/>
+        <path d="M2 42 Q10 32 18 42 T34 42 T50 42 T62 42" opacity=".6"/>
+        <path d="M2 22 Q10 12 18 22 T34 22 T50 22 T62 22" opacity=".3"/>
+        <circle cx="32" cy="32" r="3" fill="#00c9b1" stroke="none"/>
+      </svg>
+      <div>
+        <div class="brand-title">Deep Current</div>
+        <div class="brand-tag">Ocean Health Atlas</div>
+      </div>
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-label">Sections</div>
+      <a class="nav-link" href="../ocean-health/index.html">Ocean Health</a>
+      <a class="nav-link" href="../species-atlas/index.html">Species Atlas</a>
+      <a class="nav-link active" href="#">Temperature Rise</a>
+      <a class="nav-link" href="../plastic-crisis/index.html">Plastic Crisis</a>
+      <a class="nav-link" href="../take-action/index.html">Take Action</a>
+    </nav>
+
+    <div class="depth-ruler">
+      <div class="depth-ruler-label">Depth · m</div>
+      <svg viewBox="0 0 180 280" aria-hidden="true">
+        <defs>
+          <linearGradient id="rul" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#5fe6d4"/>
+            <stop offset="40%" stop-color="#00c9b1"/>
+            <stop offset="100%" stop-color="#0a1628"/>
+          </linearGradient>
+        </defs>
+        <rect x="14" y="6" width="22" height="268" fill="url(#rul)" rx="3"/>
+        <g stroke="#1f3a5f" stroke-width="1">
+          <line x1="14" y1="40" x2="40" y2="40"/>
+          <line x1="14" y1="80" x2="40" y2="80"/>
+          <line x1="14" y1="130" x2="40" y2="130"/>
+          <line x1="14" y1="190" x2="40" y2="190"/>
+          <line x1="14" y1="250" x2="40" y2="250"/>
+        </g>
+        <g font-family="ui-monospace,monospace" font-size="9" fill="#a8c5d0">
+          <text x="46" y="14">0</text>
+          <text x="46" y="44">200</text>
+          <text x="46" y="84">1000</text>
+          <text x="46" y="134">4000</text>
+          <text x="46" y="194">6000</text>
+          <text x="46" y="254">10k+</text>
+        </g>
+        <g font-family="system-ui" font-size="8" fill="#6b8a96">
+          <text x="84" y="14">sunlight</text>
+          <text x="84" y="44">twilight</text>
+          <text x="84" y="84">midnight</text>
+          <text x="84" y="134">abyssal</text>
+          <text x="84" y="194">hadal</text>
+        </g>
+      </svg>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <div class="topmeta">
+      <div class="topmeta-crumbs">
+        <span>Deep Current</span>
+        <span class="sep">/</span>
+        <span>Data</span>
+        <span class="sep">/</span>
+        <span class="text-accent">Temperature Rise</span>
+      </div>
+      <div class="topmeta-status">Dataset · HadCRUT5 · Updated 2024-Q4</div>
+    </div>
+
+    <!-- BANNER -->
+    <section class="banner banner-warn">
+      <div class="banner-inner">
+        <div class="eyebrow eyebrow-warn" style="color:#0a1628">— Indicator 03 / Climate</div>
+        <h1>Sea Surface Temperature is Climbing Faster Than Ever Recorded</h1>
+        <div class="banner-sub">+1.2°C above 1951–1980 baseline · 174 years of instrumental record</div>
+      </div>
+    </section>
+
+    <!-- HERO: chart + thermometer -->
+    <section class="temp-hero">
+      <figure class="anomaly-fig">
+        <div class="fig-title">Global SST Anomaly · 1850 → 2024</div>
+        <div class="fig-sub">Annual mean deviation from 1951–1980 reference period, expressed in degrees Celsius. Coral fill marks warming above baseline; teal fill marks cooling below baseline.</div>
+        <svg viewBox="0 0 900 380" role="img" aria-label="Sea surface temperature anomaly chart 1850 to 2024">
+          <defs>
+            <linearGradient id="warmFill" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#ff6b47" stop-opacity=".75"/>
+              <stop offset="100%" stop-color="#ff6b47" stop-opacity=".35"/>
+            </linearGradient>
+            <linearGradient id="coolFill" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#00c9b1" stop-opacity=".45"/>
+              <stop offset="100%" stop-color="#00c9b1" stop-opacity=".15"/>
+            </linearGradient>
+            <clipPath id="aboveBase"><rect x="60" y="20" width="820" height="180"/></clipPath>
+            <clipPath id="belowBase"><rect x="60" y="200" width="820" height="160"/></clipPath>
+          </defs>
+
+          <!-- grid -->
+          <g stroke="#1f3a5f" stroke-width="1">
+            <line x1="60" y1="20"  x2="880" y2="20"/>
+            <line x1="60" y1="65"  x2="880" y2="65"/>
+            <line x1="60" y1="110" x2="880" y2="110"/>
+            <line x1="60" y1="155" x2="880" y2="155"/>
+            <line x1="60" y1="245" x2="880" y2="245"/>
+            <line x1="60" y1="290" x2="880" y2="290"/>
+            <line x1="60" y1="335" x2="880" y2="335"/>
+          </g>
+
+          <!-- y axis labels (°C) -->
+          <g font-family="ui-monospace,monospace" font-size="10" fill="#6b8a96" text-anchor="end">
+            <text x="54" y="24">+1.5</text>
+            <text x="54" y="69">+1.0</text>
+            <text x="54" y="114">+0.5</text>
+            <text x="54" y="159">+0.25</text>
+            <text x="54" y="204">0.0</text>
+            <text x="54" y="249">-0.25</text>
+            <text x="54" y="294">-0.5</text>
+            <text x="54" y="339">-0.75</text>
+          </g>
+          <text x="20" y="14" font-family="system-ui" font-size="10" fill="#a8c5d0">°C anomaly</text>
+
+          <!-- x axis -->
+          <line x1="60" y1="360" x2="880" y2="360" stroke="#1f3a5f"/>
+          <g font-family="ui-monospace,monospace" font-size="10" fill="#a8c5d0" text-anchor="middle">
+            <text x="60"  y="375">1850</text>
+            <text x="177" y="375">1875</text>
+            <text x="294" y="375">1900</text>
+            <text x="411" y="375">1925</text>
+            <text x="528" y="375">1950</text>
+            <text x="645" y="375">1975</text>
+            <text x="762" y="375">2000</text>
+            <text x="879" y="375">2024</text>
+          </g>
+
+          <!-- WARMING AREA above baseline (y=200) -->
+          <g clip-path="url(#aboveBase)">
+            <path fill="url(#warmFill)" d="
+              M60,200
+              L60,212 L80,208 L100,215 L120,210 L140,218 L160,205 L180,222
+              L200,215 L220,228 L240,210 L260,225 L280,215 L300,220 L320,210
+              L340,225 L360,215 L380,200 L400,212 L420,200 L440,205 L460,198
+              L480,200 L500,195 L520,200 L540,192 L560,198 L580,185 L600,190
+              L620,178 L640,170 L660,175 L680,160 L700,165 L720,150 L740,140
+              L760,135 L780,128 L800,120 L820,105 L840,90 L860,72 L880,55
+              L880,200 Z"/>
+            <!-- top stroke -->
+            <path fill="none" stroke="#ff6b47" stroke-width="1.6" d="
+              M60,212 L80,208 L100,215 L120,210 L140,218 L160,205 L180,222
+              L200,215 L220,228 L240,210 L260,225 L280,215 L300,220 L320,210
+              L340,225 L360,215 L380,200 L400,212 L420,200 L440,205 L460,198
+              L480,200 L500,195 L520,200 L540,192 L560,198 L580,185 L600,190
+              L620,178 L640,170 L660,175 L680,160 L700,165 L720,150 L740,140
+              L760,135 L780,128 L800,120 L820,105 L840,90 L860,72 L880,55"/>
+          </g>
+
+          <!-- COOLING AREA below baseline -->
+          <g clip-path="url(#belowBase)">
+            <path fill="url(#coolFill)" d="
+              M60,200 L60,215 L80,218 L100,210 L120,222 L140,215 L160,228
+              L180,212 L200,225 L220,210 L240,232 L260,215 L280,228 L300,212
+              L320,235 L340,210 L360,228 L380,205 L400,222 L420,200 L440,215
+              L460,205 L480,212 L500,200 L520,210 L540,202 L560,205 L580,200
+              L600,202 L620,200 L640,200 L660,200 L680,200 L700,200 L720,200
+              L740,200 L760,200 L780,200 L800,200 L820,200 L840,200 L860,200 L880,200
+              Z"/>
+            <path fill="none" stroke="#00c9b1" stroke-width="1.4" d="
+              M60,215 L80,218 L100,210 L120,222 L140,215 L160,228
+              L180,212 L200,225 L220,210 L240,232 L260,215 L280,228 L300,212
+              L320,235 L340,210 L360,228 L380,205 L400,222 L420,200 L440,215
+              L460,205 L480,212 L500,200 L520,210 L540,202 L560,205 L580,200
+              L600,202 L620,200"/>
+          </g>
+
+          <!-- baseline reference -->
+          <line x1="60" y1="200" x2="880" y2="200" stroke="#a8c5d0" stroke-width="1.2" stroke-dasharray="6 4"/>
+          <text x="884" y="204" font-family="ui-monospace,monospace" font-size="10" fill="#a8c5d0">1951–1980 baseline</text>
+
+          <!-- baseline period shaded band -->
+          <rect x="528" y="195" width="117" height="10" fill="#a8c5d0" opacity=".12"/>
+
+          <!-- EVENT MARKERS -->
+          <g font-family="system-ui" font-size="9" fill="#ff6b47">
+            <!-- Krakatoa 1883 -->
+            <circle cx="214" cy="222" r="4" fill="#0a1628" stroke="#00c9b1" stroke-width="1.5"/>
+            <line x1="214" y1="222" x2="214" y2="248" stroke="#00c9b1" stroke-dasharray="2 2"/>
+            <text x="214" y="260" text-anchor="middle" class="marker-label marker-label-good">Krakatoa ’83</text>
+
+            <!-- Santa María 1902 -->
+            <circle cx="304" cy="215" r="4" fill="#0a1628" stroke="#00c9b1" stroke-width="1.5"/>
+            <text x="304" y="252" text-anchor="middle" class="marker-label marker-label-good">Sta. María ’02</text>
+
+            <!-- 1918 El Niño -->
+            <circle cx="378" cy="200" r="4" fill="#0a1628" stroke="#ff6b47" stroke-width="1.5"/>
+            <text x="378" y="195" text-anchor="middle" class="marker-label marker-label-warn">El Niño ’18</text>
+
+            <!-- 1940 warm -->
+            <circle cx="481" cy="200" r="4" fill="#0a1628" stroke="#ff6b47" stroke-width="1.5"/>
+            <text x="481" y="195" text-anchor="middle" class="marker-label marker-label-warn">WWII warm ’40</text>
+
+            <!-- Agung 1963 -->
+            <circle cx="589" cy="185" r="4" fill="#0a1628" stroke="#00c9b1" stroke-width="1.5"/>
+            <text x="589" y="178" text-anchor="middle" class="marker-label marker-label-good">Agung ’63</text>
+
+            <!-- El Chichón 1982 -->
+            <circle cx="649" cy="170" r="4" fill="#0a1628" stroke="#00c9b1" stroke-width="1.5"/>
+            <text x="649" y="163" text-anchor="middle" class="marker-label marker-label-good">El Chichón ’82</text>
+
+            <!-- Niño 1983 -->
+            <circle cx="654" cy="175" r="4" fill="#0a1628" stroke="#ff6b47" stroke-width="1.5"/>
+
+            <!-- Pinatubo 1991 -->
+            <circle cx="685" cy="160" r="4" fill="#0a1628" stroke="#00c9b1" stroke-width="1.5"/>
+            <text x="685" y="153" text-anchor="middle" class="marker-label marker-label-good">Pinatubo ’91</text>
+
+            <!-- 1998 super Niño -->
+            <circle cx="715" cy="148" r="5" fill="#ff6b47" stroke="#0a1628" stroke-width="1.5"/>
+            <text x="715" y="141" text-anchor="middle" class="marker-label marker-label-warn">Super Niño ’98</text>
+
+            <!-- 2010 -->
+            <circle cx="763" cy="135" r="4" fill="#0a1628" stroke="#ff6b47" stroke-width="1.5"/>
+            <text x="763" y="128" text-anchor="middle" class="marker-label marker-label-warn">Niño ’10</text>
+
+            <!-- 2016 record -->
+            <circle cx="791" cy="121" r="5" fill="#ff6b47" stroke="#0a1628" stroke-width="1.5"/>
+            <text x="791" y="114" text-anchor="middle" class="marker-label marker-label-warn">Record ’16</text>
+
+            <!-- 2023 record -->
+            <circle cx="867" cy="68" r="6" fill="#ff6b47" stroke="#0a1628" stroke-width="2"/>
+            <text x="855" y="58" text-anchor="end" class="marker-label marker-label-warn">Record ’23 +1.45°</text>
+          </g>
+
+          <!-- title corner -->
+          <text x="60" y="14" font-family="Georgia,serif" font-weight="700" font-size="13" fill="#e8f4f8">Annual mean SST anomaly (°C) · HadCRUT5</text>
+        </svg>
+        <figcaption>
+          <span>n = 174 years · 12 annotated events · monthly composite averaged annually</span>
+          <span class="source">SRC · HadCRUT5 / NOAA ERSSTv5</span>
+        </figcaption>
+      </figure>
+
+      <!-- THERMOMETER SIDEBAR -->
+      <aside class="thermometer">
+        <svg viewBox="0 0 80 220" aria-hidden="true">
+          <defs>
+            <linearGradient id="thermG" x1="0" x2="0" y1="1" y2="0">
+              <stop offset="0%"  stop-color="#00c9b1"/>
+              <stop offset="50%" stop-color="#ffd66b"/>
+              <stop offset="100%" stop-color="#ff6b47"/>
+            </linearGradient>
+            <clipPath id="thermClip">
+              <rect x="32" y="20" width="16" height="160" rx="8"/>
+            </clipPath>
+          </defs>
+          <!-- tube outline -->
+          <rect x="30" y="18" width="20" height="164" rx="10" fill="#0a1628" stroke="#1f3a5f" stroke-width="1.5"/>
+          <!-- fill via clip -->
+          <g clip-path="url(#thermClip)">
+            <rect class="therm-fill" x="32" y="60" width="16" height="120" fill="url(#thermG)"/>
+          </g>
+          <!-- bulb -->
+          <circle cx="40" cy="195" r="18" fill="#ff6b47" stroke="#1f3a5f" stroke-width="1.5"/>
+          <circle cx="40" cy="195" r="11" fill="#d8553a"/>
+          <!-- tick marks -->
+          <g stroke="#a8c5d0" stroke-width="1">
+            <line x1="52" y1="30"  x2="58" y2="30"/>
+            <line x1="52" y1="60"  x2="58" y2="60"/>
+            <line x1="52" y1="90"  x2="58" y2="90"/>
+            <line x1="52" y1="120" x2="58" y2="120"/>
+            <line x1="52" y1="150" x2="58" y2="150"/>
+            <line x1="52" y1="180" x2="58" y2="180"/>
+          </g>
+          <g font-family="ui-monospace,monospace" font-size="8" fill="#a8c5d0">
+            <text x="60" y="33">+2.0</text>
+            <text x="60" y="63">+1.5</text>
+            <text x="60" y="93">+1.0</text>
+            <text x="60" y="123">+0.5</text>
+            <text x="60" y="153">0.0</text>
+            <text x="60" y="183">-0.5</text>
+          </g>
+          <!-- current marker -->
+          <g>
+            <line x1="20" y1="84" x2="50" y2="84" stroke="#ff6b47" stroke-width="1.5" stroke-dasharray="2 2"/>
+            <circle cx="20" cy="84" r="3" fill="#ff6b47"/>
+          </g>
+        </svg>
+        <div class="thermometer-readout">+1.20°C</div>
+        <div class="thermometer-label">Current Anomaly<br>vs 1951–1980</div>
+        <div class="badge badge-warn badge-dot">Rising · 0.18°C / decade</div>
+      </aside>
+    </section>
+
+    <!-- SOURCES STRIP -->
+    <div class="sources">
+      <b>Sources:</b>
+      <span>HadCRUT5</span>
+      <span>NOAA ERSSTv5</span>
+      <span>NASA GISTEMP</span>
+      <span>Copernicus C3S</span>
+      <span>IPCC AR6 WG1 Ch.2</span>
+      <span>Ocean Heat Content / NCEI</span>
+    </div>
+
+    <!-- ============ WAVY DIVIDER ============ -->
+    <svg class="wave-divider divider-warn" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,30 Q75,5 150,30 T300,30 T450,30 T600,30 T750,30 T900,30 T1050,30 T1200,30"/>
+      <path d="M0,40 Q75,15 150,40 T300,40 T450,40 T600,40 T750,40 T900,40 T1050,40 T1200,40" opacity=".4"/>
+      <path d="M0,20 Q75,45 150,20 T300,20 T450,20 T600,20 T750,20 T900,20 T1050,20 T1200,20" opacity=".25"/>
+    </svg>
+
+    <!-- ============ REGIONAL BREAKDOWN ============ -->
+    <section>
+      <div class="section-header section-header-warn">
+        <h2>Regional Warming Signatures</h2>
+      </div>
+
+      <div class="eyebrow eyebrow-warn">— Three ocean basins · 1900–2024</div>
+      <p class="text-dim" style="max-width:72ch">Warming is not uniform. The Arctic Ocean has warmed nearly four times faster than the global mean, while the Southern Ocean's deep mixing has temporarily buffered surface heat. The Tropical Pacific oscillates with ENSO but trends upward decade over decade.</p>
+
+      <div class="grid-3 mt-5">
+
+        <!-- ARCTIC -->
+        <div class="region-chart">
+          <div class="region-head">
+            <div>
+              <div class="region-name">Arctic Ocean</div>
+              <small>60°N – 90°N</small>
+            </div>
+            <div class="region-delta">+3.1°C</div>
+          </div>
+          <svg viewBox="0 0 260 160" aria-label="Arctic warming line chart">
+            <!-- grid -->
+            <g stroke="#1f3a5f" stroke-width="1">
+              <line x1="30" y1="20" x2="250" y2="20"/>
+              <line x1="30" y1="60" x2="250" y2="60"/>
+              <line x1="30" y1="100" x2="250" y2="100"/>
+              <line x1="30" y1="140" x2="250" y2="140"/>
+            </g>
+            <!-- y labels -->
+            <g class="ink-axis" text-anchor="end">
+              <text x="26" y="24">+3</text>
+              <text x="26" y="64">+2</text>
+              <text x="26" y="104">+1</text>
+              <text x="26" y="144">0</text>
+            </g>
+            <!-- x labels -->
+            <g class="ink-axis" text-anchor="middle">
+              <text x="30"  y="155">1900</text>
+              <text x="140" y="155">1960</text>
+              <text x="250" y="155">2024</text>
+            </g>
+            <!-- baseline -->
+            <line x1="30" y1="140" x2="250" y2="140" stroke="#a8c5d0" stroke-dasharray="3 3"/>
+            <!-- data -->
+            <polyline fill="none" stroke="#ff6b47" stroke-width="2"
+              points="30,138 50,135 70,132 90,134 110,128 130,125 150,118 170,108 190,92 210,75 230,55 250,30"/>
+            <!-- area fill -->
+            <path d="M30,138 L50,135 L70,132 L90,134 L110,128 L130,125 L150,118 L170,108 L190,92 L210,75 L230,55 L250,30 L250,140 L30,140 Z" fill="#ff6b47" opacity=".18"/>
+            <!-- trend arrow -->
+            <polygon points="225,38 245,28 240,40 250,42 232,52 230,42" fill="#ff6b47"/>
+          </svg>
+          <div class="legend mt-3">
+            <span class="legend-item"><span class="legend-swatch legend-swatch-warn"></span>Anomaly °C</span>
+            <span class="legend-item"><span class="legend-swatch-dash"></span>Baseline</span>
+          </div>
+        </div>
+
+        <!-- TROPICAL PACIFIC -->
+        <div class="region-chart">
+          <div class="region-head">
+            <div>
+              <div class="region-name">Tropical Pacific</div>
+              <small>15°S – 15°N</small>
+            </div>
+            <div class="region-delta">+0.9°C</div>
+          </div>
+          <svg viewBox="0 0 260 160" aria-label="Tropical Pacific warming line chart">
+            <g stroke="#1f3a5f" stroke-width="1">
+              <line x1="30" y1="20" x2="250" y2="20"/>
+              <line x1="30" y1="60" x2="250" y2="60"/>
+              <line x1="30" y1="100" x2="250" y2="100"/>
+              <line x1="30" y1="140" x2="250" y2="140"/>
+            </g>
+            <g class="ink-axis" text-anchor="end">
+              <text x="26" y="24">+1.5</text>
+              <text x="26" y="64">+1.0</text>
+              <text x="26" y="104">+0.5</text>
+              <text x="26" y="144">0</text>
+            </g>
+            <g class="ink-axis" text-anchor="middle">
+              <text x="30"  y="155">1900</text>
+              <text x="140" y="155">1960</text>
+              <text x="250" y="155">2024</text>
+            </g>
+            <line x1="30" y1="140" x2="250" y2="140" stroke="#a8c5d0" stroke-dasharray="3 3"/>
+            <!-- oscillating with upward trend -->
+            <polyline fill="none" stroke="#ff6b47" stroke-width="2"
+              points="30,140 45,128 60,135 75,122 90,138 105,118 120,128 135,108 150,120 165,98 180,110 195,82 210,95 225,70 240,82 250,58"/>
+            <path d="M30,140 L45,128 L60,135 L75,122 L90,138 L105,118 L120,128 L135,108 L150,120 L165,98 L180,110 L195,82 L210,95 L225,70 L240,82 L250,58 L250,140 Z" fill="#ff6b47" opacity=".15"/>
+            <polygon points="225,68 245,58 240,70 250,72 232,82 230,72" fill="#ff6b47"/>
+          </svg>
+          <div class="legend mt-3">
+            <span class="legend-item"><span class="legend-swatch legend-swatch-warn"></span>Anomaly °C</span>
+            <span class="legend-item"><span class="legend-swatch-dash"></span>Baseline</span>
+          </div>
+        </div>
+
+        <!-- SOUTHERN OCEAN -->
+        <div class="region-chart">
+          <div class="region-head">
+            <div>
+              <div class="region-name">Southern Ocean</div>
+              <small>40°S – 70°S</small>
+            </div>
+            <div class="region-delta">+0.6°C</div>
+          </div>
+          <svg viewBox="0 0 260 160" aria-label="Southern Ocean warming line chart">
+            <g stroke="#1f3a5f" stroke-width="1">
+              <line x1="30" y1="20" x2="250" y2="20"/>
+              <line x1="30" y1="60" x2="250" y2="60"/>
+              <line x1="30" y1="100" x2="250" y2="100"/>
+              <line x1="30" y1="140" x2="250" y2="140"/>
+            </g>
+            <g class="ink-axis" text-anchor="end">
+              <text x="26" y="24">+1.0</text>
+              <text x="26" y="64">+0.6</text>
+              <text x="26" y="104">+0.3</text>
+              <text x="26" y="144">0</text>
+            </g>
+            <g class="ink-axis" text-anchor="middle">
+              <text x="30"  y="155">1900</text>
+              <text x="140" y="155">1960</text>
+              <text x="250" y="155">2024</text>
+            </g>
+            <line x1="30" y1="140" x2="250" y2="140" stroke="#a8c5d0" stroke-dasharray="3 3"/>
+            <!-- slow steady rise -->
+            <polyline fill="none" stroke="#ff6b47" stroke-width="2"
+              points="30,140 50,138 70,140 90,136 110,134 130,132 150,128 170,122 190,118 210,108 230,95 250,78"/>
+            <path d="M30,140 L50,138 L70,140 L90,136 L110,134 L130,132 L150,128 L170,122 L190,118 L210,108 L230,95 L250,78 L250,140 Z" fill="#ff6b47" opacity=".15"/>
+            <polygon points="225,88 245,78 240,90 250,92 232,102 230,92" fill="#ff6b47"/>
+          </svg>
+          <div class="legend mt-3">
+            <span class="legend-item"><span class="legend-swatch legend-swatch-warn"></span>Anomaly °C</span>
+            <span class="legend-item"><span class="legend-swatch-dash"></span>Baseline</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ DATA CARDS ============ -->
+    <section>
+      <div class="eyebrow eyebrow-warn">— Key indicators</div>
+      <h3 style="font-size:var(--fs-2xl);margin-bottom:var(--space-4)">Heat is accumulating where the water is</h3>
+
+      <div class="card-grid">
+
+        <article class="card card-warn">
+          <svg class="card-icon" viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round">
+            <circle cx="24" cy="32" r="8"/>
+            <rect x="20" y="8" width="8" height="22" rx="4"/>
+            <line x1="24" y1="14" x2="24" y2="28"/>
+            <line x1="32" y1="14" x2="36" y2="14"/>
+            <line x1="32" y1="20" x2="36" y2="20"/>
+            <line x1="32" y1="26" x2="36" y2="26"/>
+            <circle cx="24" cy="32" r="3" fill="#ff6b47" stroke="none"/>
+          </svg>
+          <div class="card-label">SST anomaly · 2023</div>
+          <div class="stat stat-warn">+1.45<span class="stat-unit">°C</span></div>
+          <div class="card-desc">Hottest year ever recorded across the global ocean surface, exceeding the prior 2016 record by 0.15°C and outpacing IPCC mid-century projections.</div>
+          <div class="card-meta">SRC · HadCRUT5 / 2024-02</div>
+        </article>
+
+        <article class="card card-warn">
+          <svg class="card-icon" viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round">
+            <path d="M6 30 Q14 22 22 30 T38 30 T44 30"/>
+            <path d="M6 38 Q14 30 22 38 T38 38 T44 38"/>
+            <path d="M6 22 Q14 14 22 22 T38 22 T44 22"/>
+            <circle cx="14" cy="14" r="3"/>
+            <circle cx="34" cy="10" r="2"/>
+            <line x1="14" y1="14" x2="14" y2="20"/>
+          </svg>
+          <div class="card-label">Ocean Heat Content</div>
+          <div class="stat stat-warn">+15<span class="stat-unit">ZJ / yr</span></div>
+          <div class="card-desc">The ocean absorbs roughly 90% of excess Earth-system heat. Annual uptake equates to 25 Hiroshima bombs every second, sustained continuously.</div>
+          <div class="card-meta">SRC · NCEI 0–2000m · 2024</div>
+        </article>
+
+        <article class="card card-warn">
+          <svg class="card-icon" viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round">
+            <circle cx="24" cy="24" r="14"/>
+            <path d="M14 24 Q18 14 24 14 T34 24"/>
+            <path d="M14 24 Q18 34 24 34 T34 24"/>
+            <line x1="10" y1="24" x2="38" y2="24"/>
+            <circle cx="24" cy="14" r="1.5" fill="#ff6b47" stroke="none"/>
+            <circle cx="24" cy="34" r="1.5" fill="#ff6b47" stroke="none"/>
+          </svg>
+          <div class="card-label">Decadal warming rate</div>
+          <div class="stat stat-warn">0.18<span class="stat-unit">°C / dec</span></div>
+          <div class="card-desc">Surface warming has more than doubled since the 1980s. The post-2000 trend now exceeds 0.21°C per decade in the upper 100m mixed layer.</div>
+          <div class="card-meta">SRC · IPCC AR6 WG1 §2.3.1</div>
+        </article>
+
+        <article class="card card-warn">
+          <svg class="card-icon" viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round">
+            <path d="M8 38 L8 14 L18 14 L18 22 L28 22 L28 30 L40 30 L40 38 Z"/>
+            <line x1="8" y1="38" x2="40" y2="38"/>
+            <circle cx="14" cy="20" r="1.5"/>
+            <circle cx="22" cy="28" r="1.5"/>
+            <circle cx="34" cy="34" r="1.5"/>
+            <path d="M14 10 L18 6 L22 10" />
+          </svg>
+          <div class="card-label">Marine heatwave days</div>
+          <div class="stat stat-warn">+54<span class="stat-unit">% / yr</span></div>
+          <div class="card-desc">Frequency of extreme marine heatwaves has risen 54% since 1925. Coral reefs and kelp forests are bleaching at unprecedented intervals.</div>
+          <div class="card-meta">SRC · Oliver et al. · Nature 2018</div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ ICON CLUSTER · DRIVERS ============ -->
+    <section>
+      <div class="section-header">
+        <h2>Drivers &amp; Consequences</h2>
+      </div>
+      <div class="eyebrow">— Cause / effect chain · 8 vectors</div>
+
+      <div class="icon-cluster icon-cluster-4 mt-4">
+
+        <div class="icon-tile">
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke="#00c9b1">
+            <circle cx="24" cy="24" r="10"/>
+            <line x1="24" y1="4"  x2="24" y2="10"/>
+            <line x1="24" y1="38" x2="24" y2="44"/>
+            <line x1="4"  y1="24" x2="10" y2="24"/>
+            <line x1="38" y1="24" x2="44" y2="24"/>
+            <line x1="10" y1="10" x2="14" y2="14"/>
+            <line x1="34" y1="34" x2="38" y2="38"/>
+            <line x1="10" y1="38" x2="14" y2="34"/>
+            <line x1="34" y1="14" x2="38" y2="10"/>
+          </svg>
+          <div class="icon-tile-stat">+1.1 W</div>
+          <div class="icon-tile-label">Solar imbalance / m²</div>
+        </div>
+
+        <div class="icon-tile">
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke="#00c9b1">
+            <rect x="10" y="22" width="8" height="20"/>
+            <rect x="20" y="14" width="8" height="28"/>
+            <rect x="30" y="6"  width="8" height="36"/>
+            <line x1="6" y1="42" x2="42" y2="42"/>
+            <circle cx="14" cy="20" r="1.5"/>
+            <circle cx="24" cy="12" r="1.5"/>
+            <circle cx="34" cy="4"  r="1.5"/>
+          </svg>
+          <div class="icon-tile-stat">421</div>
+          <div class="icon-tile-label">CO₂ ppm · 2024</div>
+        </div>
+
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke="#ff6b47">
+            <path d="M8 32 Q14 22 20 32 T32 32 T44 32"/>
+            <path d="M8 38 Q14 28 20 38 T32 38 T44 38"/>
+            <circle cx="14" cy="14" r="3"/>
+            <circle cx="28" cy="10" r="2"/>
+            <line x1="14" y1="14" x2="14" y2="22"/>
+            <line x1="28" y1="10" x2="28" y2="18"/>
+          </svg>
+          <div class="icon-tile-stat">↑41%</div>
+          <div class="icon-tile-label">Heatwave frequency</div>
+        </div>
+
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke="#ff6b47">
+            <path d="M12 38 L12 22 Q12 12 24 12 Q36 12 36 22 L36 38 Z"/>
+            <path d="M16 38 L16 28"/>
+            <path d="M24 38 L24 24"/>
+            <path d="M32 38 L32 28"/>
+            <circle cx="24" cy="20" r="2"/>
+          </svg>
+          <div class="icon-tile-stat">−14%</div>
+          <div class="icon-tile-label">Coral cover · trop.</div>
+        </div>
+
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke="#ff6b47">
+            <polygon points="6,38 18,18 26,26 34,12 42,38"/>
+            <line x1="6" y1="38" x2="42" y2="38"/>
+            <circle cx="34" cy="12" r="2"/>
+            <line x1="34" y1="6" x2="34" y2="10"/>
+          </svg>
+          <div class="icon-tile-stat">+3.3</div>
+          <div class="icon-tile-label">mm sea-level / yr</div>
+        </div>
+
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke="#ff6b47">
+            <path d="M6 30 L18 18 L26 26 L34 14 L42 22"/>
+            <line x1="6" y1="38" x2="42" y2="38"/>
+            <circle cx="18" cy="18" r="2"/>
+            <circle cx="26" cy="26" r="2"/>
+            <circle cx="34" cy="14" r="2"/>
+            <polygon points="38,18 44,14 42,22"/>
+          </svg>
+          <div class="icon-tile-stat">−12%</div>
+          <div class="icon-tile-label">Polar ice extent</div>
+        </div>
+
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke="#ff6b47">
+            <circle cx="24" cy="24" r="14"/>
+            <path d="M14 24 Q24 14 34 24 Q24 34 14 24"/>
+            <circle cx="24" cy="24" r="3"/>
+            <line x1="10" y1="10" x2="38" y2="38" opacity=".5"/>
+          </svg>
+          <div class="icon-tile-stat">−26%</div>
+          <div class="icon-tile-label">Oxygen solubility</div>
+        </div>
+
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke="#ff6b47">
+            <path d="M10 24 Q24 8 38 24 Q24 40 10 24"/>
+            <circle cx="20" cy="22" r="2"/>
+            <circle cx="30" cy="26" r="1.5"/>
+            <path d="M14 30 Q20 36 26 32"/>
+            <path d="M18 14 L22 18"/>
+          </svg>
+          <div class="icon-tile-stat">→ poles</div>
+          <div class="icon-tile-label">Species migration</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ PULLQUOTE ============ -->
+    <div class="pullquote">
+      The ocean's silent accumulation of heat is the single largest reservoir of climate inertia on Earth — even if emissions stopped today, surface temperatures would continue to rise for decades.
+      <cite>— IPCC AR6 Working Group I · Chapter 9 · 2021</cite>
+    </div>
+
+    <!-- ============ DATA TABLE ============ -->
+    <section>
+      <div class="eyebrow eyebrow-warn">— Decadal record</div>
+      <h4 class="mb-4">SST anomaly by decade · global mean</h4>
+      <div class="panel" style="padding:0;overflow:hidden">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Decade</th>
+              <th>Mean anomaly</th>
+              <th>Trend °C / dec</th>
+              <th>Record years</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1900s</td><td class="num">−0.32</td><td class="num">+0.02</td><td>—</td><td><span class="badge badge-neutral">Baseline</span></td></tr>
+            <tr><td>1930s</td><td class="num">−0.18</td><td class="num">+0.04</td><td>1939</td><td><span class="badge badge-neutral">Stable</span></td></tr>
+            <tr><td>1960s</td><td class="num">−0.04</td><td class="num">+0.06</td><td>1969</td><td><span class="badge badge-neutral">Stable</span></td></tr>
+            <tr><td>1980s</td><td class="num num-warn">+0.18</td><td class="num num-warn">+0.11</td><td>1987</td><td><span class="badge badge-warn">Accelerating</span></td></tr>
+            <tr><td>1990s</td><td class="num num-warn">+0.31</td><td class="num num-warn">+0.13</td><td>1998</td><td><span class="badge badge-warn">Accelerating</span></td></tr>
+            <tr><td>2000s</td><td class="num num-warn">+0.52</td><td class="num num-warn">+0.16</td><td>2005</td><td><span class="badge badge-warn">Critical</span></td></tr>
+            <tr><td>2010s</td><td class="num num-warn">+0.80</td><td class="num num-warn">+0.19</td><td>2016</td><td><span class="badge badge-warn">Critical</span></td></tr>
+            <tr><td>2020–24</td><td class="num num-warn">+1.16</td><td class="num num-warn">+0.21</td><td>2023, 2024</td><td><span class="badge badge-warn">Extreme</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ CALLOUT ============ -->
+    <div class="callout callout-warn">
+      <div class="callout-title">Tipping point advisory · AMOC</div>
+      <p class="text-dim mb-0" style="max-width:none">The Atlantic Meridional Overturning Circulation has weakened ~15% since the mid-20th century. Sustained surface warming combined with Greenland meltwater could push the AMOC past a collapse threshold within this century, with cascading consequences for European climate, monsoon stability, and tropical fisheries.</p>
+    </div>
+
+    <!-- decorative bottom wave -->
+    <svg class="wave-divider" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,40 C100,10 200,70 300,40 C400,10 500,70 600,40 C700,10 800,70 900,40 C1000,10 1100,70 1200,40"/>
+      <path d="M0,55 C100,25 200,85 300,55 C400,25 500,85 600,55 C700,25 800,85 900,55 C1000,25 1100,85 1200,55" opacity=".5"/>
+      <path d="M0,25 C100,55 200,−5 300,25 C400,55 500,−5 600,25 C700,55 800,−5 900,25 C1000,55 1100,−5 1200,25" opacity=".3"/>
+    </svg>
+
+    <!-- CTA strip -->
+    <div class="row-between panel" style="flex-wrap:wrap">
+      <div>
+        <h4 style="font-size:var(--fs-xl);margin-bottom:var(--space-2)">Continue the dataset trail</h4>
+        <p class="text-dim mb-0">Compare temperature with biodiversity loss, plastic accumulation, and direct action pathways.</p>
+      </div>
+      <div class="row-wrap">
+        <a class="btn btn-ghost" href="../species-atlas/index.html">Species Atlas</a>
+        <a class="btn btn-primary" href="../take-action/index.html">Take Action</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-mast">Deep Current</div>
+        <p class="footer-blurb mt-3">An open infographic atlas of peer-reviewed ocean health data for researchers, educators, and policymakers.</p>
+      </div>
+      <div class="footer-col">
+        <h6>Sections</h6>
+        <ul>
+          <li><a href="../ocean-health/index.html">Ocean Health</a></li>
+          <li><a href="../species-atlas/index.html">Species Atlas</a></li>
+          <li><a href="#">Temperature Rise</a></li>
+          <li><a href="../plastic-crisis/index.html">Plastic Crisis</a></li>
+          <li><a href="../take-action/index.html">Take Action</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Datasets</h6>
+        <ul>
+          <li><a href="#">HadCRUT5</a></li>
+          <li><a href="#">NOAA ERSSTv5</a></li>
+          <li><a href="#">NASA GISTEMP</a></li>
+          <li><a href="#">Copernicus C3S</a></li>
+          <li><a href="#">IPCC AR6 WG1</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Resources</h6>
+        <ul>
+          <li><a href="#">Method &amp; sources</a></li>
+          <li><a href="#">API / CSV exports</a></li>
+          <li><a href="#">Educator toolkit</a></li>
+          <li><a href="#">Press &amp; citations</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Deep Current Research Collective · CC-BY-4.0</span>
+      <span class="footer-iso">v4.2.1 · ISO 19115:2024 · DOI 10.5281/dc.2024.03</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

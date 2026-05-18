@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field Notes — Chlorophyll Dispatch</title>
+<style>
+  .field-intro { max-width: 780px; margin: 0 auto var(--space-7); }
+  .field-intro h1 { font-size: var(--fs-h1); margin-top: var(--space-3); }
+  .field-intro .lead { margin-top: var(--space-5); }
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 360px));
+    gap: var(--space-5);
+    justify-content: center;
+    align-items: start;
+  }
+  .field-grid .card { align-self: start; }
+  .field-grid .card:nth-child(6n+1),
+  .field-grid .card:nth-child(6n+4) { margin-top: 0; }
+  .field-grid .card:nth-child(6n+2),
+  .field-grid .card:nth-child(6n+5) { margin-top: var(--space-6); }
+  .field-grid .card:nth-child(6n+3),
+  .field-grid .card:nth-child(6n+6) { margin-top: var(--space-3); }
+  .card .coord {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--mute);
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-3);
+  }
+  .card .swatch {
+    height: 90px;
+    margin: 0 0 var(--space-4);
+    border: 1px solid var(--rule);
+  }
+  .swatch.congo { background: linear-gradient(135deg, #2d4a2a, #6b8a4a 60%, #c4b070); }
+  .swatch.sundar { background: linear-gradient(180deg, #8a9a7a, #4a6b5a 50%, #2a4a4a); }
+  .swatch.patag { background: linear-gradient(160deg, #d8c89a, #b09060 55%, #6a5a3a); }
+  .swatch.cairn { background: linear-gradient(200deg, #b4a888 0%, #6a7560 40%, #4a4a3a 80%, #d8d0b8 95%); }
+  .swatch.borneo { background: linear-gradient(135deg, #3a5a2a, #6a9a4a 60%, #e8c060); }
+  .swatch.aral { background: linear-gradient(180deg, #c8b070, #a09060 40%, #6a8a9a 70%, #4a6a8a); }
+  .corr-ribbon {
+    margin-top: var(--space-9);
+    padding: var(--space-6);
+    background: var(--paper-alt);
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+  }
+  .corr-ribbon h2 { font-size: 24px; margin-bottom: var(--space-2); }
+  .corr-ribbon .sub {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: var(--space-5);
+  }
+  .corr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    font-size: var(--fs-caption);
+    line-height: 1.55;
+    color: var(--mute);
+  }
+  .corr-grid .bio strong {
+    display: block;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: var(--fs-body);
+    margin-bottom: 2px;
+  }
+  .corr-grid .bio .where {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-1);
+    margin-bottom: var(--space-2);
+  }
+  .corr-grid .bio .stat {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--mute);
+    margin-top: var(--space-2);
+    border-top: 1px dotted var(--rule);
+    padding-top: var(--space-2);
+  }
+  .index-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-3);
+    margin: var(--space-7) auto var(--space-7);
+    max-width: calc(360px * 3 + var(--space-5) * 2);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .index-strip span { display: block; }
+  .index-strip span b { display: block; color: var(--accent-1); font-weight: 400; font-size: 10px; margin-bottom: 2px; }
+  @media (max-width: 1024px) {
+    .field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .corr-grid { grid-template-columns: 1fr 1fr; }
+    .index-strip { grid-template-columns: repeat(3, 1fr); }
+    .field-grid .card { margin-top: 0 !important; }
+  }
+  @media (max-width: 720px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .corr-grid { grid-template-columns: 1fr; }
+    .index-strip { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="wrap">
+    <a href="../cover-story/index.html" class="site-logo">Chlorophyll <em>Dispatch</em></a>
+    <ul>
+      <li><a href="../cover-story/index.html">Cover Story</a></li>
+      <li><a href="../deep-dive/index.html">Deep Dive</a></li>
+      <li><a href="#">Field Notes</a></li>
+      <li><a href="../contributors/index.html">Contributors</a></li>
+      <li><a href="../archive/index.html">Archive</a></li>
+    </ul>
+    <span class="issue-tag">Vol. XII · No. 04</span>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="field-intro">
+    <span class="dateline">Field Dispatches · Autumn 2024</span>
+    <span class="section-label">Six Letters From The Edge</span>
+    <h1>Field Notes</h1>
+    <p class="lead dropcap">Across six continents and one drying inland sea, our correspondents this season filed shorter than usual — and sharper than usual. What follows are unembellished dispatches from places where ecological time is accelerating: peat lifted by helicopter, mangroves measured in centimetres lost, steppes set on fire to be saved. Read them together and a pattern emerges. Read them apart and the particulars hold.</p>
+  </section>
+
+  <nav class="index-strip" aria-label="Dispatch index">
+    <span><b>01</b>Congo Basin</span>
+    <span><b>02</b>Sundarbans</span>
+    <span><b>03</b>Patagonia</span>
+    <span><b>04</b>Cairngorms</span>
+    <span><b>05</b>Borneo</span>
+    <span><b>06</b>Aral Sea</span>
+  </nav>
+
+  <section class="field-grid">
+
+    <article class="card">
+      <div class="swatch congo" role="img" aria-label="Congo Basin canopy"></div>
+      <span class="location">Dispatch 01 · Congo Basin</span>
+      <span class="coord">0.7893° S, 23.6560° E</span>
+      <h3>The Cuvette Centrale Holds Its Breath</h3>
+      <p class="corr">— Filed by Adaeze Okwu, Mbandaka station</p>
+      <p>For the third consecutive dry season, peat moisture in the central basin has fallen below the 80% threshold considered safe for carbon stability. Concession maps redrawn in March now route logging roads within four kilometres of an unbroken Raphia palm corridor that hydrologists have spent two decades mapping by canoe.</p>
+      <blockquote class="pullquote">The forest is still there. The water underneath it is leaving.</blockquote>
+      <p>Local fishery cooperatives report catches of <em>Hydrocynus</em> down 41% year-on-year. Ministry hydrology bulletins have not been issued since June; staff cite fuel shortages and a stalled satellite link to Kinshasa.</p>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Peat depths near Lokolama exceed 5.8 m — among the deepest measured in the tropics.
+        <cite>— Dargie et al., Nature 2017</cite>
+      </div>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        New concessions cover an area roughly the size of Belgium.
+        <cite>— Global Forest Watch, 2024</cite>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="swatch sundar" role="img" aria-label="Sundarbans tidal"></div>
+      <span class="location">Dispatch 02 · Sundarbans</span>
+      <span class="coord">21.9497° N, 89.1833° E</span>
+      <h3>Salt Lines Reach The Sweet Wells</h3>
+      <p class="corr">— Filed by Rohan Banerjee, Gosaba</p>
+      <p>The post-monsoon salinity gradient has moved 11 km inland since 2019. In the village of Satjelia, three of seven tube wells now run brackish through the dry months; rice yields on the polder behind them have collapsed to a quarter of pre-Aila levels. Women here measure the year by which crops they had to stop attempting.</p>
+      <blockquote class="pullquote">We did not lose the land. The sea simply borrowed the soil.</blockquote>
+      <p>Forest Department patrols counted 96 tiger movements through the buffer zone in the first half of 2024 — a thirty-year high, attributed to displacement from southern islands now uninhabitable to prey.</p>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Mean tidal range at Hiron Point: 4.7 m, rising annually.
+        <cite>— Bangladesh IWM, 2023</cite>
+      </div>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Embankment failures recorded at 38 sites since Cyclone Remal.
+        <cite>— WBSDMA field log</cite>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="swatch patag" role="img" aria-label="Patagonian steppe"></div>
+      <span class="location">Dispatch 03 · Patagonian Steppe</span>
+      <span class="coord">46.5947° S, 71.7259° W</span>
+      <h3>Guanaco Counts Return To The Plateau</h3>
+      <p class="corr">— Filed by Inés Caamaño, Río Mayo</p>
+      <p>Two decades after the wool-collapse abandoned an estimated 2.3 million hectares of estancia, the guanaco census on the central Santa Cruz plateau has crossed 110,000 head for the first time since records began. Restoration ecologists credit the unintentional rewilding to fence removal funded, paradoxically, by a now-defunct sheep cooperative.</p>
+      <blockquote class="pullquote">The grass remembers what the ledgers forgot.</blockquote>
+      <p>Puma sightings inside the Patagonia National Park corridor are up sixfold, though shepherds in adjacent valleys report sustained livestock losses and have petitioned for a managed cull this austral spring.</p>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Stipa speciosa cover has rebounded 28% on monitored plots.
+        <cite>— CONICET steppe survey, 2024</cite>
+      </div>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Wool prices peaked in 1991 and have not recovered in real terms.
+        <cite>— INTA Bariloche</cite>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="swatch cairn" role="img" aria-label="Cairngorms moorland"></div>
+      <span class="location">Dispatch 04 · Scottish Cairngorms</span>
+      <span class="coord">57.0700° N, 3.6700° W</span>
+      <h3>The Pine Marten Walks South Again</h3>
+      <p class="corr">— Filed by Eilidh MacRae, Glenmore</p>
+      <p>Camera traps installed along the Caledonian pine remnants of Abernethy have logged pine marten activity 22 km further south than recorded in 2018. The recovery is uneven: capercaillie leks within the same forest remain at six birds, down from forty-one a decade ago, and managers privately concede the species may not persist in Britain past 2035.</p>
+      <blockquote class="pullquote">One predator returns to a forest that is forgetting its rarest bird.</blockquote>
+      <p>Muirburn licensing reforms passed in May have already reduced the burned area on grouse moors abutting the park by 38%, but enforcement on private estates remains, as a ranger put it, "a matter of weather and faith."</p>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Pinus sylvestris regeneration up 14% on de-stocked plots.
+        <cite>— NatureScot, 2024</cite>
+      </div>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Capercaillie population: ~542 individuals UK-wide.
+        <cite>— RSPB national survey</cite>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="swatch borneo" role="img" aria-label="Borneo lowlands"></div>
+      <span class="location">Dispatch 05 · Borneo Lowlands</span>
+      <span class="coord">1.5533° N, 110.3592° E</span>
+      <h3>The Dipterocarp That Did Not Flower</h3>
+      <p class="corr">— Filed by Cahaya Tan, Lambir Hills</p>
+      <p>For the second consecutive expected masting year, the canopy emergents of Lambir Hills have failed to synchronise. Researchers attribute the gap to anomalously high minimum night-time temperatures, which appear to suppress the thermal cue triggering simultaneous flowering across the Shorea genus. Seed predators — bearded pigs especially — have shifted ranges in response.</p>
+      <blockquote class="pullquote">A forest that flowers together either lives or dies together.</blockquote>
+      <p>An oil-palm replanting concession 9 km north has begun trialling shaded inter-row plantings of native Macaranga; early data suggests modest gains in beetle diversity but no measurable change in soil hydrology.</p>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Last full mast event: 2019; previous gap 1998–2002.
+        <cite>— Sakai &amp; Itioka, Sarawak Forestry</cite>
+      </div>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Night-time temperature anomaly +1.8°C, July–Sept 2024.
+        <cite>— MMD station Bintulu</cite>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="swatch aral" role="img" aria-label="Aral Sea recovery"></div>
+      <span class="location">Dispatch 06 · Aral Sea Recovery Zone</span>
+      <span class="coord">46.0000° N, 60.0000° E</span>
+      <h3>Saxaul Holds The Salt In Place</h3>
+      <p class="corr">— Filed by Madina Yusupova, Muynak</p>
+      <p>The Kokaral dam continues to hold. The North Aral has stabilised at roughly 27,000 km² of restored surface, and fishery catches from Aralsk landed 8,400 tonnes last season — the highest figure recorded since the dam's completion in 2005. Forty kilometres south, on the exposed Aralkum seabed, a Korean-funded saxaul plantation now covers 1.7 million hectares.</p>
+      <blockquote class="pullquote">A sea will not come back. A coastline, sometimes, will.</blockquote>
+      <p>Dust events still loft pesticide-laden sediments into the lower Amu Darya basin; pediatric respiratory clinics in Nukus report seasonal admissions running 60% above the 1990s baseline.</p>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        North Aral salinity dropped from 30 g/L to 17 g/L since 2008.
+        <cite>— Micklin, J. Hydrology 2022</cite>
+      </div>
+      <div class="marginalia">
+        <span class="mg-label">Note</span>
+        Saxaul survival on planted plots: ~62% after three years.
+        <cite>— UNDP Aral programme</cite>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="corr-ribbon" aria-label="Correspondent bios">
+    <h2>Field Correspondents</h2>
+    <p class="sub">Six Bylines · Autumn 2024</p>
+    <div class="corr-grid">
+      <div class="bio">
+        <strong>Adaeze Okwu</strong>
+        <span class="where">Congo Basin</span>
+        A Lagos-trained ecologist and three-time Dispatch contributor, Okwu has spent eight seasons mapping the hydrology of the Cuvette Centrale by pirogue. She writes from Mbandaka and Kinshasa, and teaches occasionally at the University of Kisangani.
+        <span class="stat">12 dispatches filed · joined 2019</span>
+      </div>
+      <div class="bio">
+        <strong>Rohan Banerjee</strong>
+        <span class="where">Sundarbans</span>
+        Banerjee covers coastal Bengal for the Dispatch from a houseboat office moored at Gosaba. A former hydrologist with Jadavpur University, he reports principally on salinity intrusion, tiger movement, and the politics of cyclone reconstruction.
+        <span class="stat">17 dispatches filed · joined 2017</span>
+      </div>
+      <div class="bio">
+        <strong>Inés Caamaño</strong>
+        <span class="where">Patagonia</span>
+        Based in Coyhaique, Caamaño is a wildlife biologist and writer whose work tracks the post-pastoral recovery of the southern steppe. She has contributed to El Mostrador, Anfibia, and the Patagonia Park monitoring programme since 2014.
+        <span class="stat">9 dispatches filed · joined 2021</span>
+      </div>
+      <div class="bio">
+        <strong>Eilidh MacRae</strong>
+        <span class="where">Cairngorms</span>
+        MacRae is a Scottish naturalist and former NatureScot ranger who reports from Strathspey on highland forest restoration, muirburn policy, and the lingering question of what a wild Cairngorm should actually look like in the twenty-first century.
+        <span class="stat">14 dispatches filed · joined 2018</span>
+      </div>
+      <div class="bio">
+        <strong>Cahaya Tan</strong>
+        <span class="where">Borneo</span>
+        Tan splits her time between Kuching and the Lambir Hills research station, where she has worked as a botanical field assistant since 2016. Her Dispatch reporting covers dipterocarp phenology, oil-palm transition agriculture, and lowland riverine ecology.
+        <span class="stat">6 dispatches filed · joined 2022</span>
+      </div>
+      <div class="bio">
+        <strong>Madina Yusupova</strong>
+        <span class="where">Aral Sea</span>
+        A Karakalpak-born journalist based in Nukus, Yusupova reports on the long, partial repair of the Aral basin. Her work has appeared in Eurasianet, Le Monde diplomatique, and the Tashkent journal of arid-land studies.
+        <span class="stat">11 dispatches filed · joined 2020</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <p class="footer-tagline">Long-form environmental journalism from the field, since 2012.</p>
+      <p class="small">Printed quarterly on uncoated stock. Subscriptions ship from Edinburgh and Montréal.</p>
+    </div>
+    <div>
+      <h4>Sections</h4>
+      <ul>
+        <li><a href="../cover-story/index.html">Cover Story</a></li>
+        <li><a href="../deep-dive/index.html">Deep Dive</a></li>
+        <li><a href="#">Field Notes</a></li>
+        <li><a href="../contributors/index.html">Contributors</a></li>
+        <li><a href="../archive/index.html">Archive</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Editorial</h4>
+      <ul>
+        <li><a href="#">Submissions</a></li>
+        <li><a href="#">Masthead</a></li>
+        <li><a href="#">Ethics &amp; Sourcing</a></li>
+        <li><a href="#">Corrections</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Office</h4>
+      <ul>
+        <li>14 Candlemaker Row</li>
+        <li>Edinburgh EH1 2QE</li>
+        <li>letters@chlorophyll.press</li>
+      </ul>
+    </div>
+  </div>
+  <div class="colophon">© MMXXIV Chlorophyll Dispatch · Vol. XII · No. 04 · Set in Georgia &amp; system-ui</div>
+</footer>
+
+</body>
+</html>

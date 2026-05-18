@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pressure Zones — Hadal Cartography</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0a0e1a;
+    color: #e8edf5;
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Fixed vertical ruler sidebar */
+  .ruler {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 56px;
+    height: 100vh;
+    background: rgba(10,14,26,0.92);
+    border-right: 1px solid rgba(0,229,200,0.18);
+    z-index: 50;
+    padding: 12px 4px;
+  }
+  .ruler svg { width: 100%; height: 100%; display: block; }
+  .ruler .lbl {
+    fill: #e8edf5;
+    font-family: "Courier New", monospace;
+    font-size: 7px;
+  }
+
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 24px 24px 80px;
+  }
+
+  /* Header / Nav */
+  header {
+    border-bottom: 1px solid rgba(0,229,200,0.25);
+    padding-bottom: 16px;
+    margin-bottom: 28px;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .brand-mark {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #e8edf5;
+    letter-spacing: 0.5px;
+  }
+  .brand-mark span { color: #00e5c8; }
+  .brand-meta {
+    font-size: 10px;
+    color: #f5a623;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 22px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  nav a {
+    padding: 4px 0;
+    border-bottom: 1px solid transparent;
+    color: #e8edf5;
+  }
+  nav a.active {
+    color: #00e5c8;
+    border-bottom-color: #00e5c8;
+  }
+  nav a:hover { color: #00e5c8; }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 36px;
+  }
+  .eyebrow {
+    color: #00e5c8;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 18px;
+  }
+  h1 .accent { color: #f5a623; font-style: italic; }
+  .lede {
+    font-size: 13px;
+    color: #c7cfdc;
+    max-width: 640px;
+  }
+
+  /* Stats strip */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 24px 0 36px;
+    border-top: 1px solid rgba(0,229,200,0.18);
+    border-bottom: 1px solid rgba(0,229,200,0.18);
+    padding: 14px 0;
+  }
+  .stat .k {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    color: #00e5c8;
+    font-weight: 700;
+  }
+  .stat .l {
+    font-size: 9px;
+    color: #c7cfdc;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  /* Full-bleed SVG */
+  .fullbleed {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
+    padding-left: 56px; /* leave space for ruler */
+    background: linear-gradient(180deg, #0a0e1a 0%, #060912 100%);
+    padding-top: 24px;
+    padding-bottom: 24px;
+    margin-top: 24px;
+    margin-bottom: 36px;
+    border-top: 1px solid rgba(0,229,200,0.15);
+    border-bottom: 1px solid rgba(0,229,200,0.15);
+  }
+  .fullbleed-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .section-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(22px, 3vw, 32px);
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    font-size: 11px;
+    color: #f5a623;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  /* Cross-section SVG */
+  .crosssec { width: 100%; height: auto; display: block; }
+  .crosssec text { font-family: "Courier New", monospace; }
+
+  /* Zone description grid */
+  .zone-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .zone-card {
+    border: 1px solid rgba(0,229,200,0.2);
+    padding: 12px 10px;
+    background: rgba(0,229,200,0.03);
+    position: relative;
+    overflow: hidden;
+  }
+  .zone-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 14%, 0 26%);
+  }
+  .zone-card .num {
+    font-family: Georgia, serif;
+    font-size: 11px;
+    color: #f5a623;
+    letter-spacing: 1px;
+  }
+  .zone-card h3 {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    margin: 4px 0 6px;
+    color: #00e5c8;
+  }
+  .zone-card .d {
+    font-size: 10px;
+    color: #c7cfdc;
+    line-height: 1.5;
+  }
+  .zone-card .p {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(0,229,200,0.2);
+    font-size: 10px;
+    color: #e8edf5;
+  }
+  .zone-card .p b { color: #f5a623; }
+
+  /* Bar chart */
+  .barchart-wrap {
+    margin-top: 12px;
+    border: 1px solid rgba(0,229,200,0.18);
+    padding: 18px;
+    background: rgba(8,12,22,0.6);
+  }
+  .barchart { width: 100%; height: auto; display: block; }
+  .barchart text { font-family: "Courier New", monospace; }
+
+  /* Footer */
+  footer {
+    margin-top: 48px;
+    padding: 24px 0 32px;
+    border-top: 1px solid rgba(0,229,200,0.2);
+    font-size: 10px;
+    color: #c7cfdc;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 24px;
+  }
+  footer h4 {
+    font-family: Georgia, serif;
+    color: #00e5c8;
+    font-size: 12px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  footer ul { list-style: none; }
+  footer li { margin-bottom: 4px; }
+  .copy {
+    grid-column: 1 / -1;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0,229,200,0.1);
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: #6b7384;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 9px;
+  }
+
+  /* Tablet */
+  @media (max-width: 900px) {
+    .zone-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    footer { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Phone */
+  @media (max-width: 560px) {
+    .ruler { width: 38px; }
+    .ruler .lbl { font-size: 6px; }
+    .wrap { padding-left: 54px; padding-right: 16px; }
+    .fullbleed { padding-left: 38px; }
+    .fullbleed-inner { padding: 0 14px; }
+    .zone-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    footer { grid-template-columns: 1fr; }
+    nav ul { gap: 4px 14px; font-size: 10px; }
+    h1 { font-size: 38px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Fixed vertical depth ruler 0–11,000m -->
+<aside class="ruler" aria-label="Depth scale 0 to 11000 meters">
+  <svg viewBox="0 0 56 880" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="rulerGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#00e5c8" stop-opacity="0.9"/>
+        <stop offset="40%" stop-color="#1a4a7a" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#0a0e1a" stop-opacity="1"/>
+      </linearGradient>
+    </defs>
+    <!-- main spine -->
+    <rect x="26" y="20" width="4" height="840" fill="url(#rulerGrad)"/>
+    <!-- ticks every 1000m, total 11 + 0 -->
+    <g stroke="#e8edf5" stroke-width="1">
+      <line x1="18" y1="20"  x2="38" y2="20"/>
+      <line x1="20" y1="96"  x2="36" y2="96"/>
+      <line x1="20" y1="172" x2="36" y2="172"/>
+      <line x1="20" y1="249" x2="36" y2="249"/>
+      <line x1="20" y1="325" x2="36" y2="325"/>
+      <line x1="20" y1="402" x2="36" y2="402"/>
+      <line x1="20" y1="478" x2="36" y2="478"/>
+      <line x1="20" y1="554" x2="36" y2="554"/>
+      <line x1="20" y1="631" x2="36" y2="631"/>
+      <line x1="20" y1="707" x2="36" y2="707"/>
+      <line x1="20" y1="784" x2="36" y2="784"/>
+      <line x1="18" y1="860" x2="38" y2="860" stroke="#f5a623"/>
+    </g>
+    <g class="lbl" text-anchor="end">
+      <text x="16" y="23">0m</text>
+      <text x="16" y="99">1k</text>
+      <text x="16" y="175">2k</text>
+      <text x="16" y="252">3k</text>
+      <text x="16" y="328">4k</text>
+      <text x="16" y="405">5k</text>
+      <text x="16" y="481">6k</text>
+      <text x="16" y="557">7k</text>
+      <text x="16" y="634">8k</text>
+      <text x="16" y="710">9k</text>
+      <text x="16" y="787">10k</text>
+      <text x="16" y="863" fill="#f5a623">11k</text>
+    </g>
+    <text class="lbl" x="46" y="14" text-anchor="middle" fill="#00e5c8">↑</text>
+    <text class="lbl" x="46" y="876" text-anchor="middle" fill="#f5a623">↓</text>
+  </svg>
+</aside>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="brand-mark">Hadal<span>·</span>Cartography</div>
+      <div class="brand-meta">Atlas v.01 / 11,034m</div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#" class="active">01 · Pressure-Zones</a></li>
+        <li><a href="../creatures/index.html">02 · Creatures</a></li>
+        <li><a href="../light-layers/index.html">03 · Light-Layers</a></li>
+        <li><a href="../human-reach/index.html">04 · Human-Reach</a></li>
+        <li><a href="../data-dive/index.html">05 · Data-Dive</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Chapter 01 — Vertical Cross-section</div>
+    <h1>Five Strata of <span class="accent">Crushing</span> Dark.</h1>
+    <p class="lede">
+      Below the sunlit film of the surface, the ocean stacks itself into five
+      pelagic zones — each one denser, darker, and more silently violent than the
+      last. Pressure climbs by roughly one atmosphere for every ten meters
+      descended; at the Challenger Deep, every square centimeter of hull bears
+      the weight of a small car.
+    </p>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="k">5</div><div class="l">Named Zones</div></div>
+    <div class="stat"><div class="k">11,034m</div><div class="l">Max Depth</div></div>
+    <div class="stat"><div class="k">~1,100 atm</div><div class="l">Hadal Pressure</div></div>
+    <div class="stat"><div class="k">+1 atm</div><div class="l">Per 10 Meters</div></div>
+  </div>
+</div>
+
+<!-- FULL-BLEED VERTICAL CROSS-SECTION -->
+<section class="fullbleed">
+  <div class="fullbleed-inner">
+    <div class="section-title">Vertical Cross-section · Pelagic Stratigraphy</div>
+    <div class="section-sub">// boundary cuts at 12° / pressure in atmospheres</div>
+
+    <svg class="crosssec" viewBox="0 0 1200 1100" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ocean depth cross section with five zones">
+      <defs>
+        <linearGradient id="gEpi" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#5fd9ff"/>
+          <stop offset="100%" stop-color="#0a0e1a"/>
+        </linearGradient>
+        <linearGradient id="gMeso" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#2a7fb8"/>
+          <stop offset="100%" stop-color="#0a0e1a"/>
+        </linearGradient>
+        <linearGradient id="gBathy" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#1a3a6e"/>
+          <stop offset="100%" stop-color="#0a0e1a"/>
+        </linearGradient>
+        <linearGradient id="gAbyss" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#142049"/>
+          <stop offset="100%" stop-color="#06080f"/>
+        </linearGradient>
+        <linearGradient id="gHadal" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#0c1530"/>
+          <stop offset="100%" stop-color="#020308"/>
+        </linearGradient>
+        <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#00e5c8" stroke-width="0.3" opacity="0.15"/>
+        </pattern>
+
+        <!-- clip paths for diagonal boundaries at ~12 degrees -->
+        <!-- Epipelagic: 0 -> 200m. Total height 1000 units = 11034m. So 200m -> y≈18 -->
+        <clipPath id="clipEpi">
+          <polygon points="0,0 1200,0 1200,108 0,148"/>
+        </clipPath>
+        <clipPath id="clipMeso">
+          <polygon points="0,148 1200,108 1200,470 0,510"/>
+        </clipPath>
+        <clipPath id="clipBathy">
+          <polygon points="0,510 1200,470 1200,840 0,880"/>
+        </clipPath>
+        <clipPath id="clipAbyss">
+          <polygon points="0,880 1200,840 1200,985 0,1025"/>
+        </clipPath>
+        <clipPath id="clipHadal">
+          <polygon points="0,1025 1200,985 1200,1100 0,1100"/>
+        </clipPath>
+      </defs>
+
+      <!-- Zone fills -->
+      <g clip-path="url(#clipEpi)">
+        <rect x="0" y="0" width="1200" height="1100" fill="url(#gEpi)"/>
+        <rect x="0" y="0" width="1200" height="1100" fill="url(#grid)"/>
+      </g>
+      <g clip-path="url(#clipMeso)">
+        <rect x="0" y="0" width="1200" height="1100" fill="url(#gMeso)"/>
+        <rect x="0" y="0" width="1200" height="1100" fill="url(#grid)"/>
+      </g>
+      <g clip-path="url(#clipBathy)">
+        <rect x="0" y="0" width="1200" height="1100" fill="url(#gBathy)"/>
+        <rect x="0" y="0" width="1200" height="1100" fill="url(#grid)"/>
+      </g>
+      <g clip-path="url(#clipAbyss)">
+        <rect x="0" y="0" width="1200" height="1100" fill="url(#gAbyss)"/>
+      </g>
+      <g clip-path="url(#clipHadal)">
+        <rect x="0" y="0" width="1200" height="1100" fill="url(#gHadal)"/>
+      </g>
+
+      <!-- Boundary lines (12° diagonals) -->
+      <g stroke="#00e5c8" stroke-width="1" fill="none" opacity="0.7">
+        <line x1="0" y1="148"  x2="1200" y2="108"/>
+        <line x1="0" y1="510"  x2="1200" y2="470"/>
+        <line x1="0" y1="880"  x2="1200" y2="840"/>
+        <line x1="0" y1="1025" x2="1200" y2="985"/>
+      </g>
+
+      <!-- Zone labels on the left -->
+      <g font-family="Georgia, serif" fill="#e8edf5">
+        <text x="40" y="78" font-size="28" font-weight="700">EPIPELAGIC</text>
+        <text x="40" y="100" font-size="11" fill="#00e5c8" font-family="Courier New, monospace">0 – 200 m · SUNLIT ZONE</text>
+
+        <text x="40" y="300" font-size="28" font-weight="700">MESOPELAGIC</text>
+        <text x="40" y="322" font-size="11" fill="#00e5c8" font-family="Courier New, monospace">200 – 1000 m · TWILIGHT</text>
+
+        <text x="40" y="680" font-size="28" font-weight="700">BATHYPELAGIC</text>
+        <text x="40" y="702" font-size="11" fill="#00e5c8" font-family="Courier New, monospace">1000 – 4000 m · MIDNIGHT</text>
+
+        <text x="40" y="950" font-size="22" font-weight="700">ABYSSOPELAGIC</text>
+        <text x="40" y="970" font-size="11" fill="#00e5c8" font-family="Courier New, monospace">4000 – 6000 m · ABYSS</text>
+
+        <text x="40" y="1065" font-size="22" font-weight="700" fill="#f5a623">HADALPELAGIC</text>
+        <text x="40" y="1085" font-size="11" fill="#f5a623" font-family="Courier New, monospace">6000 – 11,034 m · TRENCHES</text>
+      </g>
+
+      <!-- Pressure annotations on the right with rule lines -->
+      <g font-family="Courier New, monospace" font-size="11" fill="#e8edf5">
+        <!-- 200m / 20 atm -->
+        <line x1="700" y1="138" x2="1100" y2="138" stroke="#00e5c8" stroke-width="0.6" stroke-dasharray="3,3"/>
+        <circle cx="700" cy="138" r="3" fill="#00e5c8"/>
+        <text x="1110" y="135" fill="#00e5c8">200 m</text>
+        <text x="1110" y="150" fill="#e8edf5">≈ 20 atm</text>
+
+        <!-- 1000m / 100 atm -->
+        <line x1="640" y1="490" x2="1100" y2="490" stroke="#00e5c8" stroke-width="0.6" stroke-dasharray="3,3"/>
+        <circle cx="640" cy="490" r="3" fill="#00e5c8"/>
+        <text x="1110" y="487" fill="#00e5c8">1,000 m</text>
+        <text x="1110" y="502" fill="#e8edf5">≈ 100 atm</text>
+
+        <!-- 4000m / 400 atm -->
+        <line x1="580" y1="860" x2="1100" y2="860" stroke="#00e5c8" stroke-width="0.6" stroke-dasharray="3,3"/>
+        <circle cx="580" cy="860" r="3" fill="#00e5c8"/>
+        <text x="1110" y="857" fill="#00e5c8">4,000 m</text>
+        <text x="1110" y="872" fill="#e8edf5">≈ 400 atm</text>
+
+        <!-- 6000m / 600 atm -->
+        <line x1="540" y1="1005" x2="1100" y2="1005" stroke="#f5a623" stroke-width="0.6" stroke-dasharray="3,3"/>
+        <circle cx="540" cy="1005" r="3" fill="#f5a623"/>
+        <text x="1110" y="1002" fill="#f5a623">6,000 m</text>
+        <text x="1110" y="1017" fill="#e8edf5">≈ 600 atm</text>
+
+        <!-- 11034m / 1100 atm -->
+        <line x1="500" y1="1085" x2="1100" y2="1085" stroke="#f5a623" stroke-width="0.6" stroke-dasharray="3,3"/>
+        <circle cx="500" cy="1085" r="3" fill="#f5a623"/>
+        <text x="1110" y="1082" fill="#f5a623">11,034 m</text>
+        <text x="1110" y="1097" fill="#e8edf5">≈ 1,100 atm</text>
+      </g>
+
+      <!-- Surface ships silhouettes for context -->
+      <g fill="#e8edf5" opacity="0.6">
+        <path d="M 300 30 L 360 30 L 350 42 L 310 42 Z"/>
+        <line x1="330" y1="30" x2="330" y2="14" stroke="#e8edf5" stroke-width="1"/>
+        <line x1="540" y1="32" x2="592" y2="32" stroke="#e8edf5" stroke-width="2"/>
+      </g>
+
+      <!-- Trench notch at bottom -->
+      <path d="M 200 1100 L 540 1100 L 560 1080 L 590 1095 L 610 1075 L 640 1095 L 670 1075 L 700 1100 L 1200 1100 Z"
+            fill="#020308" opacity="0.6"/>
+    </svg>
+
+    <!-- Zone description cards -->
+    <div class="zone-grid">
+      <div class="zone-card" style="border-color:#5fd9ff;">
+        <div class="num">01</div>
+        <h3>Epipelagic</h3>
+        <div class="d">0 – 200 m. Sunlight powers nearly all marine photosynthesis here.</div>
+        <div class="p"><b>≤ 20 atm</b> · 12 – 28 °C</div>
+      </div>
+      <div class="zone-card" style="border-color:#2a7fb8;">
+        <div class="num">02</div>
+        <h3>Mesopelagic</h3>
+        <div class="d">200 – 1,000 m. Twilight. Bioluminescence becomes the dominant signal.</div>
+        <div class="p"><b>20 – 100 atm</b> · 5 – 12 °C</div>
+      </div>
+      <div class="zone-card" style="border-color:#1a3a6e;">
+        <div class="num">03</div>
+        <h3>Bathypelagic</h3>
+        <div class="d">1,000 – 4,000 m. The midnight zone. Zero sunlight; constant 4 °C.</div>
+        <div class="p"><b>100 – 400 atm</b> · ~4 °C</div>
+      </div>
+      <div class="zone-card" style="border-color:#142049;">
+        <div class="num">04</div>
+        <h3>Abyssopelagic</h3>
+        <div class="d">4,000 – 6,000 m. Vast cold plains; sparse, specialised life.</div>
+        <div class="p"><b>400 – 600 atm</b> · 2 – 3 °C</div>
+      </div>
+      <div class="zone-card" style="border-color:#f5a623;">
+        <div class="num">05</div>
+        <h3>Hadalpelagic</h3>
+        <div class="d">6,000 – 11,034 m. Trench systems. Extremophiles only.</div>
+        <div class="p"><b>600 – 1,100 atm</b> · 1 – 2 °C</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Secondary bar chart -->
+<div class="wrap" style="padding-top:0;">
+  <div class="eyebrow">Comparative Pressure // 10 Iconic Locations</div>
+  <h2 style="font-family:Georgia,serif;font-weight:700;font-size:clamp(24px,3.5vw,36px);margin-bottom:8px;">Where the Weight Falls.</h2>
+  <p class="lede" style="margin-bottom:20px;">
+    Pressure scales linearly with depth. The chart below plots ten iconic ocean
+    features, from a coral reef shallow to the Mariana's Challenger Deep,
+    against their characteristic pressure in atmospheres.
+  </p>
+
+  <div class="barchart-wrap">
+    <svg class="barchart" viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bar chart of pressure at ten ocean locations">
+      <defs>
+        <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#00e5c8"/>
+          <stop offset="100%" stop-color="#1a3a6e"/>
+        </linearGradient>
+        <linearGradient id="barGradDeep" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f5a623"/>
+          <stop offset="100%" stop-color="#7a2a0a"/>
+        </linearGradient>
+      </defs>
+
+      <!-- axes -->
+      <line x1="200" y1="30" x2="200" y2="490" stroke="#e8edf5" stroke-width="1"/>
+      <line x1="200" y1="490" x2="880" y2="490" stroke="#e8edf5" stroke-width="1"/>
+
+      <!-- x-axis ticks (atm) -->
+      <g font-family="Courier New, monospace" font-size="10" fill="#c7cfdc" text-anchor="middle">
+        <line x1="200" y1="490" x2="200" y2="496" stroke="#e8edf5"/>
+        <text x="200" y="510">0</text>
+        <line x1="324" y1="490" x2="324" y2="496" stroke="#e8edf5"/>
+        <text x="324" y="510">200</text>
+        <line x1="448" y1="490" x2="448" y2="496" stroke="#e8edf5"/>
+        <text x="448" y="510">400</text>
+        <line x1="572" y1="490" x2="572" y2="496" stroke="#e8edf5"/>
+        <text x="572" y="510">600</text>
+        <line x1="696" y1="490" x2="696" y2="496" stroke="#e8edf5"/>
+        <text x="696" y="510">800</text>
+        <line x1="820" y1="490" x2="820" y2="496" stroke="#e8edf5"/>
+        <text x="820" y="510">1000</text>
+        <text x="540" y="514" font-size="9" fill="#00e5c8" letter-spacing="2">PRESSURE (atm) ▶</text>
+      </g>
+
+      <!-- gridlines -->
+      <g stroke="#00e5c8" stroke-width="0.3" opacity="0.18">
+        <line x1="324" y1="30" x2="324" y2="490"/>
+        <line x1="448" y1="30" x2="448" y2="490"/>
+        <line x1="572" y1="30" x2="572" y2="490"/>
+        <line x1="696" y1="30" x2="696" y2="490"/>
+        <line x1="820" y1="30" x2="820" y2="490"/>
+      </g>
+
+      <!-- Bars: scale 1 atm = 0.62 px. width = atm * 0.62. y = 40 + i * 44 -->
+      <!-- 1. Coral Reef — 30m / 3 atm -->
+      <g>
+        <text x="190" y="55" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Coral Reef</text>
+        <rect x="200" y="42" width="1.86" height="22" fill="url(#barGrad)"/>
+        <text x="210" y="58" font-family="Courier New, monospace" font-size="10" fill="#00e5c8">3 atm · 30m</text>
+      </g>
+      <!-- 2. Scuba Limit Recreational — 40m / 4 atm -->
+      <g>
+        <text x="190" y="99" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Scuba Limit</text>
+        <rect x="200" y="86" width="2.48" height="22" fill="url(#barGrad)"/>
+        <text x="210" y="102" font-family="Courier New, monospace" font-size="10" fill="#00e5c8">4 atm · 40m</text>
+      </g>
+      <!-- 3. Continental Shelf — 200m / 20 atm -->
+      <g>
+        <text x="190" y="143" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Shelf Edge</text>
+        <rect x="200" y="130" width="12.4" height="22" fill="url(#barGrad)"/>
+        <text x="220" y="146" font-family="Courier New, monospace" font-size="10" fill="#00e5c8">20 atm · 200m</text>
+      </g>
+      <!-- 4. Titanic Wreck — 3800m / 380 atm -->
+      <g>
+        <text x="190" y="187" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Titanic Wreck</text>
+        <rect x="200" y="174" width="235.6" height="22" fill="url(#barGrad)"/>
+        <text x="445" y="190" font-family="Courier New, monospace" font-size="10" fill="#00e5c8">380 atm · 3,800m</text>
+      </g>
+      <!-- 5. Alvin Max — 4500m / 450 atm -->
+      <g>
+        <text x="190" y="231" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Alvin Sub Max</text>
+        <rect x="200" y="218" width="279" height="22" fill="url(#barGrad)"/>
+        <text x="488" y="234" font-family="Courier New, monospace" font-size="10" fill="#00e5c8">450 atm · 4,500m</text>
+      </g>
+      <!-- 6. Mid-Atlantic Ridge — 2500m / 250 atm -->
+      <g>
+        <text x="190" y="275" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Mid-Atl. Ridge</text>
+        <rect x="200" y="262" width="155" height="22" fill="url(#barGrad)"/>
+        <text x="365" y="278" font-family="Courier New, monospace" font-size="10" fill="#00e5c8">250 atm · 2,500m</text>
+      </g>
+      <!-- 7. Avg Ocean Depth — 3700m / 370 atm -->
+      <g>
+        <text x="190" y="319" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Ocean Avg.</text>
+        <rect x="200" y="306" width="229.4" height="22" fill="url(#barGrad)"/>
+        <text x="438" y="322" font-family="Courier New, monospace" font-size="10" fill="#00e5c8">370 atm · 3,700m</text>
+      </g>
+      <!-- 8. Puerto Rico Trench — 8,400m / 840 atm -->
+      <g>
+        <text x="190" y="363" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Puerto Rico T.</text>
+        <rect x="200" y="350" width="520.8" height="22" fill="url(#barGradDeep)"/>
+        <text x="730" y="366" font-family="Courier New, monospace" font-size="10" fill="#f5a623">840 atm · 8,400m</text>
+      </g>
+      <!-- 9. Tonga Trench — 10,800m / 1080 atm -->
+      <g>
+        <text x="190" y="407" font-family="Courier New, monospace" font-size="11" fill="#e8edf5" text-anchor="end">Tonga Trench</text>
+        <rect x="200" y="394" width="669.6" height="22" fill="url(#barGradDeep)"/>
+        <text x="200" y="410" font-family="Courier New, monospace" font-size="10" fill="#0a0e1a" dx="6">1080 atm · 10,800m</text>
+      </g>
+      <!-- 10. Challenger Deep — 11,034m / 1100 atm -->
+      <g>
+        <text x="190" y="451" font-family="Courier New, monospace" font-size="11" fill="#f5a623" text-anchor="end" font-weight="bold">Challenger Deep</text>
+        <rect x="200" y="438" width="682" height="22" fill="url(#barGradDeep)"/>
+        <text x="208" y="454" font-family="Courier New, monospace" font-size="10" fill="#0a0e1a" font-weight="bold">1,100 atm · 11,034 m  ▮ MAXIMUM</text>
+      </g>
+
+      <!-- Title -->
+      <text x="200" y="20" font-family="Georgia, serif" font-size="13" fill="#e8edf5" font-weight="bold">Pressure at 10 Iconic Ocean Locations</text>
+    </svg>
+  </div>
+
+  <footer>
+    <div>
+      <h4>Hadal Cartography</h4>
+      <p>An interactive infographic atlas of ocean depth zones, pressure physics, and the strange biology that survives in the dark. All diagrams rendered as inline SVG.</p>
+    </div>
+    <div>
+      <h4>Atlas</h4>
+      <ul>
+        <li><a href="#">Pressure-Zones</a></li>
+        <li><a href="../creatures/index.html">Creatures</a></li>
+        <li><a href="../light-layers/index.html">Light-Layers</a></li>
+        <li><a href="../human-reach/index.html">Human-Reach</a></li>
+        <li><a href="../data-dive/index.html">Data-Dive</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>References</h4>
+      <ul>
+        <li>NOAA Ocean Service</li>
+        <li>Five Deeps Expedition</li>
+        <li>WHOI Deep Submergence</li>
+        <li>GEBCO Bathymetric Chart</li>
+      </ul>
+    </div>
+    <div class="copy">
+      <span>© Hadal Cartography · Synthesized 2024</span>
+      <span>Depth Index: 0 — 11,034 m</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

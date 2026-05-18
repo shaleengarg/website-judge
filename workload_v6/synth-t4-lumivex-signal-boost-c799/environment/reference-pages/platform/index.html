@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<style>
+  .platform-hero { padding: 100px 0 64px; }
+  .platform-hero h1 { font-size: var(--fs-9); }
+  .module-visual {
+    position: relative;
+  }
+  .module-visual::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(124,58,237,0.5), transparent 70%);
+    filter: blur(60px);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .module-visual::after {
+    content: "";
+    position: absolute;
+    bottom: -40px;
+    left: -40px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(245,158,11,0.25), transparent 70%);
+    filter: blur(50px);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .frosted-panel {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(160deg, rgba(124,58,237,0.14), rgba(245,158,11,0.05));
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: var(--r-card);
+    padding: var(--space-6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-lift);
+    overflow: hidden;
+  }
+  .frosted-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
+    border-bottom: 1px solid rgba(124,58,237,0.2);
+  }
+  .frosted-panel-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: var(--fs-3);
+    letter-spacing: 0.04em;
+  }
+  .pulse-dots { display: flex; gap: 6px; }
+  .pulse-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(240,244,255,0.18); }
+  .pulse-dot.on { background: var(--accent-2); box-shadow: 0 0 10px var(--accent-2); }
+  .module-eyebrow { color: var(--accent-2); }
+  .module-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+  }
+  .feat-mini {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    padding: var(--space-3) 0;
+    border-bottom: 1px dashed rgba(124,58,237,0.18);
+  }
+  .feat-mini:last-child { border-bottom: 0; }
+  .feat-mini-icon {
+    flex: 0 0 28px;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--grad-violet);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: 13px;
+    color: #fff;
+  }
+  .feat-mini-text { font-size: var(--fs-3); color: var(--ink-dim); }
+  .feat-mini-text strong { color: var(--ink); font-family: var(--font-head); font-weight: 800; font-size: var(--fs-3); display:block; margin-bottom: 2px; letter-spacing: -0.01em; }
+
+  /* Slack-style pulse card */
+  .slack-msg {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid rgba(124,58,237,0.12);
+    align-items: flex-start;
+  }
+  .slack-msg:last-child { border-bottom: 0; }
+  .slack-avatar {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--grad-violet);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: 13px;
+    color: #fff;
+  }
+  .slack-avatar.amber { background: var(--grad-amber); color: #1a0a3d; }
+  .slack-name { font-family: var(--font-head); font-weight: 800; font-size: var(--fs-3); }
+  .slack-time { font-size: var(--fs-1); color: var(--ink-faint); margin-left: var(--space-2); letter-spacing: 0.08em; }
+  .slack-body { font-size: var(--fs-2); color: var(--ink-dim); font-family: var(--font-body); margin-top: 2px; }
+  .slack-body .hot { color: var(--accent-2); font-weight: 700; }
+
+  /* Account graph nodes */
+  .graph {
+    position: relative;
+    height: 280px;
+    width: 100%;
+  }
+  .node {
+    position: absolute;
+    padding: 8px 14px;
+    border-radius: var(--r-pill);
+    background: rgba(11,15,46,0.7);
+    border: 1px solid var(--accent-1-line);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: var(--fs-2);
+    color: var(--ink);
+    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-sub);
+    z-index: 2;
+  }
+  .node.center {
+    background: var(--grad-violet);
+    border-color: transparent;
+    box-shadow: 0 0 30px rgba(124,58,237,0.6);
+    font-size: var(--fs-3);
+    padding: 12px 18px;
+  }
+  .node.amber {
+    background: rgba(245,158,11,0.18);
+    border-color: rgba(245,158,11,0.5);
+    color: var(--accent-2);
+  }
+  .edge {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(124,58,237,0.6), rgba(124,58,237,0.1));
+    transform-origin: 0 0;
+    z-index: 1;
+  }
+
+  /* CRM Sync flow */
+  .sync-flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .sync-card {
+    background: rgba(11,15,46,0.5);
+    border: 1px solid var(--accent-1-line);
+    border-radius: 10px;
+    padding: var(--space-4);
+    text-align: center;
+  }
+  .sync-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--grad-violet);
+    margin: 0 auto var(--space-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: var(--fs-3);
+    color: #fff;
+  }
+  .sync-icon.amber { background: var(--grad-amber); color: #1a0a3d; }
+  .sync-name { font-family: var(--font-head); font-weight: 800; font-size: var(--fs-3); }
+  .sync-status { font-size: var(--fs-1); color: var(--accent-2); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+  .sync-arrow {
+    width: 50px;
+    height: 24px;
+    position: relative;
+  }
+  .sync-arrow::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 12px;
+    height: 2px;
+    background: var(--grad-dual);
+    transform: translateY(-50%);
+  }
+  .sync-arrow::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid var(--accent-1);
+    border-right: 2px solid var(--accent-1);
+  }
+
+  /* Audience builder segments */
+  .seg-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: rgba(11,15,46,0.5);
+    border-radius: 10px;
+    border: 1px solid rgba(124,58,237,0.2);
+    margin-bottom: var(--space-2);
+    align-items: center;
+  }
+  .seg-rule { font-family: var(--font-mono); font-size: var(--fs-2); color: var(--ink-dim); }
+  .seg-rule b { color: var(--accent-2); font-weight: 700; }
+  .seg-count { font-family: var(--font-head); font-weight: 800; font-size: var(--fs-3); color: var(--accent-1); }
+  .seg-total {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    background: var(--grad-violet);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 24px rgba(124,58,237,0.4);
+  }
+  .seg-total-num { font-family: var(--font-head); font-weight: 900; font-size: var(--fs-7); color: #fff; line-height: 1; }
+  .seg-total-label { font-size: var(--fs-2); color: rgba(255,255,255,0.85); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
+
+  /* Sticky side nav with anchors for visual cue */
+  .platform-grid { display: grid; grid-template-columns: 240px 1fr; gap: var(--space-7); }
+  @media (max-width: 1024px) {
+    .platform-grid { grid-template-columns: 200px 1fr; gap: var(--space-5); }
+    .graph { height: 260px; }
+  }
+  @media (max-width: 768px) {
+    .platform-grid { grid-template-columns: 1fr; }
+    .side-nav { position: static; }
+    .module { padding: var(--space-7) 0; }
+    .sync-flow { grid-template-columns: 1fr; }
+    .sync-arrow { transform: rotate(90deg); margin: 0 auto; }
+    .graph { height: 320px; }
+    .module-flip .grid-split { direction: ltr; }
+  }
+
+  /* Module heading amber accent */
+  .module h2 {
+    position: relative;
+    padding-top: var(--space-4);
+  }
+  .module h2::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 48px; height: 3px;
+    background: var(--accent-2);
+    border-radius: 2px;
+  }
+
+  .cta-card {
+    background: var(--grad-dark);
+    border: 1px solid var(--accent-1-line);
+    border-radius: var(--r-card);
+    padding: var(--space-7);
+    text-align: center;
+    box-shadow: var(--shadow-lift);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-card::before {
+    content: "";
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(124,58,237,0.3), transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+  }
+  .cta-card > * { position: relative; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../ignite/index.html" class="brand">
+      <span class="brand-dot"></span>
+      Lumivex
+    </a>
+    <ul class="nav-links">
+      <li><a href="../ignite/index.html">Ignite</a></li>
+      <li><a href="#" class="active">Platform</a></li>
+      <li><a href="../results/index.html">Results</a></li>
+      <li><a href="../pricing/index.html">Pricing</a></li>
+      <li><a href="../onboard/index.html">Onboard</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="../onboard/index.html" class="btn btn-primary btn-sm">Start Free Trial</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero platform-hero full-bleed">
+  <div class="container">
+    <div class="hero-inner">
+      <span class="badge badge-violet badge-dot">The Lumivex Platform</span>
+      <h1 class="mt-5">Five Modules. One Signal Engine.</h1>
+      <p class="lede mt-5">Every Lumivex module shares the same realtime intent graph — so a Slack ping, a CRM enrichment, and an audience export all speak the same language about the same buyer.</p>
+      <div class="flex-center mt-7">
+        <a href="../onboard/index.html" class="btn btn-primary btn-lg">Start Free Trial</a>
+        <a href="#intent-radar" class="btn btn-ghost">Explore Modules</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="platform-grid">
+      <aside class="side-nav">
+        <div class="side-nav-title">Capabilities</div>
+        <ul class="side-nav-list">
+          <li><a href="#intent-radar" class="active">01 · Intent Radar</a></li>
+          <li><a href="#account-graph">02 · Account Graph</a></li>
+          <li><a href="#slack-pulse">03 · Slack Pulse</a></li>
+          <li><a href="#crm-sync">04 · CRM Sync</a></li>
+          <li><a href="#audience-builder">05 · Audience Builder</a></li>
+        </ul>
+      </aside>
+
+      <div>
+
+        <!-- MODULE 1: Intent Radar -->
+        <article class="module" id="intent-radar">
+          <div class="grid-split">
+            <div>
+              <span class="eyebrow module-eyebrow">Module 01</span>
+              <h2>Intent Radar</h2>
+              <p class="lede">Watch a live tape of every buying signal across the open web — second-party data, review-site browsing, hiring spikes, and stack-change events — all scored against your ICP within 90 seconds.</p>
+
+              <div class="mt-5">
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>14,000+ tracked signals</strong>Daily ingest from 320 first-party and partner feeds, deduped on company domain.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Custom signal weights</strong>Tune what 'high intent' means for your motion — from job-post velocity to G2 review reads.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Sub-90-second freshness</strong>Streaming pipeline routes hot accounts to your reps before the trail goes cold.</div>
+                </div>
+              </div>
+
+              <div class="module-meta">
+                <span class="tag">Streaming</span>
+                <span class="tag">Scored</span>
+                <span class="tag">ICP-aware</span>
+              </div>
+            </div>
+
+            <div class="module-visual">
+              <div class="frosted-panel">
+                <div class="frosted-panel-head">
+                  <div class="frosted-panel-title">Live Intent Feed</div>
+                  <div class="pulse-dots">
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot"></span>
+                  </div>
+                </div>
+                <table class="mock-table">
+                  <thead>
+                    <tr>
+                      <th>Account</th>
+                      <th>Signal</th>
+                      <th>Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="mock-row-hot">
+                      <td>Corvin Labs</td>
+                      <td>Hiring · 4 SDRs</td>
+                      <td>94</td>
+                    </tr>
+                    <tr class="mock-row-hot">
+                      <td>Nuvaro Health</td>
+                      <td>G2 review read</td>
+                      <td>91</td>
+                    </tr>
+                    <tr>
+                      <td>Stelka Ventures</td>
+                      <td>Stack: Segment</td>
+                      <td>78</td>
+                    </tr>
+                    <tr>
+                      <td>Halcyon Print</td>
+                      <td>Funding · Series B</td>
+                      <td>72</td>
+                    </tr>
+                    <tr>
+                      <td>Brindle Co</td>
+                      <td>Website visits ↑ 3.4×</td>
+                      <td>68</td>
+                    </tr>
+                    <tr>
+                      <td>Mossvale</td>
+                      <td>Tech change detected</td>
+                      <td>61</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- MODULE 2: Account Graph -->
+        <article class="module module-flip" id="account-graph">
+          <div class="grid-split">
+            <div>
+              <span class="eyebrow module-eyebrow">Module 02</span>
+              <h2>Account Graph</h2>
+              <p class="lede">Lumivex resolves every contact, subsidiary, and parent entity into a single relationship graph — so a buyer trail at a Tokyo subsidiary triggers the right rep on your enterprise team in New York.</p>
+
+              <div class="mt-5">
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Multi-entity resolution</strong>Roll signals from subsidiaries up to the parent buying committee automatically.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Contact-to-account linking</strong>Map persona-level engagement to the right account owner, no duplicates.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Relationship strength score</strong>See which accounts share board members, investors, or executive alumni.</div>
+                </div>
+              </div>
+
+              <div class="module-meta">
+                <span class="tag">Graph DB</span>
+                <span class="tag">Entity Resolution</span>
+                <span class="tag">Hierarchy</span>
+              </div>
+            </div>
+
+            <div class="module-visual">
+              <div class="frosted-panel">
+                <div class="frosted-panel-head">
+                  <div class="frosted-panel-title">Corvin Labs · Relationship Map</div>
+                  <div class="pulse-dots">
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot on"></span>
+                  </div>
+                </div>
+                <div class="graph">
+                  <span class="edge" style="top:50%; left:50%; width:140px; transform: rotate(-30deg);"></span>
+                  <span class="edge" style="top:50%; left:50%; width:160px; transform: rotate(40deg);"></span>
+                  <span class="edge" style="top:50%; left:50%; width:130px; transform: rotate(160deg);"></span>
+                  <span class="edge" style="top:50%; left:50%; width:150px; transform: rotate(-150deg);"></span>
+                  <span class="edge" style="top:50%; left:50%; width:120px; transform: rotate(90deg);"></span>
+
+                  <span class="node center" style="top:42%; left:38%;">Corvin Labs</span>
+                  <span class="node amber" style="top:10%; left:55%;">Corvin EU GmbH</span>
+                  <span class="node" style="top:18%; left:10%;">Corvin Cloud Inc.</span>
+                  <span class="node" style="top:72%; left:62%;">Halcyon Print (sister)</span>
+                  <span class="node amber" style="top:78%; left:8%;">M. Okafor · VP Eng</span>
+                  <span class="node" style="top:50%; left:78%;">Series C · 2024</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- MODULE 3: Slack Pulse -->
+        <article class="module" id="slack-pulse">
+          <div class="grid-split">
+            <div>
+              <span class="eyebrow module-eyebrow">Module 03</span>
+              <h2>Slack Pulse</h2>
+              <p class="lede">Hot signals show up where your reps already live — a clean Slack alert with account context, suggested talking points, and a one-click sequence start. No tab-switching, no triage queue.</p>
+
+              <div class="mt-5">
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Channel routing</strong>Send signals to the right pod, region, or vertical channel automatically.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Threaded context</strong>Each alert opens a thread with enrichment, history, and last-touch data.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Quiet-hours digest</strong>Bundle non-critical signals into a 7am morning brief for each rep.</div>
+                </div>
+              </div>
+
+              <div class="module-meta">
+                <span class="tag">Realtime</span>
+                <span class="tag">Slack-native</span>
+                <span class="tag">Routing</span>
+              </div>
+            </div>
+
+            <div class="module-visual">
+              <div class="frosted-panel">
+                <div class="frosted-panel-head">
+                  <div class="frosted-panel-title"># growth-signals</div>
+                  <div class="pulse-dots">
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot on"></span>
+                  </div>
+                </div>
+
+                <div class="slack-msg">
+                  <div class="slack-avatar amber">LV</div>
+                  <div>
+                    <div><span class="slack-name">Lumivex</span><span class="slack-time">9:42 AM</span></div>
+                    <div class="slack-body"><span class="hot">🔥 Hot signal · Corvin Labs (94)</span> · Posted 4 SDR roles in 48h. Owner: <b>@dana</b>. Suggested play: <b>Hiring Velocity</b>.</div>
+                  </div>
+                </div>
+
+                <div class="slack-msg">
+                  <div class="slack-avatar">LV</div>
+                  <div>
+                    <div><span class="slack-name">Lumivex</span><span class="slack-time">9:38 AM</span></div>
+                    <div class="slack-body">Nuvaro Health read your G2 page (2nd visit this week). Cc <b>@theo</b> — last touch 14d ago.</div>
+                  </div>
+                </div>
+
+                <div class="slack-msg">
+                  <div class="slack-avatar">LV</div>
+                  <div>
+                    <div><span class="slack-name">Lumivex</span><span class="slack-time">9:21 AM</span></div>
+                    <div class="slack-body">Stelka Ventures added <b>Segment</b> to their stack. Matches ICP rule <b>“Modern data infra”</b>.</div>
+                  </div>
+                </div>
+
+                <div class="slack-msg">
+                  <div class="slack-avatar amber">LV</div>
+                  <div>
+                    <div><span class="slack-name">Lumivex</span><span class="slack-time">9:05 AM</span></div>
+                    <div class="slack-body"><span class="hot">⚡ Funding signal</span> · Halcyon Print closed $42M Series B. Routed to <b>@kira</b>.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- MODULE 4: CRM Sync -->
+        <article class="module module-flip" id="crm-sync">
+          <div class="grid-split">
+            <div>
+              <span class="eyebrow module-eyebrow">Module 04</span>
+              <h2>CRM Sync</h2>
+              <p class="lede">Two-way sync with Salesforce, HubSpot, and Attio writes intent scores, signal timelines, and account fit ratings directly to the records your reps already use. Zero new tabs.</p>
+
+              <div class="mt-5">
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Field-level mapping</strong>Push any Lumivex signal to any custom field with conflict resolution rules.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Realtime + nightly sync</strong>Hot signals push instantly; full account refreshes run nightly at 02:00 UTC.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Audit trail</strong>Every write is logged and reversible from the Lumivex admin console.</div>
+                </div>
+              </div>
+
+              <div class="module-meta">
+                <span class="tag">Salesforce</span>
+                <span class="tag">HubSpot</span>
+                <span class="tag">Attio</span>
+                <span class="tag">2-way</span>
+              </div>
+            </div>
+
+            <div class="module-visual">
+              <div class="frosted-panel">
+                <div class="frosted-panel-head">
+                  <div class="frosted-panel-title">Sync Status · Last 60s</div>
+                  <div class="pulse-dots">
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot on"></span>
+                  </div>
+                </div>
+
+                <div class="sync-flow">
+                  <div class="sync-card">
+                    <div class="sync-icon">LV</div>
+                    <div class="sync-name">Lumivex</div>
+                    <div class="sync-status">3,842 events</div>
+                  </div>
+                  <div class="sync-arrow"></div>
+                  <div class="sync-card">
+                    <div class="sync-icon amber">SF</div>
+                    <div class="sync-name">Salesforce</div>
+                    <div class="sync-status">✓ Healthy</div>
+                  </div>
+                </div>
+
+                <table class="mock-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Direction</th>
+                      <th>Last Sync</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Intent Score</td><td>→ SFDC</td><td>2s ago</td></tr>
+                    <tr><td>ICP Fit Tier</td><td>→ SFDC</td><td>2s ago</td></tr>
+                    <tr><td>Last Signal</td><td>→ SFDC</td><td>4s ago</td></tr>
+                    <tr><td>Owner Assignment</td><td>← SFDC</td><td>11s ago</td></tr>
+                    <tr><td>Lifecycle Stage</td><td>← SFDC</td><td>11s ago</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- MODULE 5: Audience Builder -->
+        <article class="module" id="audience-builder">
+          <div class="grid-split">
+            <div>
+              <span class="eyebrow module-eyebrow">Module 05</span>
+              <h2>Audience Builder</h2>
+              <p class="lede">Stack rules in plain English to spin up an audience in seconds — then export it to LinkedIn, Meta, or your outbound sequence. Audiences auto-refresh as new accounts trip your thresholds.</p>
+
+              <div class="mt-5">
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Composable rules</strong>Mix firmographics, intent signals, and CRM stage in nested AND / OR logic.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>Live counts</strong>Audience size updates the moment you adjust a rule — no preview button.</div>
+                </div>
+                <div class="feat-mini">
+                  <span class="feat-mini-icon">◆</span>
+                  <div class="feat-mini-text"><strong>One-click destinations</strong>Push to LinkedIn Matched Audiences, Meta CAPI, Outreach, or CSV.</div>
+                </div>
+              </div>
+
+              <div class="module-meta">
+                <span class="tag">No-code</span>
+                <span class="tag">Live-refresh</span>
+                <span class="tag">Multi-destination</span>
+              </div>
+            </div>
+
+            <div class="module-visual">
+              <div class="frosted-panel">
+                <div class="frosted-panel-head">
+                  <div class="frosted-panel-title">Audience · "Q2 Mid-Market Hot"</div>
+                  <div class="pulse-dots">
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot on"></span>
+                    <span class="pulse-dot"></span>
+                  </div>
+                </div>
+
+                <div class="seg-row">
+                  <div class="seg-rule">Intent score <b>&gt;= 75</b> in last <b>14d</b></div>
+                  <div class="seg-count">2,184</div>
+                </div>
+                <div class="seg-row">
+                  <div class="seg-rule"><b>AND</b> Employees <b>200 – 2000</b></div>
+                  <div class="seg-count">1,047</div>
+                </div>
+                <div class="seg-row">
+                  <div class="seg-rule"><b>AND</b> Industry <b>= SaaS, Fintech</b></div>
+                  <div class="seg-count">612</div>
+                </div>
+                <div class="seg-row">
+                  <div class="seg-rule"><b>AND</b> CRM stage <b>!= Closed-Won</b></div>
+                  <div class="seg-count">589</div>
+                </div>
+                <div class="seg-row">
+                  <div class="seg-rule"><b>AND NOT</b> Open opp owner <b>= self</b></div>
+                  <div class="seg-count">441</div>
+                </div>
+
+                <div class="seg-total">
+                  <div class="seg-total-num">441</div>
+                  <div class="seg-total-label">Accounts · Auto-refresh hourly</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Closing CTA -->
+<section class="section">
+  <div class="container">
+    <div class="cta-card">
+      <span class="badge badge-amber">All five modules · One subscription</span>
+      <h2 class="mt-5">See your buyers before your competitors do.</h2>
+      <p class="lede" style="max-width:620px;margin:0 auto;">Spin up Lumivex in 48 hours. No long contracts, no implementation fee — just signals flowing to the people who close.</p>
+      <div class="flex-center mt-7">
+        <a href="../onboard/index.html" class="btn btn-primary btn-lg">Start Free Trial</a>
+        <a href="../pricing/index.html" class="btn btn-ghost">See Pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        Lumivex
+      </div>
+      <p class="footer-tag">B2B signal intelligence for growth teams who refuse to wait for the hand-raise.</p>
+      <div class="socials mt-5">
+        <a class="social social-x" href="#" aria-label="X"></a>
+        <a class="social social-in" href="#" aria-label="LinkedIn"></a>
+        <a class="social social-gh" href="#" aria-label="GitHub"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="../ignite/index.html">Ignite</a></li>
+        <li><a href="#">Platform</a></li>
+        <li><a href="../results/index.html">Results</a></li>
+        <li><a href="../pricing/index.html">Pricing</a></li>
+        <li><a href="../onboard/index.html">Onboard</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Modules</h5>
+      <ul>
+        <li><a href="#intent-radar">Intent Radar</a></li>
+        <li><a href="#account-graph">Account Graph</a></li>
+        <li><a href="#slack-pulse">Slack Pulse</a></li>
+        <li><a href="#crm-sync">CRM Sync</a></li>
+        <li><a href="#audience-builder">Audience Builder</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Customers</a></li>
+        <li><a href="#">Security</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Lumivex Signals, Inc. · SOC 2 Type II · GDPR</span>
+    <span class="footer-copy">Made for growth teams who move first.</span>
+  </div>
+</footer>
+
+</body>
+</html>

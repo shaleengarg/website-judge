@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Species Atlas — Deep Current</title>
+<style>
+  .atlas-grid{display:grid;grid-template-columns:60% 40%;gap:var(--space-5);align-items:start}
+  @media (max-width:900px){.atlas-grid{grid-template-columns:1fr}}
+  .map-wrap{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius-md);padding:var(--space-4);position:relative;overflow:hidden}
+  .map-wrap svg{display:block;width:100%;height:auto}
+  .map-meta{display:flex;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--ink-mute);padding-top:var(--space-3);margin-top:var(--space-3);border-top:1px dashed var(--line);text-transform:uppercase;letter-spacing:var(--ls-wide)}
+  .species-list{display:flex;flex-direction:column;gap:var(--space-3);max-height:none}
+  .species-list .panel-head{display:flex;justify-content:space-between;align-items:center;padding:var(--space-3) var(--space-4);background:rgba(0,201,177,0.06);border:1px solid var(--line);border-radius:var(--radius-sm);font-family:var(--mono);font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:var(--ls-wide)}
+  .radial-tax{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius-md);padding:var(--space-5)}
+  .radial-tax svg{display:block;width:100%;height:auto;max-width:680px;margin:0 auto}
+  .phyla-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-3);margin-top:var(--space-4)}
+  @media (max-width:720px){.phyla-legend{grid-template-columns:repeat(2,1fr)}}
+  .phyla-chip{display:flex;align-items:center;gap:var(--space-2);font-size:var(--fs-xs);color:var(--ink-dim);padding:var(--space-2) var(--space-3);background:rgba(0,0,0,0.2);border-radius:var(--radius-sm)}
+  .phyla-chip i{width:14px;height:14px;border-radius:3px;display:inline-block;flex-shrink:0}
+  .phyla-chip b{color:var(--ink);font-family:var(--serif)}
+  .phyla-chip span{margin-left:auto;font-family:var(--mono);color:var(--accent-1)}
+</style>
+</head>
+<body>
+<div class="site">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M4 36 Q14 26 24 36 T44 36 T64 36"/>
+        <path d="M4 44 Q14 34 24 44 T44 44 T64 44"/>
+        <path d="M4 52 Q14 42 24 52 T44 52 T64 52"/>
+        <circle cx="32" cy="20" r="6" fill="none" stroke="#00c9b1" stroke-width="2"/>
+      </svg>
+      <div>
+        <div class="brand-title">Deep Current</div>
+        <div class="brand-tag">Ocean Data Atlas</div>
+      </div>
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-label">Sections</div>
+      <a class="nav-link" href="../ocean-health/index.html">Ocean Health</a>
+      <a class="nav-link active" href="#">Species Atlas</a>
+      <a class="nav-link" href="../temperature-rise/index.html">Temperature Rise</a>
+      <a class="nav-link" href="../plastic-crisis/index.html">Plastic Crisis</a>
+      <a class="nav-link" href="../take-action/index.html">Take Action</a>
+    </nav>
+
+    <div class="depth-ruler">
+      <div class="depth-ruler-label">Depth Scale · m</div>
+      <svg viewBox="0 0 160 320" aria-hidden="true">
+        <defs>
+          <linearGradient id="dpgrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5fe6d4"/>
+            <stop offset="25%" stop-color="#00c9b1"/>
+            <stop offset="55%" stop-color="#0a8a7a"/>
+            <stop offset="85%" stop-color="#152d52"/>
+            <stop offset="100%" stop-color="#020812"/>
+          </linearGradient>
+        </defs>
+        <rect x="40" y="8" width="36" height="304" fill="url(#dpgrad)" rx="3"/>
+        <g stroke="#a8c5d0" stroke-width="1">
+          <line x1="40" y1="20" x2="84" y2="20"/>
+          <line x1="40" y1="80" x2="80" y2="80"/>
+          <line x1="40" y1="140" x2="80" y2="140"/>
+          <line x1="40" y1="200" x2="80" y2="200"/>
+          <line x1="40" y1="260" x2="80" y2="260"/>
+          <line x1="40" y1="306" x2="84" y2="306"/>
+        </g>
+        <g font-family="ui-monospace,monospace" font-size="9" fill="#a8c5d0">
+          <text x="90" y="23">0</text>
+          <text x="90" y="83">200</text>
+          <text x="90" y="143">1000</text>
+          <text x="90" y="203">4000</text>
+          <text x="90" y="263">6000</text>
+          <text x="90" y="309">11k</text>
+        </g>
+        <g font-family="ui-monospace,monospace" font-size="8" fill="#6b8a96">
+          <text x="4" y="50">SUNLIT</text>
+          <text x="4" y="110">TWILIGHT</text>
+          <text x="4" y="170">MIDNIGHT</text>
+          <text x="4" y="230">ABYSSAL</text>
+          <text x="4" y="285">HADAL</text>
+        </g>
+      </svg>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+
+    <div class="topmeta">
+      <div class="topmeta-crumbs">
+        <span>Deep Current</span><span class="sep">/</span>
+        <span>Atlas</span><span class="sep">/</span>
+        <span class="text-accent">Species</span>
+      </div>
+      <div class="topmeta-status">Dataset v4.2 · synced 06:14 UTC</div>
+    </div>
+
+    <section class="banner">
+      <div class="banner-inner">
+        <div class="eyebrow" style="color:rgba(10,22,40,0.8)">— Atlas · Vol II</div>
+        <h1>Species Atlas of the Global Ocean</h1>
+        <div class="banner-sub">47 biodiversity hotspots · 12 featured taxa · 8 marine phyla mapped</div>
+      </div>
+    </section>
+
+    <p class="text-dim" style="max-width:78ch">
+      The atlas aggregates IUCN Red List assessments, IPBES range models, and OBIS occurrence
+      records into a single navigable map. Hotspot markers are scaled to the local
+      Shannon biodiversity index <code>H'</code> and tinted along a teal→coral axis to
+      indicate aggregate conservation status. Featured species in the side panel are
+      drawn from the IUCN Top‑12 priority list for FY2024.
+    </p>
+
+    <!-- ===== MAIN ATLAS GRID ===== -->
+    <div class="atlas-grid">
+
+      <!-- LEFT: world map -->
+      <div class="map-wrap">
+        <div class="fig-title">Global biodiversity & migration corridors</div>
+        <div class="fig-sub text-dim">Hotspot radius ∝ Shannon index · stroke = primary migration route</div>
+
+        <svg viewBox="0 0 720 420" role="img" aria-label="World map of marine biodiversity hotspots">
+          <defs>
+            <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0a1628"/>
+              <stop offset="100%" stop-color="#06101e"/>
+            </linearGradient>
+            <radialGradient id="hot-good">
+              <stop offset="0%" stop-color="#00c9b1" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#00c9b1" stop-opacity="0.05"/>
+            </radialGradient>
+            <radialGradient id="hot-warn">
+              <stop offset="0%" stop-color="#ff6b47" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#ff6b47" stop-opacity="0.05"/>
+            </radialGradient>
+            <radialGradient id="hot-mid">
+              <stop offset="0%" stop-color="#e8b25a" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#e8b25a" stop-opacity="0.05"/>
+            </radialGradient>
+          </defs>
+
+          <!-- ocean background -->
+          <rect x="0" y="0" width="720" height="420" fill="url(#ocean)"/>
+
+          <!-- latitude grid -->
+          <g stroke="#1f3a5f" stroke-width="0.5" opacity="0.6">
+            <line x1="0" y1="70" x2="720" y2="70"/>
+            <line x1="0" y1="140" x2="720" y2="140"/>
+            <line x1="0" y1="210" x2="720" y2="210" stroke="#00c9b1" stroke-dasharray="3 4" opacity="0.4"/>
+            <line x1="0" y1="280" x2="720" y2="280"/>
+            <line x1="0" y1="350" x2="720" y2="350"/>
+            <line x1="120" y1="0" x2="120" y2="420"/>
+            <line x1="240" y1="0" x2="240" y2="420"/>
+            <line x1="360" y1="0" x2="360" y2="420"/>
+            <line x1="480" y1="0" x2="480" y2="420"/>
+            <line x1="600" y1="0" x2="600" y2="420"/>
+          </g>
+          <text x="6" y="214" class="ink-axis" fill="#00c9b1" font-family="ui-monospace,monospace" font-size="9">EQUATOR</text>
+
+          <!-- CONTINENTS as polygons -->
+          <g fill="#152d52" stroke="#1f3a5f" stroke-width="1">
+            <!-- North America -->
+            <polygon points="60,60 110,55 145,75 165,110 155,150 130,175 100,185 75,170 55,140 40,100 50,75"/>
+            <!-- South America -->
+            <polygon points="160,210 190,205 210,235 215,275 200,320 175,355 155,360 145,330 140,290 145,250"/>
+            <!-- Greenland -->
+            <polygon points="195,40 230,35 245,55 240,80 215,90 195,75"/>
+            <!-- Europe -->
+            <polygon points="320,80 365,75 385,90 380,115 350,125 325,115 315,95"/>
+            <!-- Africa -->
+            <polygon points="330,150 380,140 405,165 415,210 395,260 370,295 340,300 320,265 315,215 320,180"/>
+            <!-- Asia -->
+            <polygon points="395,55 470,60 535,80 580,110 610,135 595,170 555,185 510,180 470,165 440,140 410,120 390,90"/>
+            <!-- India peninsula -->
+            <polygon points="465,150 490,150 495,185 480,205 465,195 460,170"/>
+            <!-- SE Asia archipelago -->
+            <polygon points="560,200 590,195 610,210 600,225 575,220"/>
+            <polygon points="615,215 640,210 650,225 635,235"/>
+            <!-- Australia -->
+            <polygon points="595,275 660,270 685,290 680,315 645,325 605,315 590,295"/>
+            <!-- Antarctica strip -->
+            <polygon points="20,395 720,395 720,420 0,420" fill="#0f2240"/>
+          </g>
+
+          <!-- migration routes (curved paths) -->
+          <g fill="none" stroke="#00c9b1" stroke-width="1.2" opacity="0.55" stroke-dasharray="3 3">
+            <path d="M150,90 Q220,140 290,180 T420,210"/>
+            <path d="M180,300 Q260,260 360,240 T560,260"/>
+            <path d="M620,290 Q540,260 460,240 T300,210"/>
+            <path d="M340,300 Q390,330 470,310 T620,290"/>
+            <path d="M90,150 Q160,200 230,250 T370,290"/>
+            <path d="M510,170 Q560,210 600,260 T650,310"/>
+          </g>
+          <g fill="none" stroke="#ff6b47" stroke-width="1.2" opacity="0.55" stroke-dasharray="2 4">
+            <path d="M220,110 Q280,130 360,150 T520,140"/>
+            <path d="M390,265 Q430,280 470,265 T560,250"/>
+          </g>
+
+          <!-- 47 HOTSPOT MARKERS -->
+          <g>
+            <!-- thriving (teal) -->
+            <circle cx="120" cy="120" r="9" fill="url(#hot-good)"/><circle cx="120" cy="120" r="3" fill="#00c9b1"/>
+            <circle cx="85" cy="145" r="7" fill="url(#hot-good)"/><circle cx="85" cy="145" r="2.5" fill="#00c9b1"/>
+            <circle cx="170" cy="100" r="6" fill="url(#hot-good)"/><circle cx="170" cy="100" r="2" fill="#00c9b1"/>
+            <circle cx="60" cy="180" r="5" fill="url(#hot-good)"/><circle cx="60" cy="180" r="2" fill="#00c9b1"/>
+            <circle cx="230" cy="170" r="8" fill="url(#hot-good)"/><circle cx="230" cy="170" r="2.5" fill="#00c9b1"/>
+            <circle cx="270" cy="200" r="6" fill="url(#hot-good)"/><circle cx="270" cy="200" r="2" fill="#00c9b1"/>
+            <circle cx="310" cy="350" r="11" fill="url(#hot-good)"/><circle cx="310" cy="350" r="3.5" fill="#00c9b1"/>
+            <circle cx="420" cy="345" r="9" fill="url(#hot-good)"/><circle cx="420" cy="345" r="3" fill="#00c9b1"/>
+            <circle cx="540" cy="350" r="8" fill="url(#hot-good)"/><circle cx="540" cy="350" r="2.5" fill="#00c9b1"/>
+            <circle cx="640" cy="345" r="7" fill="url(#hot-good)"/><circle cx="640" cy="345" r="2.5" fill="#00c9b1"/>
+            <circle cx="190" cy="330" r="6" fill="url(#hot-good)"/><circle cx="190" cy="330" r="2" fill="#00c9b1"/>
+            <circle cx="555" cy="215" r="13" fill="url(#hot-good)"/><circle cx="555" cy="215" r="4" fill="#00c9b1"/>
+            <circle cx="600" cy="230" r="11" fill="url(#hot-good)"/><circle cx="600" cy="230" r="3.5" fill="#00c9b1"/>
+            <circle cx="635" cy="245" r="8" fill="url(#hot-good)"/><circle cx="635" cy="245" r="2.5" fill="#00c9b1"/>
+            <circle cx="450" cy="280" r="7" fill="url(#hot-good)"/><circle cx="450" cy="280" r="2" fill="#00c9b1"/>
+            <circle cx="690" cy="305" r="9" fill="url(#hot-good)"/><circle cx="690" cy="305" r="3" fill="#00c9b1"/>
+            <circle cx="55" cy="220" r="6" fill="url(#hot-good)"/><circle cx="55" cy="220" r="2" fill="#00c9b1"/>
+
+            <!-- mid (amber-ish) -->
+            <circle cx="350" cy="120" r="8" fill="url(#hot-mid)"/><circle cx="350" cy="120" r="2.5" fill="#e8b25a"/>
+            <circle cx="380" cy="170" r="7" fill="url(#hot-mid)"/><circle cx="380" cy="170" r="2.5" fill="#e8b25a"/>
+            <circle cx="410" cy="220" r="6" fill="url(#hot-mid)"/><circle cx="410" cy="220" r="2" fill="#e8b25a"/>
+            <circle cx="465" cy="200" r="7" fill="url(#hot-mid)"/><circle cx="465" cy="200" r="2.5" fill="#e8b25a"/>
+            <circle cx="500" cy="180" r="6" fill="url(#hot-mid)"/><circle cx="500" cy="180" r="2" fill="#e8b25a"/>
+            <circle cx="155" cy="250" r="6" fill="url(#hot-mid)"/><circle cx="155" cy="250" r="2" fill="#e8b25a"/>
+            <circle cx="210" cy="290" r="5" fill="url(#hot-mid)"/><circle cx="210" cy="290" r="2" fill="#e8b25a"/>
+            <circle cx="290" cy="265" r="7" fill="url(#hot-mid)"/><circle cx="290" cy="265" r="2" fill="#e8b25a"/>
+            <circle cx="365" cy="230" r="6" fill="url(#hot-mid)"/><circle cx="365" cy="230" r="2" fill="#e8b25a"/>
+            <circle cx="430" cy="160" r="6" fill="url(#hot-mid)"/><circle cx="430" cy="160" r="2" fill="#e8b25a"/>
+            <circle cx="100" cy="80" r="5" fill="url(#hot-mid)"/><circle cx="100" cy="80" r="2" fill="#e8b25a"/>
+            <circle cx="215" cy="65" r="5" fill="url(#hot-mid)"/><circle cx="215" cy="65" r="2" fill="#e8b25a"/>
+            <circle cx="660" cy="190" r="6" fill="url(#hot-mid)"/><circle cx="660" cy="190" r="2" fill="#e8b25a"/>
+
+            <!-- endangered (coral) -->
+            <circle cx="200" cy="220" r="10" fill="url(#hot-warn)"/><circle cx="200" cy="220" r="3.5" fill="#ff6b47"/>
+            <circle cx="250" cy="250" r="8" fill="url(#hot-warn)"/><circle cx="250" cy="250" r="3" fill="#ff6b47"/>
+            <circle cx="345" cy="195" r="9" fill="url(#hot-warn)"/><circle cx="345" cy="195" r="3" fill="#ff6b47"/>
+            <circle cx="395" cy="120" r="7" fill="url(#hot-warn)"/><circle cx="395" cy="120" r="2.5" fill="#ff6b47"/>
+            <circle cx="500" cy="120" r="7" fill="url(#hot-warn)"/><circle cx="500" cy="120" r="2.5" fill="#ff6b47"/>
+            <circle cx="535" cy="155" r="8" fill="url(#hot-warn)"/><circle cx="535" cy="155" r="2.5" fill="#ff6b47"/>
+            <circle cx="475" cy="240" r="10" fill="url(#hot-warn)"/><circle cx="475" cy="240" r="3.5" fill="#ff6b47"/>
+            <circle cx="115" cy="240" r="7" fill="url(#hot-warn)"/><circle cx="115" cy="240" r="2.5" fill="#ff6b47"/>
+            <circle cx="160" cy="155" r="6" fill="url(#hot-warn)"/><circle cx="160" cy="155" r="2" fill="#ff6b47"/>
+            <circle cx="610" cy="280" r="8" fill="url(#hot-warn)"/><circle cx="610" cy="280" r="2.5" fill="#ff6b47"/>
+            <circle cx="660" cy="270" r="7" fill="url(#hot-warn)"/><circle cx="660" cy="270" r="2.5" fill="#ff6b47"/>
+            <circle cx="380" cy="290" r="6" fill="url(#hot-warn)"/><circle cx="380" cy="290" r="2" fill="#ff6b47"/>
+            <circle cx="495" cy="285" r="6" fill="url(#hot-warn)"/><circle cx="495" cy="285" r="2" fill="#ff6b47"/>
+            <circle cx="265" cy="115" r="6" fill="url(#hot-warn)"/><circle cx="265" cy="115" r="2" fill="#ff6b47"/>
+            <circle cx="35" cy="105" r="5" fill="url(#hot-warn)"/><circle cx="35" cy="105" r="2" fill="#ff6b47"/>
+            <circle cx="685" cy="155" r="6" fill="url(#hot-warn)"/><circle cx="685" cy="155" r="2" fill="#ff6b47"/>
+            <circle cx="700" cy="115" r="5" fill="url(#hot-warn)"/><circle cx="700" cy="115" r="2" fill="#ff6b47"/>
+          </g>
+
+          <!-- callout labels -->
+          <g font-family="ui-monospace,monospace" font-size="9" fill="#a8c5d0">
+            <text x="558" y="207">Coral Triangle</text>
+            <text x="200" y="208" fill="#ff6b47">Caribbean</text>
+            <text x="478" y="232" fill="#ff6b47">Red Sea</text>
+            <text x="296" y="358">Southern Ocean</text>
+            <text x="128" y="113">Bering Sea</text>
+          </g>
+
+          <!-- map frame -->
+          <rect x="0.5" y="0.5" width="719" height="419" fill="none" stroke="#1f3a5f"/>
+        </svg>
+
+        <div class="legend" style="margin-top:var(--space-3)">
+          <span class="legend-item"><span class="legend-swatch"></span> Thriving · H' &gt; 3.2</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#e8b25a"></span> Stable · 2.0–3.2</span>
+          <span class="legend-item"><span class="legend-swatch legend-swatch-warn"></span> At-risk · H' &lt; 2.0</span>
+          <span class="legend-item"><span class="legend-swatch legend-swatch-line"></span> Migration corridor</span>
+          <span class="legend-item"><span class="legend-swatch legend-swatch-dash"></span> Equator reference</span>
+        </div>
+        <div class="map-meta">
+          <span>Hotspots: 47</span><span>Routes: 8</span><span>Projection: Equirectangular</span><span>Updated 2024-Q4</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: species list -->
+      <div class="species-list">
+        <div class="panel-head">
+          <span>Featured species · 12 of 247</span>
+          <span class="text-accent">IUCN priority</span>
+        </div>
+
+        <!-- 1 Blue Whale -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <path d="M6 38 Q14 22 36 22 Q56 22 64 32 L66 30 L65 36 L62 38 Q58 46 36 48 Q18 48 10 44 Z" fill="#2a4a7a" stroke="#00c9b1" stroke-width="1"/>
+              <path d="M8 40 Q16 50 28 50" fill="none" stroke="#00c9b1" stroke-width="1"/>
+              <path d="M62 32 L70 26 L66 34 Z" fill="#2a4a7a" stroke="#00c9b1"/>
+              <path d="M44 22 L46 14 L48 22" fill="#2a4a7a" stroke="#00c9b1"/>
+              <circle cx="58" cy="32" r="1.2" fill="#e8f4f8"/>
+              <path d="M52 30 L56 28" stroke="#00c9b1"/>
+              <path d="M16 38 L20 38 M22 38 L26 38 M28 38 L32 38" stroke="#0a1628" stroke-width="0.6"/>
+              <path d="M14 36 Q18 34 22 36" fill="none" stroke="#5fe6d4" stroke-width="0.5"/>
+              <path d="M30 42 Q34 44 38 42" fill="none" stroke="#5fe6d4" stroke-width="0.5"/>
+              <path d="M40 26 Q44 28 48 26" fill="none" stroke="#5fe6d4" stroke-width="0.5"/>
+              <path d="M50 36 L54 38" stroke="#00c9b1"/>
+              <path d="M64 36 Q70 38 70 44 Q66 42 64 40 Z" fill="#2a4a7a" stroke="#00c9b1"/>
+              <path d="M58 44 L62 50" stroke="#00c9b1"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Blue Whale</div>
+            <div class="species-sci">Balaenoptera musculus</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Endangered</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,4 12,6 24,8 36,10 48,11 60,13 72,15 84,14 96,16 108,17 120,18"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Polar–Tropical</b></div>
+              <div class="species-row"><span>Diet</span><b>Krill</b></div>
+              <div class="species-row"><span>Threat</span><b>Ship strikes</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Leatherback Turtle -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <ellipse cx="36" cy="38" rx="22" ry="16" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M22 28 L26 22 L30 28" fill="none" stroke="#00c9b1"/>
+              <path d="M30 26 L36 18 L42 26" fill="none" stroke="#00c9b1"/>
+              <path d="M42 28 L46 22 L50 28" fill="none" stroke="#00c9b1"/>
+              <ellipse cx="36" cy="20" rx="6" ry="5" fill="#1f3a5f" stroke="#00c9b1"/>
+              <circle cx="34" cy="19" r="1" fill="#e8f4f8"/>
+              <circle cx="38" cy="19" r="1" fill="#e8f4f8"/>
+              <path d="M14 36 L8 32 L10 40 L16 42" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M58 36 L64 32 L62 40 L56 42" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M22 52 L18 60 L26 56" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M50 52 L54 60 L46 56" fill="#1f3a5f" stroke="#00c9b1"/>
+              <line x1="36" y1="24" x2="36" y2="52" stroke="#00c9b1" stroke-width="0.6"/>
+              <line x1="20" y1="36" x2="52" y2="36" stroke="#00c9b1" stroke-width="0.6"/>
+              <line x1="22" y1="44" x2="50" y2="44" stroke="#00c9b1" stroke-width="0.4"/>
+              <path d="M24 32 Q36 26 48 32" fill="none" stroke="#5fe6d4" stroke-width="0.4"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Leatherback Turtle</div>
+            <div class="species-sci">Dermochelys coriacea</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Vulnerable</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,3 12,5 24,4 36,7 48,9 60,12 72,14 84,17 96,18 108,20 120,21"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Pan-tropical</b></div>
+              <div class="species-row"><span>Diet</span><b>Jellyfish</b></div>
+              <div class="species-row"><span>Threat</span><b>Plastic ingestion</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Great White Shark -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <path d="M4 38 Q14 30 36 30 Q54 30 62 36 L68 32 L66 40 L62 42 Q54 48 36 48 Q14 48 4 40 Z" fill="#2a4a7a" stroke="#00c9b1"/>
+              <path d="M30 30 L34 18 L38 30" fill="#2a4a7a" stroke="#00c9b1"/>
+              <path d="M40 48 L44 60 L48 48" fill="#2a4a7a" stroke="#00c9b1"/>
+              <path d="M62 36 L70 30 L68 42 Z" fill="#2a4a7a" stroke="#00c9b1"/>
+              <path d="M20 44 L18 52 L26 46" fill="#2a4a7a" stroke="#00c9b1"/>
+              <circle cx="56" cy="36" r="1.2" fill="#e8f4f8"/>
+              <path d="M50 42 L60 42" stroke="#0a1628" stroke-width="0.8"/>
+              <path d="M51 42 L52 44 M54 42 L55 44 M57 42 L58 44" stroke="#e8f4f8" stroke-width="0.5"/>
+              <line x1="10" y1="40" x2="14" y2="40" stroke="#00c9b1"/>
+              <line x1="10" y1="42" x2="14" y2="42" stroke="#00c9b1"/>
+              <line x1="10" y1="44" x2="14" y2="44" stroke="#00c9b1"/>
+              <path d="M6 39 Q12 36 18 39" fill="none" stroke="#5fe6d4" stroke-width="0.4"/>
+              <path d="M30 38 L60 38" stroke="#0a1628" stroke-width="0.4"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Great White Shark</div>
+            <div class="species-sci">Carcharodon carcharias</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Vulnerable</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,6 12,8 24,7 36,10 48,12 60,11 72,14 84,16 96,15 108,18 120,19"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Temperate seas</b></div>
+              <div class="species-row"><span>Diet</span><b>Pinnipeds, fish</b></div>
+              <div class="species-row"><span>Threat</span><b>Bycatch, finning</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Sea Otter -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <ellipse cx="36" cy="42" rx="22" ry="14" fill="#0f2240" stroke="#00c9b1"/>
+              <circle cx="20" cy="34" r="9" fill="#0f2240" stroke="#00c9b1"/>
+              <circle cx="16" cy="28" r="2.5" fill="#0f2240" stroke="#00c9b1"/>
+              <circle cx="24" cy="28" r="2.5" fill="#0f2240" stroke="#00c9b1"/>
+              <circle cx="17" cy="33" r="0.8" fill="#e8f4f8"/>
+              <circle cx="23" cy="33" r="0.8" fill="#e8f4f8"/>
+              <path d="M19 36 Q20 38 21 36" fill="none" stroke="#e8f4f8" stroke-width="0.6"/>
+              <circle cx="20" cy="36" r="0.8" fill="#ff6b47" opacity="0.5"/>
+              <ellipse cx="44" cy="38" rx="4" ry="3" fill="#152d52" stroke="#00c9b1"/>
+              <path d="M42 36 L40 32 M46 36 L48 32 M44 35 L44 30" stroke="#5fe6d4" stroke-width="0.5"/>
+              <path d="M52 46 L62 50 L58 52" fill="#0f2240" stroke="#00c9b1"/>
+              <path d="M28 52 L34 56 M38 54 L44 56" stroke="#00c9b1"/>
+              <path d="M14 44 Q18 50 24 48" fill="none" stroke="#00c9b1"/>
+              <path d="M30 60 Q36 64 42 60" fill="none" stroke="#5fe6d4" stroke-width="0.5"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Sea Otter</div>
+            <div class="species-sci">Enhydra lutris</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Endangered</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,2 12,4 24,6 36,5 48,7 60,9 72,8 84,11 96,13 108,15 120,16"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>North Pacific</b></div>
+              <div class="species-row"><span>Diet</span><b>Urchins, shellfish</b></div>
+              <div class="species-row"><span>Threat</span><b>Oil spills</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Emperor Penguin -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <ellipse cx="36" cy="42" rx="14" ry="22" fill="#0f2240" stroke="#00c9b1"/>
+              <ellipse cx="36" cy="44" rx="9" ry="16" fill="#e8f4f8"/>
+              <circle cx="36" cy="20" r="9" fill="#0f2240" stroke="#00c9b1"/>
+              <path d="M28 20 Q36 28 44 20 Q44 14 36 12 Q28 14 28 20" fill="#0f2240"/>
+              <circle cx="32" cy="20" r="0.9" fill="#e8f4f8"/>
+              <circle cx="40" cy="20" r="0.9" fill="#e8f4f8"/>
+              <path d="M36 24 L42 28 L36 30 Z" fill="#ff6b47" opacity="0.6"/>
+              <path d="M30 18 Q26 22 30 26" fill="#e8b25a" opacity="0.7"/>
+              <path d="M42 18 Q46 22 42 26" fill="#e8b25a" opacity="0.7"/>
+              <path d="M22 40 Q18 46 22 52" fill="#0f2240" stroke="#00c9b1"/>
+              <path d="M50 40 Q54 46 50 52" fill="#0f2240" stroke="#00c9b1"/>
+              <path d="M30 62 L26 66 L34 64" fill="#e8b25a" stroke="#00c9b1"/>
+              <path d="M42 62 L46 66 L38 64" fill="#e8b25a" stroke="#00c9b1"/>
+              <line x1="36" y1="36" x2="36" y2="58" stroke="#00c9b1" stroke-width="0.5"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Emperor Penguin</div>
+            <div class="species-sci">Aptenodytes forsteri</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Near Threatened</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,5 12,6 24,5 36,8 48,7 60,10 72,12 84,11 96,14 108,16 120,18"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Antarctica</b></div>
+              <div class="species-row"><span>Diet</span><b>Fish, squid, krill</b></div>
+              <div class="species-row"><span>Threat</span><b>Sea-ice loss</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Giant Pacific Octopus -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <ellipse cx="36" cy="22" rx="14" ry="11" fill="#7a3a5a" stroke="#00c9b1"/>
+              <path d="M22 26 Q14 36 16 50 Q22 44 26 38" fill="#7a3a5a" stroke="#00c9b1"/>
+              <path d="M28 32 Q22 44 24 58 Q30 50 32 42" fill="#7a3a5a" stroke="#00c9b1"/>
+              <path d="M34 34 Q32 48 36 62 Q40 48 38 34" fill="#7a3a5a" stroke="#00c9b1"/>
+              <path d="M44 32 Q50 44 48 58 Q42 50 40 42" fill="#7a3a5a" stroke="#00c9b1"/>
+              <path d="M50 26 Q58 36 56 50 Q50 44 46 38" fill="#7a3a5a" stroke="#00c9b1"/>
+              <path d="M48 28 Q56 32 60 26 Q56 24 50 24" fill="#7a3a5a" stroke="#00c9b1"/>
+              <path d="M24 28 Q16 32 12 26 Q16 24 22 24" fill="#7a3a5a" stroke="#00c9b1"/>
+              <circle cx="30" cy="20" r="2" fill="#e8f4f8"/>
+              <circle cx="42" cy="20" r="2" fill="#e8f4f8"/>
+              <circle cx="30" cy="20" r="0.9" fill="#0a1628"/>
+              <circle cx="42" cy="20" r="0.9" fill="#0a1628"/>
+              <circle cx="26" cy="42" r="0.8" fill="#5fe6d4"/>
+              <circle cx="32" cy="50" r="0.8" fill="#5fe6d4"/>
+              <circle cx="40" cy="50" r="0.8" fill="#5fe6d4"/>
+              <circle cx="46" cy="42" r="0.8" fill="#5fe6d4"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Giant Pacific Octopus</div>
+            <div class="species-sci">Enteroctopus dofleini</div>
+            <span class="badge badge-dot" style="align-self:flex-start">Stable</span>
+            <svg class="sparkline" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,12 12,11 24,13 36,12 48,11 60,12 72,10 84,11 96,12 108,11 120,12"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>N. Pacific shelf</b></div>
+              <div class="species-row"><span>Diet</span><b>Crustaceans</b></div>
+              <div class="species-row"><span>Threat</span><b>Habitat warming</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 Manta Ray -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <path d="M8 36 Q20 18 36 26 Q52 18 64 36 Q52 44 36 38 Q20 44 8 36 Z" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M36 26 L36 50" stroke="#00c9b1" stroke-width="0.6"/>
+              <path d="M36 50 L34 62 L38 62 Z" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M28 30 Q24 26 22 30" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M44 30 Q48 26 50 30" fill="#1f3a5f" stroke="#00c9b1"/>
+              <circle cx="30" cy="32" r="1" fill="#e8f4f8"/>
+              <circle cx="42" cy="32" r="1" fill="#e8f4f8"/>
+              <path d="M30 36 L32 38 M40 36 L42 38" stroke="#5fe6d4" stroke-width="0.5"/>
+              <path d="M12 36 Q18 32 22 36 M50 36 Q54 32 60 36" fill="none" stroke="#5fe6d4" stroke-width="0.5"/>
+              <circle cx="20" cy="36" r="0.6" fill="#e8f4f8"/>
+              <circle cx="26" cy="40" r="0.6" fill="#e8f4f8"/>
+              <circle cx="46" cy="40" r="0.6" fill="#e8f4f8"/>
+              <circle cx="52" cy="36" r="0.6" fill="#e8f4f8"/>
+              <path d="M36 38 Q34 42 36 46 Q38 42 36 38" fill="#00c9b1" opacity="0.4"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Giant Manta Ray</div>
+            <div class="species-sci">Mobula birostris</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Endangered</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,4 12,5 24,7 36,9 48,10 60,13 72,14 84,16 96,17 108,19 120,20"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Tropical pelagic</b></div>
+              <div class="species-row"><span>Diet</span><b>Zooplankton</b></div>
+              <div class="species-row"><span>Threat</span><b>Gill-plate trade</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 Clownfish -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <path d="M10 36 Q22 18 50 24 Q60 30 60 36 Q60 42 50 48 Q22 54 10 36 Z" fill="#ff6b47" stroke="#00c9b1"/>
+              <path d="M22 24 L22 48" stroke="#e8f4f8" stroke-width="2"/>
+              <path d="M36 22 L36 50" stroke="#e8f4f8" stroke-width="2"/>
+              <path d="M48 26 L48 46" stroke="#e8f4f8" stroke-width="2"/>
+              <path d="M22 24 L22 48 M36 22 L36 50 M48 26 L48 46" stroke="#0a1628" stroke-width="0.5"/>
+              <path d="M60 36 L70 28 L66 36 L70 44 Z" fill="#ff6b47" stroke="#00c9b1"/>
+              <circle cx="20" cy="34" r="2" fill="#e8f4f8"/>
+              <circle cx="20" cy="34" r="1" fill="#0a1628"/>
+              <path d="M14 38 Q16 42 20 40" fill="none" stroke="#0a1628" stroke-width="0.6"/>
+              <path d="M30 22 L34 16 L34 22" fill="#ff6b47" stroke="#0a1628" stroke-width="0.4"/>
+              <path d="M30 50 L34 56 L34 50" fill="#ff6b47" stroke="#0a1628" stroke-width="0.4"/>
+              <path d="M44 22 L46 18 L48 22" fill="#ff6b47" stroke="#0a1628" stroke-width="0.4"/>
+              <circle cx="56" cy="38" r="0.6" fill="#0a1628"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Orange Clownfish</div>
+            <div class="species-sci">Amphiprion percula</div>
+            <span class="badge badge-dot" style="align-self:flex-start">Stable</span>
+            <svg class="sparkline" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,10 12,11 24,9 36,12 48,10 60,13 72,11 84,12 96,10 108,11 120,12"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Coral Triangle</b></div>
+              <div class="species-row"><span>Diet</span><b>Plankton, algae</b></div>
+              <div class="species-row"><span>Threat</span><b>Reef bleaching</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9 Dugong -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <path d="M8 38 Q16 26 38 26 Q54 26 60 36 Q60 44 50 48 Q24 50 14 46 Q8 42 8 38 Z" fill="#3a4a6a" stroke="#00c9b1"/>
+              <path d="M60 36 L70 30 L68 38 L70 46 L60 42 Z" fill="#3a4a6a" stroke="#00c9b1"/>
+              <path d="M16 48 L12 56 L20 52" fill="#3a4a6a" stroke="#00c9b1"/>
+              <path d="M36 46 L34 56 L40 52" fill="#3a4a6a" stroke="#00c9b1"/>
+              <circle cx="50" cy="34" r="1" fill="#e8f4f8"/>
+              <path d="M54 38 Q58 40 56 42" fill="none" stroke="#0a1628" stroke-width="0.6"/>
+              <path d="M52 30 Q56 26 60 30" fill="#3a4a6a" stroke="#00c9b1"/>
+              <path d="M10 38 Q14 36 18 38" fill="none" stroke="#5fe6d4" stroke-width="0.4"/>
+              <path d="M22 32 Q30 28 38 32" fill="none" stroke="#5fe6d4" stroke-width="0.4"/>
+              <circle cx="24" cy="36" r="0.5" fill="#5fe6d4"/>
+              <circle cx="32" cy="38" r="0.5" fill="#5fe6d4"/>
+              <circle cx="40" cy="36" r="0.5" fill="#5fe6d4"/>
+              <circle cx="46" cy="40" r="0.5" fill="#5fe6d4"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Dugong</div>
+            <div class="species-sci">Dugong dugon</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Vulnerable</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,3 12,5 24,6 36,8 48,10 60,11 72,13 84,15 96,16 108,18 120,19"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Indo-Pacific</b></div>
+              <div class="species-row"><span>Diet</span><b>Seagrass</b></div>
+              <div class="species-row"><span>Threat</span><b>Habitat loss</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10 Atlantic Bluefin Tuna -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <path d="M6 36 Q18 24 38 28 Q54 32 60 36 Q54 40 38 44 Q18 48 6 36 Z" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M60 36 L70 28 L66 36 L70 44 Z" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M32 28 L36 18 L40 28" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M38 44 L42 54 L46 44" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M20 40 L18 48 L26 42" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M44 32 L48 26 L46 32" fill="#1f3a5f" stroke="#00c9b1"/>
+              <path d="M50 38 L54 44 L52 40" fill="#1f3a5f" stroke="#00c9b1"/>
+              <circle cx="18" cy="34" r="1.2" fill="#e8f4f8"/>
+              <circle cx="18" cy="34" r="0.5" fill="#0a1628"/>
+              <path d="M10 38 L14 38" stroke="#00c9b1" stroke-width="0.4"/>
+              <path d="M22 32 Q30 30 50 32" fill="none" stroke="#5fe6d4" stroke-width="0.5"/>
+              <path d="M22 40 Q30 42 50 40" fill="none" stroke="#5fe6d4" stroke-width="0.5"/>
+              <circle cx="34" cy="36" r="0.4" fill="#5fe6d4"/>
+              <circle cx="44" cy="36" r="0.4" fill="#5fe6d4"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Atlantic Bluefin Tuna</div>
+            <div class="species-sci">Thunnus thynnus</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Endangered</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,2 12,3 24,5 36,8 48,11 60,14 72,16 84,17 96,19 108,20 120,21"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>N. Atlantic, Med.</b></div>
+              <div class="species-row"><span>Diet</span><b>Fish, squid</b></div>
+              <div class="species-row"><span>Threat</span><b>Overfishing</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 11 Lion's Mane Jellyfish -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <path d="M14 30 Q36 8 58 30 Q58 36 36 38 Q14 36 14 30 Z" fill="#7a3a5a" stroke="#00c9b1"/>
+              <path d="M14 30 Q36 16 58 30" fill="none" stroke="#5fe6d4" stroke-width="0.6"/>
+              <path d="M20 38 Q18 50 22 62" fill="none" stroke="#00c9b1" stroke-width="0.6"/>
+              <path d="M26 38 Q24 52 28 64" fill="none" stroke="#00c9b1" stroke-width="0.6"/>
+              <path d="M32 38 Q30 54 34 66" fill="none" stroke="#00c9b1" stroke-width="0.6"/>
+              <path d="M38 38 Q40 54 36 66" fill="none" stroke="#00c9b1" stroke-width="0.6"/>
+              <path d="M44 38 Q46 52 42 64" fill="none" stroke="#00c9b1" stroke-width="0.6"/>
+              <path d="M50 38 Q52 50 48 62" fill="none" stroke="#00c9b1" stroke-width="0.6"/>
+              <path d="M18 38 Q14 48 16 58" fill="none" stroke="#00c9b1" stroke-width="0.4"/>
+              <path d="M54 38 Q58 48 56 58" fill="none" stroke="#00c9b1" stroke-width="0.4"/>
+              <circle cx="30" cy="28" r="2" fill="#5fe6d4" opacity="0.4"/>
+              <circle cx="42" cy="28" r="2" fill="#5fe6d4" opacity="0.4"/>
+              <circle cx="36" cy="22" r="2.5" fill="#5fe6d4" opacity="0.4"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Lion's Mane Jelly</div>
+            <div class="species-sci">Cyanea capillata</div>
+            <span class="badge badge-dot" style="align-self:flex-start">Increasing</span>
+            <svg class="sparkline" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,20 12,18 24,17 36,15 48,13 60,11 72,9 84,7 96,6 108,4 120,3"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Boreal Atlantic</b></div>
+              <div class="species-row"><span>Diet</span><b>Plankton, fish</b></div>
+              <div class="species-row"><span>Threat</span><b>Bloom expansion</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 12 Vaquita -->
+        <div class="species-card">
+          <div class="species-portrait">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <path d="M8 36 Q14 26 32 28 Q50 30 60 36 Q56 40 50 42 Q32 46 16 44 Q8 40 8 36 Z" fill="#3a4a6a" stroke="#ff6b47"/>
+              <path d="M60 36 L68 28 L66 36 L68 44 Z" fill="#3a4a6a" stroke="#ff6b47"/>
+              <path d="M30 28 L34 18 L36 28" fill="#3a4a6a" stroke="#ff6b47"/>
+              <path d="M22 42 L18 50 L26 46" fill="#3a4a6a" stroke="#ff6b47"/>
+              <ellipse cx="14" cy="36" rx="5" ry="3" fill="#0f2240" stroke="#ff6b47"/>
+              <circle cx="13" cy="35" r="1" fill="#e8f4f8"/>
+              <circle cx="13" cy="35" r="0.4" fill="#0a1628"/>
+              <path d="M10 38 L18 38" stroke="#0a1628" stroke-width="0.6"/>
+              <ellipse cx="14" cy="33" rx="3" ry="1.5" fill="#0a1628" opacity="0.5"/>
+              <path d="M20 32 Q30 28 50 32" fill="none" stroke="#5fe6d4" stroke-width="0.4"/>
+              <path d="M40 38 L44 40 M46 36 L50 38" stroke="#ff6b47" stroke-width="0.4"/>
+              <path d="M52 28 Q56 26 58 28" fill="none" stroke="#ff6b47" stroke-width="0.5"/>
+            </svg>
+          </div>
+          <div class="species-meta">
+            <div class="species-name">Vaquita</div>
+            <div class="species-sci">Phocoena sinus</div>
+            <span class="badge badge-warn badge-dot" style="align-self:flex-start">Critical</span>
+            <svg class="sparkline sparkline-warn" viewBox="0 0 120 24" preserveAspectRatio="none"><polyline points="0,2 12,3 24,4 36,6 48,9 60,12 72,16 84,18 96,20 108,21 120,22"/></svg>
+            <div class="species-rows">
+              <div class="species-row"><span>Range</span><b>Gulf of California</b></div>
+              <div class="species-row"><span>Diet</span><b>Small fish, squid</b></div>
+              <div class="species-row"><span>Threat</span><b>Gillnet bycatch</b></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== WAVY DIVIDER ===== -->
+    <svg class="wave-divider wave-divider-fill" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 30 Q100 5 200 30 T400 30 T600 30 T800 30 T1000 30 T1200 30 L1200 60 L0 60 Z"/>
+      <path d="M0 30 Q100 5 200 30 T400 30 T600 30 T800 30 T1000 30 T1200 30"/>
+    </svg>
+
+    <!-- ===== ICON CLUSTER: threat categories ===== -->
+    <div>
+      <div class="section-header">
+        <h2>Primary Threats by Taxon</h2>
+      </div>
+      <div class="icon-cluster">
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48"><path d="M6 30 L42 30 L38 40 L10 40 Z" fill="none" stroke="currentColor" stroke-width="2"/><line x1="14" y1="30" x2="14" y2="20" stroke="currentColor" stroke-width="2"/><line x1="34" y1="30" x2="34" y2="20" stroke="currentColor" stroke-width="2"/><path d="M14 20 L24 14 L34 20" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="35" r="2" fill="currentColor"/><line x1="6" y1="44" x2="42" y2="44" stroke="currentColor" stroke-width="2"/></svg>
+          <div class="icon-tile-stat">38%</div>
+          <div class="icon-tile-label">Overfishing</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48"><rect x="10" y="14" width="28" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><line x1="10" y1="22" x2="38" y2="22" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="28" r="1.5" fill="currentColor"/><circle cx="22" cy="28" r="1.5" fill="currentColor"/><circle cx="28" cy="28" r="1.5" fill="currentColor"/><circle cx="34" cy="28" r="1.5" fill="currentColor"/><path d="M24 6 L24 14 M18 6 L18 14 M30 6 L30 14" stroke="currentColor" stroke-width="1.5"/><path d="M14 34 L14 42 M34 34 L34 42" stroke="currentColor" stroke-width="1.5"/></svg>
+          <div class="icon-tile-stat">22%</div>
+          <div class="icon-tile-label">Bycatch</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48"><path d="M24 6 Q14 14 14 22 Q14 32 24 42 Q34 32 34 22 Q34 14 24 6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="22" r="3" fill="currentColor"/><path d="M18 22 Q24 16 30 22" fill="none" stroke="currentColor"/><path d="M18 28 Q24 34 30 28" fill="none" stroke="currentColor"/><line x1="24" y1="6" x2="24" y2="42" stroke="currentColor" stroke-width="0.5"/></svg>
+          <div class="icon-tile-stat">15%</div>
+          <div class="icon-tile-label">Warming</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48"><circle cx="14" cy="24" r="6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="22" y="18" width="16" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="14" cy="24" r="2" fill="currentColor"/><line x1="26" y1="22" x2="34" y2="22" stroke="currentColor"/><line x1="26" y1="26" x2="34" y2="26" stroke="currentColor"/><path d="M8 36 L40 36" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/><circle cx="38" cy="14" r="3" fill="none" stroke="currentColor"/></svg>
+          <div class="icon-tile-stat">11%</div>
+          <div class="icon-tile-label">Plastic</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48"><path d="M8 32 Q14 26 20 30 Q26 34 32 28 Q38 22 42 28" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 38 Q14 32 20 36 Q26 40 32 34 Q38 28 42 34" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="14" cy="14" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 18 L14 26" stroke="currentColor"/><circle cx="34" cy="12" r="2" fill="currentColor"/><circle cx="26" cy="20" r="1.5" fill="currentColor"/></svg>
+          <div class="icon-tile-stat">8%</div>
+          <div class="icon-tile-label">Acidification</div>
+        </div>
+        <div class="icon-tile icon-tile-warn">
+          <svg viewBox="0 0 48 48"><rect x="6" y="20" width="36" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="14" cy="34" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="34" cy="34" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 20 L16 12 L32 12 L36 20" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="38" cy="26" r="1" fill="currentColor"/><line x1="10" y1="26" x2="30" y2="26" stroke="currentColor"/></svg>
+          <div class="icon-tile-stat">6%</div>
+          <div class="icon-tile-label">Habitat loss</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RADIAL TAXONOMIC CHART ===== -->
+    <div class="radial-tax">
+      <div class="fig-title">Taxonomic distribution across 8 marine phyla</div>
+      <div class="fig-sub text-dim">Concentric ring segments scaled to known described species, OBIS 2024 release</div>
+
+      <svg viewBox="0 0 680 460" role="img" aria-label="Radial taxonomic chart">
+        <defs>
+          <linearGradient id="rgrad-1"><stop offset="0%" stop-color="#00c9b1"/><stop offset="100%" stop-color="#0a8a7a"/></linearGradient>
+        </defs>
+        <!-- background rings -->
+        <g fill="none" stroke="#1f3a5f" stroke-width="0.5">
+          <circle cx="340" cy="230" r="60"/>
+          <circle cx="340" cy="230" r="100"/>
+          <circle cx="340" cy="230" r="140"/>
+          <circle cx="340" cy="230" r="180"/>
+        </g>
+
+        <!-- 8 wedge segments, each with two stacked arcs to imply ring -->
+        <!-- Wedge 1: Chordata (0-45deg) outer big -->
+        <g transform="translate(340 230)">
+          <!-- Chordata 0-45 -->
+          <path d="M0 0 L180 0 A180 180 0 0 1 127.28 127.28 Z" fill="#00c9b1" opacity="0.85"/>
+          <path d="M0 0 L60 0 A60 60 0 0 1 42.42 42.42 Z" fill="#0a8a7a"/>
+          <!-- Mollusca 45-90 -->
+          <path d="M0 0 L127.28 127.28 A180 180 0 0 1 0 180 Z" fill="#5fe6d4" opacity="0.8"/>
+          <path d="M0 0 L70.71 70.71 A100 100 0 0 1 0 100 Z" fill="#00c9b1" opacity="0.95"/>
+          <!-- Arthropoda 90-135 -->
+          <path d="M0 0 L0 180 A180 180 0 0 1 -127.28 127.28 Z" fill="#e8b25a" opacity="0.85"/>
+          <path d="M0 0 L0 140 A140 140 0 0 1 -98.99 98.99 Z" fill="#c89342"/>
+          <!-- Cnidaria 135-180 -->
+          <path d="M0 0 L-127.28 127.28 A180 180 0 0 1 -180 0 Z" fill="#7a3a5a" opacity="0.85"/>
+          <path d="M0 0 L-80 80 A113 113 0 0 1 -113 0 Z" fill="#9a4a7a"/>
+          <!-- Echinodermata 180-225 -->
+          <path d="M0 0 L-180 0 A180 180 0 0 1 -127.28 -127.28 Z" fill="#ff6b47" opacity="0.55"/>
+          <path d="M0 0 L-95 0 A95 95 0 0 1 -67.18 -67.18 Z" fill="#ff6b47" opacity="0.85"/>
+          <!-- Porifera 225-270 -->
+          <path d="M0 0 L-127.28 -127.28 A180 180 0 0 1 0 -180 Z" fill="#2a4a7a" opacity="0.9"/>
+          <path d="M0 0 L-56.57 -56.57 A80 80 0 0 1 0 -80 Z" fill="#3a5a8a"/>
+          <!-- Annelida 270-315 -->
+          <path d="M0 0 L0 -180 A180 180 0 0 1 127.28 -127.28 Z" fill="#152d52" opacity="0.95"/>
+          <path d="M0 0 L0 -110 A110 110 0 0 1 77.78 -77.78 Z" fill="#244680"/>
+          <!-- Other 315-360 -->
+          <path d="M0 0 L127.28 -127.28 A180 180 0 0 1 180 0 Z" fill="#6b8a96" opacity="0.7"/>
+          <path d="M0 0 L42.42 -42.42 A60 60 0 0 1 60 0 Z" fill="#a8c5d0"/>
+
+          <!-- center hub -->
+          <circle r="36" fill="#0a1628" stroke="#00c9b1" stroke-width="2"/>
+          <text y="-4" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#e8f4f8" font-weight="700">247k</text>
+          <text y="12" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#a8c5d0">SPECIES</text>
+
+          <!-- divider lines -->
+          <g stroke="#0a1628" stroke-width="1.5">
+            <line x1="36" y1="0" x2="180" y2="0"/>
+            <line x1="25.46" y1="25.46" x2="127.28" y2="127.28"/>
+            <line x1="0" y1="36" x2="0" y2="180"/>
+            <line x1="-25.46" y1="25.46" x2="-127.28" y2="127.28"/>
+            <line x1="-36" y1="0" x2="-180" y2="0"/>
+            <line x1="-25.46" y1="-25.46" x2="-127.28" y2="-127.28"/>
+            <line x1="0" y1="-36" x2="0" y2="-180"/>
+            <line x1="25.46" y1="-25.46" x2="127.28" y2="-127.28"/>
+          </g>
+
+          <!-- segment labels with leader lines -->
+          <g font-family="ui-monospace,monospace" font-size="10" fill="#a8c5d0">
+            <line x1="155" y1="64" x2="200" y2="64" stroke="#a8c5d0" stroke-width="0.5"/>
+            <text x="204" y="68">Chordata · 28%</text>
+            <line x1="105" y1="145" x2="160" y2="180" stroke="#a8c5d0" stroke-width="0.5"/>
+            <text x="164" y="184">Mollusca · 19%</text>
+            <line x1="-105" y1="145" x2="-160" y2="180" stroke="#a8c5d0" stroke-width="0.5"/>
+            <text x="-280" y="184">Arthropoda · 17%</text>
+            <line x1="-155" y1="64" x2="-200" y2="64" stroke="#a8c5d0" stroke-width="0.5"/>
+            <text x="-280" y="68">Cnidaria · 11%</text>
+            <line x1="-155" y1="-64" x2="-200" y2="-64" stroke="#a8c5d0" stroke-width="0.5" />
+            <text x="-292" y="-60" fill="#ff6b47">Echinodermata · 9%</text>
+            <line x1="-105" y1="-145" x2="-160" y2="-180" stroke="#a8c5d0" stroke-width="0.5"/>
+            <text x="-220" y="-184">Porifera · 7%</text>
+            <line x1="105" y1="-145" x2="160" y2="-180" stroke="#a8c5d0" stroke-width="0.5"/>
+            <text x="164" y="-184">Annelida · 6%</text>
+            <line x1="155" y1="-64" x2="200" y2="-64" stroke="#a8c5d0" stroke-width="0.5"/>
+            <text x="204" y="-60">Other · 3%</text>
+          </g>
+        </g>
+      </svg>
+
+      <div class="phyla-legend">
+        <span class="phyla-chip"><i style="background:#00c9b1"></i><b>Chordata</b><span>28%</span></span>
+        <span class="phyla-chip"><i style="background:#5fe6d4"></i><b>Mollusca</b><span>19%</span></span>
+        <span class="phyla-chip"><i style="background:#e8b25a"></i><b>Arthropoda</b><span>17%</span></span>
+        <span class="phyla-chip"><i style="background:#7a3a5a"></i><b>Cnidaria</b><span>11%</span></span>
+        <span class="phyla-chip"><i style="background:#ff6b47"></i><b>Echinodermata</b><span>9%</span></span>
+        <span class="phyla-chip"><i style="background:#2a4a7a"></i><b>Porifera</b><span>7%</span></span>
+        <span class="phyla-chip"><i style="background:#152d52"></i><b>Annelida</b><span>6%</span></span>
+        <span class="phyla-chip"><i style="background:#6b8a96"></i><b>Other</b><span>3%</span></span>
+      </div>
+    </div>
+
+    <!-- sources -->
+    <div class="sources">
+      <b>Data sources:</b>
+      <span>IUCN Red List v2024-3</span>
+      <span>OBIS</span>
+      <span>WoRMS</span>
+      <span>IPBES Global Assessment</span>
+      <span>FishBase</span>
+      <span>GBIF Marine</span>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">Atlas alert · 41% of featured taxa show declining trend</div>
+      <div class="text-sm text-dim">Of the 247k currently described marine species, 41% of the IUCN priority-12 sample exhibit a downward population trajectory over the last decade. Cetaceans and chondrichthyans remain disproportionately affected by industrial fishing pressure.</div>
+    </div>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-mast">Deep Current</div>
+        <p class="footer-blurb">Peer-reviewed ocean health data, visualized for climate researchers, journalists, and educators worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <h6>Atlas</h6>
+        <ul>
+          <li><a href="../ocean-health/index.html">Ocean Health</a></li>
+          <li><a href="#">Species Atlas</a></li>
+          <li><a href="../temperature-rise/index.html">Temperature Rise</a></li>
+          <li><a href="../plastic-crisis/index.html">Plastic Crisis</a></li>
+          <li><a href="../take-action/index.html">Take Action</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Data</h6>
+        <ul>
+          <li><a href="#">Download CSV</a></li>
+          <li><a href="#">Methodology</a></li>
+          <li><a href="#">API access</a></li>
+          <li><a href="#">Citations</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Institute</h6>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Researchers</a></li>
+          <li><a href="#">Press kit</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Deep Current Institute · CC-BY 4.0</span>
+      <span class="footer-iso">ISO 19115 · DOI:10.5281/dc.atlas.v4</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

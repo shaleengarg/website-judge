@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coral Systems — Deep Current</title>
+<style>
+  /* page-specific overrides only */
+  .reef-map-wrap { position: relative; }
+  .reef-map-wrap svg { width: 100%; height: auto; display: block; }
+  .reef-profile-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-5); }
+  @media (max-width: 720px) { .reef-profile-grid { grid-template-columns: 1fr; } }
+  .reef-profile h4 { margin: 0 0 4px; }
+  .bleach-legend { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-2); font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-dim); }
+  .bleach-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .bleach-legend i { width: 12px; height: 12px; display: inline-block; border-radius: 2px; }
+  .reef-row { display: grid; grid-template-columns: 30px 1fr 64px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--line); font-family: var(--mono); font-size: var(--fs-xs); color: var(--ink-dim); }
+  .reef-row:last-child { border-bottom: 0; }
+  .reef-row .pin { color: var(--accent-2); letter-spacing: 0.2em; }
+  .reef-row .nm { color: var(--ink); font-family: var(--sans); letter-spacing: 0; font-size: var(--fs-sm); }
+  .reef-row .val { text-align: right; color: var(--amber); }
+  .icon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-3); }
+  .icon-tile { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; background: var(--panel-2); border-radius: var(--r-sm); border: 1px solid var(--line); }
+  .icon-tile svg { width: 36px; height: 36px; display: block; }
+  .icon-tile span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); text-align: center; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brandbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true">
+        <circle cx="18" cy="18" r="17" fill="none" stroke="#00d4c8" stroke-width="1.5"/>
+        <path d="M2 20 Q9 14 18 20 T34 20" fill="none" stroke="#00d4c8" stroke-width="1.5"/>
+        <path d="M2 24 Q9 18 18 24 T34 24" fill="none" stroke="#ff6b47" stroke-width="1.2"/>
+        <circle cx="18" cy="12" r="2" fill="#ff6b47"/>
+      </svg>
+      Deep Current <span class="brand-sub">Vol. 04 · Reef Issue</span>
+    </div>
+    <nav class="topnav" aria-label="Primary">
+      <a href="../ocean-health/index.html">Ocean Health</a>
+      <a href="../coral-systems/index.html" class="is-active">Coral Systems</a>
+      <a href="../plastic-tides/index.html">Plastic Tides</a>
+      <a href="../temperature-rise/index.html">Temperature Rise</a>
+      <a href="../action-atlas/index.html">Action Atlas</a>
+    </nav>
+  </div>
+
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,80 C220,30 440,110 720,70 C1000,30 1220,100 1440,60 L1440,120 L0,120 Z" fill="#122849"/>
+      <path d="M0,95 C260,55 480,115 740,85 C1010,55 1240,110 1440,80 L1440,120 L0,120 Z" fill="#1a3358" opacity="0.85"/>
+      <path d="M0,108 C300,80 540,118 780,100 C1040,82 1260,115 1440,100 L1440,120 L0,120 Z" fill="#ffb347" opacity="0.55"/>
+      <path d="M0,116 C320,100 600,120 820,112 C1080,100 1300,120 1440,114 L1440,120 L0,120 Z" fill="#ff6b47" opacity="0.4"/>
+    </svg>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow eyebrow-coral">Chapter 02 · Living Architectures</span>
+      <h1 class="mega">Coral<br>Systems</h1>
+      <p class="lede">Six biogeographic reef provinces account for 84% of the world's tropical coral habitat. Since 1980, live coral cover has fallen by roughly half — and the trajectory is steepening.</p>
+    </div>
+    <div>
+      <p class="muted">A flat-projection atlas of the planet's reef belts, paired with four-decade bleaching curves drawn from the Global Coral Reef Monitoring Network, AIMS long-term reef monitoring, and NOAA Coral Reef Watch satellite anomalies.</p>
+      <div class="hero-meta">
+        <div><span class="data-label">Updated</span><span class="mono">2024.09</span></div>
+        <div><span class="data-label">Reefs Mapped</span><span class="mono accent-1">112</span></div>
+        <div><span class="data-label">Data Points</span><span class="mono accent-2">4,820</span></div>
+        <div><span class="data-label">Source</span><span class="mono">GCRMN · NOAA · AIMS</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" aria-label="Page navigation">
+
+    <div class="sidebar-section">
+      <h5>On this page</h5>
+      <ul class="section-list">
+        <li><a href="#world-map" class="is-active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+          World Reef Atlas</a></li>
+        <li><a href="#reef-profiles">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V8M9 20V4M14 20v-9M19 20V12"/></svg>
+          Six Reef Profiles</a></li>
+        <li><a href="#bleaching-curve">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 19l5-7 4 3 5-8 4 6"/></svg>
+          Bleaching Trajectory</a></li>
+        <li><a href="#species-key">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="10" r="3"/><circle cx="16" cy="14" r="4"/></svg>
+          Species Components</a></li>
+        <li><a href="#thermal-stress">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12"/><circle cx="12" cy="18" r="3"/></svg>
+          Thermal Stress Index</a></li>
+        <li><a href="#field-notes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+          Field Notes</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <h5>Bleaching Scale</h5>
+      <div class="legend">
+        <div class="legend-row"><span class="legend-swatch sw-green"></span>Healthy live cover</div>
+        <div class="legend-row"><span class="legend-swatch sw-amber"></span>Stressed / pale</div>
+        <div class="legend-row"><span class="legend-swatch sw-white"></span>Bleached</div>
+        <div class="legend-row"><span class="legend-swatch sw-grey"></span>Dead / algal turf</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h5>Depth Profile</h5>
+      <div class="depth-scale">
+        <div class="depth-bar" aria-hidden="true"></div>
+        <div class="depth-labels">
+          <span>0 m</span>
+          <span>30 m</span>
+          <span>60 m</span>
+          <span>90 m</span>
+          <span>120 m</span>
+        </div>
+      </div>
+      <p class="mono" style="font-size:10px;color:var(--ink-faint);letter-spacing:0.15em;margin-top:12px;">PHOTIC ZONE → MESOPHOTIC</p>
+    </div>
+
+    <div class="sidebar-section">
+      <h5>Issue Tag</h5>
+      <div class="flex gap-1 wrap">
+        <span class="chip chip-coral">Reefs</span>
+        <span class="chip chip-amber">Bleaching</span>
+        <span class="chip chip-teal">SST+</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- SECTION 1: WORLD MAP -->
+    <section id="world-map">
+      <div class="section-head">
+        <div>
+          <div class="section-num">§ 01 · Distribution</div>
+          <h2>The Reef Belt</h2>
+        </div>
+        <div class="mono faint">Robinson · 23.5° N ↔ 23.5° S</div>
+      </div>
+
+      <p class="muted">Tropical reef-building corals occupy a narrow thermal envelope — roughly 23–29 °C — confining living reefs to a band straddling the equator. The six annotated systems below represent the largest contiguous reef provinces remaining on Earth.</p>
+
+      <div class="figure reef-map-wrap">
+        <div class="figure-head">
+          <div>
+            <h3 class="figure-title">Fig. 01 · World Coral Reef Distribution, 2024</h3>
+            <div class="figure-sub">Reef polygons scaled by area · Mercator-equivalent flat projection</div>
+          </div>
+          <div class="data-label right">N = 112 systems</div>
+        </div>
+
+        <svg viewBox="0 0 880 440" role="img" aria-label="World map of coral reef systems">
+          <!-- Ocean grid -->
+          <defs>
+            <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+              <path d="M44 0H0V44" fill="none" stroke="rgba(232,244,248,0.05)" stroke-width="1"/>
+            </pattern>
+            <radialGradient id="reefGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffb347" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#ffb347" stop-opacity="0.05"/>
+            </radialGradient>
+          </defs>
+          <rect width="880" height="440" fill="#0d1f3c"/>
+          <rect width="880" height="440" fill="url(#grid)"/>
+          <!-- Equator -->
+          <line x1="0" y1="220" x2="880" y2="220" stroke="#00d4c8" stroke-width="0.5" stroke-dasharray="2 6" opacity="0.6"/>
+          <!-- Tropics -->
+          <line x1="0" y1="170" x2="880" y2="170" stroke="rgba(232,244,248,0.18)" stroke-width="0.5" stroke-dasharray="1 4"/>
+          <line x1="0" y1="270" x2="880" y2="270" stroke="rgba(232,244,248,0.18)" stroke-width="0.5" stroke-dasharray="1 4"/>
+
+          <!-- Land masses (stylized polygon paths) -->
+          <g fill="#1a3358" stroke="#122849" stroke-width="1">
+            <!-- North America -->
+            <path d="M70,80 L180,70 L210,110 L240,140 L220,170 L260,200 L240,230 L200,240 L160,225 L120,210 L100,180 L80,140 Z"/>
+            <!-- South America -->
+            <path d="M220,250 L260,245 L280,270 L295,310 L285,360 L260,400 L240,395 L225,360 L215,310 L210,275 Z"/>
+            <!-- Europe -->
+            <path d="M400,80 L460,75 L490,100 L475,125 L440,130 L410,115 Z"/>
+            <!-- Africa -->
+            <path d="M420,140 L490,135 L520,170 L535,220 L520,265 L500,310 L470,340 L440,335 L425,290 L415,240 L410,190 Z"/>
+            <!-- Middle East -->
+            <path d="M495,140 L535,135 L555,165 L540,185 L515,180 Z"/>
+            <!-- Asia -->
+            <path d="M540,70 L660,65 L740,80 L760,110 L730,140 L700,150 L660,145 L610,135 L570,125 L545,100 Z"/>
+            <!-- India -->
+            <path d="M600,150 L630,150 L640,180 L625,210 L605,200 L598,175 Z"/>
+            <!-- SE Asia / Indonesia -->
+            <path d="M680,200 L720,195 L755,210 L780,230 L760,245 L725,240 L700,225 Z"/>
+            <!-- Australia -->
+            <path d="M720,265 L800,260 L820,290 L810,320 L770,335 L735,320 L715,295 Z"/>
+            <!-- Greenland -->
+            <path d="M310,40 L360,38 L380,60 L370,80 L335,82 L315,60 Z"/>
+          </g>
+
+          <!-- Reef zones (ellipse clusters in amber) -->
+          <g>
+            <!-- Florida Keys / Caribbean -->
+            <g>
+              <ellipse cx="225" cy="195" rx="22" ry="6" fill="url(#reefGlow)"/>
+              <ellipse cx="215" cy="205" rx="14" ry="4" fill="#ffb347" opacity="0.7"/>
+              <ellipse cx="240" cy="210" rx="10" ry="3" fill="#ffb347" opacity="0.8"/>
+            </g>
+            <!-- Mesoamerican -->
+            <g>
+              <ellipse cx="200" cy="225" rx="10" ry="22" fill="url(#reefGlow)"/>
+              <ellipse cx="200" cy="225" rx="5" ry="18" fill="#ffb347" opacity="0.9"/>
+            </g>
+            <!-- Red Sea -->
+            <g>
+              <ellipse cx="510" cy="170" rx="6" ry="20" fill="url(#reefGlow)"/>
+              <ellipse cx="510" cy="170" rx="3" ry="16" fill="#ffb347" opacity="0.9"/>
+            </g>
+            <!-- Coral Triangle -->
+            <g>
+              <ellipse cx="730" cy="225" rx="42" ry="22" fill="url(#reefGlow)"/>
+              <ellipse cx="730" cy="225" rx="28" ry="14" fill="#ffb347" opacity="0.8"/>
+              <ellipse cx="715" cy="218" rx="6" ry="3" fill="#ff6b47"/>
+              <ellipse cx="745" cy="232" rx="6" ry="3" fill="#ff6b47"/>
+            </g>
+            <!-- Great Barrier Reef -->
+            <g>
+              <ellipse cx="800" cy="280" rx="8" ry="34" fill="url(#reefGlow)"/>
+              <ellipse cx="800" cy="280" rx="4" ry="30" fill="#ffb347" opacity="0.95"/>
+            </g>
+            <!-- New Caledonia -->
+            <g>
+              <ellipse cx="830" cy="310" rx="14" ry="6" fill="url(#reefGlow)"/>
+              <ellipse cx="830" cy="310" rx="9" ry="3" fill="#ffb347" opacity="0.9"/>
+            </g>
+            <!-- Smaller reef zones -->
+            <ellipse cx="170" cy="215" rx="8" ry="3" fill="#ffb347" opacity="0.5"/>
+            <ellipse cx="565" cy="240" rx="6" ry="3" fill="#ffb347" opacity="0.5"/>
+            <ellipse cx="580" cy="265" rx="8" ry="4" fill="#ffb347" opacity="0.5"/>
+            <ellipse cx="665" cy="245" rx="6" ry="3" fill="#ffb347" opacity="0.5"/>
+            <ellipse cx="780" cy="240" rx="10" ry="4" fill="#ffb347" opacity="0.5"/>
+          </g>
+
+          <!-- Annotation lines + circles -->
+          <g stroke="#00d4c8" stroke-width="1" fill="none">
+            <!-- Florida Keys -->
+            <path d="M225,195 L225,110 L140,110"/>
+            <!-- Mesoamerican -->
+            <path d="M200,225 L120,290 L60,290"/>
+            <!-- Red Sea -->
+            <path d="M510,170 L510,80 L400,40"/>
+            <!-- Coral Triangle -->
+            <path d="M730,225 L730,360 L600,400"/>
+            <!-- GBR -->
+            <path d="M800,280 L820,400 L720,420"/>
+            <!-- New Caledonia -->
+            <path d="M830,310 L860,380 L770,420"/>
+          </g>
+          <g fill="#00d4c8">
+            <circle cx="225" cy="195" r="3"/><circle cx="200" cy="225" r="3"/>
+            <circle cx="510" cy="170" r="3"/><circle cx="730" cy="225" r="3"/>
+            <circle cx="800" cy="280" r="3"/><circle cx="830" cy="310" r="3"/>
+          </g>
+
+          <!-- Labels -->
+          <g font-family="Courier New, monospace" font-size="9" fill="#e8f4f8" letter-spacing="1.5">
+            <text x="60" y="108">01 · FLORIDA KEYS</text>
+            <text x="20" y="294">02 · MESOAMERICAN</text>
+            <text x="280" y="44">03 · RED SEA</text>
+            <text x="500" y="404" text-anchor="end">04 · CORAL TRIANGLE</text>
+            <text x="640" y="424" text-anchor="end">05 · GREAT BARRIER REEF</text>
+            <text x="690" y="424" text-anchor="end" fill="#ffb347">06 · NEW CALEDONIA</text>
+          </g>
+
+          <!-- N indicator -->
+          <g transform="translate(820,30)" fill="#00d4c8">
+            <polygon points="0,-12 5,8 0,4 -5,8" />
+            <text x="0" y="22" font-family="Courier New" font-size="9" text-anchor="middle" fill="#e8f4f8">N</text>
+          </g>
+        </svg>
+
+        <div class="figure-caption">Reef polygons combine GCRMN's Status of Coral Reefs of the World (2020) with NOAA's Allen Coral Atlas geomorphic baselayer. Annotation indices match the reef-profile cards below.</div>
+        <div class="figure-source">Source · GCRMN 2020 · Allen Coral Atlas v2 · NOAA CRW</div>
+      </div>
+
+      <div class="callout-bg">
+        <div class="callout-inner">
+          <span class="data-label">Headline figure</span>
+          <p class="mt-2" style="margin-bottom:0;"><strong class="accent-1" style="font-family:var(--serif);font-size:34px;">14% of global reef</strong> — the area lost to bleaching, disease and storms between 2009 and 2018 alone, equivalent to all the coral currently living on Australia's reefs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: REEF PROFILES -->
+    <section id="reef-profiles">
+      <div class="section-head">
+        <div>
+          <div class="section-num">§ 02 · Six Profiles</div>
+          <h2>Reefs in Decline</h2>
+        </div>
+        <div class="mono faint">1980 → 2024</div>
+      </div>
+
+      <p class="muted">Each profile renders four-decade transects of live coral cover, sampled by long-term monitoring networks. Bars stack the proportion of substrate classified healthy, bleached, and dead across four reference years.</p>
+
+      <div class="bleach-legend mb-4">
+        <span><i style="background:#4ecb71"></i>Live</span>
+        <span><i style="background:#ffb347"></i>Stressed</span>
+        <span><i style="background:#f0f0f0"></i>Bleached</span>
+        <span><i style="background:#555"></i>Dead</span>
+      </div>
+
+      <div class="reef-profile-grid">
+
+        <!-- 1. Great Barrier Reef -->
+        <div class="figure reef-profile">
+          <div class="figure-head">
+            <div>
+              <h4 class="figure-title">01 · Great Barrier Reef</h4>
+              <div class="figure-sub">AUS · 344,400 km² · 2,900 reefs</div>
+            </div>
+            <span class="chip chip-coral">−54%</span>
+          </div>
+          <svg viewBox="0 0 360 180" aria-label="Great Barrier Reef live cover 1980-2024">
+            <line x1="20" y1="150" x2="350" y2="150" stroke="rgba(232,244,248,0.2)"/>
+            <g font-family="Courier New" font-size="9" fill="#a8c4cc">
+              <text x="50" y="170">1980</text><text x="125" y="170">2000</text>
+              <text x="200" y="170">2010</text><text x="275" y="170">2024</text>
+            </g>
+            <!-- 1980: 50% live, 0 stressed, 0 bleached, 0 dead, rest=substrate(grey faint) -->
+            <g>
+              <rect x="50" y="30" width="40" height="60" fill="#4ecb71"/>
+              <rect x="50" y="90" width="40" height="20" fill="#ffb347"/>
+              <rect x="50" y="110" width="40" height="40" fill="#555"/>
+            </g>
+            <!-- 2000 -->
+            <g>
+              <rect x="125" y="48" width="40" height="42" fill="#4ecb71"/>
+              <rect x="125" y="90" width="40" height="18" fill="#ffb347"/>
+              <rect x="125" y="108" width="40" height="10" fill="#f0f0f0"/>
+              <rect x="125" y="118" width="40" height="32" fill="#555"/>
+            </g>
+            <!-- 2010 -->
+            <g>
+              <rect x="200" y="78" width="40" height="32" fill="#4ecb71"/>
+              <rect x="200" y="60" width="40" height="18" fill="#ffb347"/>
+              <rect x="200" y="110" width="40" height="14" fill="#f0f0f0"/>
+              <rect x="200" y="124" width="40" height="26" fill="#555"/>
+            </g>
+            <!-- 2024 -->
+            <g>
+              <rect x="275" y="92" width="40" height="22" fill="#4ecb71"/>
+              <rect x="275" y="70" width="40" height="22" fill="#ffb347"/>
+              <rect x="275" y="114" width="40" height="18" fill="#f0f0f0"/>
+              <rect x="275" y="132" width="40" height="18" fill="#555"/>
+            </g>
+            <!-- Y axis -->
+            <g font-family="Courier New" font-size="8" fill="#6b8590">
+              <text x="14" y="34" text-anchor="end">60%</text>
+              <text x="14" y="74" text-anchor="end">40%</text>
+              <text x="14" y="114" text-anchor="end">20%</text>
+              <text x="14" y="152" text-anchor="end">0</text>
+            </g>
+          </svg>
+          <div class="mono" style="font-size:11px;color:var(--ink-dim);margin-top:8px;">Live cover · 50% → 23%</div>
+        </div>
+
+        <!-- 2. Mesoamerican -->
+        <div class="figure reef-profile">
+          <div class="figure-head">
+            <div>
+              <h4 class="figure-title">02 · Mesoamerican Reef</h4>
+              <div class="figure-sub">MX·BZ·GT·HN · 1,000 km arc</div>
+            </div>
+            <span class="chip chip-coral">−61%</span>
+          </div>
+          <svg viewBox="0 0 360 180" aria-label="Mesoamerican reef live cover">
+            <line x1="20" y1="150" x2="350" y2="150" stroke="rgba(232,244,248,0.2)"/>
+            <g font-family="Courier New" font-size="9" fill="#a8c4cc">
+              <text x="50" y="170">1980</text><text x="125" y="170">2000</text>
+              <text x="200" y="170">2010</text><text x="275" y="170">2024</text>
+            </g>
+            <g><rect x="50" y="30" width="40" height="64" fill="#4ecb71"/><rect x="50" y="94" width="40" height="16" fill="#ffb347"/><rect x="50" y="110" width="40" height="40" fill="#555"/></g>
+            <g><rect x="125" y="68" width="40" height="26" fill="#4ecb71"/><rect x="125" y="50" width="40" height="18" fill="#ffb347"/><rect x="125" y="94" width="40" height="20" fill="#f0f0f0"/><rect x="125" y="114" width="40" height="36" fill="#555"/></g>
+            <g><rect x="200" y="92" width="40" height="22" fill="#4ecb71"/><rect x="200" y="70" width="40" height="22" fill="#ffb347"/><rect x="200" y="114" width="40" height="14" fill="#f0f0f0"/><rect x="200" y="128" width="40" height="22" fill="#555"/></g>
+            <g><rect x="275" y="108" width="40" height="14" fill="#4ecb71"/><rect x="275" y="84" width="40" height="24" fill="#ffb347"/><rect x="275" y="122" width="40" height="14" fill="#f0f0f0"/><rect x="275" y="136" width="40" height="14" fill="#555"/></g>
+            <g font-family="Courier New" font-size="8" fill="#6b8590">
+              <text x="14" y="34" text-anchor="end">60%</text><text x="14" y="74" text-anchor="end">40%</text>
+              <text x="14" y="114" text-anchor="end">20%</text><text x="14" y="152" text-anchor="end">0</text>
+            </g>
+          </svg>
+          <div class="mono" style="font-size:11px;color:var(--ink-dim);margin-top:8px;">Live cover · 53% → 21%</div>
+        </div>
+
+        <!-- 3. Coral Triangle -->
+        <div class="figure reef-profile">
+          <div class="figure-head">
+            <div>
+              <h4 class="figure-title">03 · Coral Triangle</h4>
+              <div class="figure-sub">ID·PH·MY·PNG·SB·TL · 76,000 km² reef</div>
+            </div>
+            <span class="chip chip-amber">−34%</span>
+          </div>
+          <svg viewBox="0 0 360 180" aria-label="Coral Triangle live cover">
+            <line x1="20" y1="150" x2="350" y2="150" stroke="rgba(232,244,248,0.2)"/>
+            <g font-family="Courier New" font-size="9" fill="#a8c4cc">
+              <text x="50" y="170">1980</text><text x="125" y="170">2000</text>
+              <text x="200" y="170">2010</text><text x="275" y="170">2024</text>
+            </g>
+            <g><rect x="50" y="14" width="40" height="80" fill="#4ecb71"/><rect x="50" y="94" width="40" height="14" fill="#ffb347"/><rect x="50" y="108" width="40" height="42" fill="#555"/></g>
+            <g><rect x="125" y="32" width="40" height="60" fill="#4ecb71"/><rect x="125" y="20" width="40" height="12" fill="#ffb347"/><rect x="125" y="92" width="40" height="10" fill="#f0f0f0"/><rect x="125" y="102" width="40" height="48" fill="#555"/></g>
+            <g><rect x="200" y="46" width="40" height="48" fill="#4ecb71"/><rect x="200" y="30" width="40" height="16" fill="#ffb347"/><rect x="200" y="94" width="40" height="14" fill="#f0f0f0"/><rect x="200" y="108" width="40" height="42" fill="#555"/></g>
+            <g><rect x="275" y="70" width="40" height="32" fill="#4ecb71"/><rect x="275" y="46" width="40" height="24" fill="#ffb347"/><rect x="275" y="102" width="40" height="20" fill="#f0f0f0"/><rect x="275" y="122" width="40" height="28" fill="#555"/></g>
+            <g font-family="Courier New" font-size="8" fill="#6b8590">
+              <text x="14" y="34" text-anchor="end">60%</text><text x="14" y="74" text-anchor="end">40%</text>
+              <text x="14" y="114" text-anchor="end">20%</text><text x="14" y="152" text-anchor="end">0</text>
+            </g>
+          </svg>
+          <div class="mono" style="font-size:11px;color:var(--ink-dim);margin-top:8px;">Live cover · 68% → 45%</div>
+        </div>
+
+        <!-- 4. Red Sea -->
+        <div class="figure reef-profile">
+          <div class="figure-head">
+            <div>
+              <h4 class="figure-title">04 · Red Sea</h4>
+              <div class="figure-sub">EG·SA·SD·ER · 1,800 km coastline</div>
+            </div>
+            <span class="chip chip-teal">−9%</span>
+          </div>
+          <svg viewBox="0 0 360 180" aria-label="Red Sea live cover">
+            <line x1="20" y1="150" x2="350" y2="150" stroke="rgba(232,244,248,0.2)"/>
+            <g font-family="Courier New" font-size="9" fill="#a8c4cc">
+              <text x="50" y="170">1980</text><text x="125" y="170">2000</text>
+              <text x="200" y="170">2010</text><text x="275" y="170">2024</text>
+            </g>
+            <g><rect x="50" y="30" width="40" height="62" fill="#4ecb71"/><rect x="50" y="92" width="40" height="14" fill="#ffb347"/><rect x="50" y="106" width="40" height="44" fill="#555"/></g>
+            <g><rect x="125" y="32" width="40" height="60" fill="#4ecb71"/><rect x="125" y="20" width="40" height="12" fill="#ffb347"/><rect x="125" y="92" width="40" height="14" fill="#f0f0f0"/><rect x="125" y="106" width="40" height="44" fill="#555"/></g>
+            <g><rect x="200" y="38" width="40" height="54" fill="#4ecb71"/><rect x="200" y="22" width="40" height="16" fill="#ffb347"/><rect x="200" y="92" width="40" height="10" fill="#f0f0f0"/><rect x="200" y="102" width="40" height="48" fill="#555"/></g>
+            <g><rect x="275" y="42" width="40" height="50" fill="#4ecb71"/><rect x="275" y="26" width="40" height="16" fill="#ffb347"/><rect x="275" y="92" width="40" height="14" fill="#f0f0f0"/><rect x="275" y="106" width="40" height="44" fill="#555"/></g>
+            <g font-family="Courier New" font-size="8" fill="#6b8590">
+              <text x="14" y="34" text-anchor="end">60%</text><text x="14" y="74" text-anchor="end">40%</text>
+              <text x="14" y="114" text-anchor="end">20%</text><text x="14" y="152" text-anchor="end">0</text>
+            </g>
+          </svg>
+          <div class="mono" style="font-size:11px;color:var(--ink-dim);margin-top:8px;">Live cover · 52% → 47% · most thermally tolerant</div>
+        </div>
+
+        <!-- 5. Florida Keys -->
+        <div class="figure reef-profile">
+          <div class="figure-head">
+            <div>
+              <h4 class="figure-title">05 · Florida Keys</h4>
+              <div class="figure-sub">USA · 360 km reef tract</div>
+            </div>
+            <span class="chip chip-coral">−84%</span>
+          </div>
+          <svg viewBox="0 0 360 180" aria-label="Florida Keys live cover">
+            <line x1="20" y1="150" x2="350" y2="150" stroke="rgba(232,244,248,0.2)"/>
+            <g font-family="Courier New" font-size="9" fill="#a8c4cc">
+              <text x="50" y="170">1980</text><text x="125" y="170">2000</text>
+              <text x="200" y="170">2010</text><text x="275" y="170">2024</text>
+            </g>
+            <g><rect x="50" y="50" width="40" height="44" fill="#4ecb71"/><rect x="50" y="94" width="40" height="16" fill="#ffb347"/><rect x="50" y="110" width="40" height="40" fill="#555"/></g>
+            <g><rect x="125" y="106" width="40" height="14" fill="#4ecb71"/><rect x="125" y="78" width="40" height="28" fill="#ffb347"/><rect x="125" y="120" width="40" height="14" fill="#f0f0f0"/><rect x="125" y="134" width="40" height="16" fill="#555"/></g>
+            <g><rect x="200" y="124" width="40" height="10" fill="#4ecb71"/><rect x="200" y="100" width="40" height="24" fill="#ffb347"/><rect x="200" y="134" width="40" height="6" fill="#f0f0f0"/><rect x="200" y="140" width="40" height="10" fill="#555"/></g>
+            <g><rect x="275" y="138" width="40" height="6" fill="#4ecb71"/><rect x="275" y="112" width="40" height="26" fill="#ffb347"/><rect x="275" y="144" width="40" height="4" fill="#f0f0f0"/><rect x="275" y="148" width="40" height="2" fill="#555"/></g>
+            <g font-family="Courier New" font-size="8" fill="#6b8590">
+              <text x="14" y="34" text-anchor="end">60%</text><text x="14" y="74" text-anchor="end">40%</text>
+              <text x="14" y="114" text-anchor="end">20%</text><text x="14" y="152" text-anchor="end">0</text>
+            </g>
+          </svg>
+          <div class="mono" style="font-size:11px;color:var(--ink-dim);margin-top:8px;">Live cover · 33% → 5% · most degraded province</div>
+        </div>
+
+        <!-- 6. New Caledonia -->
+        <div class="figure reef-profile">
+          <div class="figure-head">
+            <div>
+              <h4 class="figure-title">06 · New Caledonia</h4>
+              <div class="figure-sub">NC · 1,500 km barrier reef</div>
+            </div>
+            <span class="chip chip-amber">−22%</span>
+          </div>
+          <svg viewBox="0 0 360 180" aria-label="New Caledonia live cover">
+            <line x1="20" y1="150" x2="350" y2="150" stroke="rgba(232,244,248,0.2)"/>
+            <g font-family="Courier New" font-size="9" fill="#a8c4cc">
+              <text x="50" y="170">1980</text><text x="125" y="170">2000</text>
+              <text x="200" y="170">2010</text><text x="275" y="170">2024</text>
+            </g>
+            <g><rect x="50" y="22" width="40" height="72" fill="#4ecb71"/><rect x="50" y="94" width="40" height="14" fill="#ffb347"/><rect x="50" y="108" width="40" height="42" fill="#555"/></g>
+            <g><rect x="125" y="32" width="40" height="60" fill="#4ecb71"/><rect x="125" y="18" width="40" height="14" fill="#ffb347"/><rect x="125" y="92" width="40" height="14" fill="#f0f0f0"/><rect x="125" y="106" width="40" height="44" fill="#555"/></g>
+            <g><rect x="200" y="48" width="40" height="46" fill="#4ecb71"/><rect x="200" y="30" width="40" height="18" fill="#ffb347"/><rect x="200" y="94" width="40" height="16" fill="#f0f0f0"/><rect x="200" y="110" width="40" height="40" fill="#555"/></g>
+            <g><rect x="275" y="58" width="40" height="38" fill="#4ecb71"/><rect x="275" y="36" width="40" height="22" fill="#ffb347"/><rect x="275" y="96" width="40" height="20" fill="#f0f0f0"/><rect x="275" y="116" width="40" height="34" fill="#555"/></g>
+            <g font-family="Courier New" font-size="8" fill="#6b8590">
+              <text x="14" y="34" text-anchor="end">60%</text><text x="14" y="74" text-anchor="end">40%</text>
+              <text x="14" y="114" text-anchor="end">20%</text><text x="14" y="152" text-anchor="end">0</text>
+            </g>
+          </svg>
+          <div class="mono" style="font-size:11px;color:var(--ink-dim);margin-top:8px;">Live cover · 64% → 49%</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: BLEACHING CURVE -->
+    <section id="bleaching-curve">
+      <div class="section-head">
+        <div>
+          <div class="section-num">§ 03 · Trajectory</div>
+          <h2>Bleaching Years, 1985–2024</h2>
+        </div>
+        <div class="mono faint">DHW · Degree-heating weeks</div>
+      </div>
+
+      <div class="grid grid-12 gap-3">
+        <div class="span-8">
+          <div class="figure">
+            <div class="figure-head">
+              <div>
+                <h3 class="figure-title">Fig. 02 · Global Mass Bleaching Events</h3>
+                <div class="figure-sub">Reefs experiencing &gt;8 DHW per year</div>
+              </div>
+              <div class="data-label right">2024 = 4th global event</div>
+            </div>
+            <svg viewBox="0 0 720 280" aria-label="Mass bleaching timeseries">
+              <!-- axes -->
+              <line x1="40" y1="240" x2="700" y2="240" stroke="rgba(232,244,248,0.2)"/>
+              <line x1="40" y1="40" x2="40" y2="240" stroke="rgba(232,244,248,0.2)"/>
+              <!-- gridlines -->
+              <g stroke="rgba(232,244,248,0.06)">
+                <line x1="40" y1="80" x2="700" y2="80"/>
+                <line x1="40" y1="120" x2="700" y2="120"/>
+                <line x1="40" y1="160" x2="700" y2="160"/>
+                <line x1="40" y1="200" x2="700" y2="200"/>
+              </g>
+              <!-- 4 global events shaded -->
+              <rect x="125" y="40" width="22" height="200" fill="#ff6b47" opacity="0.08"/>
+              <rect x="305" y="40" width="22" height="200" fill="#ff6b47" opacity="0.12"/>
+              <rect x="465" y="40" width="60" height="200" fill="#ff6b47" opacity="0.15"/>
+              <rect x="640" y="40" width="40" height="200" fill="#ff6b47" opacity="0.2"/>
+
+              <!-- bars: % of reefs bleached -->
+              <g fill="#ffb347">
+                <!-- 1985 - 2024, sample bars -->
+                <rect x="46" y="232" width="12" height="8"/>
+                <rect x="62" y="228" width="12" height="12"/>
+                <rect x="78" y="224" width="12" height="16"/>
+                <rect x="94" y="218" width="12" height="22"/>
+                <rect x="110" y="210" width="12" height="30"/>
+                <rect x="126" y="160" width="12" height="80" fill="#ff6b47"/>
+                <rect x="142" y="200" width="12" height="40"/>
+                <rect x="158" y="216" width="12" height="24"/>
+                <rect x="174" y="220" width="12" height="20"/>
+                <rect x="190" y="208" width="12" height="32"/>
+                <rect x="206" y="212" width="12" height="28"/>
+                <rect x="222" y="200" width="12" height="40"/>
+                <rect x="238" y="196" width="12" height="44"/>
+                <rect x="254" y="206" width="12" height="34"/>
+                <rect x="270" y="188" width="12" height="52"/>
+                <rect x="286" y="190" width="12" height="50"/>
+                <rect x="302" y="100" width="12" height="140" fill="#ff6b47"/>
+                <rect x="318" y="180" width="12" height="60"/>
+                <rect x="334" y="184" width="12" height="56"/>
+                <rect x="350" y="172" width="12" height="68"/>
+                <rect x="366" y="178" width="12" height="62"/>
+                <rect x="382" y="168" width="12" height="72"/>
+                <rect x="398" y="160" width="12" height="80"/>
+                <rect x="414" y="158" width="12" height="82"/>
+                <rect x="430" y="150" width="12" height="90"/>
+                <rect x="446" y="148" width="12" height="92"/>
+                <rect x="462" y="70" width="12" height="170" fill="#ff6b47"/>
+                <rect x="478" y="60" width="12" height="180" fill="#ff6b47"/>
+                <rect x="494" y="80" width="12" height="160" fill="#ff6b47"/>
+                <rect x="510" y="140" width="12" height="100"/>
+                <rect x="526" y="146" width="12" height="94"/>
+                <rect x="542" y="138" width="12" height="102"/>
+                <rect x="558" y="132" width="12" height="108"/>
+                <rect x="574" y="142" width="12" height="98"/>
+                <rect x="590" y="130" width="12" height="110"/>
+                <rect x="606" y="118" width="12" height="122"/>
+                <rect x="622" y="110" width="12" height="130"/>
+                <rect x="638" y="90" width="12" height="150" fill="#ff6b47"/>
+                <rect x="654" y="74" width="12" height="166" fill="#ff6b47"/>
+                <rect x="670" y="50" width="12" height="190" fill="#ff6b47"/>
+              </g>
+
+              <!-- annotation lines for events -->
+              <g font-family="Courier New" font-size="9" fill="#ff6b47">
+                <text x="137" y="32" text-anchor="middle">1998</text>
+                <text x="316" y="32" text-anchor="middle">2010</text>
+                <text x="495" y="32" text-anchor="middle">2014–17</text>
+                <text x="660" y="32" text-anchor="middle">2023–24</text>
+              </g>
+              <g font-family="Courier New" font-size="9" fill="#a8c4cc">
+                <text x="40" y="258">1985</text>
+                <text x="200" y="258">1995</text>
+                <text x="360" y="258">2005</text>
+                <text x="520" y="258">2015</text>
+                <text x="680" y="258" text-anchor="end">2024</text>
+              </g>
+              <g font-family="Courier New" font-size="9" fill="#6b8590">
+                <text x="34" y="244" text-anchor="end">0%</text>
+                <text x="34" y="204" text-anchor="end">20%</text>
+                <text x="34" y="164" text-anchor="end">40%</text>
+                <text x="34" y="124" text-anchor="end">60%</text>
+                <text x="34" y="84" text-anchor="end">80%</text>
+                <text x="34" y="48" text-anchor="end">100%</text>
+              </g>
+              <text x="700" y="55" font-family="Courier New" font-size="10" fill="#ff6b47" text-anchor="end">% REEFS BLEACHED</text>
+            </svg>
+            <div class="figure-caption">Each bar denotes the share of monitored reef stations recording &gt;8 degree-heating weeks of thermal stress in that year. Coral can recover from short events; the compressed 2014–17 and 2023–24 windows leave no recovery interval.</div>
+            <div class="figure-source">Source · NOAA Coral Reef Watch v3.1 · Eakin et al. 2022</div>
+          </div>
+        </div>
+
+        <div class="span-4 flex flex-col gap-3">
+          <div class="stat-block coral">
+            <span class="label">Reefs bleached · 2024</span>
+            <span class="val">77%</span>
+            <span class="sub">4th confirmed global event</span>
+          </div>
+          <div class="stat-block amber">
+            <span class="label">DHW threshold</span>
+            <span class="val">8.0</span>
+            <span class="sub">Beyond which mortality &gt; 50%</span>
+          </div>
+          <div class="stat-block">
+            <span class="label">Recovery window</span>
+            <span class="val">10 yr</span>
+            <span class="sub">Required between mass events</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-coral">
+        <span class="callout-num">2.4×</span>
+        <p style="margin:0;">Mass bleaching frequency since 2010 vs. the 1980–2000 baseline. The biological recovery interval has effectively collapsed: most reefs now bleach again before fast-growing branching corals can re-colonise.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 4: SPECIES KEY -->
+    <section id="species-key">
+      <div class="section-head">
+        <div>
+          <div class="section-num">§ 04 · Components</div>
+          <h2>Ecosystem Key</h2>
+        </div>
+        <div class="mono faint">6 functional groups</div>
+      </div>
+
+      <div class="grid grid-12 gap-3">
+        <div class="span-8">
+          <div class="figure">
+            <div class="figure-head">
+              <div>
+                <h3 class="figure-title">Fig. 03 · Reef Cross-Section · Healthy vs. Degraded</h3>
+                <div class="figure-sub">Schematic · benthic cover composition</div>
+              </div>
+              <span class="chip chip-teal">15m depth</span>
+            </div>
+            <svg viewBox="0 0 720 260" aria-label="Reef cross section">
+              <defs>
+                <linearGradient id="watercol" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#1a3358"/>
+                  <stop offset="1" stop-color="#0a1628"/>
+                </linearGradient>
+                <linearGradient id="watercol2" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#2a4878"/>
+                  <stop offset="1" stop-color="#0a1628"/>
+                </linearGradient>
+              </defs>
+              <!-- background two panels -->
+              <rect x="0" y="0" width="360" height="220" fill="url(#watercol)"/>
+              <rect x="360" y="0" width="360" height="220" fill="url(#watercol2)"/>
+              <rect x="0" y="220" width="720" height="40" fill="#1a3358"/>
+
+              <!-- divider -->
+              <line x1="360" y1="0" x2="360" y2="260" stroke="#0a1628" stroke-width="2"/>
+
+              <!-- HEALTHY SIDE -->
+              <g>
+                <!-- branching corals -->
+                <path d="M40,220 Q42,180 56,170 Q60,150 70,160 Q78,140 86,160 Q98,150 100,180 Q110,190 100,210 Z" fill="#4ecb71"/>
+                <path d="M120,220 Q118,190 130,180 Q140,160 150,180 Q160,170 156,200 Z" fill="#4ecb71"/>
+                <!-- massive coral -->
+                <ellipse cx="200" cy="210" rx="40" ry="22" fill="#ff6b47" opacity="0.7"/>
+                <ellipse cx="200" cy="210" rx="32" ry="16" fill="#ffb347" opacity="0.8"/>
+                <!-- anemone clusters -->
+                <g fill="#00d4c8">
+                  <circle cx="270" cy="212" r="3"/><circle cx="275" cy="208" r="3"/>
+                  <circle cx="278" cy="214" r="3"/><circle cx="282" cy="210" r="3"/>
+                  <circle cx="286" cy="214" r="3"/>
+                </g>
+                <!-- urchin -->
+                <g transform="translate(320,210)" stroke="#0a1628" stroke-width="1">
+                  <polygon points="0,-8 2,-4 6,-6 4,-2 8,0 4,2 6,6 2,4 0,8 -2,4 -6,6 -4,2 -8,0 -4,-2 -6,-6 -2,-4" fill="#555"/>
+                </g>
+                <!-- fish schools (polygon clusters) -->
+                <g fill="#00d4c8" opacity="0.85">
+                  <polygon points="60,80 70,76 70,84"/>
+                  <polygon points="80,72 90,68 90,76"/>
+                  <polygon points="100,85 110,81 110,89"/>
+                  <polygon points="120,70 130,66 130,74"/>
+                  <polygon points="150,90 160,86 160,94"/>
+                </g>
+                <!-- label -->
+                <text x="20" y="30" font-family="Georgia" font-size="14" font-weight="700" fill="#4ecb71">HEALTHY</text>
+                <text x="20" y="46" font-family="Courier New" font-size="9" fill="#a8c4cc" letter-spacing="1.5">52% LIVE COVER · 1985</text>
+              </g>
+
+              <!-- DEGRADED SIDE -->
+              <g transform="translate(360,0)">
+                <!-- algal turf -->
+                <path d="M20,220 Q30,200 50,210 Q70,196 90,206 Q110,200 130,212 Q160,198 200,210 Q240,200 280,212 Q310,202 340,210 L340,220 L20,220 Z" fill="#555"/>
+                <!-- dead coral skeletons (white) -->
+                <path d="M70,220 Q72,200 80,196 Q86,184 92,200 Q100,194 100,214 Z" fill="#f0f0f0" opacity="0.7"/>
+                <path d="M160,220 Q160,198 172,194 Q180,182 188,200 Q196,190 196,214 Z" fill="#f0f0f0" opacity="0.6"/>
+                <!-- one stressed coral -->
+                <ellipse cx="260" cy="212" rx="28" ry="14" fill="#ffb347" opacity="0.4"/>
+                <ellipse cx="260" cy="212" rx="20" ry="8" fill="#f0f0f0" opacity="0.5"/>
+                <!-- few fish -->
+                <g fill="#00d4c8" opacity="0.5">
+                  <polygon points="60,80 70,76 70,84"/>
+                  <polygon points="200,100 210,96 210,104"/>
+                </g>
+                <!-- label -->
+                <text x="20" y="30" font-family="Georgia" font-size="14" font-weight="700" fill="#c0392b">DEGRADED</text>
+                <text x="20" y="46" font-family="Courier New" font-size="9" fill="#a8c4cc" letter-spacing="1.5">14% LIVE COVER · 2024</text>
+              </g>
+
+              <!-- depth marks -->
+              <g font-family="Courier New" font-size="9" fill="#6b8590">
+                <text x="710" y="20" text-anchor="end">0m</text>
+                <text x="710" y="110" text-anchor="end">8m</text>
+                <text x="710" y="215" text-anchor="end">15m</text>
+              </g>
+              <!-- substrate label -->
+              <text x="360" y="246" text-anchor="middle" font-family="Courier New" font-size="9" fill="#a8c4cc" letter-spacing="2">SUBSTRATE — CARBONATE PLATFORM</text>
+            </svg>
+            <div class="figure-caption">Phase-shift schematic: dominant cover transitions from branching <em>Acropora</em> and massive <em>Porites</em> assemblages to fleshy macroalgae and rubble, with corresponding collapse of associated reef-fish biomass.</div>
+          </div>
+        </div>
+
+        <div class="span-4">
+          <div class="panel" style="padding: var(--s-4);">
+            <h4 class="mb-2" style="font-size:16px;">Component Icons</h4>
+            <div class="icon-grid">
+              <div class="icon-tile">
+                <svg viewBox="0 0 40 40" aria-label="Branching coral">
+                  <path d="M20,36 L20,22 M20,22 L12,14 M20,22 L28,12 M14,18 L8,8 M26,16 L30,6 M20,28 L26,24" fill="none" stroke="#ff6b47" stroke-width="1.6" stroke-linecap="round"/>
+                  <circle cx="12" cy="14" r="1.5" fill="#ff6b47"/>
+                  <circle cx="28" cy="12" r="1.5" fill="#ff6b47"/>
+                  <circle cx="8" cy="8" r="1.5" fill="#ff6b47"/>
+                  <circle cx="30" cy="6" r="1.5" fill="#ff6b47"/>
+                </svg>
+                <span>Branching coral</span>
+              </div>
+              <div class="icon-tile">
+                <svg viewBox="0 0 40 40" aria-label="Massive coral">
+                  <ellipse cx="20" cy="26" rx="14" ry="9" fill="none" stroke="#ffb347" stroke-width="1.6"/>
+                  <ellipse cx="20" cy="26" rx="8" ry="5" fill="#ffb347" opacity="0.4"/>
+                  <circle cx="14" cy="24" r="1" fill="#ffb347"/>
+                  <circle cx="22" cy="26" r="1" fill="#ffb347"/>
+                  <circle cx="26" cy="28" r="1" fill="#ffb347"/>
+                </svg>
+                <span>Massive coral</span>
+              </div>
+              <div class="icon-tile">
+                <svg viewBox="0 0 40 40" aria-label="Anemone">
+                  <g fill="#00d4c8">
+                    <circle cx="14" cy="22" r="2"/><circle cx="18" cy="18" r="2"/>
+                    <circle cx="22" cy="18" r="2"/><circle cx="26" cy="22" r="2"/>
+                    <circle cx="20" cy="24" r="3"/><circle cx="16" cy="26" r="2"/>
+                    <circle cx="24" cy="26" r="2"/>
+                  </g>
+                </svg>
+                <span>Anemone</span>
+              </div>
+              <div class="icon-tile">
+                <svg viewBox="0 0 40 40" aria-label="Urchin">
+                  <polygon points="20,4 22,12 30,8 26,16 36,18 26,22 30,30 22,26 20,36 18,26 10,30 14,22 4,18 14,16 10,8 18,12" fill="none" stroke="#555" stroke-width="1.4"/>
+                  <circle cx="20" cy="19" r="4" fill="#555"/>
+                </svg>
+                <span>Urchin</span>
+              </div>
+              <div class="icon-tile">
+                <svg viewBox="0 0 40 40" aria-label="Reef fish">
+                  <path d="M6,20 L18,14 L26,14 Q32,20 26,26 L18,26 Z" fill="#00d4c8"/>
+                  <polygon points="6,20 0,14 0,26" fill="#00d4c8"/>
+                  <circle cx="22" cy="18" r="1" fill="#0a1628"/>
+                </svg>
+                <span>Reef fish</span>
+              </div>
+              <div class="icon-tile">
+                <svg viewBox="0 0 40 40" aria-label="Sponge">
+                  <path d="M10,36 Q8,20 14,16 Q12,8 20,8 Q28,8 26,16 Q32,20 30,36 Z" fill="none" stroke="#ff6b47" stroke-width="1.5"/>
+                  <circle cx="18" cy="20" r="1.2" fill="#ff6b47"/>
+                  <circle cx="24" cy="24" r="1.2" fill="#ff6b47"/>
+                  <circle cx="20" cy="30" r="1.2" fill="#ff6b47"/>
+                </svg>
+                <span>Sponge</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: THERMAL STRESS -->
+    <section id="thermal-stress">
+      <div class="section-head">
+        <div>
+          <div class="section-num">§ 05 · Stress Index</div>
+          <h2>Thermal Stress by Province</h2>
+        </div>
+        <div class="mono faint">Mean DHW · 2014–2024</div>
+      </div>
+
+      <div class="figure">
+        <div class="figure-head">
+          <div>
+            <h3 class="figure-title">Fig. 04 · Cumulative Heat Stress vs. Recovery Interval</h3>
+            <div class="figure-sub">Bubble area scaled by reef extent (km²)</div>
+          </div>
+        </div>
+        <svg viewBox="0 0 720 320" aria-label="Heat stress scatterplot">
+          <!-- axes -->
+          <line x1="60" y1="280" x2="700" y2="280" stroke="rgba(232,244,248,0.2)"/>
+          <line x1="60" y1="20" x2="60" y2="280" stroke="rgba(232,244,248,0.2)"/>
+          <!-- gridlines -->
+          <g stroke="rgba(232,244,248,0.06)">
+            <line x1="60" y1="80" x2="700" y2="80"/>
+            <line x1="60" y1="140" x2="700" y2="140"/>
+            <line x1="60" y1="200" x2="700" y2="200"/>
+            <line x1="180" y1="20" x2="180" y2="280"/>
+            <line x1="320" y1="20" x2="320" y2="280"/>
+            <line x1="460" y1="20" x2="460" y2="280"/>
+            <line x1="600" y1="20" x2="600" y2="280"/>
+          </g>
+          <!-- danger zone -->
+          <rect x="460" y="20" width="240" height="100" fill="#ff6b47" opacity="0.06"/>
+          <text x="690" y="40" font-family="Courier New" font-size="9" fill="#ff6b47" text-anchor="end" letter-spacing="2">DANGER ZONE</text>
+
+          <!-- Bubbles -->
+          <!-- Red Sea: low stress, long recovery -->
+          <g>
+            <circle cx="160" cy="200" r="20" fill="#00d4c8" opacity="0.35" stroke="#00d4c8"/>
+            <text x="160" y="204" font-family="Courier New" font-size="9" fill="#e8f4f8" text-anchor="middle">04</text>
+          </g>
+          <!-- New Caledonia -->
+          <g>
+            <circle cx="280" cy="160" r="22" fill="#ffb347" opacity="0.4" stroke="#ffb347"/>
+            <text x="280" y="164" font-family="Courier New" font-size="9" fill="#e8f4f8" text-anchor="middle">06</text>
+          </g>
+          <!-- Coral Triangle -->
+          <g>
+            <circle cx="360" cy="120" r="42" fill="#ffb347" opacity="0.4" stroke="#ffb347"/>
+            <text x="360" y="124" font-family="Courier New" font-size="11" fill="#e8f4f8" text-anchor="middle">03</text>
+          </g>
+          <!-- GBR -->
+          <g>
+            <circle cx="500" cy="100" r="38" fill="#ff6b47" opacity="0.45" stroke="#ff6b47"/>
+            <text x="500" y="104" font-family="Courier New" font-size="11" fill="#e8f4f8" text-anchor="middle">01</text>
+          </g>
+          <!-- Mesoamerican -->
+          <g>
+            <circle cx="540" cy="180" r="20" fill="#ff6b47" opacity="0.45" stroke="#ff6b47"/>
+            <text x="540" y="184" font-family="Courier New" font-size="9" fill="#e8f4f8" text-anchor="middle">02</text>
+          </g>
+          <!-- Florida Keys -->
+          <g>
+            <circle cx="640" cy="60" r="16" fill="#c0392b" opacity="0.55" stroke="#c0392b"/>
+            <text x="640" y="64" font-family="Courier New" font-size="9" fill="#f0f0f0" text-anchor="middle">05</text>
+          </g>
+
+          <!-- axis labels -->
+          <text x="60" y="305" font-family="Courier New" font-size="9" fill="#6b8590">LOW</text>
+          <text x="700" y="305" font-family="Courier New" font-size="9" fill="#6b8590" text-anchor="end">HIGH</text>
+          <text x="380" y="305" font-family="Courier New" font-size="10" fill="#a8c4cc" text-anchor="middle" letter-spacing="2">→ CUMULATIVE DHW (2014–2024)</text>
+          <g transform="translate(20,170) rotate(-90)">
+            <text font-family="Courier New" font-size="10" fill="#a8c4cc" text-anchor="middle" letter-spacing="2">RECOVERY INTERVAL (yr) ←</text>
+          </g>
+          <g font-family="Courier New" font-size="9" fill="#6b8590">
+            <text x="54" y="24" text-anchor="end">14</text>
+            <text x="54" y="84" text-anchor="end">10</text>
+            <text x="54" y="144" text-anchor="end">7</text>
+            <text x="54" y="204" text-anchor="end">4</text>
+            <text x="54" y="280" text-anchor="end">0</text>
+          </g>
+        </svg>
+        <div class="figure-caption">Reefs in the upper-right quadrant face the steepest mortality trajectory: high accumulated heat-stress with insufficient time between events for structural recovery. Florida Keys (05) has already crossed the recovery threshold.</div>
+        <div class="figure-source">Source · NOAA CRW · GCRMN reef-extent gazetteer 2023</div>
+      </div>
+
+      <div class="grid grid-3 gap-3 mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">SST anomaly</h4>
+            <span class="card-meta">°C</span>
+          </div>
+          <div class="card-stat"><span class="num">+1.54</span><span class="delta-down">+0.18 yoy</span></div>
+          <div class="card-figure">
+            <svg viewBox="0 0 200 50">
+              <polyline points="0,40 20,38 40,36 60,32 80,28 100,26 120,20 140,18 160,12 180,8 200,4" fill="none" stroke="#ff6b47" stroke-width="2"/>
+              <line x1="0" y1="32" x2="200" y2="32" stroke="rgba(232,244,248,0.15)" stroke-dasharray="2 3"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Calcification</h4>
+            <span class="card-meta">g/cm²/yr</span>
+          </div>
+          <div class="card-stat"><span class="num">1.22</span><span class="delta-down">−21% v 1990</span></div>
+          <div class="card-figure">
+            <svg viewBox="0 0 200 50">
+              <polyline points="0,10 20,12 40,16 60,18 80,22 100,26 120,30 140,32 160,36 180,38 200,42" fill="none" stroke="#00d4c8" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Reef-fish biomass</h4>
+            <span class="card-meta">kg/ha</span>
+          </div>
+          <div class="card-stat"><span class="num">388</span><span class="delta-down">−42% v 1980</span></div>
+          <div class="card-figure">
+            <svg viewBox="0 0 200 50">
+              <polyline points="0,8 20,14 40,12 60,20 80,22 100,28 120,26 140,34 160,32 180,40 200,42" fill="none" stroke="#ffb347" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: FIELD NOTES -->
+    <section id="field-notes">
+      <div class="section-head">
+        <div>
+          <div class="section-num">§ 06 · Field notes</div>
+          <h2>Province Index</h2>
+        </div>
+        <div class="mono faint">Sortable summary</div>
+      </div>
+
+      <div class="grid grid-12 gap-3">
+        <div class="span-8">
+          <div class="panel">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>#</th><th>Province</th><th>Reefs</th>
+                  <th class="num">Area km²</th><th class="num">Live 1980</th><th class="num">Live 2024</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="accent-2">01</td><td>Great Barrier Reef</td><td>AUS</td><td class="num">344,400</td><td class="num green">50%</td><td class="num amber">23%</td></tr>
+                <tr><td class="accent-2">02</td><td>Mesoamerican Reef</td><td>MX·BZ·GT·HN</td><td class="num">22,600</td><td class="num green">53%</td><td class="num amber">21%</td></tr>
+                <tr><td class="accent-2">03</td><td>Coral Triangle</td><td>6 nations</td><td class="num">75,800</td><td class="num green">68%</td><td class="num amber">45%</td></tr>
+                <tr><td class="accent-2">04</td><td>Red Sea</td><td>EG·SA·SD·ER</td><td class="num">17,600</td><td class="num green">52%</td><td class="num green">47%</td></tr>
+                <tr><td class="accent-2">05</td><td>Florida Keys</td><td>USA</td><td class="num">3,800</td><td class="num amber">33%</td><td class="num red">5%</td></tr>
+                <tr><td class="accent-2">06</td><td>New Caledonia</td><td>NC</td><td class="num">23,400</td><td class="num green">64%</td><td class="num green">49%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="span-4">
+          <div class="panel">
+            <h4 class="mb-2" style="font-size:16px;">Site quick-key</h4>
+            <div class="reef-row"><span class="pin">▲ 01</span><span class="nm">Great Barrier Reef</span><span class="val">−54%</span></div>
+            <div class="reef-row"><span class="pin">▲ 02</span><span class="nm">Mesoamerican</span><span class="val">−61%</span></div>
+            <div class="reef-row"><span class="pin">▲ 03</span><span class="nm">Coral Triangle</span><span class="val">−34%</span></div>
+            <div class="reef-row"><span class="pin">▲ 04</span><span class="nm">Red Sea</span><span class="val" style="color:var(--green)">−09%</span></div>
+            <div class="reef-row"><span class="pin">▲ 05</span><span class="nm">Florida Keys</span><span class="val" style="color:var(--red)">−84%</span></div>
+            <div class="reef-row"><span class="pin">▲ 06</span><span class="nm">New Caledonia</span><span class="val">−22%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pullquote">
+        "The reefs of 2050 will not be the reefs we knew. They will be smaller, simpler, and dominated by a handful of heat-tolerant species — unless we cut emissions this decade."
+        <cite>— Dr. Terry Hughes · ARC Centre of Excellence for Coral Reef Studies</cite>
+      </div>
+
+      <div class="flex gap-3 wrap mt-4">
+        <a href="../temperature-rise/index.html" class="btn btn-primary">Next · Temperature Rise →</a>
+        <a href="../action-atlas/index.html" class="btn btn-coral">Conservation Atlas</a>
+        <a href="#" class="btn btn-ghost">Download dataset (CSV)</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <path d="M0,40 C260,10 540,70 820,40 C1080,15 1300,55 1440,30 L1440,0 L0,0 Z" fill="#0a1628"/>
+      <path d="M0,55 C300,30 580,75 860,55 C1100,40 1320,65 1440,50 L1440,0 L0,0 Z" fill="#122849" opacity="0.7"/>
+      <path d="M0,68 C320,52 600,78 880,68 C1120,60 1320,75 1440,68 L1440,0 L0,0 Z" fill="#0d1f3c" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="brand mb-3">
+          <svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true">
+            <circle cx="18" cy="18" r="17" fill="none" stroke="#00d4c8" stroke-width="1.5"/>
+            <path d="M2 20 Q9 14 18 20 T34 20" fill="none" stroke="#00d4c8" stroke-width="1.5"/>
+            <path d="M2 24 Q9 18 18 24 T34 24" fill="none" stroke="#ff6b47" stroke-width="1.2"/>
+            <circle cx="18" cy="12" r="2" fill="#ff6b47"/>
+          </svg>
+          Deep Current
+        </div>
+        <p class="muted" style="max-width: 380px; font-size: 14px;">An interactive infographic journal translating NOAA and peer-reviewed ocean science into dense visual stories.</p>
+        <p class="mono faint" style="font-size:11px;letter-spacing:0.18em;">EST. 2021 · ISSN 2837-0149</p>
+      </div>
+      <div>
+        <h6>Chapters</h6>
+        <ul>
+          <li><a href="../ocean-health/index.html">Ocean Health</a></li>
+          <li><a href="../coral-systems/index.html">Coral Systems</a></li>
+          <li><a href="../plastic-tides/index.html">Plastic Tides</a></li>
+          <li><a href="../temperature-rise/index.html">Temperature Rise</a></li>
+          <li><a href="../action-atlas/index.html">Action Atlas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6>Sources</h6>
+        <ul>
+          <li><a href="#">NOAA Coral Reef Watch</a></li>
+          <li><a href="#">GCRMN</a></li>
+          <li><a href="#">AIMS LTMP</a></li>
+          <li><a href="#">Allen Coral Atlas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6>Subscribe</h6>
+        <ul>
+          <li><a href="#">Monthly briefing</a></li>
+          <li><a href="#">Data releases</a></li>
+          <li><a href="#">RSS feed</a></li>
+          <li><a href="#">Press kit</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-credit">© 2024 Deep Current Editorial</span>
+      <span>Vol. 04 · Issue 02 · Coral Systems</span>
+      <span class="accent-1">Made with open ocean data</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

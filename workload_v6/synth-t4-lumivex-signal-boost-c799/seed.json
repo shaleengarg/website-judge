@@ -1,0 +1,29 @@
+{
+  "id": "synth-t4-lumivex-signal-boost-c799",
+  "tier": 4,
+  "genre": "marketing-landing",
+  "pages": [
+    "ignite",
+    "platform",
+    "results",
+    "pricing",
+    "onboard"
+  ],
+  "palette_hint": "Deep space navy #0b0f2e as background, crisp white #f0f4ff for body text, electric violet #7c3aed and molten amber #f59e0b as dual accents",
+  "type_style": "Headings in system-ui bold (900 weight) with tight letter-spacing for urgency; body in Georgia serif at normal weight for readable warmth; a compact, confident feel throughout",
+  "description": "Lumivex is a B2B signal-intelligence platform that helps growth teams identify high-intent leads before competitors do, marketed through a richly decorated five-page landing site.",
+  "constraints": [
+    "Max content width 1160px centered with 48px horizontal padding; hero sections full-bleed with radial gradient overlays on #0b0f2e base",
+    "Elevation system: cards use three shadow depths \u2014 subtle (0 2px 8px rgba(124,58,237,0.15)), mid (0 8px 24px rgba(124,58,237,0.28)), lifted (0 20px 48px rgba(124,58,237,0.42)) \u2014 applied consistently by component role",
+    "Border-radius rhythm: pill badges at 999px, feature cards at 16px, stat blocks at 8px, primary CTA buttons at 12px, secondary ghost buttons at 999px",
+    "Decorative ::before and ::after pseudo-elements on section headings render amber (#f59e0b) geometric accent lines (3px tall, 48px wide) and violet glow blobs (blurred radial gradients at 20% opacity) behind hero text",
+    "Every page must include at least 6 distinct gradient declarations (linear or radial) and use CSS backdrop-filter: blur(12px) on at least one frosted-glass card per page"
+  ],
+  "page_specs": {
+    "ignite": "The hero landing page opens with a full-bleed radial gradient from #1a0a3d at center to #0b0f2e at edges, overlaid with a grid of faint violet lines at 5% opacity. Above the fold: a pill badge reading 'Now in Public Beta', an H1 'Find Your Buyers Before They Raise Their Hand', a 24px Georgia subhead explaining signal-based intent tracking, and two CTAs \u2014 'Start Free Trial' (violet filled, 12px radius) and 'Watch 90s Demo' (ghost pill). Below the fold: a 4-column icon-stat row (14 000+ signals tracked, 3.1\u00d7 pipeline velocity, 87% match accuracy, SOC 2 Type II), then a horizontal marquee strip of 12 customer logo placeholders rendered as styled text badges on frosted-glass tiles.",
+    "platform": "A detailed feature showcase page with a sticky left nav listing five capability modules: Intent Radar, Account Graph, Slack Pulse, CRM Sync, and Audience Builder. Each module occupies a full-width alternating two-column section (text left / visual right, then flip) where the visual panel is a frosted-glass card (backdrop-filter blur 12px, border 1px solid rgba(124,58,237,0.3)) containing a mock data table or metric chart built entirely in HTML/CSS. Decorative amber accent lines appear above each module heading, and violet glow blobs sit behind each frosted panel using ::before pseudo-elements.",
+    "results": "A social-proof page structured as: a top banner gradient strip in amber-to-violet announcing '2 300% average ROI reported by customers in Q1'; three large testimonial cards with mid-depth shadows and 16px radius featuring specific quotes from fictional VP-level personas at named fictional companies (e.g. Corvin Labs, Stelka Ventures, Nuvaro Health); a 3\u00d73 case-study grid where each cell shows company name, industry tag pill, and a single headline metric in 48px bold violet; and a bottom section with a horizontal bar-chart comparison of 'Before Lumivex vs After' built in pure CSS using div widths and amber/violet fills.",
+    "pricing": "Three-tier pricing table (Starter $0/mo, Growth $299/mo, Enterprise custom) rendered as elevated cards \u2014 Starter with subtle shadow, Growth with lifted shadow and a 'Most Popular' violet ribbon pseudo-element in the top-right corner, Enterprise with a dark gradient (#1a0a3d to #0b0f2e) background. Each card lists 8\u201310 feature line items using checkmark and cross icons styled in CSS. A toggle row above switches between Monthly and Annual views using CSS :checked state on a visually styled radio pair. Below the cards, an FAQ accordion of 8 questions is rendered as styled details/summary elements with violet left-border accents and amber hover states.",
+    "onboard": "A conversion-focused page with a two-column layout: left side holds a vertical 4-step onboarding timeline (Connect your CRM \u2192 Define ICP \u2192 Set signal thresholds \u2192 Go live in 48h) rendered with violet connector lines and numbered amber circle badges; right side holds a large frosted-glass signup form card (backdrop-filter blur 12px) with fields for Work Email, Company Name, Team Size dropdown, and a 'Claim Your Free Signals' CTA button. Below the form, three trust badges (SOC 2, GDPR, 99.9% Uptime) appear as pill cards with subtle shadows. The page footer spans full width with a dark gradient, Lumivex wordmark, five nav links, and three social-icon CSS shapes."
+  }
+}

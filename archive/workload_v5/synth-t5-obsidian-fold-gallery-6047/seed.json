@@ -1,0 +1,29 @@
+{
+  "id": "synth-t5-obsidian-fold-gallery-6047",
+  "tier": 5,
+  "genre": "gallery-exhibition",
+  "pages": [
+    "manifesto",
+    "collection",
+    "artists",
+    "catalogue",
+    "visit"
+  ],
+  "palette_hint": "Deep charcoal background #1a1a1a with off-white body text #f0ede6, accented by burnt sienna #c0512f and pale gold #d4af6e for typographic highlights and ruled lines.",
+  "type_style": "Georgia for body and pull quotes (elegant serif, weight 400/700), system-ui for labels, captions, and marginalia (clean sans at 300/600), producing a tension between archival warmth and curatorial precision.",
+  "description": "Obsidian Fold is a contemporary print-art gallery in Rotterdam specializing in large-format risograph and letterpress works, with this five-page site serving as both exhibition catalogue and institutional voice.",
+  "constraints": [
+    "Modular type scale: display 4.8rem, h1 3rem, h2 1.875rem, h3 1.25rem, body 1rem, caption 0.8rem, small 0.65rem \u2014 all sizes used on every page at least once.",
+    "Three-column CSS Grid master layout (max-width 1280px, 24px column gap): a 200px left marginalia column, a 680px main content column, and a 280px right sidebar; on pages where one column is absent it collapses but the grid is never single-column.",
+    "Pull quotes appear in the main column with font-size 1.6rem, font-weight 700, color #d4af6e, left border 4px solid #c0512f, padding-left 1.5rem, and a margin that bleeds 48px into the left marginalia column.",
+    "Every lead paragraph on a page gets a ::first-letter drop cap at 4rem tall, float left, font-weight 700, color #c0512f, line-height 0.8, margin-right 6px.",
+    "Marginalia text uses font-size 0.65rem, letter-spacing 0.12em, color #8a8070, line-height 1.9, and is positioned via the left grid column with sticky top 120px; it contains section numbers, cross-references, and curatorial footnotes."
+  ],
+  "page_specs": {
+    "manifesto": "A full statement-of-intent page opening with a 4.8rem display headline 'Pressure Makes Permanence' set in Georgia 700, followed by three dense body sections arguing for the cultural necessity of physical print in an era of disposable digital imagery. The left marginalia column carries five numbered curatorial footnotes (e.g., '\u00a71 \u2014 Risograph ink is soy-based; its imprecision is its honesty.') while the right sidebar presents a timeline of the gallery's founding moments (2017\u20132024) as small-type entries. Two pull quotes interrupt the body: 'The smudge is not an error. It is evidence.' and 'We print on paper that outlives its makers.'",
+    "collection": "A grid-catalog page showcasing twelve works from the current exhibition 'Strata & Sediment' using a four-across CSS Grid of artwork cards (each 280px wide, background #242424, 12px radius, box-shadow 0 4px 24px rgba(0,0,0,0.6)). Each card contains a colored placeholder rectangle representing the artwork (height 200px, background gradients using palette colors), an artwork title in h3, a medium/edition caption at 0.8rem, and a price or 'NFS' label at 0.65rem letter-spacing 0.15em uppercase. The left marginalia column lists exhibition themes ('Geological Time', 'Layered Memory', 'Pressure as Metaphor') as vertical rotated labels, and the right sidebar contains a dense paragraph on the risograph printing process.",
+    "artists": "Profiles of four artists \u2014 Maren Holt (Norway), Soo-Jin Bae (South Korea), Darius Vael (Belgium), and Priya Menon (UK) \u2014 each presented as a distinct horizontal band with a two-column internal layout: a 280px bio column on the left and a 680px statement column on the right. Each band has an h2 artist name, a byline in 0.65rem small-caps showing nationality and medium, a lead paragraph with drop cap, and one pull quote from the artist's statement. The right sidebar across all profiles accumulates a running list of awards and residencies in caption-size type, and the marginalia column marks each profile with a large faint ordinal (01\u201304) at 4.8rem, color #2a2a2a, used decoratively.",
+    "catalogue": "A text-heavy archival page presenting the printed exhibition catalogue 'Strata & Sediment, Vol. III' as a designed object, with reproduction of the table of contents in a two-column body layout (column-count 2, column-gap 40px, column-rule 1px solid #3a3a3a). Section headings in h2 introduce essays: 'On Geological Patience', 'The Ethics of Edition', and 'Ink as Archive'. Each essay excerpt (approximately 120 words) ends with an em-dashed attribution byline. The left marginalia column carries page-number cross-references from the physical book, and the right sidebar shows ordering information, ISBN, print run size (375 copies), and price in a structured definition-list styled with caption-size labels and body-size values.",
+    "visit": "Practical information page for the Rotterdam gallery space at Vuurplaat 14, with three distinct typographic zones. The main column holds opening hours as a styled table (days left-aligned in 0.8rem small-caps, hours right-aligned in body size), a paragraph on public transport routes, and an accessibility statement with a drop cap. The left marginalia column shows compass-cardinal orientation notes and neighborhood context ('Katendrecht district, former harbor warehouse, ceiling height 6.4m'). The right sidebar contains a dense events listing for the next six weeks, with event titles in h3, dates in 0.65rem uppercase letter-spacing 0.2em, and a ticket-price or 'Free Entry' flag in #c0512f. A large pull quote anchors the bottom of the main column: 'The work asks to be seen slowly. We have arranged the light accordingly.'"
+  }
+}

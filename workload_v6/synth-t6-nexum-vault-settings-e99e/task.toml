@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "workloads/synth-t6-nexum-vault-settings-e99e"
+description = "Nexum Vault is a fictional enterprise secrets-management platform offering exhaustive account settings across profile identity, multi-factor security, subscription billing, granular notification preferences, and a full tamper-evident audit log."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "account-settings", "tier-6"]
+
+[metadata]
+difficulty_explanation = "Tier 6 (account-settings): Nexum Vault is a fictional enterprise secrets-management platform offering exhaustive account settings across profile identity, multi-factor security, subscription billing, granular notification preferences, and a full tamper-evident audit log."
+category = "frontend"
+tier = 6
+genre = "account-settings"
+
+[verifier]
+# V4 grader makes ~3-6× more API calls than V3.3 (3 viewports × ensemble of 3
+# × 5 pages, sending 6 images per call). Under concurrent harbor runs, 429
+# backoff storms from the Anthropic API can stretch a single trial's
+# verifier past 1000s. 420s timed out 2/12 trials in the v3 dataset; 1200s
+# leaves enough headroom for retry backoffs to land.
+timeout_sec = 1200.0
+
+[agent]
+# V4-aware sites must be responsive across desktop/tablet/phone, ~3× the
+# design work per page vs V3-era 1280×800-only tasks. 900s timed out 4/12
+# v3 trials; 1500s leaves headroom for complex tier-6+ multi-page flows.
+timeout_sec = 1500.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

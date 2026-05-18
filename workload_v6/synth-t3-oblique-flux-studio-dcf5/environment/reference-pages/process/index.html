@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Process — Oblique Flux Studio</title>
+<style>
+  .phase-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+  .outputs-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2) var(--space-5);
+  }
+  .outputs-list li {
+    position: relative;
+    padding-left: var(--space-4);
+    font-size: var(--fs-sm);
+    color: var(--ink-dim);
+    margin: 0;
+  }
+  .outputs-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent-1);
+    font-family: var(--mono);
+  }
+  .outputs-block {
+    margin: var(--space-5) 0 var(--space-4);
+  }
+  .outputs-block .lbl {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-bottom: var(--space-3);
+    display: block;
+  }
+  .phase-intro {
+    color: var(--ink-dim);
+    max-width: 64ch;
+    margin-bottom: var(--space-4);
+  }
+  .compare-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-5);
+  }
+  .compare-wrap .tbl { font-size: var(--fs-xs); }
+  .compare-wrap .tbl th,
+  .compare-wrap .tbl td {
+    border-bottom: 1px solid var(--rule-soft);
+    padding: var(--space-3);
+  }
+  .compare-wrap .tbl td:first-child {
+    font-family: var(--serif);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .compare-wrap .tbl td.num {
+    font-family: var(--mono);
+    color: var(--accent-2);
+  }
+  @media (max-width: 640px) {
+    .outputs-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"></span>Oblique Flux</div>
+    <div class="brand-sub">Studio · Est. 2011</div>
+
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-label">Studio</div>
+      <a href="../work/index.html"><span>Work</span><span class="nav-num">01</span></a>
+      <a href="../services/index.html"><span>Services</span><span class="nav-num">02</span></a>
+      <a href="../studio/index.html"><span>Studio</span><span class="nav-num">03</span></a>
+      <a href="#" aria-current="page" class="active"><span>Process</span><span class="nav-num">04</span></a>
+      <a href="../contact/index.html"><span>Contact</span><span class="nav-num">05</span></a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <strong>Oblique Flux Studio</strong><br>
+      Brand &amp; experience for<br>science, technology, and<br>cultural institutions.<br><br>
+      NY · BER · MEL
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner wide">
+      <header class="page-head">
+        <span class="eyebrow">Method · 04</span>
+        <h1 class="page-title">A six-phase engagement, calibrated for institutions.</h1>
+        <p class="page-lede">Every engagement at Oblique Flux moves through the same six phases — Discovery through Debrief — but their depth varies by context. Below is the durable structure we use to scope, contract, and operate research-led brand and product programs for museums, labs, universities, and public-sector clients.</p>
+      </header>
+
+      <div class="process-layout">
+        <aside class="process-nav" aria-label="Phase navigation">
+          <ol>
+            <li><a href="#discovery" class="active">Discovery</a></li>
+            <li><a href="#define">Define</a></li>
+            <li><a href="#design">Design</a></li>
+            <li><a href="#develop">Develop</a></li>
+            <li><a href="#deploy">Deploy</a></li>
+            <li><a href="#debrief">Debrief</a></li>
+          </ol>
+
+          <div class="callout callout-teal" style="margin-top: var(--space-6);">
+            <div class="callout-title">Engagement note</div>
+            <p class="text-sm mb-0 text-dim">Phases run sequentially but overlap by roughly 15%. A full program typically spans 18–26 weeks; standalone audits can compress to 4.</p>
+          </div>
+        </aside>
+
+        <section>
+          <!-- PHASE 1 -->
+          <article class="phase" id="discovery">
+            <div class="phase-head">
+              <span class="phase-num">PHASE 01</span>
+              <h2 class="phase-title">Discovery</h2>
+              <span class="phase-duration">3–5 Weeks</span>
+            </div>
+            <div class="phase-meta-row">
+              <span class="pill is-active">Research-led</span>
+              <span class="pill">Stakeholder mapping</span>
+              <span class="pill">Field immersion</span>
+            </div>
+            <p class="phase-intro">We begin by listening. The Discovery phase reconstructs the institution's recent decision history, audience mix, and operational constraints so subsequent strategy is grounded in evidence, not assumption.</p>
+
+            <div class="icon-grid">
+              <div class="icon-cell">
+                <span class="icn">SI</span>
+                <span class="lbl">Stakeholder Interviews</span>
+                <span class="desc">12–20 conversations across leadership, curatorial, and operations.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">AA</span>
+                <span class="lbl">Audience Analysis</span>
+                <span class="desc">Quant segmentation cross-referenced with on-site behaviour.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">CL</span>
+                <span class="lbl">Competitive Landscape</span>
+                <span class="desc">Peer institutions, adjacent sectors, comparable digital products.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">HA</span>
+                <span class="lbl">Heritage Audit</span>
+                <span class="desc">Archive, identity history, and prior strategic work review.</span>
+              </div>
+            </div>
+
+            <div class="outputs-block">
+              <span class="lbl">Outputs</span>
+              <ul class="outputs-list">
+                <li>Discovery report (40–60 pp.)</li>
+                <li>Stakeholder map &amp; quotes book</li>
+                <li>Audience segment briefs</li>
+                <li>Annotated peer landscape</li>
+              </ul>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Client Responsibility</div>
+              <p class="mb-0 text-sm">Provide access to internal stakeholders for interviews (approx. 1 hour each), share prior research and brand artifacts, and nominate a single point-of-contact for scheduling. Plan for ~10 hours of total client time across the phase.</p>
+            </div>
+          </article>
+
+          <!-- PHASE 2 -->
+          <article class="phase" id="define">
+            <div class="phase-head">
+              <span class="phase-num">PHASE 02</span>
+              <h2 class="phase-title">Define</h2>
+              <span class="phase-duration">2–3 Weeks</span>
+            </div>
+            <div class="phase-meta-row">
+              <span class="pill">Strategy</span>
+              <span class="pill">Positioning</span>
+              <span class="pill">Workshop</span>
+            </div>
+            <p class="phase-intro">We translate Discovery findings into a sharp strategic frame — the positioning, principles, and decision criteria that govern every downstream choice. Defined together, defended in writing.</p>
+
+            <div class="icon-grid">
+              <div class="icon-cell">
+                <span class="icn">PS</span>
+                <span class="lbl">Positioning Statement</span>
+                <span class="desc">A single paragraph that survives the next ten years of choices.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">BP</span>
+                <span class="lbl">Brand Principles</span>
+                <span class="desc">5–7 principles, each with a do/don't pair for designers.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">NA</span>
+                <span class="lbl">Narrative Arc</span>
+                <span class="desc">Long-form story that powers admissions, fundraising, and PR.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">SC</span>
+                <span class="lbl">Success Criteria</span>
+                <span class="desc">Measurable signals tied to mission and operations.</span>
+              </div>
+            </div>
+
+            <div class="outputs-block">
+              <span class="lbl">Outputs</span>
+              <ul class="outputs-list">
+                <li>Strategy brief</li>
+                <li>Positioning &amp; principles deck</li>
+                <li>Messaging architecture</li>
+                <li>Success-criteria matrix</li>
+              </ul>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Client Responsibility</div>
+              <p class="mb-0 text-sm">Attend a two-day in-person definition workshop (or two half-day remote sessions) with 6–10 decision-makers. Designate a strategy approver empowered to ratify the positioning by the close of week three.</p>
+            </div>
+          </article>
+
+          <!-- PHASE 3 -->
+          <article class="phase" id="design">
+            <div class="phase-head">
+              <span class="phase-num">PHASE 03</span>
+              <h2 class="phase-title">Design</h2>
+              <span class="phase-duration">5–8 Weeks</span>
+            </div>
+            <div class="phase-meta-row">
+              <span class="pill">Identity</span>
+              <span class="pill">Editorial</span>
+              <span class="pill">Wayfinding</span>
+              <span class="pill">UI</span>
+            </div>
+            <p class="phase-intro">The Design phase resolves the strategic frame into visible, usable form: identity systems, editorial models, environmental graphics, and digital interfaces — each developed against the principles set in Define.</p>
+
+            <div class="icon-grid">
+              <div class="icon-cell">
+                <span class="icn">ID</span>
+                <span class="lbl">Identity System</span>
+                <span class="desc">Mark, type, color, motion logic, and tone-of-voice rules.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">CD</span>
+                <span class="lbl">Component Design</span>
+                <span class="desc">Atomic UI library spec'd for the engineering handoff.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">EL</span>
+                <span class="lbl">Editorial Layouts</span>
+                <span class="desc">Print and web templates anchored to a shared typographic scale.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">PR</span>
+                <span class="lbl">Prototype Reviews</span>
+                <span class="desc">Three formal review gates with documented decisions.</span>
+              </div>
+            </div>
+
+            <div class="outputs-block">
+              <span class="lbl">Outputs</span>
+              <ul class="outputs-list">
+                <li>Identity guidelines (v1)</li>
+                <li>UI component library</li>
+                <li>Template set &amp; specimens</li>
+                <li>Interactive prototype</li>
+              </ul>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Client Responsibility</div>
+              <p class="mb-0 text-sm">Commit to three scheduled review gates with consistent attendees. Consolidate feedback into a single channel within 5 business days of each gate. Avoid mid-phase rescoping — additions land in a clearly logged change list for Phase 04.</p>
+            </div>
+          </article>
+
+          <!-- PHASE 4 -->
+          <article class="phase" id="develop">
+            <div class="phase-head">
+              <span class="phase-num">PHASE 04</span>
+              <h2 class="phase-title">Develop</h2>
+              <span class="phase-duration">4–10 Weeks</span>
+            </div>
+            <div class="phase-meta-row">
+              <span class="pill">Build</span>
+              <span class="pill">CMS</span>
+              <span class="pill">QA</span>
+            </div>
+            <p class="phase-intro">Designs harden into production assets and shipping code. We work in two-week iterations with continuous QA, accessibility checks, and integration into the institution's content and infrastructure environment.</p>
+
+            <div class="icon-grid">
+              <div class="icon-cell">
+                <span class="icn">FE</span>
+                <span class="lbl">Front-End Build</span>
+                <span class="desc">Semantic, accessible markup paired to the component library.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">CM</span>
+                <span class="lbl">CMS Modeling</span>
+                <span class="desc">Editor-friendly content types matched to editorial workflows.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">A11</span>
+                <span class="lbl">Accessibility QA</span>
+                <span class="desc">WCAG 2.2 AA pass with manual screen-reader verification.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">PA</span>
+                <span class="lbl">Production Assets</span>
+                <span class="desc">Print-ready files, environmental specs, motion masters.</span>
+              </div>
+            </div>
+
+            <div class="outputs-block">
+              <span class="lbl">Outputs</span>
+              <ul class="outputs-list">
+                <li>Staging build &amp; release notes</li>
+                <li>CMS schema &amp; editor docs</li>
+                <li>Accessibility audit report</li>
+                <li>Print &amp; environmental files</li>
+              </ul>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Client Responsibility</div>
+              <p class="mb-0 text-sm">Provide hosting credentials and technical liaison by week one. Supply final copy and image rights at least two weeks before launch. Designate a UAT lead to coordinate testers and triage tickets through the staging period.</p>
+            </div>
+          </article>
+
+          <!-- PHASE 5 -->
+          <article class="phase" id="deploy">
+            <div class="phase-head">
+              <span class="phase-num">PHASE 05</span>
+              <h2 class="phase-title">Deploy</h2>
+              <span class="phase-duration">1–2 Weeks</span>
+            </div>
+            <div class="phase-meta-row">
+              <span class="pill">Launch</span>
+              <span class="pill">Rollout</span>
+              <span class="pill">Training</span>
+            </div>
+            <p class="phase-intro">Launch is a coordinated event, not an upload. We sequence go-live with content, communications, and operational readiness so the institution's internal teams are equipped to run the new system from day one.</p>
+
+            <div class="icon-grid">
+              <div class="icon-cell">
+                <span class="icn">RP</span>
+                <span class="lbl">Rollout Plan</span>
+                <span class="desc">Timed cutover sequence with rollback contingency.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">TR</span>
+                <span class="lbl">Team Training</span>
+                <span class="desc">Two sessions for editors, designers, and comms staff.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">LC</span>
+                <span class="lbl">Launch Comms</span>
+                <span class="desc">Internal memo kit and external press-ready materials.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">MN</span>
+                <span class="lbl">Monitoring</span>
+                <span class="desc">Two-week stabilization window with daily check-ins.</span>
+              </div>
+            </div>
+
+            <div class="outputs-block">
+              <span class="lbl">Outputs</span>
+              <ul class="outputs-list">
+                <li>Production launch</li>
+                <li>Training recordings &amp; manuals</li>
+                <li>Launch communications kit</li>
+                <li>Stabilization log</li>
+              </ul>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Client Responsibility</div>
+              <p class="mb-0 text-sm">Free the internal team for two days of training during launch week. Coordinate cross-departmental announcements through your communications office. Plan for a moratorium on non-critical content changes for the first 10 days post-launch.</p>
+            </div>
+          </article>
+
+          <!-- PHASE 6 -->
+          <article class="phase" id="debrief">
+            <div class="phase-head">
+              <span class="phase-num">PHASE 06</span>
+              <h2 class="phase-title">Debrief</h2>
+              <span class="phase-duration">2 Weeks</span>
+            </div>
+            <div class="phase-meta-row">
+              <span class="pill">Measurement</span>
+              <span class="pill">Retrospective</span>
+              <span class="pill">Handover</span>
+            </div>
+            <p class="phase-intro">We close every engagement with a structured retrospective: what shipped, what shifted, what we learned, and what the institution should watch for in the months ahead. Debrief converts a project into institutional memory.</p>
+
+            <div class="icon-grid">
+              <div class="icon-cell">
+                <span class="icn">PM</span>
+                <span class="lbl">Performance Metrics</span>
+                <span class="desc">Baseline vs. post-launch readings against Phase 02 criteria.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">RE</span>
+                <span class="lbl">Retrospective</span>
+                <span class="desc">Joint review with the working group, written and signed.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">RM</span>
+                <span class="lbl">Roadmap</span>
+                <span class="desc">12-month optimization plan with owners and budgets.</span>
+              </div>
+              <div class="icon-cell">
+                <span class="icn">HO</span>
+                <span class="lbl">Handover Pack</span>
+                <span class="desc">Source files, repositories, contacts, license registry.</span>
+              </div>
+            </div>
+
+            <div class="outputs-block">
+              <span class="lbl">Outputs</span>
+              <ul class="outputs-list">
+                <li>Post-launch report</li>
+                <li>Retrospective document</li>
+                <li>12-month roadmap</li>
+                <li>Complete handover archive</li>
+              </ul>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Client Responsibility</div>
+              <p class="mb-0 text-sm">Attend the closing retrospective (half day) and ratify the 12-month roadmap. Nominate an internal steward to own the handover archive. Optional: agree a quarterly check-in cadence for the year following launch.</p>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <!-- COMPARISON TABLE -->
+      <h2 class="section-heading">Phase comparison at a glance<span class="kicker" style="margin-top:0;margin-bottom:8px;">SUMMARY · ALL SIX PHASES</span></h2>
+      <p class="text-dim" style="max-width: 70ch;">A side-by-side reading of how the six phases differ in cadence, team load, and risk. Use this as a scoping aid during early conversations — actual figures are tuned per engagement.</p>
+
+      <div class="compare-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>Duration</th>
+              <th>Studio Team</th>
+              <th>Client Hours / Wk</th>
+              <th>Primary Output</th>
+              <th>Risk Profile</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>01 · Discovery</td>
+              <td class="num">3–5 wks</td>
+              <td>Strategist, Researcher</td>
+              <td class="num">4–6</td>
+              <td>Discovery report</td>
+              <td>Low</td>
+            </tr>
+            <tr>
+              <td>02 · Define</td>
+              <td class="num">2–3 wks</td>
+              <td>Strategist, Creative Dir.</td>
+              <td class="num">6–8</td>
+              <td>Strategy brief</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td>03 · Design</td>
+              <td class="num">5–8 wks</td>
+              <td>Designers, Creative Dir.</td>
+              <td class="num">3–5</td>
+              <td>Identity &amp; UI system</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td>04 · Develop</td>
+              <td class="num">4–10 wks</td>
+              <td>Engineers, QA, Designer</td>
+              <td class="num">2–4</td>
+              <td>Production build</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td>05 · Deploy</td>
+              <td class="num">1–2 wks</td>
+              <td>Full team on call</td>
+              <td class="num">8–10</td>
+              <td>Launch &amp; training</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td>06 · Debrief</td>
+              <td class="num">2 wks</td>
+              <td>Strategist, Project Lead</td>
+              <td class="num">2–3</td>
+              <td>Retro &amp; roadmap</td>
+              <td>Low</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-teal" style="margin-top: var(--space-7);">
+        <div class="callout-title">Want a tailored phase plan?</div>
+        <p class="mb-0">Most engagements modify two or three phases substantially. Tell us about the institution and timeline and we'll send back a scoped, phased proposal within ten working days. <a href="../contact/index.html">Start an enquiry →</a></p>
+      </div>
+
+      <footer class="footer">
+        <div>
+          <div class="brand"><span class="brand-mark"></span>Oblique Flux Studio</div>
+          <p class="text-sm text-dim" style="max-width: 36ch; margin-top: var(--space-3);">A boutique brand strategy and digital experience agency for science, technology, and cultural institutions.</p>
+        </div>
+        <div>
+          <h6>Navigate</h6>
+          <ul>
+            <li><a href="../work/index.html">Work</a></li>
+            <li><a href="../services/index.html">Services</a></li>
+            <li><a href="../studio/index.html">Studio</a></li>
+            <li><a href="#">Process</a></li>
+            <li><a href="../contact/index.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h6>Offices</h6>
+          <ul class="text-sm">
+            <li>New York · UTC−5</li>
+            <li>Berlin · UTC+1</li>
+            <li>Melbourne · UTC+11</li>
+          </ul>
+        </div>
+        <div>
+          <h6>Elsewhere</h6>
+          <ul class="text-sm">
+            <li><a href="#">Are.na</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-legal">
+          <span>© 2024 Oblique Flux Studio</span>
+          <span>Method document · v4.2</span>
+        </div>
+      </footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>

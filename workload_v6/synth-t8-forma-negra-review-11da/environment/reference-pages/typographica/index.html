@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Typographica — Forma Negra Review Vol. 12</title>
+<style>
+  /* page-unique overrides only */
+  .hero-three{position:relative;background:var(--ink);color:var(--bg);padding:var(--s6) var(--s5);min-height:560px;display:grid;grid-template-columns:1fr 1fr;gap:var(--s5);align-items:center;overflow:hidden}
+  .hero-three .numeral-3{font-family:var(--serif);font-weight:700;font-size:240px;line-height:0.9;color:var(--yellow);position:relative;text-align:center}
+  .hero-three .anatomy-key{font-family:var(--mono);font-size:var(--fs-mono);color:var(--bg);text-transform:uppercase;letter-spacing:0.12em;line-height:1.8}
+  .hero-three .anatomy-key li{padding:6px 0;border-bottom:1px solid rgba(245,242,236,0.15);display:grid;grid-template-columns:32px 1fr;gap:var(--s2)}
+  .hero-three .anatomy-key li b{color:var(--yellow);font-weight:700}
+  .hero-three .anatomy-svg{width:100%;height:auto;max-width:480px;margin:0 auto;display:block}
+
+  .layout-typo-page{display:grid;grid-template-columns:200px 1fr;gap:var(--gutter-inner);padding:var(--s5) 0}
+  @media (max-width:1024px){.layout-typo-page{grid-template-columns:160px 1fr}}
+  @media (max-width:640px){
+    .layout-typo-page{grid-template-columns:1fr;padding:var(--s3) 0}
+    .hero-three{grid-template-columns:1fr;padding:var(--s4) var(--s3);min-height:auto}
+    .hero-three .numeral-3{font-size:140px}
+  }
+
+  .spec-row{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gutter-inner);margin-top:var(--s4)}
+  @media (max-width:1024px){.spec-row{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:640px){.spec-row{grid-template-columns:1fr}}
+
+  .face-label{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:var(--s2);margin-bottom:var(--s3)}
+  .face-label .num{font-family:var(--mono);font-size:48px;font-weight:700;color:var(--rust);line-height:1}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="../cover/index.html" class="logo">Forma Negra<span class="dot">.</span> Review</a>
+    <ul>
+      <li><a href="../cover/index.html">Cover</a></li>
+      <li><a href="../feature/index.html">Feature</a></li>
+      <li><a href="../critique/index.html">Critique</a></li>
+      <li><a href="../typographica/index.html">Typographica</a></li>
+      <li><a href="../archive/index.html">Archive</a></li>
+    </ul>
+    <span class="issue-tag">Vol. 12 / Friction</span>
+  </div>
+</nav>
+
+<!-- HERO: numeral 3 with anatomy callouts -->
+<section class="hero hero-three full-bleed">
+  <div>
+    <div class="eyebrow" style="color:var(--yellow)">Typographica · Anatomy Plate Nº 03</div>
+    <svg class="anatomy-svg" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- numeral 3 painted as text for crispness -->
+      <text x="240" y="360" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="380" fill="#D4E04A">3</text>
+      <!-- 7 callout lines & dots -->
+      <g stroke="#F5F2EC" stroke-width="1" fill="none">
+        <!-- cap height -->
+        <line x1="60" y1="80" x2="180" y2="120"/>
+        <circle cx="60" cy="80" r="3" fill="#C4421A" stroke="none"/>
+        <!-- x-height -->
+        <line x1="40" y1="200" x2="170" y2="220"/>
+        <circle cx="40" cy="200" r="3" fill="#C4421A" stroke="none"/>
+        <!-- descender -->
+        <line x1="50" y1="420" x2="200" y2="380"/>
+        <circle cx="50" cy="420" r="3" fill="#C4421A" stroke="none"/>
+        <!-- serif bracket -->
+        <line x1="420" y1="380" x2="320" y2="360"/>
+        <circle cx="420" cy="380" r="3" fill="#C4421A" stroke="none"/>
+        <!-- counter -->
+        <line x1="440" y1="240" x2="290" y2="240"/>
+        <circle cx="440" cy="240" r="3" fill="#C4421A" stroke="none"/>
+        <!-- stem -->
+        <line x1="440" y1="140" x2="310" y2="160"/>
+        <circle cx="440" cy="140" r="3" fill="#C4421A" stroke="none"/>
+        <!-- ink trap -->
+        <line x1="40" y1="320" x2="195" y2="300"/>
+        <circle cx="40" cy="320" r="3" fill="#C4421A" stroke="none"/>
+      </g>
+      <!-- corner ticks -->
+      <g stroke="#F5F2EC" stroke-width="1">
+        <line x1="8" y1="8" x2="32" y2="8"/><line x1="8" y1="8" x2="8" y2="32"/>
+        <line x1="472" y1="8" x2="448" y2="8"/><line x1="472" y1="8" x2="472" y2="32"/>
+        <line x1="8" y1="472" x2="32" y2="472"/><line x1="8" y1="472" x2="8" y2="448"/>
+        <line x1="472" y1="472" x2="448" y2="472"/><line x1="472" y1="472" x2="472" y2="448"/>
+      </g>
+    </svg>
+  </div>
+  <div>
+    <div class="h2" style="color:var(--bg);font-family:var(--serif);margin-bottom:var(--s3)">Seven landmarks of a single glyph.</div>
+    <ol class="anatomy-key">
+      <li><b>01</b> Cap height — uppercase ceiling, 700 units</li>
+      <li><b>02</b> x-height — lowercase mean, 510 units</li>
+      <li><b>03</b> Descender — depth below baseline, 200 u</li>
+      <li><b>04</b> Serif bracket — transitional curvature</li>
+      <li><b>05</b> Counter — enclosed negative space</li>
+      <li><b>06</b> Stem — primary vertical stroke</li>
+      <li><b>07</b> Ink trap — concavity for press gain</li>
+    </ol>
+  </div>
+</section>
+
+<div class="container">
+  <div class="layout-typo-page">
+
+    <!-- LEFT STICKY SIDEBAR: GLOSSARY -->
+    <aside class="sidebar sticky">
+      <h4>Glossary · 18 terms</h4>
+      <ul class="glossary">
+        <li><b>Aperture</b>Opening of a partially enclosed counter.</li>
+        <li><b>Apex</b>Top junction of two strokes, as in /A.</li>
+        <li><b>Ascender</b>Stroke rising above x-height.</li>
+        <li><b>Bowl</b>Curved stroke enclosing a counter.</li>
+        <li><b>Bracket</b>Curve joining serif to stem.</li>
+        <li><b>Counter</b>Negative space within a glyph.</li>
+        <li><b>Crossbar</b>Horizontal stroke spanning two stems.</li>
+        <li><b>Descender</b>Stroke dropping below baseline.</li>
+        <li><b>Ear</b>Small projection from the bowl of /g.</li>
+        <li><b>Finial</b>Tapered terminal of a stroke.</li>
+        <li><b>Ink trap</b>Concavity compensating for spread.</li>
+        <li><b>Kerning</b>Pair-specific letterfit adjustment.</li>
+        <li><b>Ligature</b>Glyph joining two characters.</li>
+        <li><b>Spur</b>Small projection at stroke base.</li>
+        <li><b>Stem</b>Primary vertical or diagonal stroke.</li>
+        <li><b>Stress</b>Axis of contrast in curved strokes.</li>
+        <li><b>Terminal</b>Stroke end without a serif.</li>
+        <li><b>x-height</b>Height of lowercase /x.</li>
+      </ul>
+    </aside>
+
+    <!-- MAIN COLUMN: 3 SPECIMEN BANDS -->
+    <main>
+
+      <div class="section-head">
+        <span class="label">Specimen Files · Three Faces</span>
+        <span class="count">003 / 003</span>
+      </div>
+
+      <!-- SPECIMEN 1: Akzidenz-Grotesk -->
+      <section class="specimen">
+        <div class="face-label">
+          <div>
+            <div class="name">Specimen 01 — Akzidenz-Grotesk</div>
+            <div class="caption">Berthold, Berlin · Industrial grotesque · System substitute: Helvetica</div>
+          </div>
+          <div class="num">01</div>
+        </div>
+        <div class="face-akzidenz">
+          <div class="alpha">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div>
+          <div class="pangram">The quick brown fox jumps over the lazy printer's devil at dawn.</div>
+          <div class="numerals">0 1 2 3 4 5 6 7 8 9 &nbsp; &amp; · § ¶ № @</div>
+        </div>
+        <div class="spec-row">
+          <div class="stat-card"><div class="label">Designer</div><div class="h3" style="margin-top:var(--s1)">Ferdinand<br>Theinhardt</div></div>
+          <div class="stat-card"><div class="label">Year</div><div class="num" style="font-family:var(--serif);font-weight:700;font-size:var(--fs-h1);color:var(--rust)">1898</div></div>
+          <div class="stat-card"><div class="label">Classification</div><div class="h3" style="margin-top:var(--s1)">Grotesque<br>Sans-Serif</div></div>
+          <div class="stat-card"><div class="label">Optical Range</div><div class="h3" style="margin-top:var(--s1)">6 — 96 pt</div></div>
+        </div>
+        <table class="spec-table mt-4">
+          <thead><tr><th>Attribute</th><th>Weight Axis</th><th>Width Axis</th><th>Recommended Pairing</th><th>Use Cases</th></tr></thead>
+          <tbody>
+            <tr><td>Stress</td><td class="mono">Light → Super</td><td class="mono">Cond. → Extd.</td><td>Plantin / Baskerville</td><td>Signage, editorial decks</td></tr>
+            <tr><td>x-height</td><td class="mono">Medium-tall</td><td class="mono">Even</td><td>Adobe Caslon</td><td>Corporate identity</td></tr>
+            <tr><td>Terminals</td><td class="mono">Horizontal</td><td class="mono">Cut flat</td><td>Sabon</td><td>Wayfinding</td></tr>
+            <tr><td>Counter</td><td class="mono">Open</td><td class="mono">Generous</td><td>Mercury Text</td><td>Tabular data</td></tr>
+            <tr><td>Spacing</td><td class="mono">Tight default</td><td class="mono">Equal</td><td>Times New Roman</td><td>Posters, broadsheet</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SPECIMEN 2: Plantin -->
+      <section class="specimen mt-5">
+        <div class="face-label">
+          <div>
+            <div class="name">Specimen 02 — Plantin</div>
+            <div class="caption">Monotype, 1913 · Old-style serif · System substitute: Georgia</div>
+          </div>
+          <div class="num">02</div>
+        </div>
+        <div class="face-plantin">
+          <div class="alpha">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div>
+          <div class="pangram">Sphinx of black quartz, judge my vow — twelve pica ems hold.</div>
+          <div class="numerals">0 1 2 3 4 5 6 7 8 9 &nbsp; &amp; · § ¶ № @</div>
+        </div>
+        <div class="spec-row">
+          <div class="stat-card"><div class="label">Designer</div><div class="h3" style="margin-top:var(--s1)">Frank Hinman<br>Pierpont</div></div>
+          <div class="stat-card"><div class="label">Year</div><div class="num" style="font-family:var(--serif);font-weight:700;font-size:var(--fs-h1);color:var(--rust)">1913</div></div>
+          <div class="stat-card"><div class="label">Classification</div><div class="h3" style="margin-top:var(--s1)">Transitional<br>Serif</div></div>
+          <div class="stat-card"><div class="label">Optical Range</div><div class="h3" style="margin-top:var(--s1)">8 — 72 pt</div></div>
+        </div>
+        <table class="spec-table mt-4">
+          <thead><tr><th>Attribute</th><th>Weight Axis</th><th>Width Axis</th><th>Recommended Pairing</th><th>Use Cases</th></tr></thead>
+          <tbody>
+            <tr><td>Stress</td><td class="mono">Vertical</td><td class="mono">Regular only</td><td>Akzidenz-Grotesk</td><td>Book interiors</td></tr>
+            <tr><td>x-height</td><td class="mono">Tall</td><td class="mono">Wide bowl</td><td>Univers 55</td><td>Long-form essay</td></tr>
+            <tr><td>Terminals</td><td class="mono">Bracketed</td><td class="mono">Sturdy</td><td>News Gothic</td><td>Reference works</td></tr>
+            <tr><td>Counter</td><td class="mono">Compact</td><td class="mono">Slight cup</td><td>Helvetica Neue</td><td>Captions, legal</td></tr>
+            <tr><td>Spacing</td><td class="mono">Loose at text</td><td class="mono">Generous</td><td>Eurostile</td><td>Annual reports</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SPECIMEN 3: Eurostile -->
+      <section class="specimen mt-5">
+        <div class="face-label">
+          <div>
+            <div class="name">Specimen 03 — Eurostile</div>
+            <div class="caption">Nebiolo, 1962 · Square sans-serif · System substitute: Trebuchet MS</div>
+          </div>
+          <div class="num">03</div>
+        </div>
+        <div class="face-eurostile">
+          <div class="alpha">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div>
+          <div class="pangram">Pack my box with five dozen liquor jugs — fixed pitch yields.</div>
+          <div class="numerals">0 1 2 3 4 5 6 7 8 9 &nbsp; &amp; · § ¶ № @</div>
+        </div>
+        <div class="spec-row">
+          <div class="stat-card"><div class="label">Designer</div><div class="h3" style="margin-top:var(--s1)">Aldo<br>Novarese</div></div>
+          <div class="stat-card"><div class="label">Year</div><div class="num" style="font-family:var(--serif);font-weight:700;font-size:var(--fs-h1);color:var(--rust)">1962</div></div>
+          <div class="stat-card"><div class="label">Classification</div><div class="h3" style="margin-top:var(--s1)">Square<br>Sans-Serif</div></div>
+          <div class="stat-card"><div class="label">Optical Range</div><div class="h3" style="margin-top:var(--s1)">10 — 144 pt</div></div>
+        </div>
+        <table class="spec-table mt-4">
+          <thead><tr><th>Attribute</th><th>Weight Axis</th><th>Width Axis</th><th>Recommended Pairing</th><th>Use Cases</th></tr></thead>
+          <tbody>
+            <tr><td>Stress</td><td class="mono">None</td><td class="mono">Extended only</td><td>Plantin</td><td>Cinematic titling</td></tr>
+            <tr><td>x-height</td><td class="mono">Very tall</td><td class="mono">Squared bowl</td><td>Garamond</td><td>Aerospace, tech</td></tr>
+            <tr><td>Terminals</td><td class="mono">Right-angled</td><td class="mono">Mechanical</td><td>Caslon</td><td>Industrial signage</td></tr>
+            <tr><td>Counter</td><td class="mono">Rectilinear</td><td class="mono">Wide</td><td>Bembo</td><td>Display, packaging</td></tr>
+            <tr><td>Spacing</td><td class="mono">Architectural</td><td class="mono">Loose</td><td>Bodoni</td><td>Sci-fi, transport</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Decorative SVG divider -->
+      <svg class="divider-svg" viewBox="0 0 1200 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <line x1="0" y1="12" x2="1200" y2="12" stroke="#1A1814" stroke-width="2"/>
+        <circle cx="200" cy="12" r="4" fill="#C4421A"/>
+        <circle cx="600" cy="12" r="4" fill="#D4E04A" stroke="#1A1814"/>
+        <circle cx="1000" cy="12" r="4" fill="#4A5568"/>
+        <rect x="595" y="0" width="10" height="24" fill="#F5F2EC" stroke="#1A1814"/>
+      </svg>
+
+      <!-- PULL QUOTE -->
+      <blockquote class="pullquote pullquote-display mt-5">
+        “Perfect typography is certainly the most elusive of all arts. Sculpture in stone alone comes near it in obstinacy.”
+        <cite>— Jan Tschichold, 1948</cite>
+      </blockquote>
+
+    </main>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="issue-index">
+      <div class="col">
+        <h5>Editorial</h5>
+        <ul>
+          <li>Cover Essays <span class="num">06</span></li>
+          <li>Features <span class="num">12</span></li>
+          <li>Critiques <span class="num">09</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Typography</h5>
+        <ul>
+          <li>Specimens <span class="num">14</span></li>
+          <li>Histories <span class="num">07</span></li>
+          <li>Glossary <span class="num">18</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Material</h5>
+        <ul>
+          <li>Paperworks <span class="num">05</span></li>
+          <li>Print Process <span class="num">08</span></li>
+          <li>Bindings <span class="num">04</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Spatial</h5>
+        <ul>
+          <li>Signage <span class="num">06</span></li>
+          <li>Exhibition <span class="num">10</span></li>
+          <li>Wayfinding <span class="num">03</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Archive</h5>
+        <ul>
+          <li>Volumes <span class="num">12</span></li>
+          <li>Contributors <span class="num">86</span></li>
+          <li>Letters <span class="num">21</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-mark">
+      <span class="logotype">Forma Negra Review</span>
+      <span>Vol. 12 · Friction · MMXXIV</span>
+      <span>ISSN 2104-8821</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

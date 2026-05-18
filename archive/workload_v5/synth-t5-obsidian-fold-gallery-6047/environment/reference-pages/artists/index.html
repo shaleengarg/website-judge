@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artists — Obsidian Fold</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    background: #1a1a1a;
+    color: #f0ede6;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ============ NAV ============ */
+  .topbar {
+    border-bottom: 1px solid #3a3a3a;
+    background: #1a1a1a;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+  }
+  .brand span { color: #c0512f; }
+  .brand small {
+    display: block;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8070;
+    margin-top: 2px;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #f0ede6;
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+  }
+  nav a.active { border-bottom-color: #c0512f; color: #d4af6e; }
+
+  /* ============ MASTER GRID ============ */
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 32px 96px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 200px 680px 280px;
+    column-gap: 24px;
+  }
+
+  /* ============ PAGE HEADER ============ */
+  .page-header { margin-bottom: 64px; }
+  .page-header .marg {
+    grid-column: 1;
+  }
+  .page-header .main {
+    grid-column: 2;
+  }
+  .page-header .side {
+    grid-column: 3;
+  }
+  .eyebrow {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c0512f;
+    margin-bottom: 18px;
+  }
+  h1.display {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 4.8rem;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+  }
+  h1.display em { color: #d4af6e; font-style: italic; font-weight: 400; }
+  .page-h1 {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 3rem;
+    line-height: 1.1;
+    color: #f0ede6;
+    margin-bottom: 24px;
+  }
+  .intro {
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    color: #cfc8b8;
+    max-width: 560px;
+  }
+
+  /* ============ MARGINALIA ============ */
+  .marginalia {
+    grid-column: 1;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: #8a8070;
+    line-height: 1.9;
+    text-transform: uppercase;
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+  .marginalia .ordinal {
+    font-family: Georgia, serif;
+    font-size: 4.8rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+    text-transform: none;
+  }
+  .marginalia .label {
+    display: block;
+    margin-bottom: 8px;
+    color: #d4af6e;
+    font-weight: 600;
+  }
+  .marginalia p { margin-bottom: 16px; }
+
+  /* ============ ARTIST BAND ============ */
+  .artist {
+    border-top: 1px solid #3a3a3a;
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  .artist:last-of-type { border-bottom: 1px solid #3a3a3a; }
+
+  .artist .main { grid-column: 2; }
+  .artist .side { grid-column: 3; }
+
+  .artist-inner {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+  }
+
+  /* Bio column */
+  .bio .portrait {
+    width: 100%;
+    aspect-ratio: 4/5;
+    margin-bottom: 18px;
+    border-radius: 2px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 14px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,237,230,0.5);
+  }
+  .p-holt { background: linear-gradient(135deg, #2a2a2a 0%, #c0512f 100%); }
+  .p-bae  { background: linear-gradient(150deg, #1a1a1a 0%, #d4af6e 75%, #c0512f 100%); }
+  .p-vael { background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 60%, #c0512f 100%); }
+  .p-menon{ background: linear-gradient(120deg, #d4af6e 0%, #2a2a2a 50%, #c0512f 100%); }
+
+  .bio dl {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    line-height: 1.9;
+    letter-spacing: 0.12em;
+    color: #8a8070;
+    text-transform: uppercase;
+  }
+  .bio dt {
+    color: #d4af6e;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  .bio dd { color: #cfc8b8; font-weight: 300; }
+
+  /* Statement column */
+  .statement h2 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.875rem;
+    line-height: 1.1;
+    color: #f0ede6;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .byline {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c0512f;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #3a3a3a;
+  }
+  .byline span { color: #8a8070; font-weight: 300; }
+  .lead {
+    margin-bottom: 22px;
+  }
+  .lead::first-letter {
+    font-size: 4rem;
+    float: left;
+    font-weight: 700;
+    color: #c0512f;
+    line-height: 0.8;
+    margin-right: 6px;
+    font-family: Georgia, serif;
+  }
+  .statement p { margin-bottom: 18px; }
+
+  .pullquote {
+    font-family: Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #d4af6e;
+    border-left: 4px solid #c0512f;
+    padding-left: 1.5rem;
+    margin: 36px 0 36px -48px;
+    line-height: 1.25;
+  }
+  .pullquote cite {
+    display: block;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8070;
+    margin-top: 16px;
+    font-family: system-ui, sans-serif;
+  }
+
+  /* ============ SIDEBAR ============ */
+  .sidebar {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+    padding-left: 18px;
+    border-left: 1px solid #3a3a3a;
+  }
+  .sidebar h3 {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #d4af6e;
+    margin-bottom: 14px;
+  }
+  .sidebar .sb-h3 {
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #f0ede6;
+    margin: 28px 0 10px;
+  }
+  .award-list { list-style: none; }
+  .award-list li {
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #cfc8b8;
+    padding: 10px 0;
+    border-bottom: 1px dotted #2a2a2a;
+  }
+  .award-list .yr {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: #c0512f;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .small-note {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    line-height: 1.9;
+    color: #8a8070;
+    text-transform: uppercase;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #3a3a3a;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    border-top: 1px solid #3a3a3a;
+    margin-top: 64px;
+    background: #141414;
+  }
+  .foot-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 56px 32px 40px;
+    display: grid;
+    grid-template-columns: 200px 680px 280px;
+    column-gap: 24px;
+  }
+  .foot-brand {
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #d4af6e;
+  }
+  .foot-brand small {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: #8a8070;
+    text-transform: uppercase;
+    font-weight: 300;
+    margin-top: 6px;
+  }
+  .foot-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #cfc8b8;
+  }
+  .foot-cols h4 {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: #c0512f;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .foot-meta {
+    text-align: right;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: #8a8070;
+    text-transform: uppercase;
+    line-height: 1.9;
+  }
+  .foot-rule {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 32px;
+    border-top: 1px solid #2a2a2a;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8070;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .foot-rule .gold { color: #d4af6e; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1180px) {
+    .grid, .foot-inner {
+      grid-template-columns: 160px 1fr 240px;
+    }
+    .artist-inner { grid-template-columns: 220px 1fr; gap: 28px; }
+    h1.display { font-size: 4rem; }
+  }
+  @media (max-width: 900px) {
+    .grid, .foot-inner {
+      grid-template-columns: 140px 1fr;
+    }
+    .page-header .side,
+    .artist .side {
+      grid-column: 1 / -1;
+      margin-top: 32px;
+      padding-left: 0;
+      border-left: none;
+      border-top: 1px solid #3a3a3a;
+      padding-top: 24px;
+      position: static;
+    }
+    .marginalia { position: static; }
+    .pullquote { margin-left: -32px; }
+    h1.display { font-size: 3.4rem; }
+  }
+  @media (max-width: 640px) {
+    .page { padding: 40px 20px 64px; }
+    .topbar-inner { padding: 18px 20px; gap: 14px; }
+    nav ul { gap: 16px; }
+    .grid, .foot-inner {
+      grid-template-columns: 64px 1fr;
+      column-gap: 16px;
+    }
+    .marginalia .ordinal { font-size: 3rem; }
+    .marginalia { font-size: 0.65rem; }
+    .artist-inner { grid-template-columns: 1fr; gap: 24px; }
+    .bio .portrait { aspect-ratio: 3/2; }
+    h1.display { font-size: 2.6rem; }
+    .page-h1 { font-size: 2rem; }
+    .pullquote { font-size: 1.3rem; margin-left: -16px; padding-left: 1rem; }
+    .statement h2 { font-size: 1.5rem; }
+    .foot-cols { grid-template-columns: 1fr; gap: 20px; }
+    .foot-meta { text-align: left; margin-top: 20px; }
+    .foot-inner { padding: 40px 20px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      Obsidian <span>Fold</span>
+      <small>Rotterdam · Print Gallery</small>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../manifesto/index.html">Manifesto</a></li>
+        <li><a href="../collection/index.html">Collection</a></li>
+        <li><a href="#" class="active">Artists</a></li>
+        <li><a href="../catalogue/index.html">Catalogue</a></li>
+        <li><a href="../visit/index.html">Visit</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ============ HEADER ============ -->
+  <section class="grid page-header">
+    <aside class="marginalia">
+      <span class="label">Roster · 2024</span>
+      <p>§ Four printmakers<br>working across<br>risograph & letterpress.</p>
+      <p>§ Profiles compiled<br>from artist statements,<br>edited for length.</p>
+      <p>Updated 04.iii.2024</p>
+    </aside>
+    <div class="main">
+      <div class="eyebrow">Section 03 — The Hand &amp; The Press</div>
+      <h1 class="display">Four <em>makers</em>, four pressures.</h1>
+      <p class="intro">The artists currently represented by Obsidian Fold work at the threshold of pigment and paper. Each profile below records a practice in its own register — geographies, materials, and the marks left by patient repetition.</p>
+    </div>
+    <aside class="sidebar">
+      <h3>Awards &amp; Residencies</h3>
+      <p class="small-note" style="margin-top:0;border-top:0;padding-top:0;">A running ledger of recognitions accrued by the four artists profiled on this page.</p>
+    </aside>
+  </section>
+
+  <!-- ============ ARTIST 01 — MAREN HOLT ============ -->
+  <section class="grid artist">
+    <aside class="marginalia">
+      <div class="ordinal">01</div>
+      <span class="label">Holt · NO</span>
+      <p>Cross-ref:<br>Cat. III, pp.&nbsp;14–27</p>
+      <p>Medium:<br>Risograph, 4-pass</p>
+      <p>See also §2,<br>Manifesto</p>
+    </aside>
+
+    <div class="main">
+      <div class="artist-inner">
+        <div class="bio">
+          <div class="portrait p-holt">Portrait — M. Holt, Bergen, 2023</div>
+          <dl>
+            <dt>Born</dt><dd>1984, Tromsø</dd>
+            <dt>Lives</dt><dd>Bergen, Norway</dd>
+            <dt>Studio</dt><dd>Gamle Bergen, riso</dd>
+            <dt>Represented since</dt><dd>2019</dd>
+          </dl>
+        </div>
+        <div class="statement">
+          <h2>Maren Holt</h2>
+          <div class="byline">Norway &nbsp;·&nbsp; <span>Risograph &amp; salt-bleached pigment on Hahnemühle</span></div>
+          <p class="lead">Holt works at the slow end of process. Her risographs are pulled in editions of fifteen across four ink passes, each layer cured for forty-eight hours before the next is registered. The work that emerges is less an image than a deposition — strata of fluorescent rose, federal blue, and the brown that occurs only when two of her chosen inks fail to settle.</p>
+          <p>For Holt, registration error is not a flaw to be designed around but a record of weather. Her Bergen studio is unheated until October; the paper expands and contracts with the harbour fog, and the press records this as a soft halo at every edge.</p>
+          <blockquote class="pullquote">
+            “I have stopped apologising for the misalignment. The misalignment is the year the print was made.”
+            <cite>— Maren Holt, in conversation, 2023</cite>
+          </blockquote>
+          <p>Her current series, <em>Saltvann</em>, was produced over fourteen months and exists in two states: an edition pulled in summer light and a winter counterpart printed on the same plates. Shown side by side, they describe a year in the life of a single sheet.</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <h3>Holt — Recognitions</h3>
+      <ul class="award-list">
+        <li><span class="yr">2023</span>Nordic Print Triennial, Gold Medal — Reykjavík</li>
+        <li><span class="yr">2022</span>Frans Masereel Centrum, Residency — Kasterlee</li>
+        <li><span class="yr">2020</span>Statens Kunstfond Working Grant</li>
+        <li><span class="yr">2018</span>Bergen Kunsthall, Solo Exhibition</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ ARTIST 02 — SOO-JIN BAE ============ -->
+  <section class="grid artist">
+    <aside class="marginalia">
+      <div class="ordinal">02</div>
+      <span class="label">Bae · KR</span>
+      <p>Cross-ref:<br>Cat. III, pp.&nbsp;28–41</p>
+      <p>Medium:<br>Letterpress, polymer plate</p>
+      <p>See also §4,<br>Manifesto</p>
+    </aside>
+
+    <div class="main">
+      <div class="artist-inner">
+        <div class="bio">
+          <div class="portrait p-bae">Portrait — S-J. Bae, Seoul, 2024</div>
+          <dl>
+            <dt>Born</dt><dd>1979, Daegu</dd>
+            <dt>Lives</dt><dd>Seoul, South Korea</dd>
+            <dt>Studio</dt><dd>Mapo, Vandercook SP-15</dd>
+            <dt>Represented since</dt><dd>2021</dd>
+          </dl>
+        </div>
+        <div class="statement">
+          <h2>Soo-Jin Bae</h2>
+          <div class="byline">South Korea &nbsp;·&nbsp; <span>Letterpress on kozo, polymer &amp; metal type</span></div>
+          <p class="lead">Bae sets her own type. She has milled three full-pica fonts from cherrywood and is currently working a fourth in poplar. Her prints are typographic but rarely legible; words are pressed deep into damp kozo until they pass through to the verso, becoming relief on one side and impression on the other. The viewer is asked to choose a face.</p>
+          <p>Influences arrive through translation. Bae has spoken of hanji as a substrate that refuses haste — a sheet that punishes pressure misapplied — and her practice has come to depend on that punishment.</p>
+          <blockquote class="pullquote">
+            “A letter that does not bruise the paper has not committed to being read.”
+            <cite>— Soo-Jin Bae, artist's notes, 2024</cite>
+          </blockquote>
+          <p>Recent works incorporate fragments of pre-modern Korean ledgers; the printed verso of one suggests an inventory of millet, the recto a love letter. Bae will not say which is the source.</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <h3>Bae — Recognitions</h3>
+      <ul class="award-list">
+        <li><span class="yr">2024</span>Seoul Museum of Art, Acquisition</li>
+        <li><span class="yr">2023</span>Hangul Foundation Type Design Prize</li>
+        <li><span class="yr">2022</span>Awagami Factory, Residency — Tokushima</li>
+        <li><span class="yr">2021</span>Korean Letterpress Society, Honorary Member</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ ARTIST 03 — DARIUS VAEL ============ -->
+  <section class="grid artist">
+    <aside class="marginalia">
+      <div class="ordinal">03</div>
+      <span class="label">Vael · BE</span>
+      <p>Cross-ref:<br>Cat. III, pp.&nbsp;42–55</p>
+      <p>Medium:<br>Risograph + screen</p>
+      <p>See also §5,<br>Manifesto</p>
+    </aside>
+
+    <div class="main">
+      <div class="artist-inner">
+        <div class="bio">
+          <div class="portrait p-vael">Portrait — D. Vael, Ghent, 2023</div>
+          <dl>
+            <dt>Born</dt><dd>1991, Antwerp</dd>
+            <dt>Lives</dt><dd>Ghent, Belgium</dd>
+            <dt>Studio</dt><dd>Dok-Noord, Risograph MZ1090</dd>
+            <dt>Represented since</dt><dd>2020</dd>
+          </dl>
+        </div>
+        <div class="statement">
+          <h2>Darius Vael</h2>
+          <div class="byline">Belgium &nbsp;·&nbsp; <span>Risograph &amp; screenprint on Munken Pure</span></div>
+          <p class="lead">Vael builds compositions algorithmically and prints them by hand. He writes short generative scripts to produce moiré fields and gradient interference, then commits to a single output — never the most beautiful, always the one nearest to failing — and pulls the edition through a temperamental MZ1090 he refuses to service.</p>
+          <p>The tension in his work sits between calculation and contingency. The drum will drop ink; the script will not. Vael accepts the drop.</p>
+          <blockquote class="pullquote">
+            “The machine has opinions about what I have asked of it. I have learned to listen.”
+            <cite>— Darius Vael, studio interview, 2022</cite>
+          </blockquote>
+          <p>His <em>Interference Studies</em> are routinely shown unframed, taped to the wall with linen hinges. He prefers that the paper continue to move in the room's air.</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <h3>Vael — Recognitions</h3>
+      <ul class="award-list">
+        <li><span class="yr">2023</span>Prix Mediatine, Brussels</li>
+        <li><span class="yr">2022</span>WIELS Residency — Forest, BE</li>
+        <li><span class="yr">2021</span>Riso International, Featured Maker</li>
+        <li><span class="yr">2019</span>KASK Master's Prize, Ghent</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ ARTIST 04 — PRIYA MENON ============ -->
+  <section class="grid artist">
+    <aside class="marginalia">
+      <div class="ordinal">04</div>
+      <span class="label">Menon · UK</span>
+      <p>Cross-ref:<br>Cat. III, pp.&nbsp;56–69</p>
+      <p>Medium:<br>Letterpress, woodblock</p>
+      <p>See also §6,<br>Manifesto</p>
+    </aside>
+
+    <div class="main">
+      <div class="artist-inner">
+        <div class="bio">
+          <div class="portrait p-menon">Portrait — P. Menon, Glasgow, 2024</div>
+          <dl>
+            <dt>Born</dt><dd>1986, Manchester</dd>
+            <dt>Lives</dt><dd>Glasgow, United Kingdom</dd>
+            <dt>Studio</dt><dd>Govanhill, Albion press</dd>
+            <dt>Represented since</dt><dd>2022</dd>
+          </dl>
+        </div>
+        <div class="statement">
+          <h2>Priya Menon</h2>
+          <div class="byline">United Kingdom &nbsp;·&nbsp; <span>Letterpress, hand-cut woodblock, indigo</span></div>
+          <p class="lead">Menon prints in indigo she ferments herself. The vat lives in a cupboard in Govanhill and is replenished on a schedule she will not disclose; the colour that arrives on the paper depends on the day of the week and the weather. Her woodblocks, cut from reclaimed beech, are deliberately fragile — she has, on two occasions, printed a block to destruction.</p>
+          <p>The work is, in her own description, an inheritance argument. Menon's grandmother dyed cloth in Kerala; the prints are a way of asking what survives translation across an ocean, a generation, and a press.</p>
+          <blockquote class="pullquote">
+            “Indigo is the only blue that goes onto the paper green and decides, in the air, what it wishes to become.”
+            <cite>— Priya Menon, gallery talk, 2024</cite>
+          </blockquote>
+          <p>She is currently at work on <em>Six Returns</em>, a suite of large-format prints in which the same block is pulled in six successive vats, each weaker than the last — a sequence describing the decay of a colour and, she suggests, of a memory.</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <h3>Menon — Recognitions</h3>
+      <ul class="award-list">
+        <li><span class="yr">2024</span>Jerwood Print Prize, Shortlist</li>
+        <li><span class="yr">2023</span>Glasgow Print Studio, Solo</li>
+        <li><span class="yr">2022</span>Cove Park Residency — Argyll</li>
+        <li><span class="yr">2020</span>RSA New Contemporaries</li>
+        <li><span class="yr">2019</span>Hospitalfield Fellowship — Arbroath</li>
+      </ul>
+      <p class="small-note">Complete CVs available on request from the gallery office.</p>
+    </aside>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">
+      Obsidian Fold
+      <small>Est. 2017 · Rotterdam</small>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <h4>Gallery</h4>
+        <a href="../manifesto/index.html">Manifesto</a><br>
+        <a href="../collection/index.html">Collection</a><br>
+        <a href="#">Artists</a><br>
+        <a href="../catalogue/index.html">Catalogue</a><br>
+        <a href="../visit/index.html">Visit</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        Vuurplaat 14<br>
+        3072 AN Rotterdam<br>
+        post@obsidianfold.nl<br>
+        +31 10 244 0017
+      </div>
+      <div>
+        <h4>Hours</h4>
+        Wed – Fri · 12–18<br>
+        Sat – Sun · 11–17<br>
+        Mon &amp; Tue · Closed<br>
+        First Thu / mo · until 21
+      </div>
+    </div>
+    <div class="foot-meta">
+      Sect. 03<br>
+      Artists · iv.2024<br>
+      Cat. III printing
+    </div>
+  </div>
+  <div class="foot-rule">
+    <span>© Obsidian Fold v.o.f. · Rotterdam</span>
+    <span class="gold">Pressure makes permanence.</span>
+  </div>
+</footer>
+
+</body>
+</html>

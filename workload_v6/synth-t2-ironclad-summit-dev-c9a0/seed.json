@@ -1,0 +1,29 @@
+{
+  "id": "synth-t2-ironclad-summit-dev-c9a0",
+  "tier": 2,
+  "genre": "conference",
+  "pages": [
+    "home",
+    "schedule",
+    "speakers",
+    "venue",
+    "register"
+  ],
+  "palette_hint": "Background #F4F1EC (warm off-white), body text #1A1A2E (near-black navy), primary accent #C0392B (bold crimson), secondary accent #2E86AB (steel blue).",
+  "type_style": "Headings in Georgia serif, bold weight (700) for a authoritative editorial feel; body text in system-ui sans-serif at normal weight (400), comfortable 1.6 line-height.",
+  "description": "Ironclad Summit is a two-day systems engineering and infrastructure conference held annually in Pittsburgh, PA, featuring deep-dive technical talks, workshops, and a hardware expo.",
+  "constraints": [
+    "All pages share a top nav (max-width 1100px, horizontal flexbox, 16px padding, crimson #C0392B bottom border 3px) listing all 5 pages with the active page underlined in crimson.",
+    "Footer is identical across all pages: dark navy #1A1A2E background, off-white text, 3-column grid with conference logo/tagline, quick links, and contact email/social handles, 40px vertical padding.",
+    "Card components used on speakers and schedule pages must have border 1px solid #D0CBC0, border-radius 6px, background #FFFFFF, padding 20px, and display in a CSS grid with gap 24px.",
+    "Section headings use Georgia bold, font-size 2rem, with a 4px crimson left-border and 16px left-padding to create a consistent editorial accent rule.",
+    "Maximum content width is 1100px centered with auto margins; body background stays #F4F1EC across all pages."
+  ],
+  "page_specs": {
+    "home": "The home page opens with a full-width hero section (background #1A1A2E, off-white text) announcing 'Ironclad Summit 2025 \u2014 October 9\u201310, Pittsburgh PA' with a crimson CTA button linking to registration and a steel-blue secondary button linking to the schedule. Below the hero, three highlight blocks in a CSS grid (3 columns) show key stats: '42 Sessions', '28 Speakers', '1,200 Attendees Expected'. A featured sponsors ribbon lists six fictional company names (GridForge, PulseLabs, Alloy Systems, CoreStack, Ironvault, Tangent IO) in a horizontal flexbox row. A brief 'About the Summit' paragraph describes the conference mission of advancing resilient infrastructure design.",
+    "schedule": "The schedule page displays two tabbed sections labeled 'Day 1 \u2014 Oct 9' and 'Day 2 \u2014 Oct 10' as static stacked blocks (no JS tabs \u2014 each day is a clearly labeled section). Each day lists at least 8 time-slot rows in a structured grid (time | track | session title | room), with alternating row backgrounds (#FFFFFF and #F4F1EC). Sessions span three tracks: Systems Core, Edge & Embedded, and Platform Ops. A sidebar-style aside on the right (20% width via CSS grid) lists workshop pre-registration notes and a lunch break callout box in steel blue #2E86AB.",
+    "speakers": "The speakers page features a 3-column CSS grid of 12 speaker cards, each containing a placeholder avatar block (60px \u00d7 60px square in #D0CBC0), speaker name in Georgia bold, job title and company in smaller sans-serif, and a 2-sentence talk abstract. A page intro paragraph explains the speaker selection process emphasizing practitioner experience over academic credentials. Below the grid, a 'Keynote Spotlight' section highlights two keynote speakers in larger horizontal cards with their talk titles 'Designing for Failure at Scale' and 'The Hidden Cost of Eventual Consistency'.",
+    "venue": "The venue page describes the David L. Lawrence Convention Center in Pittsburgh with sections for Location (address, nearby transit lines T-Blue and T-Red, 12-minute walk from Union Station), Hotel Block (three partner hotels listed in a styled table: Omni William Penn, Drury Plaza, Courtyard Riverfront, with room rates and booking codes), and Floor Plan (a CSS-drawn schematic using div blocks labeling Hall A \u2014 Main Stage, Hall B \u2014 Workshops, Expo Floor, and Registration Desk). A highlighted callout box in steel blue gives parking garage information and daily rates.",
+    "register": "The registration page presents three pricing tiers in a CSS grid (3 columns): Early Bird $449, Standard $649, and Team Pass (4 seats) $2,199, each in a card with a bulleted list of 5 inclusions (e.g., 'Full 2-day access', 'Workshop selection', 'Conference dinner ticket', 'Digital proceedings', 'Ironclad swag kit'). The Standard card has a crimson 'Most Popular' badge via a positioned element styled with CSS. Below the pricing grid, a registration details section lists key deadlines, a refund policy summary, and a contact email (register@ironcladsummit.io) for group inquiries. A static HTML form (name, email, ticket type select, company, dietary restrictions textarea, submit button) is included at the bottom of the page."
+  }
+}

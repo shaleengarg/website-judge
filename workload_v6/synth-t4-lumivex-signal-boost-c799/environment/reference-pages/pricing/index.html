@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<style>
+  .pricing-hero { padding: 100px 0 60px; text-align: center; position: relative; }
+  .pricing-hero .glow-blob.b1 { width: 400px; height: 400px; top: -100px; left: -100px; }
+  .pricing-hero .glow-blob.b2 { width: 360px; height: 360px; bottom: -120px; right: -60px; }
+  .toggle-wrap { display: flex; justify-content: center; margin: var(--space-6) 0 var(--space-4); }
+  .toggle-row .save {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 8px;
+    border-radius: var(--r-pill);
+    background: var(--accent-2-soft);
+    color: var(--accent-2);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    align-items: stretch;
+  }
+  @media (max-width: 1024px) { .price-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; } }
+  .price-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-7) var(--space-6);
+    border-radius: var(--r-card);
+    border: 1px solid var(--accent-1-line);
+    overflow: hidden;
+  }
+  .price-starter { background: var(--paper-lift); box-shadow: var(--shadow-sub); }
+  .price-growth {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(124,58,237,0.25), transparent 60%),
+      var(--paper-lift);
+    box-shadow: var(--shadow-lift);
+    border-color: rgba(124, 58, 237, 0.5);
+    transform: translateY(-8px);
+  }
+  @media (max-width: 1024px) { .price-growth { transform: none; } }
+  .price-enterprise {
+    background: linear-gradient(160deg, #1a0a3d 0%, #0b0f2e 100%);
+    box-shadow: var(--shadow-mid);
+  }
+  .price-enterprise::before {
+    content: "";
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(245,158,11,0.18), transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+  .price-name {
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: var(--fs-6);
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-2);
+  }
+  .price-tag { font-size: var(--fs-3); color: var(--ink-dim); margin-bottom: var(--space-5); min-height: 48px; }
+  .price-amount {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+  .price-num {
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: 56px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    background: var(--grad-dual);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .price-per {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: var(--fs-3);
+    color: var(--ink-dim);
+  }
+  .price-note { font-size: var(--fs-2); color: var(--ink-faint); margin-bottom: var(--space-5); min-height: 32px; }
+  .price-cta { margin-bottom: var(--space-6); }
+  .price-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-1-line), transparent);
+    margin: 0 0 var(--space-5);
+  }
+  .price-feats-title {
+    font-family: var(--font-head);
+    font-size: var(--fs-1);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: var(--space-4);
+  }
+  /* Annual visible by default; toggle via :checked */
+  .price-amount.annual { display: none; }
+  #bill-annual:checked ~ .price-grid .price-amount.monthly { display: none; }
+  #bill-annual:checked ~ .price-grid .price-amount.annual { display: flex; }
+  .ribbon-pop {
+    position: absolute;
+    top: 18px;
+    right: -6px;
+    background: var(--grad-violet);
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 4px 0 0 4px;
+    box-shadow: var(--shadow-mid);
+  }
+  .ribbon-pop::after {
+    content: "";
+    position: absolute;
+    right: 0; bottom: -6px;
+    border: 4px solid #4c1d95;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+  }
+  .compare-row {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-top: var(--space-7);
+    font-size: var(--fs-2);
+    color: var(--ink-faint);
+  }
+  .faq-wrap { max-width: 880px; margin: 0 auto; }
+  .pricing-cta-strip {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(124,58,237,0.3), transparent 60%),
+      radial-gradient(circle at 80% 50%, rgba(245,158,11,0.18), transparent 60%),
+      var(--grad-dark);
+    border-radius: var(--r-card);
+    padding: var(--space-7);
+    text-align: center;
+    border: 1px solid var(--accent-1-line);
+    box-shadow: var(--shadow-mid);
+    position: relative;
+    overflow: hidden;
+  }
+  .pricing-cta-strip::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,58,237,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,58,237,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .pricing-cta-strip > * { position: relative; z-index: 1; }
+  #bill-monthly, #bill-annual { display: none; }
+  .toggle-label {
+    padding: 8px 22px;
+    border-radius: var(--r-pill);
+    font-family: var(--font-head);
+    font-size: var(--fs-2);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition: all .2s;
+    display: inline-flex;
+    align-items: center;
+  }
+  #bill-monthly:checked ~ .toggle-wrap .toggle-row label[for="bill-monthly"],
+  #bill-annual:checked ~ .toggle-wrap .toggle-row label[for="bill-annual"] {
+    background: var(--grad-violet);
+    color: #fff;
+    box-shadow: var(--shadow-sub);
+  }
+  .quick-stat {
+    background: var(--paper-glass);
+    border: 1px solid var(--accent-1-line);
+    border-radius: var(--r-card);
+    padding: var(--space-5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../ignite/index.html" class="brand"><span class="brand-dot"></span> Lumivex</a>
+    <ul class="nav-links">
+      <li><a href="../ignite/index.html">Ignite</a></li>
+      <li><a href="../platform/index.html">Platform</a></li>
+      <li><a href="../results/index.html">Results</a></li>
+      <li><a href="../pricing/index.html" class="active">Pricing</a></li>
+      <li><a href="../onboard/index.html">Onboard</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="../onboard/index.html" class="btn btn-primary btn-sm">Start Free</a>
+    </div>
+  </div>
+</nav>
+
+<input type="radio" name="billing" id="bill-monthly">
+<input type="radio" name="billing" id="bill-annual" checked>
+
+<section class="pricing-hero">
+  <div class="glow-blob glow-violet b1"></div>
+  <div class="glow-blob glow-amber b2"></div>
+  <div class="container">
+    <span class="badge badge-amber badge-dot">Transparent Pricing</span>
+    <h1 class="mt-3 mb-3">Signal intelligence,<br>priced for momentum.</h1>
+    <p class="lede" style="max-width:680px;margin:0 auto;">Pick the tier that matches your motion. Switch, upgrade, or cancel any time — no procurement gauntlet, no surprise overages.</p>
+
+    <div class="toggle-wrap">
+      <div class="toggle-row" role="tablist" aria-label="Billing cycle">
+        <label for="bill-monthly" class="toggle-label">Monthly</label>
+        <label for="bill-annual" class="toggle-label">Annual <span class="save">Save 20%</span></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: var(--space-5);">
+  <div class="container">
+    <div class="price-grid">
+
+      <!-- STARTER -->
+      <article class="price-card price-starter">
+        <div class="price-name">Starter</div>
+        <p class="price-tag">For solo founders validating signal-driven outbound.</p>
+        <div class="price-amount monthly">
+          <span class="price-num">$0</span>
+          <span class="price-per">/ month</span>
+        </div>
+        <div class="price-amount annual">
+          <span class="price-num">$0</span>
+          <span class="price-per">/ year</span>
+        </div>
+        <p class="price-note">Free forever. No credit card required.</p>
+        <a href="../onboard/index.html" class="btn btn-ghost price-cta">Start Free</a>
+        <div class="price-divider"></div>
+        <div class="price-feats-title">Includes</div>
+        <ul class="feat-list">
+          <li class="yes">250 tracked signals / month</li>
+          <li class="yes">3 saved ICP profiles</li>
+          <li class="yes">Weekly digest in Slack or email</li>
+          <li class="yes">Basic Account Graph (1 hop)</li>
+          <li class="yes">CSV export</li>
+          <li class="no">CRM bi-directional sync</li>
+          <li class="no">Custom signal thresholds</li>
+          <li class="no">Audience Builder</li>
+          <li class="no">SSO &amp; role-based access</li>
+          <li class="no">Dedicated success manager</li>
+        </ul>
+      </article>
+
+      <!-- GROWTH -->
+      <article class="price-card price-growth">
+        <span class="ribbon-pop">Most Popular</span>
+        <div class="price-name text-violet">Growth</div>
+        <p class="price-tag">For revenue teams of 5–50 running disciplined outbound at scale.</p>
+        <div class="price-amount monthly">
+          <span class="price-num">$299</span>
+          <span class="price-per">/ month</span>
+        </div>
+        <div class="price-amount annual">
+          <span class="price-num">$239</span>
+          <span class="price-per">/ mo, billed annually</span>
+        </div>
+        <p class="price-note">Billed per workspace. 14-day trial included.</p>
+        <a href="../onboard/index.html" class="btn btn-primary price-cta">Start 14-Day Trial</a>
+        <div class="price-divider"></div>
+        <div class="price-feats-title">Everything in Starter, plus</div>
+        <ul class="feat-list">
+          <li class="yes">14,000 tracked signals / month</li>
+          <li class="yes">Unlimited ICP profiles &amp; segments</li>
+          <li class="yes">Real-time Slack Pulse alerts</li>
+          <li class="yes">CRM bi-directional sync (HubSpot, Salesforce)</li>
+          <li class="yes">Account Graph (3-hop relationships)</li>
+          <li class="yes">Audience Builder &amp; warm intro paths</li>
+          <li class="yes">Custom signal thresholds</li>
+          <li class="yes">API access (10k req / day)</li>
+          <li class="no">SSO &amp; SAML</li>
+          <li class="no">Dedicated success manager</li>
+        </ul>
+      </article>
+
+      <!-- ENTERPRISE -->
+      <article class="price-card price-enterprise">
+        <div class="price-name text-amber">Enterprise</div>
+        <p class="price-tag">For multi-region revenue orgs with bespoke data and compliance needs.</p>
+        <div class="price-amount monthly">
+          <span class="price-num">Custom</span>
+        </div>
+        <div class="price-amount annual">
+          <span class="price-num">Custom</span>
+        </div>
+        <p class="price-note">Volume pricing, MSA, and procurement support.</p>
+        <a href="#contact" class="btn btn-amber price-cta">Talk to Sales</a>
+        <div class="price-divider"></div>
+        <div class="price-feats-title">Everything in Growth, plus</div>
+        <ul class="feat-list">
+          <li class="yes">Unlimited tracked signals</li>
+          <li class="yes">Custom signal sources &amp; firmographics</li>
+          <li class="yes">SSO, SAML &amp; SCIM provisioning</li>
+          <li class="yes">Role-based access &amp; audit logs</li>
+          <li class="yes">Private data residency (US / EU)</li>
+          <li class="yes">Dedicated success manager</li>
+          <li class="yes">Quarterly business reviews</li>
+          <li class="yes">SOC 2 Type II &amp; DPA on file</li>
+          <li class="yes">99.95% uptime SLA</li>
+          <li class="yes">Custom data warehouse sync</li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="compare-row">
+      <span>✓ 14-day trial on Growth</span>
+      <span>•</span>
+      <span>✓ Cancel anytime</span>
+      <span>•</span>
+      <span>✓ No setup fees</span>
+      <span>•</span>
+      <span>✓ Migrate from competitors in 48h</span>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="grid-3">
+      <div class="quick-stat">
+        <div class="stat-num">3.1×</div>
+        <div class="stat-label">Pipeline velocity</div>
+      </div>
+      <div class="quick-stat">
+        <div class="stat-num">48h</div>
+        <div class="stat-label">Time to first signal</div>
+      </div>
+      <div class="quick-stat">
+        <div class="stat-num">87%</div>
+        <div class="stat-label">Match accuracy</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="sec-head center">
+      <span class="eyebrow">Common Questions</span>
+      <h2>Frequently asked</h2>
+      <p class="lede" style="max-width:640px;margin:0 auto;">Eight things buyers usually want to know before they switch their signal stack to Lumivex.</p>
+    </div>
+
+    <div class="faq-wrap">
+      <div class="accordion">
+
+        <details class="acc-item" open>
+          <summary>What counts as a "signal"?</summary>
+          <div class="acc-body">
+            A signal is any behavioral, firmographic, or relational event we surface about a target account — a hiring spike, a leadership change, a tech-stack swap, intent-data spikes, fundraising news, or a warm-intro path opening up. Each tracked signal is deduped per account per 24-hour window, so your quota reflects real opportunities, not noise.
+          </div>
+        </details>
+
+        <details class="acc-item">
+          <summary>Can I switch between Monthly and Annual later?</summary>
+          <div class="acc-body">
+            Yes. You can switch billing cycles from the Workspace Settings → Billing page at any time. Switching to annual immediately applies the 20% discount and prorates your remaining monthly balance. Switching back to monthly takes effect at the end of your current annual term.
+          </div>
+        </details>
+
+        <details class="acc-item">
+          <summary>Do you offer a free trial on Growth?</summary>
+          <div class="acc-body">
+            Every Growth signup includes a 14-day full-feature trial with up to 2,000 tracked signals. No credit card is required to start; we ask for billing details on day 14 if you want to continue. Unused signal credits do not roll over.
+          </div>
+        </details>
+
+        <details class="acc-item">
+          <summary>Which CRMs and tools do you integrate with?</summary>
+          <div class="acc-body">
+            Native bi-directional sync ships with HubSpot, Salesforce, Pipedrive, and Attio. We push to Slack, Microsoft Teams, Gmail, and Outreach, and pull from Snowflake, BigQuery, and any REST endpoint via our Audience webhooks. Enterprise customers can request a custom connector during onboarding.
+          </div>
+        </details>
+
+        <details class="acc-item">
+          <summary>How is "tracked signals" counted?</summary>
+          <div class="acc-body">
+            One signal = one qualifying event for one account in a 24-hour window. If three buyers at the same account change roles on the same day, that's one signal. Signals that fail your ICP threshold are never charged. You can see live consumption and a forecast in your Workspace dashboard.
+          </div>
+        </details>
+
+        <details class="acc-item">
+          <summary>What happens if I exceed my signal quota?</summary>
+          <div class="acc-body">
+            You'll see in-app warnings at 80% and 95% of your monthly quota. We never auto-charge overages on Starter or Growth — instead, alerts pause until the next billing cycle, or you can upgrade with one click. Enterprise customers configure either soft caps or burst capacity in their contract.
+          </div>
+        </details>
+
+        <details class="acc-item">
+          <summary>Is Lumivex SOC 2 compliant?</summary>
+          <div class="acc-body">
+            Yes. Lumivex is SOC 2 Type II audited, GDPR-aligned, and offers a DPA, sub-processor list, and security questionnaire on request. Enterprise contracts include US or EU data residency, customer-managed encryption keys, and quarterly penetration test summaries.
+          </div>
+        </details>
+
+        <details class="acc-item">
+          <summary>Can I cancel anytime?</summary>
+          <div class="acc-body">
+            Absolutely. Monthly plans cancel at the end of the current billing period with one click; you keep access until the period ends. Annual plans can be cancelled or downgraded at renewal. We don't lock data — every account can export their signal history and audience definitions as JSON or CSV at any time.
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="container">
+    <div class="pricing-cta-strip">
+      <span class="badge badge-glass badge-dot">Enterprise Sales</span>
+      <h2 class="mt-3 mb-3">Need a custom contract or 1,000+ seats?</h2>
+      <p class="lede" style="max-width:620px;margin:0 auto var(--space-5);">Our enterprise team will scope volume pricing, security review, and a co-built rollout plan within 48 hours of your first call.</p>
+      <div class="flex-center">
+        <a href="../onboard/index.html" class="btn btn-primary btn-lg">Book a 30-min call</a>
+        <a href="../platform/index.html" class="btn btn-ghost btn-lg">See the platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand"><span class="brand-dot"></span> Lumivex</div>
+      <p class="footer-tag">Signal intelligence for revenue teams that move first.</p>
+      <div class="socials mt-5">
+        <a href="#" class="social social-x" aria-label="X"></a>
+        <a href="#" class="social social-in" aria-label="LinkedIn"></a>
+        <a href="#" class="social social-gh" aria-label="GitHub"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="../ignite/index.html">Ignite</a></li>
+        <li><a href="../platform/index.html">Platform</a></li>
+        <li><a href="../results/index.html">Results</a></li>
+        <li><a href="../pricing/index.html">Pricing</a></li>
+        <li><a href="../onboard/index.html">Onboard</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Trust</h5>
+      <ul>
+        <li><a href="#">SOC 2 Type II</a></li>
+        <li><a href="#">GDPR</a></li>
+        <li><a href="#">Status</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Lumivex Labs, Inc. — All rights reserved.</span>
+    <span class="footer-copy">Built in Brooklyn &amp; Lisbon</span>
+  </div>
+</footer>
+
+</body>
+</html>

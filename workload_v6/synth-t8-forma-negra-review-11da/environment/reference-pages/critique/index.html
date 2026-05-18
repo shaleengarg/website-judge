@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<title>Critique — Forma Negra Review Vol. 12</title>
+<style>
+  .crit-hero{padding:var(--s6) 0 var(--s4);text-align:center;border-bottom:2px solid var(--ink)}
+  .crit-hero .meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.15em;color:var(--slate);padding:0 var(--gutter-outer);margin-bottom:var(--s4)}
+  .crit-hero .lockup{font-family:var(--serif);font-weight:700;font-size:var(--fs-display);color:transparent;-webkit-text-stroke:2px var(--ink);letter-spacing:0.16em;line-height:1;padding:var(--s5) 0}
+  .crit-hero .sub{font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.2em;color:var(--rust)}
+  .crit-deck{max-width:780px;margin:var(--s3) auto 0;font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.35;color:var(--ink);padding:0 var(--gutter-outer)}
+  .review{display:flex;flex-direction:column;gap:var(--s2)}
+  .review .head{display:flex;flex-direction:column;gap:var(--s2);padding-bottom:var(--s2);border-bottom:2px solid var(--ink)}
+  .review .head .h{font-family:var(--serif);font-weight:700;font-size:var(--fs-h2);line-height:1.1}
+  .review .meta-row{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap}
+  .review .object{font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.15em;color:var(--slate)}
+  .review .plate{aspect-ratio:4/3;background:var(--ink);position:relative;margin:var(--s2) 0;overflow:hidden}
+  .review .plate.one{background:linear-gradient(135deg,var(--ink) 0 50%,var(--rust) 50% 100%)}
+  .review .plate.two{background:repeating-linear-gradient(0deg,var(--ink) 0 8px,var(--bg-alt) 8px 12px)}
+  .review .plate.three{background:radial-gradient(circle at 30% 40%,var(--yellow) 0 18%,var(--ink) 18% 100%)}
+  .review p{font-size:15px;line-height:1.55}
+  .review .verdict{margin-top:var(--s2);padding:var(--s2);background:var(--bg-alt);border-left:3px solid var(--rust);font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.12em;color:var(--ink)}
+  .verdict b{color:var(--rust)}
+  .compare-section{padding:var(--s6) 0 var(--s4)}
+  .compare-grid-9{display:grid;grid-template-columns:200px repeat(6,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .compare-grid-9 > div{background:var(--bg);padding:var(--s2);font-family:var(--mono);font-size:var(--fs-caption);text-align:center;display:flex;align-items:center;justify-content:center}
+  .compare-grid-9 .row-label{justify-content:flex-start;text-align:left;font-family:var(--sans);font-weight:500;font-size:13px;background:var(--bg)}
+  .compare-grid-9 .head{background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.05em;padding:var(--s2) 6px}
+  .compare-grid-9 .corner{background:var(--ink);color:var(--bg);justify-content:flex-start;font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.15em;padding:var(--s2)}
+  .cell-hi{background:var(--yellow) !important;color:var(--ink);font-weight:700}
+  .cell-mid{background:var(--slate) !important;color:var(--bg);font-weight:700}
+  .cell-lo{background:var(--rust) !important;color:var(--bg);font-weight:700}
+  .legend{display:flex;gap:var(--s3);font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.15em;color:var(--slate);margin-bottom:var(--s3);flex-wrap:wrap}
+  .legend .sw{display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:6px}
+  .ratings-svg{display:inline-flex;gap:2px;align-items:center}
+  .ratings-svg svg{width:14px;height:14px}
+  .pill{display:inline-block;font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.12em;padding:4px 12px;background:var(--yellow);color:var(--ink);border-radius:999px}
+  .reviews-wrap{padding:var(--s5) 4% var(--s5)}
+  .footnote-zone{padding:var(--s5) 0;border-top:2px solid var(--ink)}
+  .footnote-zone h3{font-family:var(--mono);font-size:var(--fs-mono);text-transform:uppercase;letter-spacing:0.2em;color:var(--rust);margin-bottom:var(--s3)}
+  .fn-cols{column-count:2;column-gap:var(--gutter-inner);font-family:var(--mono);font-size:var(--fs-mono);line-height:24px}
+  .fn-cols p{padding:0;border-bottom:1px solid var(--rule);break-inside:avoid;margin:0;line-height:24px;padding-bottom:0;min-height:48px;display:flex;align-items:flex-start;gap:6px}
+  .fn-cols p span.num{color:var(--rust);font-weight:700;flex-shrink:0}
+  .ornament{margin:var(--s4) auto;display:block}
+  @media(max-width:1024px){
+    .compare-grid-9{grid-template-columns:140px repeat(6,1fr);font-size:10px}
+    .reviews-wrap{padding:var(--s4) var(--s3)}
+  }
+  @media(max-width:640px){
+    .crit-hero .lockup{font-size:54px;-webkit-text-stroke:1px var(--ink)}
+    .compare-grid-9{grid-template-columns:100px repeat(6,1fr);font-size:9px}
+    .compare-grid-9 .head{font-size:8px;padding:6px 2px}
+    .compare-grid-9 > div{padding:8px 4px}
+    .fn-cols{column-count:1}
+  }
+  .reviews-grid{display:grid;grid-template-columns:38% 28% 26%;gap:var(--gutter-inner)}
+  @media(max-width:1024px){.reviews-grid{grid-template-columns:1fr 1fr;gap:var(--gutter-inner)}}
+  @media(max-width:640px){.reviews-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="../cover/index.html" class="logo">Forma Negra<span class="dot">.</span> Review</a>
+    <ul>
+      <li><a href="../cover/index.html">Cover</a></li>
+      <li><a href="../feature/index.html">Feature</a></li>
+      <li><a href="../critique/index.html" style="color:var(--rust)">Critique</a></li>
+      <li><a href="../typographica/index.html">Typographica</a></li>
+      <li><a href="../archive/index.html">Archive</a></li>
+    </ul>
+    <span class="issue-tag">Vol. 12 / FRI</span>
+  </div>
+</nav>
+
+<header class="crit-hero">
+  <div class="meta">
+    <span>Section 04 / Critique</span>
+    <span>Vol. 12 — The Friction Issue</span>
+    <span>pp. 088 — 117</span>
+  </div>
+  <div class="sub">Three Objects · Three Verdicts · One Hour</div>
+  <div class="lockup">CRITIQUE</div>
+  <p class="crit-deck">In which our editors test the resilience, legibility, and ethical posture of three recent design objects against a six-criterion rubric — and award no medals.</p>
+
+  <svg class="ornament" width="160" height="24" viewBox="0 0 160 24" aria-hidden="true">
+    <line x1="0" y1="12" x2="60" y2="12" stroke="#1A1814" stroke-width="1"/>
+    <circle cx="72" cy="12" r="4" fill="#C4421A"/>
+    <rect x="84" y="8" width="8" height="8" fill="#D4E04A"/>
+    <circle cx="100" cy="12" r="4" fill="#4A5568"/>
+    <line x1="112" y1="12" x2="160" y2="12" stroke="#1A1814" stroke-width="1"/>
+  </svg>
+</header>
+
+<section class="reviews-wrap">
+  <div class="reviews-grid">
+
+    <!-- Review 1 -->
+    <article class="review">
+      <div class="head">
+        <span class="object">Object № 01 / Identity System</span>
+        <h2 class="h">A Brutal Civic Identity for Helsinki Transit, Refined Past the Point of Friction</h2>
+        <div class="meta-row">
+          <span class="pill">By Eira Lindqvist</span>
+          <span class="ratings-svg" aria-label="4 of 5">
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-empty" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="plate one" role="img" aria-label="Plate one"></div>
+      <p>The new HSL identity arrives in a uniform of cobalt and gravel — a system so disciplined it threatens to disappear. Where the 1998 mark squawked, the 2024 mark exhales. This is not a complaint, but it is a reservation: a city identity that refuses to misbehave at the kerb has surrendered an instrument.</p>
+      <p>Typographically the suite leans on a custom Grotesk with humanist outliers — a tail on the lowercase 'l', an opened 'a'. Wayfinding pictograms have been deboned of their 80s curves into something close to ISO neutrality. The signage prototypes I photographed last winter at Pasila held up at 40 metres; the same panels at 4 metres felt evacuated of voice.</p>
+      <p>What this system does best is endure. What it does worst is surprise. Helsinki is a city of small frictions — ice, language, light — and the identity should bear a few of them too.</p>
+      <div class="verdict"><b>Verdict:</b> Excellent infrastructure. Diminished personality.</div>
+    </article>
+
+    <!-- Review 2 -->
+    <article class="review">
+      <div class="head">
+        <span class="object">Object № 02 / Printed Matter</span>
+        <h2 class="h">Riso Monograph, Self-Published, Bound in Failure</h2>
+        <div class="meta-row">
+          <span class="pill">By Hugo Marçal</span>
+          <span class="ratings-svg" aria-label="3 of 5">
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-empty" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-empty" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="plate two" role="img" aria-label="Plate two"></div>
+      <p>'Soft Tools', a 168-page Riso anthology from the Porto collective Mãoseca, sells its imperfections as ideology. The misregistration is genuine; the binding is genuinely bad. The question is whether genuineness is enough.</p>
+      <p>Spine cracks at spread 14. Ink set-off on 22. A loving rebellion against the laser-perfect monograph, yes — but rebellion without craft is just attrition. The strongest sections (an essay on Cape Verdean signage by Tavares) survive on the merit of their writing.</p>
+      <div class="verdict"><b>Verdict:</b> Sincere, smudged, and structurally precarious.</div>
+    </article>
+
+    <!-- Review 3 -->
+    <article class="review">
+      <div class="head">
+        <span class="object">Object № 03 / Digital Artefact</span>
+        <h2 class="h">A Reading App That Mistakes Animation for Care</h2>
+        <div class="meta-row">
+          <span class="pill">By Naledi Okafor</span>
+          <span class="ratings-svg" aria-label="2 of 5">
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-fill" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-empty" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-empty" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+            <svg viewBox="0 0 16 16"><polygon class="star-empty" points="8,1 10,6 15,6 11,9 13,15 8,12 3,15 5,9 1,6 6,6"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="plate three" role="img" aria-label="Plate three"></div>
+      <p>'Marginal', a long-form reading app from a Berlin studio, makes a wager that page turns should feel like silk. The pages comply; the reading does not. Every animation costs a beat, and beats compound into hours.</p>
+      <p>Underneath sits a respectable rendering engine and an excellent typeface licensing model. But the surface is busy convincing me it is calm.</p>
+      <div class="verdict"><b>Verdict:</b> Beautiful, costly, and quietly exhausting.</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- Pull quote -->
+<section class="container">
+  <blockquote class="pullquote pullquote-display">
+    “A criticism is not a verdict on whether an object pleases; it is an audit of whether the object can be defended in the room it claims to enter.”
+    <cite>— Editorial, Forma Negra Review, Vol. 12</cite>
+  </blockquote>
+</section>
+
+<!-- Comparison Section -->
+<section class="container compare-section">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Cross-Object Matrix</div>
+      <h2 class="h2">Nine Objects, Six Criteria, One Rubric</h2>
+    </div>
+    <span class="count">Fig. 04.A / Score 0–10</span>
+  </div>
+
+  <div class="legend">
+    <span><span class="sw" style="background:var(--yellow)"></span>High (7–10)</span>
+    <span><span class="sw" style="background:var(--slate)"></span>Mid (4–6)</span>
+    <span><span class="sw" style="background:var(--rust)"></span>Low (0–3)</span>
+  </div>
+
+  <div class="compare-grid-9">
+    <div class="corner">Object / Criterion</div>
+    <div class="head">Materiality</div>
+    <div class="head">Legibility</div>
+    <div class="head">Cultural Ctx</div>
+    <div class="head">Prod. Ethics</div>
+    <div class="head">Novelty</div>
+    <div class="head">Longevity</div>
+
+    <div class="row-label">01 · HSL Identity</div>
+    <div class="cell-mid">06</div><div class="cell-hi">09</div><div class="cell-mid">05</div><div class="cell-hi">08</div><div class="cell-lo">03</div><div class="cell-hi">09</div>
+
+    <div class="row-label">02 · Soft Tools Riso</div>
+    <div class="cell-hi">08</div><div class="cell-mid">05</div><div class="cell-hi">08</div><div class="cell-hi">07</div><div class="cell-mid">06</div><div class="cell-lo">02</div>
+
+    <div class="row-label">03 · Marginal App</div>
+    <div class="cell-mid">05</div><div class="cell-mid">06</div><div class="cell-lo">03</div><div class="cell-mid">05</div><div class="cell-mid">06</div><div class="cell-mid">04</div>
+
+    <div class="row-label">04 · KADIST Wayfind.</div>
+    <div class="cell-hi">07</div><div class="cell-hi">08</div><div class="cell-mid">06</div><div class="cell-mid">05</div><div class="cell-mid">04</div><div class="cell-hi">07</div>
+
+    <div class="row-label">05 · Carrera Bookplate</div>
+    <div class="cell-hi">09</div><div class="cell-mid">06</div><div class="cell-hi">09</div><div class="cell-mid">06</div><div class="cell-hi">07</div><div class="cell-mid">06</div>
+
+    <div class="row-label">06 · Liminal Type Spec.</div>
+    <div class="cell-mid">04</div><div class="cell-hi">07</div><div class="cell-mid">05</div><div class="cell-lo">02</div><div class="cell-hi">08</div><div class="cell-mid">05</div>
+
+    <div class="row-label">07 · Praça Pavilion</div>
+    <div class="cell-hi">08</div><div class="cell-mid">05</div><div class="cell-hi">09</div><div class="cell-hi">08</div><div class="cell-mid">06</div><div class="cell-hi">07</div>
+
+    <div class="row-label">08 · Bauhaus Reissue</div>
+    <div class="cell-mid">06</div><div class="cell-hi">08</div><div class="cell-mid">06</div><div class="cell-mid">05</div><div class="cell-lo">02</div><div class="cell-hi">08</div>
+
+    <div class="row-label">09 · Zürich Ballot Form</div>
+    <div class="cell-mid">05</div><div class="cell-hi">09</div><div class="cell-mid">06</div><div class="cell-hi">09</div><div class="cell-mid">05</div><div class="cell-hi">08</div>
+  </div>
+
+  <p class="caption mt-3">Scores aggregate three editors' independent reads. Where editors diverged by &gt; 2 points, the median was taken; full panel data appears in the appendix. See footnotes 04, 09, and 11.</p>
+
+  <svg class="divider-svg mt-4" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="0" y1="12" x2="1200" y2="12" stroke="#1A1814" stroke-width="1"/>
+    <circle cx="200" cy="12" r="3" fill="#C4421A"/>
+    <circle cx="400" cy="12" r="3" fill="#1A1814"/>
+    <circle cx="600" cy="12" r="3" fill="#D4E04A" stroke="#1A1814"/>
+    <circle cx="800" cy="12" r="3" fill="#4A5568"/>
+    <circle cx="1000" cy="12" r="3" fill="#C4421A"/>
+  </svg>
+</section>
+
+<!-- Footnotes -->
+<section class="container footnote-zone">
+  <h3>Footnotes & Apparatus</h3>
+  <div class="fn-cols">
+    <p><span class="num">01.</span> HSL identity refresh launched 02.2024. Studio: Tsto / Werklig. Total program cost: €1.4M over 38 months.</p>
+    <p><span class="num">02.</span> 'Soft Tools' ed. of 320, four Riso colours (federal blue, fluorescent pink, sunflower, black). Distributed Porto / Lisbon / Berlin.</p>
+    <p><span class="num">03.</span> Cf. Lupton, E. 'Thinking with Type', 2nd ed., 2010, pp. 41–48 on the ethics of imperfection in DIY printed matter.</p>
+    <p><span class="num">04.</span> Editor disagreement on Marginal's legibility score (4 / 7 / 6) resolved by motion path inspection on iPad Pro M2.</p>
+    <p><span class="num">05.</span> KADIST wayfinding measured against ISO 7001 contrast standards at 3.5m and 12m. Both passed.</p>
+    <p><span class="num">06.</span> Carrera Bookplate is a 64pp letterpress monograph by Atelier 17, São Paulo. Edition of 180, signed.</p>
+    <p><span class="num">07.</span> 'Liminal' typeface released 09.2023 by Future Fonts contributor M. Reyes. Currently at v0.4.</p>
+    <p><span class="num">08.</span> Praça Pavilion (Lisbon Triennale 2023) used reclaimed cork and CNC oak — full BoM published openly.</p>
+    <p><span class="num">09.</span> All production-ethics scores incorporate disclosed supply chain, fair labour audits, and material end-of-life pathways.</p>
+    <p><span class="num">10.</span> Bauhaus reissue refers to Lars Müller's 2024 facsimile of the 1925 Bauhausbücher series.</p>
+    <p><span class="num">11.</span> Zürich Ballot Form redesigned by Studio Atelier Kontrast for the 2023 cantonal elections. Reduced spoilage 7.2%.</p>
+    <p><span class="num">12.</span> The rubric is published in full at formanegra.review/rubric — comments welcome via editorial post.</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="issue-index">
+      <div class="col">
+        <h5>Editorial</h5>
+        <ul>
+          <li>Cover <span class="num">01</span></li>
+          <li>Masthead <span class="num">02</span></li>
+          <li>Letters <span class="num">06</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Features</h5>
+        <ul>
+          <li>Lead Essay <span class="num">01</span></li>
+          <li>Field Notes <span class="num">04</span></li>
+          <li>Interviews <span class="num">03</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Critique</h5>
+        <ul>
+          <li>Object Reviews <span class="num">09</span></li>
+          <li>Rebuttals <span class="num">02</span></li>
+          <li>Verdicts <span class="num">03</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Typographica</h5>
+        <ul>
+          <li>Specimens <span class="num">03</span></li>
+          <li>Glossary <span class="num">18</span></li>
+          <li>History <span class="num">02</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Archive</h5>
+        <ul>
+          <li>Volumes <span class="num">12</span></li>
+          <li>Index <span class="num">14</span></li>
+          <li>Errata <span class="num">07</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-mark">
+      <span class="logotype">Forma Negra Review</span>
+      <span>Vol. 12 · The Friction Issue</span>
+      <span>© MMXXIV · Lisbon / Zürich</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

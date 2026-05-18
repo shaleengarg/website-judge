@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="../_shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Type Lab — Folio Obscura</title>
+<style>
+  .grotesk-hero{
+    border-top:3px solid var(--ink);
+    border-bottom:3px solid var(--ink);
+    padding:var(--space-8) 0;
+    margin-top:var(--space-5);
+    text-align:center;
+    background:var(--parchment);
+    position:relative;
+    overflow:hidden;
+  }
+  .grotesk-word{
+    font-family:var(--serif);
+    font-weight:900;
+    font-size:96px;
+    letter-spacing:0.08em;
+    line-height:1;
+    color:var(--ink);
+    margin:0;
+  }
+  .grotesk-meta{
+    display:flex;justify-content:space-between;
+    font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;letter-spacing:0.14em;
+    color:var(--mid-tone);
+    margin-top:var(--space-5);
+    padding:0 var(--space-5);
+  }
+  .anatomy{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:var(--space-7);
+    align-items:start;
+    margin:var(--space-7) 0;
+  }
+  .anatomy-figure{
+    background:#E8DCBE;
+    border:1px solid var(--ink);
+    padding:var(--space-6);
+    aspect-ratio:1/1;
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+  }
+  .anatomy-figure svg{width:100%;height:100%}
+  .anatomy-notes{
+    border-top:2px solid var(--ink);
+    padding-top:var(--space-4);
+  }
+  .anatomy-notes h2{margin-bottom:var(--space-2)}
+  @media (max-width:1024px){
+    .anatomy{grid-template-columns:1fr}
+    .grotesk-word{font-size:72px}
+  }
+  @media (max-width:768px){
+    .grotesk-word{font-size:44px;letter-spacing:0.06em}
+    .grotesk-meta{flex-direction:column;gap:var(--space-2)}
+  }
+  .comp-wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="../cover-story/index.html" class="brand">Folio Obscura<small>Quarterly · Est. 2014</small></a>
+    <ul class="nav-links">
+      <li><a href="../cover-story/index.html">Cover Story</a></li>
+      <li><a href="#" class="active">Type Lab</a></li>
+      <li><a href="../object-study/index.html">Object Study</a></li>
+      <li><a href="../grid-dispatch/index.html">Grid Dispatch</a></li>
+      <li><a href="../archive-index/index.html">Archive Index</a></li>
+    </ul>
+    <span class="nav-issue">ISSUE XXXVII · WINTER 2024</span>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="masthead">
+    <span>Folio Obscura / Type Lab № 037</span>
+    <span>Filed under Specimen · Anatomy · Neutrality</span>
+    <span>14 / 02 / 2024</span>
+  </div>
+
+  <section class="grotesk-hero">
+    <span class="kicker">Specimen Dissection — Berthold, 1898→</span>
+    <h1 class="grotesk-word">GROTESK</h1>
+    <div class="grotesk-meta">
+      <span>Akzidenz-Grotesk · Berthold Type Foundry</span>
+      <span>Sans-serif · Grotesque · Industrial</span>
+      <span>Origin: Berlin, DE</span>
+    </div>
+  </section>
+</div>
+
+<div class="layout">
+  <main class="main">
+
+    <div class="anatomy">
+      <div class="anatomy-figure" aria-label="Anatomy of the lowercase a">
+        <!-- Decorative SVG with 11 numbered callouts on a lowercase 'a' silhouette -->
+        <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g stroke="#1A1208" fill="none" stroke-width="1.2">
+            <!-- Baseline / x-height / cap height rules -->
+            <line x1="40" y1="120" x2="460" y2="120" stroke-dasharray="3 4"/>
+            <line x1="40" y1="180" x2="460" y2="180" stroke-dasharray="3 4"/>
+            <line x1="40" y1="380" x2="460" y2="380"/>
+            <line x1="40" y1="420" x2="460" y2="420" stroke-dasharray="3 4"/>
+
+            <!-- Lowercase 'a' (double-storey) silhouette -->
+            <path d="M170 380 C 170 280, 270 250, 330 270 L 330 250 C 330 220, 290 210, 260 210 C 220 210, 195 225, 185 245" stroke-width="2"/>
+            <path d="M330 270 L 330 380" stroke-width="2"/>
+            <path d="M330 320 C 300 310, 250 312, 230 335 C 215 355, 230 385, 270 385 C 305 385, 330 365, 330 340" stroke-width="2"/>
+
+            <!-- Numbered callouts 1..11 -->
+            <g font-family="Georgia, serif" font-size="14" font-weight="900" fill="#1A1208" stroke="none">
+              <circle cx="60" cy="60" r="14" stroke="#1A1208" fill="#BFDB38" stroke-width="1.2"/><text x="60" y="65" text-anchor="middle">1</text>
+              <circle cx="60" cy="200" r="14" stroke="#1A1208" fill="#F5ECD7" stroke-width="1.2"/><text x="60" y="205" text-anchor="middle">2</text>
+              <circle cx="60" cy="320" r="14" stroke="#1A1208" fill="#F5ECD7" stroke-width="1.2"/><text x="60" y="325" text-anchor="middle">3</text>
+              <circle cx="60" cy="400" r="14" stroke="#1A1208" fill="#C4561A" stroke-width="1.2"/><text x="60" y="405" text-anchor="middle" fill="#F5ECD7">4</text>
+              <circle cx="200" cy="60" r="14" stroke="#1A1208" fill="#F5ECD7" stroke-width="1.2"/><text x="200" y="65" text-anchor="middle">5</text>
+              <circle cx="340" cy="60" r="14" stroke="#1A1208" fill="#F5ECD7" stroke-width="1.2"/><text x="340" y="65" text-anchor="middle">6</text>
+              <circle cx="450" cy="200" r="14" stroke="#1A1208" fill="#BFDB38" stroke-width="1.2"/><text x="450" y="205" text-anchor="middle">7</text>
+              <circle cx="450" cy="300" r="14" stroke="#1A1208" fill="#F5ECD7" stroke-width="1.2"/><text x="450" y="305" text-anchor="middle">8</text>
+              <circle cx="450" cy="400" r="14" stroke="#1A1208" fill="#F5ECD7" stroke-width="1.2"/><text x="450" y="405" text-anchor="middle">9</text>
+              <circle cx="260" cy="450" r="14" stroke="#1A1208" fill="#C4561A" stroke-width="1.2"/><text x="260" y="455" text-anchor="middle" fill="#F5ECD7">10</text>
+              <circle cx="120" cy="450" r="14" stroke="#1A1208" fill="#F5ECD7" stroke-width="1.2"/><text x="120" y="455" text-anchor="middle">11</text>
+            </g>
+
+            <!-- Callout lines -->
+            <polyline points="74,60 130,120"/>
+            <polyline points="74,200 175,232"/>
+            <polyline points="74,320 200,340"/>
+            <polyline points="74,400 170,380"/>
+            <polyline points="200,74 220,210"/>
+            <polyline points="340,74 320,240"/>
+            <polyline points="436,200 340,260"/>
+            <polyline points="436,300 330,310"/>
+            <polyline points="436,400 332,370"/>
+            <polyline points="260,436 305,385"/>
+            <polyline points="120,436 220,380"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="anatomy-notes">
+        <span class="kicker">Marginalia</span>
+        <h2>Eleven features of the double-storey <span class="italic serif">a</span></h2>
+        <p class="muted small">The Akzidenz lowercase &ldquo;a&rdquo; is the foundry's signature stress-test: a compact vessel for terminal logic, aperture, and the subtle tension between humanist breathing room and grotesque restraint.</p>
+
+        <ol class="annot-list">
+          <li><span class="num">1</span><span><b class="label">Cap height marker</b>Reference rule at 720 units, defining the optical ceiling of the upright caps.</span></li>
+          <li><span class="num">2</span><span><b class="label">Apex of the bowl</b>The flattened curve where stroke contrast yields to industrial uniformity.</span></li>
+          <li><span class="num">3</span><span><b class="label">Counter aperture</b>Slightly more open than Helvetica (1957); permits sharper grayscale at 9–12px.</span></li>
+          <li><span class="num">4</span><span><b class="label">Baseline</b>Anchoring rule. Akzidenz terminals sit exactly on it — no overshoot grace.</span></li>
+          <li><span class="num">5</span><span><b class="label">Top arm of the &ldquo;t&rdquo;</b>Vestigial flat-top — a holdover from 19th-century jobbing types.</span></li>
+          <li><span class="num">6</span><span><b class="label">Stroke modulation</b>Near-monolinear: vertical stems are ~6% thicker than horizontals.</span></li>
+          <li><span class="num">7</span><span><b class="label">Spur</b>The half-serif on lowercase &ldquo;a&rdquo;'s stem; absent in later Helvetica.</span></li>
+          <li><span class="num">8</span><span><b class="label">Junction of bowl &amp; stem</b>Slight ink-trap; preserved from hot-metal origins.</span></li>
+          <li><span class="num">9</span><span><b class="label">Foot terminal</b>Cleanly cut horizontal; no flare, no ball.</span></li>
+          <li><span class="num">10</span><span><b class="label">Descender depth</b>Conservative — 210 units — keeping linespacing tight.</span></li>
+          <li><span class="num">11</span><span><b class="label">Sidebearing</b>Asymmetrical metrics: right bearing wider by 14 units to settle the eye.</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <svg class="svg-rule" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="12" x2="1200" y2="12"/>
+      <circle cx="600" cy="12" r="5"/>
+      <line x1="580" y1="2" x2="580" y2="22"/>
+      <line x1="620" y1="2" x2="620" y2="22"/>
+    </svg>
+
+    <span class="kicker">Essay — On a Type That Refused to Editorialize</span>
+    <h2>The neutrality myth, and what Akzidenz quietly insisted on instead</h2>
+
+    <div class="body-2col lead">
+      <p class="dropcap">When the Berthold foundry began consolidating its grotesque drawings under the Akzidenz banner in 1898, the term &ldquo;akzidenz&rdquo; itself signalled the modest commercial ambition: <em>jobbing work</em> — handbills, timetables, receipts, the visual furniture of an industrializing Berlin. There was no manifesto, no designer named on the specimen, no claim to a worldview. The type simply had to set cleanly at 6 point and survive at 96.</p>
+
+      <p>And yet, a century later, Akzidenz-Grotesk became the most quietly authoritative sans of the post-war Swiss imagination. Hofmann taught with it. Müller-Brockmann typeset entire posters with nothing else. Helvetica, Univers, and Folio were all drawn in its long shadow — sometimes openly, sometimes by elaborate denial.</p>
+
+      <p>What the Swiss inherited was not, as is commonly claimed, a <em>neutral</em> typeface. Neutrality is a fiction sustained by familiarity. Akzidenz is full of small, opinionated decisions: the slightly-too-narrow lowercase &ldquo;e&rdquo;, the stubborn flat-top &ldquo;t&rdquo;, the descender depth that refuses to compromise for tight leading. It is a type that has views — they are simply views about restraint.</p>
+
+      <p>This is, perhaps, the more useful frame: not that some types editorialize and others do not, but that every type editorializes about <em>which</em> editorial gestures are permissible. Garamond editorializes about literacy. Futura editorializes about the future. Akzidenz editorializes about not editorializing — which is itself a fierce position, defended by Berthold's punch-cutters with the seriousness of cathedral masons.</p>
+
+      <p>To set a paragraph in Akzidenz today — particularly in one of the original Berthold cuts, before the 1957 systemizations — is to encounter a type that does not want your attention. It wants only to deliver the sentence. The achievement is that, after 126 years of distraction, this still feels radical.</p>
+    </div>
+
+    <div class="pullquote">
+      &ldquo;Neutrality in type is not the absence of opinion. It is the discipline of having only one opinion, and holding it for a century without raising your voice.&rdquo;
+      <cite>— Erik Spiekermann, in conversation, 2011</cite>
+    </div>
+
+    <span class="kicker">Comparative — Eight Grotesque Variants</span>
+    <h2>X-height ratios &amp; optical size envelopes</h2>
+    <p class="muted">Measured against a 1000-unit em. X-height is reported as a ratio of cap height. Optical range describes the point sizes at which the cut was originally intended to function without compensation.</p>
+
+    <div class="comp-wrap">
+    <table class="data">
+      <caption>Table 1 — Eight grotesque variants, comparative metrics</caption>
+      <thead>
+        <tr>
+          <th>Typeface</th>
+          <th>Foundry</th>
+          <th>Year</th>
+          <th class="num">X-height</th>
+          <th class="num">Cap</th>
+          <th>Optical range</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><b>Akzidenz-Grotesk</b></td><td>Berthold</td><td class="num">1898</td><td class="num">0.521</td><td class="num">720</td><td>8 – 72 pt</td><td>Reference cut; flat-top &ldquo;t&rdquo;</td></tr>
+        <tr><td><b>Folio</b></td><td>Bauer</td><td class="num">1957</td><td class="num">0.508</td><td class="num">714</td><td>9 – 60 pt</td><td>Konrad Bauer / Walter Baum</td></tr>
+        <tr><td><b>Neue Haas Grotesk</b></td><td>Haas'sche</td><td class="num">1957</td><td class="num">0.529</td><td class="num">718</td><td>6 – 72 pt</td><td>Miedinger; precursor to Helvetica</td></tr>
+        <tr><td><b>Univers 55</b></td><td>Deberny &amp; Peignot</td><td class="num">1957</td><td class="num">0.512</td><td class="num">700</td><td>8 – 96 pt</td><td>Frutiger; systematic numbering</td></tr>
+        <tr><td><b>Helvetica</b></td><td>Linotype</td><td class="num">1961</td><td class="num">0.534</td><td class="num">718</td><td>6 – 96 pt</td><td>Rationalized Haas redraw</td></tr>
+        <tr><td><b>Unica</b></td><td>Haas'sche</td><td class="num">1980</td><td class="num">0.526</td><td class="num">722</td><td>9 – 36 pt</td><td>Team'77 synthesis</td></tr>
+        <tr><td><b>FF Real</b></td><td>FontFont</td><td class="num">2015</td><td class="num">0.540</td><td class="num">720</td><td>5 – 144 pt</td><td>Optical-size family</td></tr>
+        <tr><td><b>GT Flexa</b></td><td>Grilli Type</td><td class="num">2020</td><td class="num">0.531</td><td class="num">715</td><td>6 – 200 pt</td><td>Variable; width axis</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+  </main>
+
+  <aside class="sidebar sticky">
+    <span class="kicker">Lab Notes</span>
+    <h3>Filed in Type Lab № 037</h3>
+    <ul class="side-list">
+      <li><a href="#"><span class="ref">FO·37 / TL·01</span><span class="ttl">Akzidenz: a foundry's quiet century</span></a></li>
+      <li><a href="#"><span class="ref">FO·37 / TL·02</span><span class="ttl">Why grotesques have spurs</span></a></li>
+      <li><a href="#"><span class="ref">FO·37 / TL·03</span><span class="ttl">Reading the 1898 specimen book</span></a></li>
+      <li><a href="#"><span class="ref">FO·37 / TL·04</span><span class="ttl">Helvetica's debt, itemized</span></a></li>
+      <li><a href="#"><span class="ref">FO·37 / TL·05</span><span class="ttl">The flat-top &ldquo;t&rdquo; lineage</span></a></li>
+    </ul>
+
+    <div class="divider-thin"></div>
+
+    <span class="kicker">Lab Stats</span>
+    <ul class="numbered">
+      <li>Berthold released 8 weights between 1898 and 1969.</li>
+      <li>The 1958 Schelter &amp; Giesecke version differs in 14 glyphs.</li>
+      <li>Akzidenz was used to set the 1957 Basel Kunsthalle posters in full.</li>
+      <li>Berthold's New York office cut a phototype version in 1969.</li>
+      <li>Günter Gerhard Lange revived the family in 1969–1970.</li>
+    </ul>
+  </aside>
+</div>
+
+<div class="container">
+  <div class="bleed">
+    <span class="kicker" style="color:var(--chartreuse)">Specimen Stack — Akzidenz at Five Sizes</span>
+    <h2 style="color:var(--parchment)">A B C D E F G — Hamburgevons</h2>
+    <p class="muted" style="color:rgba(245,236,215,0.7)">Stacked grid; ascending sizes; the same alphabetic glyph row rendered to show how the cut accumulates personality as it scales.</p>
+
+    <div class="specimen-stack" style="border-color:var(--parchment);background:var(--ink)">
+      <div class="specimen-row s1"><span class="sz" style="color:rgba(245,236,215,0.6)">16 pt</span><span class="glyphs" style="color:var(--parchment)">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</span></div>
+      <div class="specimen-row s2"><span class="sz" style="color:rgba(245,236,215,0.6)">24 pt</span><span class="glyphs" style="color:var(--parchment)">Hamburgevons — Akzidenz-Grotesk</span></div>
+      <div class="specimen-row s3"><span class="sz" style="color:rgba(245,236,215,0.6)">36 pt</span><span class="glyphs" style="color:var(--parchment)">Grotesque &amp; precise</span></div>
+      <div class="specimen-row s4"><span class="sz" style="color:rgba(245,236,215,0.6)">54 pt</span><span class="glyphs" style="color:var(--chartreuse)">Berlin · 1898</span></div>
+      <div class="specimen-row s5"><span class="sz" style="color:rgba(245,236,215,0.6)">80 pt</span><span class="glyphs" style="color:var(--parchment)">Aa Rr Gg</span></div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div>
+      <h4>Folio Obscura</h4>
+      <p class="colophon">A quarterly of design criticism, set in Georgia &amp; system sans, edited from Zürich &amp; Lisbon since 2014.</p>
+    </div>
+    <div>
+      <h4>Sections</h4>
+      <a href="../cover-story/index.html">Cover Story</a>
+      <a href="#">Type Lab</a>
+      <a href="../object-study/index.html">Object Study</a>
+      <a href="../grid-dispatch/index.html">Grid Dispatch</a>
+      <a href="../archive-index/index.html">Archive Index</a>
+    </div>
+    <div>
+      <h4>Subscribe</h4>
+      <a href="#">Print quarterly</a>
+      <a href="#">Digital edition</a>
+      <a href="#">Institutional</a>
+      <a href="#">Back issues</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <a href="#">editors@folioobscura</a>
+      <a href="#">Submissions</a>
+      <a href="#">Masthead</a>
+      <a href="#">Colophon</a>
+    </div>
+    <div class="legal">
+      <span>© MMXXIV Folio Obscura Press</span>
+      <span>Issue XXXVII · Winter 2024</span>
+      <span>ISSN 2634-0118</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
