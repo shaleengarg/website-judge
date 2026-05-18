@@ -118,3 +118,143 @@ Another Problem with my scoring logic is that I have defined a single size scree
 ------
 Ok so now there is an LLM to generate the seed; then another set of LLM calls to generate the HTML/CSS. earlier we were asking the LLM to generate the full set of 5 htmls in a single API call. This overflows the max token limits for any complex task. So, I changed that to a call per html page.
 Another problem I saw was that there was not guarantees of diversity in website generation in terms of genres for a single tier. So I fixed that by evenly sampling the genre set.
+
+--------------------------
+Why grade the grader?
+
+The benchmark generator now emits diverse tier-1/2/3 sites and the grader at
+`bench-generator/templates/tests/score.py` is what every benchmarked agent's
+output flows through to produce a single reward number. That number is the
+*only* signal the rest of the system sees — leaderboards, RL training, agent
+comparisons, "is model X better than model Y" claims — they all collapse onto
+this one function. If the grader is wrong, every conclusion drawn from the
+benchmark is wrong, and we have no way of knowing.
+
+So before iterating on the grader (V1 → V2 → V3) we need a way to measure
+"is this grader actually good?" The shape that question takes here is:
+**given an output we already know is good/medium/bad, does the grader rank
+them in the right order, in the right bands, every time?** If yes, the grader
+is at least monotonic with design fidelity. If no, the grader is rewarding
+something other than what we claim it is.
+
+To answer that without humans grading hundreds of outputs by hand, we generate
+the labels programmatically. Pick one reference task, then synthesize three
+deliberately-degraded variants of the agent's output: one that is *known to be
+perfect*, one *known to be mediocre*, one *known to be bad*. Feed each through
+the grader and check that the scores fall into the bands we'd expect from
+those labels. The targets (from `small_checks/docs/GRADING.md`, where the same
+approach was used at larger scale): near_perfect ≥ 0.85, mediocre 0.40–0.65,
+bad 0.10–0.30, with zero per-task inversions (`near_perfect > mediocre > bad`
+must always hold).
+
+`bench-generator/scoring_calibration/degrade.py` is the variant generator. It
+takes the reference HTML for a task and rewrites it under three regex-based
+rule sets — no LLM, no Playwright, just string surgery so the rules are
+deterministic and inspectable:
+
+- **near_perfect** — verbatim copy. Establishes the ceiling: if the grader
+  doesn't rank a byte-identical copy of the reference near 1.0, the grader
+  is broken at the simplest possible test.
+- **mediocre** — swap every hex color in the source with a cycling generic
+  palette (`#6B7280` gray, `#3B82F6` blue, `#10B981` green, `#F59E0B` amber);
+  force every `font-family` to Arial; replace every other `<p>`'s text with
+  lorem. Keep semantic tags (`<nav>`/`<header>`/`<main>`/`<footer>`) and
+  `@media` queries intact. Models a "low-effort but not lazy" agent — the
+  structure is right, the brand is wrong.
+- **bad** — swap colors to a high-contrast wrong palette (salmon/turquoise/
+  gold/magenta); replace ALL visible text in every `<h*>`/`<p>`/`<span>`/
+  `<a>`/`<li>`/`<button>` with lorem placeholders; strip all `@media` blocks;
+  strip the viewport meta tag; rewrite every semantic tag to a `<div>`;
+  flatten flex/grid to plain block; remove `<link rel="stylesheet">`; inject
+  an ugly monospace style block; and drop the alpha-last page entirely.
+  Models an agent that has given up — text, structure, palette, responsive
+  CSS, page count are all wrong.
+
+Because the rules are filename-locked (this file is `degrade.py`, version 1),
+any future change to the rules requires copying to `degrade_v2.py` and starting
+a new results column — otherwise grader scores from old runs become
+incomparable across rule changes.
+
+The runner at `bench-generator/scoring_calibration/run.py` then loads a
+**snapshotted grader version** (`grader_versions/v1/score.py`,
+`grader_versions/v2/score.py`, …) and runs it against every (task, variant)
+pair, writes a per-version results JSON, and prints a tier-separation table.
+Frozen snapshots mean the `vN.json` filename and the bytes that produced it
+can never disagree, so calibration runs are reproducible even after the live
+template has moved on.
+
+--------------------------
+Grader meta-evaluation — V1 calibration results
+
+Task: `synth-t1-burnt-sage-kitchen-9322` (5 pages, warm off-white + terracotta + sage palette).
+
+<!-- BEGIN v1 calibration -->
+V1 results (run: 2026-05-18):
+
+The runner prints `HIT` when a tier's mean reward lands inside its target band
+and `MISS` when it doesn't; an extra `inversions` row counts how many per-task
+pairs violated `near_perfect > mediocre > bad`. Crucially, a single `HIT` per
+tier is not the same as "the grader works" — the grader passes calibration only
+when **all three tiers HIT and inversions == 0**. Hitting one band by luck
+while inverting another is failure, not partial credit (see the prose after the
+table).
+
+| tier         | mean  | target band | verdict |
+|--------------|-------|-------------|---------|
+| near_perfect | 1.000 | ≥ 0.85      | HIT     |
+| mediocre     | 0.465 | 0.40–0.65   | HIT     |
+| bad          | 0.482 | 0.10–0.30   | MISS    |
+| inversions   | 1     | 0           | MISS    |
+
+Per-page breakdown (combined = 0.7·SSIM + 0.3·color_hist):
+
+- near_perfect — about-cook=1.000, ingredients=1.000, method=1.000, notes=1.000, recipe=1.000
+- mediocre     — about-cook=0.452, ingredients=0.496, method=0.461, notes=0.462, recipe=0.455
+- bad          — about-cook=0.580, ingredients=0.651, method=0.591, notes=0.587, recipe=0.000 (page intentionally omitted)
+
+Note on flakiness: on one earlier run, near_perfect/about-cook scored 0.000
+despite being a byte-identical copy of the reference — Playwright's first-page
+screenshot in a fresh browser context sometimes captures before font/style
+loading settles, so ref and agent renders diverge despite identical source. On
+the clean re-run above all 5 near_perfect pages scored a flat 1.000. The
+intermittency itself is a V1 flaw — a reward signal that's nondeterministic
+across runs is worse than one that's deterministically wrong, because you can't
+even tell whether a low score means the agent did badly or the grader hiccuped.
+<!-- END v1 calibration -->
+
+Two "HIT"s on the table above are misleading. The grader still failed
+calibration in two concrete ways:
+
+1. **The ranking is inverted.** Per-page, every `bad` page scores higher than
+   every `mediocre` page (0.58–0.65 vs 0.46–0.50). The grader literally rewards
+   the structurally broken output over the structurally intact one. This
+   happens because the bad palette (salmon/turquoise/gold/magenta) coincidentally
+   has *more red coverage* than the muted gray/blue mediocre palette does — and
+   the reference site is warm (cream + terracotta), so RGB histogram
+   intersection gives `bad` a 0.33 color score vs `mediocre`'s 0.01. The
+   mediocre tier *destroys* the histogram match by going gray, while the bad
+   tier *preserves* it by going also-red. Pure RGB histogram is not a
+   brand-fidelity signal — it's a "is there any red on the page" signal. And
+   pixel SSIM also gives bad the edge because monolithic blocks of one color
+   (the bad variant's stripped-flex layout) produce smoother gradients than
+   the mediocre variant's mixed-wrong-colors-over-intact-structure.
+
+2. **`mediocre` hitting its target band is luck, not signal.** The grader has
+   no structural awareness — there's no reason 0.465 means "structurally OK,
+   visually wrong"; it's just where pixel SSIM lands when the page outline is
+   intact and the colors aren't catastrophically different. A grader that
+   coincidentally lands in the right band for one tier on one task is not the
+   same as a grader that ranks design fidelity reliably.
+
+3. **Single scalar hides the diagnosis.** The reward.txt for V1 is one float.
+   To find the failures above I had to parse `score_details.json`'s per-page
+   breakdown. An operator reading just `reward = 0.48` for bad has no way to
+   know whether that's "moderate everything" or "great on 4 pages, broken on
+   1" or "wrong palette but right structure" — the score should expose
+   dimensions, not collapse them.
+
+These are *concrete, measurable* gaps. V2 needs to: (a) reward structural
+correctness independently of pixel histograms so a gray-palette mediocre beats
+a magenta-palette bad; (b) make perfect copies score reliably high on every
+page (deterministic rendering); (c) expose per-aspect breakdown so failures
+are diagnosable.
