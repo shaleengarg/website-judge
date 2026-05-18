@@ -258,3 +258,122 @@ correctness independently of pixel histograms so a gray-palette mediocre beats
 a magenta-palette bad; (b) make perfect copies score reliably high on every
 page (deterministic rendering); (c) expose per-aspect breakdown so failures
 are diagnosable.
+
+--------------------------
+Scoring V2 — schema-free multi-aspect
+
+V2 keeps V1's I/O contract and pixel metrics but demotes them to 2 of 11
+weighted aspects. After rendering each page at 1280×800, the same Playwright
+page object runs a JavaScript snippet (`EXTRACTION_JS`) that pulls a generic
+DOM description: every visible heading (h1-h6), paragraph, link with `inNav`
+flag, button/input, navigation region, repeating group (detected by structural
+similarity — any container whose ≥60% of direct children share `tag + size
+bucket`), layout skeleton, and the document-order visible-text stream. Generic
+primitives — works across t1-t3 sites without per-genre hard-coding.
+
+The 11 aspects (declared in `ASPECT_TARGET_WEIGHTS`, summing to 1.0):
+
+| Aspect             | Weight | What it scores |
+|--------------------|--------|----------------|
+| `pixel_ssim`       | 0.18   | Grayscale SSIM (V1's metric, kept for backwards comparability) |
+| `color_histogram`  | 0.07   | V1's RGB histogram intersection (also kept) |
+| `region_color`     | 0.08   | Mean RGB per 3×3 spatial bin — catches "right colors, wrong placement" |
+| `palette`          | 0.05   | Top-K quantized dominant colors, area-weighted overlap |
+| `headings`         | 0.10   | Per-tag count match + biggest-heading text/position + top-5 text match |
+| `paragraphs`       | 0.07   | Count + length-bucket distribution (short/medium/long) |
+| `navigation`       | 0.08   | Primary-nav position + link count + link text match |
+| `repeating_groups` | 0.12   | Greedy IoU match + per-item text/image/interactive counts |
+| `interactive`      | 0.05   | Count + tag:type breakdown + button text |
+| `layout_skeleton`  | 0.10   | Bounding-box map of major element types, matched by IoU |
+| `text_content`     | 0.10   | difflib.SequenceMatcher over the full visible-text stream |
+
+Key V2 design choices vs V1:
+
+1. **Adaptive renormalization.** Each aspect returns `(score, weight_multiplier)`.
+   When an aspect has nothing to compare (e.g., paragraphs on a sparse t1 hero,
+   navigation on a single-page site), it returns `weight_multiplier=0` and
+   contributes nothing. The final score is `weighted_sum / applied_weight`,
+   not `weighted_sum / 1.0` — non-applicable aspects don't get free 1.0s.
+
+2. **Schema-free extraction.** The earlier 11-aspect prototype in
+   `rudimentary_test/` was tuned for pricing pages (cards detected by `$`
+   substring + size heuristics). That doesn't generalize to recipe sites,
+   blogs, dashboards. V2's primitives (headings, paragraphs, links,
+   repeating-groups-by-structural-similarity, etc.) are genre-agnostic.
+
+3. **Per-aspect breakdown.** `score_details.json` now exposes every aspect's
+   score, applied weight, sub-aspect details, and a `low_coverage` flag when
+   <50% of total weight applied. An operator reading the JSON can see *what*
+   failed, not just the combined number.
+
+<!-- BEGIN v2 calibration -->
+V2 results (run: 2026-05-18, same task as V1):
+
+| tier         | mean  | target band | verdict |
+|--------------|-------|-------------|---------|
+| near_perfect | 0.999 | ≥ 0.85      | HIT     |
+| mediocre     | 0.661 | 0.40–0.65   | MISS    |
+| bad          | 0.393 | 0.10–0.30   | MISS    |
+| inversions   | 0     | 0           | HIT     |
+
+V1 vs V2 side by side:
+
+|                  | V1    | V2    | direction |
+|------------------|-------|-------|-----------|
+| near_perfect     | 1.000 | 0.999 | flat (good) |
+| mediocre         | 0.465 | 0.661 | up (closer to mediocre prose) |
+| bad              | 0.482 | 0.393 | **down** (the only one moving toward its band) |
+| inversions       | 1     | 0     | **fixed** |
+<!-- END v2 calibration -->
+
+The headline result: **V2's per-task ranking is monotonic.** V1 had
+`mediocre (0.465) < bad (0.482)` — the grader literally rewarded broken output
+over partially-correct output. V2 has `near_perfect (0.999) > mediocre (0.661)
+> bad (0.393)`. The qualitative bug — "the grader doesn't know which output
+is better" — is fixed.
+
+What's still off: both `mediocre` and `bad` score above their target bands.
+Looking at per-aspect breakdown in `bench-generator/scoring_calibration/results/v2.json`,
+three aspects leak credit on the bad variant:
+
+- **`navigation = 0.804`** despite the bad variant stripping `<nav>` tags to
+  `<div class="nav">` and replacing link text with "Link One"/"Link Two".
+  The extractor's "4+ child links" heuristic still detects the nav region;
+  link count matches; primary-region position matches; only the link-text
+  similarity is low. Result: 0.80 — way too high for "the nav was demolished."
+- **`pixel_ssim = 0.68–0.79`** still high because grayscale SSIM is forgiving
+  of color changes when the layout is mostly intact. The bad variant flattens
+  flex/grid but the underlying element order is preserved.
+- **`repeating_groups = 0.74`** because the JS extractor only requires
+  `tag + size_bucket` similarity to call something a group. After flattening
+  flex to block, children still share tags (mostly), so groups are detected
+  and matched by IoU even though the visual presentation is completely
+  different.
+
+The pure-text aspect (`text_content`) correctly tanks (0.09–0.21 on bad), but
+it's only 10% of total weight, so it can't drag the average down enough.
+
+This is a **weight-tuning failure, not a correctness failure** — the ranking
+is right; the absolute numbers are too generous. Two ways to fix:
+
+- **Sharpen the lenient aspects.** Make `navigation` penalize generic link
+  labels (Link One / Link Two patterns), make `repeating_groups` require item
+  *text* similarity (not just count/direction/position), reduce `pixel_ssim`
+  weight, increase `text_content` weight.
+- **Add a dimension that actually judges design fidelity** — i.e., V3's MLLM
+  judge. A model that sees both screenshots can directly tell that the bad
+  variant looks wrong in ways the deterministic aspects can't quantify.
+
+V2 still doesn't address:
+
+1. **No semantic design judgment.** Two pages with identical extracted
+   primitives can look obviously different to a human (broken type pairing,
+   wrong vertical rhythm, clashing buttons). V2's score for those would be
+   ~1.0 because all the primitives match.
+2. **Responsive blindness.** Still 1280×800 only. Desktop-only CSS scores the
+   same as responsive CSS.
+3. **Source HTML is never inspected.** An agent that embeds the input PNG as
+   `<img src="data:image/png;base64,…">` would render exactly the reference,
+   match every extracted primitive, and score ~1.0. V2 looks only at the
+   rendered output.
+
