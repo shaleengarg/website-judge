@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaultline — Personal Details</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Header / Nav */
+  .site-header {
+    background: #00CED1;
+    color: #FF6B6B;
+    border-bottom: 3px solid #FFD700;
+  }
+  .header-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 18px 48px;
+    display: block;
+    
+    
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+  }
+  .brand .mark {
+    color: #FFD700;
+    margin-right: 4px;
+  }
+  .nav {
+    display: block;
+    
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #FF00FF;
+  }
+  .nav a { padding: 4px 0; border-bottom: 1px solid transparent; }
+  .nav a.active { color: #FF6B6B; border-bottom-color: #FFD700; }
+  .nav a:hover { color: #FF6B6B; }
+
+  /* Sub-header */
+  .sub-header {
+    background: #FF6B6B;
+    border-bottom: 1px solid #FF00FF;
+  }
+  .sub-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 48px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #00CED1;
+    display: block;
+    
+  }
+  .sub-inner .ref { font-family: "Courier New", monospace; color: #00CED1; letter-spacing: 0.05em; text-transform: none; font-size: 12px; }
+
+  /* Content column */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 48px 64px;
+  }
+
+  /* Progress indicator */
+  .progress {
+    display: block;
+    
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .progress::before {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    height: 1px;
+    background: #FF00FF;
+    z-index: 0;
+  }
+  .step {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    flex: 1;
+  }
+  .step .num {
+    display: inline-flex;
+    
+    
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #FF6B6B;
+    border: 1.5px solid #FF00FF;
+    color: #00CED1;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .step .lbl {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #00CED1;
+  }
+  .step.completed .num {
+    background: #FFD700;
+    border-color: #FFD700;
+    color: #00CED1;
+  }
+  .step.completed .lbl { color: #00CED1; }
+  .step.active .num {
+    background: #FFD700;
+    border-color: #FFD700;
+    color: #FF00FF;
+  }
+  .step.active .lbl { color: #FFD700; font-weight: 600; }
+
+  /* Page heading */
+  .page-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 0 0 6px 0;
+    color: #00CED1;
+  }
+  .page-sub {
+    color: #00CED1;
+    font-size: 13px;
+    margin: 0 0 32px 0;
+  }
+  .page-sub b { color: #FFD700; font-weight: 600; }
+
+  /* Section */
+  .section-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 15px;
+    color: #00CED1;
+    margin: 0 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #FF00FF;
+  }
+
+  /* Form grid */
+  .form-grid {
+    display: block;
+    
+    
+    margin-bottom: 32px;
+  }
+  .field { display: block;  }
+  .field.full {  }
+  .field.third {  }
+
+  label.lbl-top {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #00CED1;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  select,
+  textarea {
+    border: 1.5px solid #FF00FF;
+    border-radius: 3px;
+    padding: 10px 12px;
+    background: #FF00FF;
+    font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #00CED1;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%;
+  }
+  input.mono { font-family: "Courier New", monospace; }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid rgba(46,93,158,0.25);
+    outline-offset: 0;
+    border-color: #FFD700;
+  }
+  input:required:invalid:not(:placeholder-shown) {
+    border-color: #FF6B6B;
+  }
+  input:required:invalid:not(:placeholder-shown) + .err {
+    display: block;
+  }
+  .err {
+    display: none;
+    font-size: 11px;
+    color: #FF6B6B;
+    margin-top: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  /* Phone group */
+  .phone-group {
+    display: block;
+    
+    
+  }
+
+  /* Radio group (yes/no) */
+  .radio-row {
+    display: block;
+    
+    
+    padding-top: 4px;
+  }
+  .radio-opt {
+    display: inline-flex;
+    
+    cursor: pointer;
+    font-size: 14px;
+    color: #00CED1;
+  }
+  .radio-opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .radio-opt .mark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #FF00FF;
+    border-radius: 50%;
+    margin-right: 8px;
+    display: inline-block;
+    position: relative;
+    background: #FF00FF;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .radio-opt input:checked + .mark {
+    border-color: #FFD700;
+    background: #FFD700;
+  }
+  .radio-opt input:checked + .mark::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px; height: 6px;
+    background: #FF00FF;
+    border-radius: 50%;
+  }
+  .radio-opt input:focus + .mark {
+    outline: 2px solid rgba(46,93,158,0.25);
+  }
+
+  /* CTA */
+  .cta-row {
+    display: block;
+    
+    
+    
+    margin-top: 12px;
+  }
+  .back-link {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #FFD700;
+    border-bottom: 1px solid #FFD700;
+    padding-bottom: 2px;
+  }
+  .btn-gold {
+    background: #FFD700;
+    color: #00CED1;
+    border: none;
+    height: 48px;
+    padding: 0 32px;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 3px;
+    font-family: inherit;
+  }
+  .btn-gold:hover { background: #00CED1; }
+
+  /* Footer */
+  .site-footer {
+    background: #00CED1;
+    color: #FF00FF;
+    margin-top: 32px;
+  }
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 48px;
+    display: block;
+    
+    
+    font-size: 11px;
+    letter-spacing: 0.12em;
+  }
+  .footer-inner .legal { color: #00CED1; }
+  .footer-inner .marks { color: #FFD700; font-family: Georgia, serif; letter-spacing: 0.05em; }
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<div class="header" class="site-header">
+  <div class="header-inner">
+    <div class="brand"><span class="mark">Lorem ipsum dolor sit amet consectetur.</span> VAULTLINE</div>
+    <div class="nav" class="nav">
+      <a href="../account-type/index.html">Link One</a>
+      <a href="#" class="active">Link Two</a>
+      <a href="../financial-profile/index.html">Link Three</a>
+      <a href="../documents/index.html">Link Four</a>
+      <a href="../review-submit/index.html">Link Five</a>
+    </div>
+  </div>
+</div>
+
+<div class="sub-header">
+  <div class="sub-inner">
+    <span>Lorem ipsum dolor sit amet consectetur.</span>
+    <span class="ref">Lorem ipsum dolor sit amet consectetur.</span>
+  </div>
+</div>
+
+<div class="main" class="container">
+
+  <div class="progress">
+    <div class="step completed"><span class="num">Lorem ipsum dolor sit amet consectetur.</span><span class="lbl">Lorem ipsum dolor sit amet consectetur.</span></div>
+    <div class="step active"><span class="num">Lorem ipsum dolor sit amet consectetur.</span><span class="lbl">Lorem ipsum dolor sit amet consectetur.</span></div>
+    <div class="step"><span class="num">Lorem ipsum dolor sit amet consectetur.</span><span class="lbl">Lorem ipsum dolor sit amet consectetur.</span></div>
+    <div class="step"><span class="num">Lorem ipsum dolor sit amet consectetur.</span><span class="lbl">Lorem ipsum dolor sit amet consectetur.</span></div>
+    <div class="step"><span class="num">Lorem ipsum dolor sit amet consectetur.</span><span class="lbl">Lorem ipsum dolor sit amet consectetur.</span></div>
+  </div>
+
+  <h1 class="page-title">Lorem Ipsum Dolor</h1>
+  <p class="page-sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+  <h2 class="section-title">Lorem Ipsum Dolor</h2>
+  <div class="form-grid">
+    <div class="field">
+      <label class="lbl-top" for="first">Legal First Name</label>
+      <input id="first" type="text" placeholder="Alexander" required>
+      <span class="err">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="middle">Middle Name(s)</label>
+      <input id="middle" type="text" placeholder="James Reginald">
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="last">Legal Last Name</label>
+      <input id="last" type="text" placeholder="Whitfield" required>
+      <span class="err">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="dob">Date of Birth</label>
+      <input id="dob" type="text" class="mono" placeholder="YYYY / MM / DD" required>
+      <span class="err">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="nationality">Nationality</label>
+      <select id="nationality" required>
+        <option value="">Select country…</option>
+        <option>United States</option>
+        <option>United Kingdom</option>
+        <option>Canada</option>
+        <option>Australia</option>
+        <option>Germany</option>
+        <option>France</option>
+        <option>Switzerland</option>
+        <option>Luxembourg</option>
+        <option>Netherlands</option>
+        <option>Belgium</option>
+        <option>Italy</option>
+        <option>Spain</option>
+        <option>Portugal</option>
+        <option>Sweden</option>
+        <option>Norway</option>
+        <option>Denmark</option>
+        <option>Ireland</option>
+        <option>Austria</option>
+        <option>Finland</option>
+        <option>Japan</option>
+        <option>Singapore</option>
+        <option>Hong Kong SAR</option>
+        <option>United Arab Emirates</option>
+        <option>Saudi Arabia</option>
+        <option>South Korea</option>
+        <option>New Zealand</option>
+        <option>Brazil</option>
+        <option>Mexico</option>
+        <option>South Africa</option>
+        <option>India</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="lbl-top">Dual Citizenship</label>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="dual"><span class="mark">Lorem ipsum dolor sit amet consectetur.</span>Yes</label>
+        <label class="radio-opt"><input type="radio" name="dual" checked><span class="mark">Lorem ipsum dolor sit amet consectetur.</span>No</label>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Lorem Ipsum Dolor</h2>
+  <div class="form-grid">
+    <div class="field full">
+      <label class="lbl-top" for="addr1">Street Address</label>
+      <input id="addr1" type="text" placeholder="148 Belgrave Square, Apt. 7B" required>
+      <span class="err">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="city">City</label>
+      <input id="city" type="text" placeholder="London" required>
+      <span class="err">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="region">State / Region</label>
+      <input id="region" type="text" placeholder="Greater London">
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="postal">Postal Code</label>
+      <input id="postal" type="text" class="mono" placeholder="SW1X 8PZ" required>
+      <span class="err">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="country">Country of Residence</label>
+      <select id="country" required>
+        <option value="">Select country…</option>
+        <option>United Kingdom</option>
+        <option>United States</option>
+        <option>Switzerland</option>
+        <option>Singapore</option>
+        <option>United Arab Emirates</option>
+        <option>Luxembourg</option>
+      </select>
+    </div>
+  </div>
+
+  <h2 class="section-title">Lorem Ipsum Dolor</h2>
+  <div class="form-grid">
+    <div class="field">
+      <label class="lbl-top" for="phone">Phone Number</label>
+      <div class="phone-group">
+        <select id="cc">
+          <option>+44 UK</option>
+          <option>+1 US</option>
+          <option>+41 CH</option>
+          <option>+65 SG</option>
+          <option>+971 AE</option>
+          <option>+352 LU</option>
+          <option>+49 DE</option>
+          <option>+33 FR</option>
+        </select>
+        <input id="phone" type="tel" class="mono" placeholder="20 7946 0188" required>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl-top" for="email">Email Address</label>
+      <input id="email" type="email" placeholder="a.whitfield@private.mail" required>
+      <span class="err">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <a class="back-link" href="../account-type/index.html">Link One</a>
+    <button class="btn-gold" type="submit">Click Here</button>
+  </div>
+
+</div>
+
+<div class="footer" class="site-footer">
+  <div class="footer-inner">
+    <span class="marks">Lorem ipsum dolor sit amet consectetur.</span>
+    <span class="legal">Lorem ipsum dolor sit amet consectetur.</span>
+  </div>
+</div>
+
+</body>
+</html>

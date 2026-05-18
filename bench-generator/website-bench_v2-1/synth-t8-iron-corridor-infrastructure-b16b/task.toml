@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/synth-t8-iron-corridor-infrastructure-b16b"
+description = "A special investigative report — 'The Iron Corridor' — examining the structural decay of North America's inland freight rail network across five densely composed editorial pages."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "special-report", "tier-8"]
+
+[metadata]
+difficulty_explanation = "Tier 8 (special-report): A special investigative report — 'The Iron Corridor' — examining the structural decay of North America's inland freight rail network across five densely composed editorial pages."
+category = "frontend"
+tier = 8
+genre = "special-report"
+
+[verifier]
+timeout_sec = 420.0
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

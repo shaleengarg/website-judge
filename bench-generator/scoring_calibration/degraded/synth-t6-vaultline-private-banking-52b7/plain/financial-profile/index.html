@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaultline — Financial Profile</title>
+
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">VAULTLINE<span class="mark">·</span><span>PRIVATE BANKING</span></div>
+    <nav class="site-nav">
+      <ul>
+        <li><a href="../account-type/index.html">Account Type</a></li>
+        <li><a href="../personal-details/index.html">Personal Details</a></li>
+        <li><a href="#" class="active">Financial Profile</a></li>
+        <li><a href="../documents/index.html">Documents</a></li>
+        <li><a href="../review-submit/index.html">Review &amp; Submit</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress">
+    <div class="step completed">
+      <div class="num">✓</div>
+      <div class="lbl">Account Type</div>
+    </div>
+    <div class="step completed">
+      <div class="num">✓</div>
+      <div class="lbl">Personal Details</div>
+    </div>
+    <div class="step active">
+      <div class="num">3</div>
+      <div class="lbl">Financial Profile</div>
+    </div>
+    <div class="step">
+      <div class="num">4</div>
+      <div class="lbl">Documents</div>
+    </div>
+    <div class="step">
+      <div class="num">5</div>
+      <div class="lbl">Review &amp; Submit</div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <h1 class="page-title">Financial Profile</h1>
+  <p class="page-subtitle">All information is encrypted and reviewed solely by our suitability committee. Required fields are marked.</p>
+
+  <form novalidate>
+
+    <section class="section">
+      <h2 class="section-heading"><span class="idx">01 ·</span>Income</h2>
+      <label class="field-label" for="income">Annual Income Range (USD)</label>
+      <select id="income" required>
+        <option value="">Select a range…</option>
+        <option>Under $250,000</option>
+        <option>$250,000 – $500,000</option>
+        <option>$500,000 – $1,000,000</option>
+        <option>$1,000,000 – $2,500,000</option>
+        <option>$2,500,000 – $5,000,000</option>
+        <option>Over $5,000,000</option>
+      </select>
+      <div class="err">Required — please select an income range.</div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-heading"><span class="idx">02 ·</span>Source of Wealth</h2>
+      <label class="field-label">Select all that apply</label>
+      <div class="check-grid">
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="employment">
+          <span class="box"></span>
+          <span class="opt-label">Employment income</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="inheritance">
+          <span class="box"></span>
+          <span class="opt-label">Inheritance</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="investments">
+          <span class="box"></span>
+          <span class="opt-label">Investment returns</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="business">
+          <span class="box"></span>
+          <span class="opt-label">Business sale / equity</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="other">
+          <span class="box"></span>
+          <span class="opt-label">Other (specify in notes)</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-heading"><span class="idx">03 ·</span>Estimated Net Worth</h2>
+      <label class="field-label" for="networth">Total Net Worth (USD)</label>
+      <div class="currency-wrap">
+        <span class="prefix">$</span>
+        <input id="networth" class="mono" type="text" placeholder="0,000,000.00" required pattern="[0-9,\.\s]+">
+      </div>
+      <div class="err">Required — enter a numeric estimate.</div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-heading"><span class="idx">04 ·</span>Primary Investment Objective</h2>
+      <div class="radio-list">
+        <label class="radio-row">
+          <input type="radio" name="obj" value="preservation" required>
+          <span class="dot"></span>
+          <span class="opt-label">Capital preservation — protect principal, low volatility</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="obj" value="income" required>
+          <span class="dot"></span>
+          <span class="opt-label">Income — generate steady cash flow from holdings</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="obj" value="balanced" required>
+          <span class="dot"></span>
+          <span class="opt-label">Balanced growth — moderate risk, blended returns</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="obj" value="aggressive" required>
+          <span class="dot"></span>
+          <span class="opt-label">Aggressive growth — high risk, long-horizon appreciation</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-heading"><span class="idx">05 ·</span>Additional Notes</h2>
+      <label class="field-label" for="notes">Disclosures, context, or special considerations (optional)</label>
+      <textarea id="notes" placeholder="Describe anything our advisory team should know — concentrated positions, liquidity events, fiduciary structures, etc."></textarea>
+    </section>
+
+    <div class="actions">
+      <button type="button" class="btn-back">← Back</button>
+      <button type="submit" class="btn-primary">Save &amp; Continue</button>
+    </div>
+
+  </form>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="legal">© 2024 Vaultline Trust Company, N.A. · Member FDIC · Equal Housing Lender</div>
+    <div class="meta">REF · VL-ONB-3 / 5</div>
+  </div>
+</footer>
+
+</body>
+</html>

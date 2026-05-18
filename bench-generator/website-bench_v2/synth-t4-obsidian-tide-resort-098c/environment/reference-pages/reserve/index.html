@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reserve — Obsidian Tide Resort</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0B1B2B;
+    color: #F5EDD8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(11, 27, 43, 0.92);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  }
+  .nav-inner {
+    max-width: 1160px; margin: 0 auto;
+    padding: 22px 80px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand {
+    font-family: Georgia, serif; font-weight: 700; font-size: 20px;
+    background: linear-gradient(90deg, #C9A84C, #E8C96A);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    letter-spacing: 0.5px;
+  }
+  .nav ul { list-style: none; display: flex; gap: 36px; }
+  .nav ul a {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 1.6px;
+    color: #F5EDD8; opacity: 0.85; transition: color .2s;
+  }
+  .nav ul a.active {
+    color: transparent;
+    background: linear-gradient(90deg, #C9A84C, #E8C96A);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 1;
+  }
+
+  /* HERO STRIP */
+  .page-head {
+    background: linear-gradient(160deg, #0B1B2B 60%, #112233 100%);
+    padding: 96px 80px 64px;
+    text-align: center;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+  }
+  .eyebrow {
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+    color: #2ABFBF; margin-bottom: 18px;
+  }
+  .page-head h1 {
+    font-size: 42px;
+    background: linear-gradient(90deg, #C9A84C, #E8C96A);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative; display: inline-block;
+    padding-bottom: 22px;
+  }
+  .page-head h1::before {
+    content: "";
+    position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+    width: 48px; height: 2px;
+    background: linear-gradient(90deg, #C9A84C, transparent);
+  }
+  .page-head p {
+    margin-top: 22px; max-width: 540px; margin-left: auto; margin-right: auto;
+    color: rgba(245, 237, 216, 0.78); font-size: 16px;
+  }
+
+  /* MAIN */
+  .main-wrap {
+    max-width: 1160px; margin: 0 auto;
+    padding: 96px 80px;
+    display: grid; grid-template-columns: 1fr 280px; gap: 64px;
+    align-items: start;
+  }
+  .form-col { max-width: 600px; justify-self: center; width: 100%; }
+
+  .form-title {
+    font-size: 28px;
+    position: relative; padding-left: 64px;
+    margin-bottom: 8px;
+    color: #F5EDD8;
+  }
+  .form-title::before {
+    content: ""; position: absolute; left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 48px; height: 2px;
+    background: linear-gradient(90deg, #C9A84C, transparent);
+  }
+  .form-sub { color: rgba(245, 237, 216, 0.7); font-size: 16px; margin-bottom: 40px; padding-left: 64px; }
+
+  form { display: flex; flex-direction: column; gap: 22px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .field { display: flex; flex-direction: column; }
+  .field label {
+    font-size: 13px; letter-spacing: 1.4px; text-transform: uppercase;
+    color: #C9A84C; margin-bottom: 10px; font-weight: 500;
+  }
+  .field input, .field select, .field textarea {
+    background: #0B1B2B;
+    border: 1px solid #C9A84C;
+    border-radius: 4px;
+    color: #F5EDD8;
+    padding: 14px 16px;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: #2ABFBF;
+    box-shadow: 0 0 0 3px rgba(42, 191, 191, 0.15);
+  }
+  .field textarea { resize: vertical; min-height: 110px; }
+  .field select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #C9A84C 50%),
+                      linear-gradient(135deg, #C9A84C 50%, transparent 50%);
+    background-position: calc(100% - 20px) center, calc(100% - 14px) center;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+
+  .consent {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 13px; color: rgba(245, 237, 216, 0.75);
+    padding: 4px 0;
+  }
+  .consent input { accent-color: #C9A84C; margin-top: 4px; }
+
+  .submit {
+    margin-top: 14px;
+    width: 100%;
+    padding: 18px 24px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #C9A84C, #E8C96A);
+    color: #0B1B2B;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  }
+
+  /* ASIDE */
+  .aside {
+    position: sticky; top: 110px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    border-radius: 12px;
+    padding: 28px 26px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    position: relative;
+  }
+  .aside::after {
+    content: ""; display: block;
+    position: absolute; left: 12px; right: 12px; bottom: -1px;
+    height: 3px; background: #2ABFBF;
+    box-shadow: 0 0 12px rgba(42, 191, 191, 0.6);
+    border-radius: 999px;
+  }
+  .aside h3 {
+    font-size: 20px; color: #F5EDD8; margin-bottom: 18px;
+    position: relative; padding-bottom: 14px;
+  }
+  .aside h3::before {
+    content: ""; position: absolute; left: 0; bottom: 0;
+    width: 48px; height: 2px;
+    background: linear-gradient(90deg, #C9A84C, transparent);
+  }
+  .calc-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 8px 0;
+    color: rgba(245, 237, 216, 0.85);
+    border-bottom: 1px solid rgba(245, 237, 216, 0.08);
+  }
+  .calc-row:last-of-type { border-bottom: none; }
+  .calc-row.total {
+    font-family: Georgia, serif; font-size: 20px; color: #C9A84C;
+    padding-top: 14px; margin-top: 6px;
+    border-top: 1px solid rgba(201, 168, 76, 0.3);
+  }
+  .aside .policy {
+    margin-top: 22px;
+    font-size: 13px; color: rgba(245, 237, 216, 0.65);
+    line-height: 1.6;
+    padding: 14px;
+    background: rgba(11, 27, 43, 0.6);
+    border-radius: 4px;
+    border-left: 2px solid #2ABFBF;
+  }
+  .aside .concierge {
+    margin-top: 22px; padding-top: 22px;
+    border-top: 1px solid rgba(245, 237, 216, 0.1);
+  }
+  .concierge .label {
+    font-size: 13px; letter-spacing: 1.4px; text-transform: uppercase;
+    color: #2ABFBF; margin-bottom: 8px;
+  }
+  .concierge .phone {
+    font-family: Georgia, serif; font-size: 20px;
+    background: linear-gradient(90deg, #C9A84C, #E8C96A);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .concierge .hrs { font-size: 13px; color: rgba(245, 237, 216, 0.6); margin-top: 4px; }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(160deg, #0B1B2B 60%, #112233 100%);
+    border-top: 1px solid rgba(201, 168, 76, 0.15);
+    padding: 64px 80px 32px;
+    margin-top: 32px;
+  }
+  .foot-inner {
+    max-width: 1160px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+  }
+  .foot-inner h4 {
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    color: #C9A84C; margin-bottom: 18px; font-family: system-ui, sans-serif;
+  }
+  .foot-inner p, .foot-inner li {
+    font-size: 13px; color: rgba(245, 237, 216, 0.7);
+    line-height: 1.9; list-style: none;
+  }
+  .foot-brand {
+    font-family: Georgia, serif; font-size: 28px;
+    background: linear-gradient(90deg, #C9A84C, #E8C96A);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .legal {
+    max-width: 1160px; margin: 48px auto 0;
+    padding-top: 24px; border-top: 1px solid rgba(245, 237, 216, 0.1);
+    display: flex; justify-content: space-between;
+    font-size: 13px; color: rgba(245, 237, 216, 0.5);
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">OBSIDIAN TIDE</div>
+    <ul>
+      <li><a href="../arrival/index.html">Arrival</a></li>
+      <li><a href="../suites/index.html">Suites</a></li>
+      <li><a href="../dining/index.html">Dining</a></li>
+      <li><a href="../experiences/index.html">Experiences</a></li>
+      <li><a href="#" class="active">Reserve</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page-head">
+  <div class="eyebrow">Reservations · Private &amp; Concierge</div>
+  <h1>Begin Your Stay</h1>
+  <p>Tell us when the Pacific should be yours. Each reservation is reviewed personally by our concierge team before confirmation.</p>
+</section>
+
+<main class="main-wrap">
+  <div class="form-col">
+    <h2 class="form-title">Your Reservation</h2>
+    <p class="form-sub">All fields confidential. Confirmation arrives within 12 hours.</p>
+
+    <form>
+      <div class="row">
+        <div class="field">
+          <label>Arrival Date</label>
+          <input type="date" value="2025-11-14">
+        </div>
+        <div class="field">
+          <label>Departure Date</label>
+          <input type="date" value="2025-11-17">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Suite Preference</label>
+        <select>
+          <option>Obsidian King — from $895/night</option>
+          <option>Tide-Watch Suite — from $1,120/night</option>
+          <option>Kelp Forest Cabin — from $740/night</option>
+          <option>Lava Stone Double — from $820/night</option>
+          <option>Canopy Loft — from $1,050/night</option>
+          <option>The Crest Penthouse — from $2,400/night</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Number of Guests</label>
+          <select>
+            <option>1 Guest</option>
+            <option selected>2 Guests</option>
+            <option>3 Guests</option>
+            <option>4 Guests</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Arrival Time</label>
+          <input type="text" placeholder="e.g. 4:30 PM">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Special Requests</label>
+        <textarea placeholder="Anniversary arrangements, dietary restrictions, in-room basalt soak preparation, transport from PDX, etc."></textarea>
+      </div>
+
+      <label class="consent">
+        <input type="checkbox" checked>
+        <span>I acknowledge that Obsidian Tide is an adults-only sanctuary (21+) and have reviewed the cancellation policy.</span>
+      </label>
+
+      <button class="submit" type="button">Request Reservation</button>
+    </form>
+  </div>
+
+  <aside class="aside">
+    <h3>Rate Summary</h3>
+    <div class="calc-row"><span>Tide-Watch Suite</span><span>$1,120 × 3</span></div>
+    <div class="calc-row"><span>Resort fee</span><span>$95</span></div>
+    <div class="calc-row"><span>Spa circuit credit</span><span>Included</span></div>
+    <div class="calc-row"><span>Occupancy tax</span><span>$248</span></div>
+    <div class="calc-row total"><span>Estimated</span><span>$3,703</span></div>
+
+    <div class="policy">
+      Full refund up to 14 days prior to arrival. Within 14 days, first night non-refundable. Storm-season flexibility applies November–March.
+    </div>
+
+    <div class="concierge">
+      <div class="label">Private Concierge</div>
+      <div class="phone">+1 (541) 488-0427</div>
+      <div class="hrs">Daily · 7 AM – 11 PM PT</div>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="foot-brand">Obsidian Tide</div>
+      <p>A cliffside sanctuary above the Pacific. Volcanic-rock spa pools, private tide-watch terraces, and farm-foraged cuisine on the Oregon coast.</p>
+    </div>
+    <div>
+      <h4>Visit</h4>
+      <ul>
+        <li><a href="../arrival/index.html">Arrival</a></li>
+        <li><a href="../suites/index.html">Suites</a></li>
+        <li><a href="../dining/index.html">Dining</a></li>
+        <li><a href="../experiences/index.html">Experiences</a></li>
+        <li><a href="#">Reserve</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>+1 (541) 488-0427</li>
+        <li>stay@obsidiantide.com</li>
+        <li>Coastal Hwy 101</li>
+        <li>Yachats, Oregon</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Hours</h4>
+      <ul>
+        <li>Check-in · 4:00 PM</li>
+        <li>Check-out · 11:00 AM</li>
+        <li>Open Year-Round</li>
+        <li>Adults Only · 21+</li>
+      </ul>
+    </div>
+  </div>
+  <div class="legal">
+    <span>© 2025 Obsidian Tide Resort. All rights reserved.</span>
+    <span>Privacy · Terms · Accessibility</span>
+  </div>
+</footer>
+
+</body>
+</html>

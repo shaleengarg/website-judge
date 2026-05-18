@@ -1,0 +1,29 @@
+{
+  "id": "synth-t5-moth-and-meridian-press-0edc",
+  "tier": 5,
+  "genre": "poetry-collection",
+  "pages": [
+    "collection",
+    "poets",
+    "single-poem",
+    "about",
+    "submissions"
+  ],
+  "palette_hint": "Deep charcoal background #1a1814 with warm off-white text #f0ebe0, accented by dusty amber #c8943a and muted sage #7a9e7e for pull quotes and drop caps.",
+  "type_style": "Headings in Georgia serif at weights 400 and 700 with wide letter-spacing; body in system-ui at weight 300 and 400 with generous line-height of 1.85; drop caps and pull quotes use Georgia italic 700 in amber.",
+  "description": "Moth & Meridian Press is a curated online poetry collection publishing three seasonal anthologies per year, featuring emerging and established voices writing at the intersection of grief, cartography, and natural wonder.",
+  "constraints": [
+    "All pages use a centered content column with max-width 720px and horizontal padding of 2rem; the background #1a1814 bleeds full-width.",
+    "The modular type scale is: 0.75rem (captions/meta), 1rem (body), 1.375rem (subheadings), 2rem (section headings), 3.25rem (page titles); no other font sizes permitted.",
+    "Drop caps on every poem's first stanza use ::first-letter at font-size 4.5rem, line-height 0.8, float left, color #c8943a, font-weight 700, margin-right 0.15rem.",
+    "Pull quotes are set in Georgia italic, font-size 1.375rem, color #7a9e7e, border-left 3px solid #7a9e7e, padding-left 1.25rem, max-width 520px, margin 2.5rem auto.",
+    "Heading letter-spacing: page titles at 0.08em, section headings at 0.05em, subheadings at 0.03em; body text letter-spacing 0.01em; all uppercase headings forbidden."
+  ],
+  "page_specs": {
+    "collection": "Displays the current anthology 'The Cartographer's Elegy \u2014 Winter 2024' as a full table of contents: 18 poem titles listed in two columns at subheading scale with poet names in 0.75rem caption weight below each. A pull quote from the editorial note introduces the page above the listing, and a muted amber horizontal rule (1px solid #c8943a, opacity 0.4) separates the introduction from the poem list.",
+    "poets": "A directory of the 12 contributing poets for the Winter 2024 issue, each rendered as a compact card with the poet's name at 1.375rem subheading, hometown and a single-sentence biography at 0.75rem caption, and a count of poems included. Cards are stacked vertically in the single column with 1.5rem spacing between them and a thin sage border-bottom #7a9e7e at 1px.",
+    "single-poem": "Displays a full poem \u2014 'Surveying the Flood Plain at Dusk' by Mirela Okonkwo \u2014 with the title at 2rem section-heading scale, the poet's name in 0.75rem caption italic beneath it, and the full 28-line poem in body text at line-height 2.0 to honor line breaks. The first stanza receives a drop cap on the letter 'W'; a pull quote lifts the couplet 'I have named every inlet / the water has already forgotten' in sage italic below the poem.",
+    "about": "Describes Moth & Meridian Press: founding year 2019, editorial philosophy emphasizing poems that 'hold a landscape accountable,' and a note on the three annual anthologies (Spring Thaw, Midsummer Rift, Winter Elegy). The page opens with the press name as a 3.25rem page title, followed by three short prose sections at body weight 300, each introduced by a 1.375rem subheading: 'Our Origins,' 'What We Publish,' and 'The Editorial Collective.'",
+    "submissions": "Outlines submission guidelines for the Spring Thaw 2025 anthology: open window February 1\u2013March 15, up to 5 poems per submission, no previously published work, poets retain all rights. Guidelines are presented as a structured list in body text with subheading labels for each rule category. A pull quote in sage reads: 'We are looking for poems that know the name of the soil beneath them.' Closes with a plain mailto link styled in amber #c8943a at subheading scale for submission contact."
+  }
+}

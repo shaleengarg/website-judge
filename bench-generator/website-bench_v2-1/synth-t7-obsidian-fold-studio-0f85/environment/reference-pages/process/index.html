@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Process — Obsidian Fold</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#1a1a1e;color:#f0ede6;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 64px}
+
+  /* HEADER */
+  header{position:relative;z-index:5;padding:28px 0;border-bottom:1px solid rgba(240,237,230,.08)}
+  header .wrap{display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:18px}
+  .brand .mark{width:48px;height:48px}
+  .brand .word{font-family:Georgia,serif;font-weight:bold;font-size:1.15rem;letter-spacing:.02em}
+  .brand .word small{display:block;font-family:system-ui,sans-serif;font-weight:normal;font-size:.7rem;color:#7b5ea7;letter-spacing:.25em;text-transform:uppercase;margin-top:2px}
+  nav ul{list-style:none;display:flex;gap:36px}
+  nav a{font-size:.82rem;letter-spacing:.18em;text-transform:uppercase;color:#f0ede6;opacity:.7;padding-bottom:4px;border-bottom:1px solid transparent;transition:.2s}
+  nav a.active{opacity:1;color:#f5a623;border-bottom-color:#f5a623}
+  nav a:hover{opacity:1}
+
+  /* INTRO */
+  .intro{position:relative;padding:96px 0 140px;overflow:hidden}
+  .intro .deco{position:absolute;top:120px;left:48%;width:520px;height:120px;background:#f5a623;opacity:.15;transform:rotate(-6deg) skewX(-18deg);z-index:0}
+  .intro .deco2{position:absolute;top:220px;left:38%;width:280px;height:60px;background:#f5a623;opacity:.15;transform:rotate(4deg) skewX(12deg);z-index:0}
+  .intro .wrap{position:relative;z-index:1}
+  .eyebrow{font-size:.78rem;letter-spacing:.32em;text-transform:uppercase;color:#f5a623;margin-bottom:24px}
+  .intro h1{font-family:Georgia,serif;font-weight:bold;font-size:5.2rem;line-height:1.02;letter-spacing:-.02em;margin-bottom:32px;max-width:1000px}
+  .intro h1 em{font-style:italic;color:#7b5ea7}
+  .intro p{max-width:580px;font-size:1.05rem;color:rgba(240,237,230,.78)}
+
+  /* PANEL SYSTEM */
+  .panel{position:relative;padding:140px 0 160px;margin-top:-60px}
+  .panel.charcoal{background:#1a1a1e;clip-path:polygon(0 7%,100% 0,100% 93%,0 100%)}
+  .panel.violet{background:linear-gradient(180deg,rgba(123,94,167,.12),rgba(123,94,167,.12)),#1a1a1e;clip-path:polygon(0 7%,100% 0,100% 93%,0 100%)}
+
+  .step{position:relative;display:grid;grid-template-columns:120px 1fr 320px;gap:48px;align-items:start}
+  .rail{position:relative;height:100%;min-height:380px}
+  .rail svg{position:absolute;top:0;left:50%;transform:translateX(-50%);overflow:visible}
+
+  .stepwatermark{position:absolute;top:-60px;left:60px;font-family:Georgia,serif;font-weight:bold;font-size:15rem;line-height:.85;color:transparent;-webkit-text-stroke:1px rgba(245,166,35,.35);pointer-events:none;z-index:0;letter-spacing:-.04em}
+  .panel.violet .stepwatermark{-webkit-text-stroke:1px rgba(123,94,167,.55)}
+
+  .content{position:relative;z-index:2}
+  .content .tag{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:#7b5ea7;margin-bottom:14px}
+  .panel.violet .content .tag{color:#f5a623}
+  .content h2{font-family:Georgia,serif;font-weight:bold;font-size:2.5rem;line-height:1.05;margin-bottom:20px;letter-spacing:-.01em}
+  .content h2 .dash{color:#f5a623}
+  .content p{max-width:580px;color:rgba(240,237,230,.82);margin-bottom:14px}
+  .content ul{list-style:none;margin-top:22px;max-width:580px}
+  .content ul li{font-size:.88rem;padding:10px 0;border-bottom:1px dashed rgba(240,237,230,.12);display:flex;justify-content:space-between;color:rgba(240,237,230,.75)}
+  .content ul li span{color:#f5a623;font-family:Georgia,serif;font-style:italic}
+
+  .aside{position:relative;z-index:2;padding-top:8px}
+  .aside .card{border:1px solid rgba(240,237,230,.12);padding:22px;position:relative;clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,0 100%);background:rgba(240,237,230,.02)}
+  .aside .card .num{font-family:Georgia,serif;font-size:.75rem;color:#7b5ea7;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
+  .aside .card h4{font-family:Georgia,serif;font-size:1.05rem;margin-bottom:10px;color:#f0ede6}
+  .aside .card p{font-size:.84rem;color:rgba(240,237,230,.68);line-height:1.55}
+  .aside .swatch{display:flex;gap:6px;margin-top:14px}
+  .aside .swatch span{width:24px;height:24px;display:block}
+
+  /* FOOTER */
+  footer{position:relative;padding:80px 0 60px;background:#1a1a1e;border-top:1px solid rgba(240,237,230,.08)}
+  footer .wrap{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px}
+  footer h5{font-family:Georgia,serif;font-size:.95rem;margin-bottom:14px;color:#f5a623}
+  footer p,footer li{font-size:.82rem;color:rgba(240,237,230,.6);line-height:1.7}
+  footer ul{list-style:none}
+  footer .lockup{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+  footer .lockup svg{width:36px;height:36px;flex:none}
+  footer .lockup b{font-family:Georgia,serif;font-size:1rem;display:block}
+  .legal{margin-top:48px;padding-top:24px;border-top:1px solid rgba(240,237,230,.08);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,237,230,.45);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<!-- Reusable origami octagon SVG mark -->
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="Obsidian Fold mark">
+        <polygon points="14,2 34,2 46,14 46,34 34,46 14,46 2,34 2,14" fill="none" stroke="#f5a623" stroke-width="1.6"/>
+        <polygon points="14,2 24,24 2,14" fill="#f5a623" opacity=".92"/>
+        <polygon points="34,2 24,24 46,14" fill="#f5a623" opacity=".55"/>
+        <polygon points="46,34 24,24 34,46" fill="#f5a623" opacity=".82"/>
+        <polygon points="2,34 24,24 14,46" fill="#f5a623" opacity=".4"/>
+        <line x1="24" y1="24" x2="24" y2="2" stroke="#1a1a1e" stroke-width="1"/>
+        <line x1="24" y1="24" x2="46" y2="24" stroke="#1a1a1e" stroke-width="1"/>
+      </svg>
+      <div class="word">Obsidian Fold<small>Identity Studio · Berlin</small></div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../manifesto/index.html">Manifesto</a></li>
+        <li><a href="#" class="active">Process</a></li>
+        <li><a href="../identity-work/index.html">Identity Work</a></li>
+        <li><a href="../typefaces/index.html">Typefaces</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="deco"></div>
+  <div class="deco2"></div>
+  <div class="wrap">
+    <div class="eyebrow">Method · 04 movements</div>
+    <h1>Four folds<br>from question<br>to <em>finished mark.</em></h1>
+    <p>Every identity we build passes through the same disciplined sequence — never skipped, never rushed. The work below is how a brand becomes itself in our hands: discovered, distilled, drawn, and deployed.</p>
+  </div>
+</section>
+
+<!-- STEP 01 — Discover (charcoal) -->
+<section class="panel charcoal">
+  <div class="wrap">
+    <div class="step">
+      <div class="rail">
+        <svg width="40" height="420" viewBox="0 0 40 420">
+          <line x1="20" y1="0" x2="20" y2="420" stroke="#f5a623" stroke-width="1" stroke-dasharray="2 6"/>
+          <polygon points="20,8 30,20 20,32 10,20" fill="#f5a623"/>
+          <polygon points="20,200 28,210 20,220 12,210" fill="none" stroke="#7b5ea7" stroke-width="1"/>
+          <polygon points="20,400 28,410 20,420 12,410" fill="none" stroke="#7b5ea7" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="stepwatermark">01</div>
+        <div class="tag">Phase 01 · Weeks 1–2</div>
+        <h2>Discover <span class="dash">—</span> we listen until the question is precise.</h2>
+        <p>We interview founders, staff, and skeptics. We audit the category, the competitors, and the ghosts in the room. Nothing is drawn yet. The deliverable of this phase is a single, sharpened brief — usually one paragraph long.</p>
+        <ul>
+          <li>Stakeholder interviews <span>10–14 sessions</span></li>
+          <li>Category cartography <span>field map</span></li>
+          <li>Lexicon &amp; tone audit <span>verbatim deck</span></li>
+          <li>Sharpened brief <span>1 paragraph</span></li>
+        </ul>
+      </div>
+      <div class="aside">
+        <div class="card">
+          <div class="num">Artifact · 01</div>
+          <h4>The Sharpened Brief</h4>
+          <p>One paragraph. No hedges. Signed by the founders before we touch a pencil. If we cannot agree on this, we do not proceed.</p>
+          <div class="swatch">
+            <span style="background:#1a1a1e;border:1px solid #f0ede6"></span>
+            <span style="background:#f5a623"></span>
+            <span style="background:#7b5ea7"></span>
+            <span style="background:#f0ede6"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 02 — Distill (violet) -->
+<section class="panel violet">
+  <div class="wrap">
+    <div class="step">
+      <div class="rail">
+        <svg width="40" height="420" viewBox="0 0 40 420">
+          <line x1="20" y1="0" x2="20" y2="420" stroke="#7b5ea7" stroke-width="1" stroke-dasharray="2 6"/>
+          <polygon points="20,8 30,20 20,32 10,20" fill="none" stroke="#f5a623" stroke-width="1"/>
+          <polygon points="20,200 30,212 20,224 10,212" fill="#f5a623"/>
+          <polygon points="20,400 28,410 20,420 12,410" fill="none" stroke="#f5a623" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="stepwatermark">02</div>
+        <div class="tag">Phase 02 · Weeks 3–4</div>
+        <h2>Distill <span class="dash">—</span> we reduce until what remains is unbreakable.</h2>
+        <p>Strategy hardens into form-language. We choose three governing words, a geometric posture, and a palette philosophy. Anything that cannot survive being said out loud at room volume is cut.</p>
+        <ul>
+          <li>Three governing words <span>core triad</span></li>
+          <li>Form posture <span>angular / soft / hybrid</span></li>
+          <li>Palette philosophy <span>2 anchor hues</span></li>
+          <li>Reject list <span>what we are not</span></li>
+        </ul>
+      </div>
+      <div class="aside">
+        <div class="card">
+          <div class="num">Artifact · 02</div>
+          <h4>The Reject List</h4>
+          <p>Equally important as what the brand will become. Pinned to the studio wall for the remainder of the engagement — a fence against drift.</p>
+          <div class="swatch">
+            <span style="background:#7b5ea7"></span>
+            <span style="background:#f5a623"></span>
+            <span style="background:#1a1a1e;border:1px solid #f0ede6"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 03 — Draw (charcoal) -->
+<section class="panel charcoal">
+  <div class="wrap">
+    <div class="step">
+      <div class="rail">
+        <svg width="40" height="420" viewBox="0 0 40 420">
+          <line x1="20" y1="0" x2="20" y2="420" stroke="#f5a623" stroke-width="1" stroke-dasharray="2 6"/>
+          <polygon points="20,8 28,18 20,28 12,18" fill="none" stroke="#7b5ea7" stroke-width="1"/>
+          <polygon points="20,196 28,206 20,216 12,206" fill="none" stroke="#7b5ea7" stroke-width="1"/>
+          <polygon points="20,398 32,410 20,422 8,410" fill="#f5a623"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="stepwatermark">03</div>
+        <div class="tag">Phase 03 · Weeks 5–9</div>
+        <h2>Draw <span class="dash">—</span> we cut every line by hand, then by grid.</h2>
+        <p>Logomarks begin on paper, migrate to vector, and survive a punishing internal critique. Typography is paired, intervals are measured, and a working identity system is constructed at production fidelity.</p>
+        <ul>
+          <li>Logomark routes <span>3 directions</span></li>
+          <li>Type pairing <span>display + text</span></li>
+          <li>Grid &amp; geometry doc <span>angle table</span></li>
+          <li>Living system file <span>working build</span></li>
+        </ul>
+      </div>
+      <div class="aside">
+        <div class="card">
+          <div class="num">Artifact · 03</div>
+          <h4>The Angle Table</h4>
+          <p>The mathematical spine of the identity. Every rotation, chamfer, and skew in the system is referenced back to this single document.</p>
+          <div class="swatch">
+            <span style="background:#f5a623"></span>
+            <span style="background:#1a1a1e;border:1px solid #f0ede6"></span>
+            <span style="background:#f0ede6"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 04 — Deploy (violet) -->
+<section class="panel violet">
+  <div class="wrap">
+    <div class="step">
+      <div class="rail">
+        <svg width="40" height="420" viewBox="0 0 40 420">
+          <line x1="20" y1="0" x2="20" y2="380" stroke="#7b5ea7" stroke-width="1" stroke-dasharray="2 6"/>
+          <polygon points="20,8 28,18 20,28 12,18" fill="none" stroke="#f5a623" stroke-width="1"/>
+          <polygon points="20,196 28,206 20,216 12,206" fill="none" stroke="#f5a623" stroke-width="1"/>
+          <polygon points="20,376 32,388 20,400 8,388" fill="#f5a623"/>
+          <circle cx="20" cy="416" r="3" fill="#f0ede6"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="stepwatermark">04</div>
+        <div class="tag">Phase 04 · Weeks 10–12</div>
+        <h2>Deploy <span class="dash">—</span> we hand over a system that defends itself.</h2>
+        <p>The identity ships with a guidelines document precise enough to survive a decade of in-house designers. We supervise the first three real-world applications, then step back. The brand belongs to the client now.</p>
+        <ul>
+          <li>Guidelines · 80–120 pages <span>PDF + web</span></li>
+          <li>Asset library <span>SVG · PDF · OTF</span></li>
+          <li>First three applications <span>supervised</span></li>
+          <li>One-year stewardship <span>quarterly review</span></li>
+        </ul>
+      </div>
+      <div class="aside">
+        <div class="card">
+          <div class="num">Artifact · 04</div>
+          <h4>The Stewardship Letter</h4>
+          <p>A printed note signed by the studio and the founders, listing the four rules that must never be broken. Framed; usually hung in reception.</p>
+          <div class="swatch">
+            <span style="background:#7b5ea7"></span>
+            <span style="background:#f5a623"></span>
+            <span style="background:#f0ede6"></span>
+            <span style="background:#1a1a1e;border:1px solid #f0ede6"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="lockup">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="14,2 34,2 46,14 46,34 34,46 14,46 2,34 2,14" fill="none" stroke="#f5a623" stroke-width="1.6"/>
+          <polygon points="14,2 24,24 2,14" fill="#f5a623" opacity=".9"/>
+          <polygon points="46,34 24,24 34,46" fill="#f5a623" opacity=".7"/>
+        </svg>
+        <b>Obsidian Fold<br><span style="font-weight:normal;font-size:.78rem;color:rgba(240,237,230,.55);font-family:system-ui">Identity Studio · est. 2014</span></b>
+      </div>
+      <p>A boutique identity practice working with founders who want their visual systems to outlast trend cycles. Berlin and remote.</p>
+    </div>
+    <div>
+      <h5>Pages</h5>
+      <ul>
+        <li><a href="../manifesto/index.html">Manifesto</a></li>
+        <li><a href="#">Process</a></li>
+        <li><a href="../identity-work/index.html">Identity Work</a></li>
+        <li><a href="../typefaces/index.html">Typefaces</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Studio</h5>
+      <ul>
+        <li>Linienstraße 144</li>
+        <li>10115 Berlin</li>
+        <li>studio@obsidianfold.de</li>
+      </ul>
+    </div>
+    <div>
+      <h5>Elsewhere</h5>
+      <ul>
+        <li>Are.na · /obsidian-fold</li>
+        <li>LinkedIn</li>
+        <li>Annual · No. 07</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <span>© MMXXV Obsidian Fold</span>
+    <span>Set in Georgia &amp; System</span>
+    <span>Folded in Berlin</span>
+  </div>
+</footer>
+
+</body>
+</html>

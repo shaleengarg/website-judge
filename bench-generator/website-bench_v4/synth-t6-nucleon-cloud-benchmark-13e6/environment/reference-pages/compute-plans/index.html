@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compute Plans — Nucleon Cloud Benchmark</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #F4F6FA;
+    color: #1A1F2E;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header / Nav */
+  header.site {
+    background: #1A1F2E;
+    color: #fff;
+    border-bottom: 3px solid #2563EB;
+  }
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 18px;
+  }
+  .brand-mark {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #2563EB, #F59E0B);
+    border-radius: 6px;
+    display: inline-block;
+  }
+  nav.primary ul {
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  nav.primary a {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #CBD5E1;
+  }
+  nav.primary a:hover { background: #2A3344; color: #fff; }
+  nav.primary a.active { background: #2563EB; color: #fff; }
+
+  /* Page hero */
+  .hero {
+    padding: 36px 0 24px;
+  }
+  .hero h1 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .hero p {
+    color: #475569;
+    max-width: 720px;
+    font-size: 14px;
+  }
+  .crumbs {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 12px;
+    color: #64748B;
+    margin-bottom: 12px;
+  }
+  .crumbs span { color: #2563EB; }
+
+  /* Section title */
+  .section-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 32px 0 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .section-title h2 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .section-title .meta {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 12px;
+    color: #64748B;
+  }
+
+  /* Filter row */
+  .filter-row {
+    background: #fff;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .filter-row .label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1A1F2E;
+  }
+  .filter-row label.radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .filter-row input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #2563EB;
+    border-radius: 50%;
+    background: #fff;
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+  }
+  .filter-row input[type="radio"]:checked {
+    background: #2563EB;
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+  .filter-row input[type="radio"]:focus {
+    outline: 2px solid #2563EB;
+    outline-offset: 2px;
+  }
+  .filter-hint {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 12px;
+    color: #64748B;
+    margin-left: auto;
+  }
+
+  /* Tables */
+  .table-wrap {
+    background: #fff;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    overflow-x: auto;
+    overflow-y: visible;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 900px) {
+    .table-wrap { scrollbar-width: auto; }
+    .table-wrap::-webkit-scrollbar { height: 10px; }
+    .table-wrap::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 4px; }
+    .table-wrap::-webkit-scrollbar-track { background: #EBF0FB; }
+  }
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 13px;
+    min-width: 760px;
+  }
+  table.compare thead th {
+    position: sticky;
+    top: 0;
+    background: #1A1F2E;
+    color: #fff;
+    text-align: right;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    padding: 12px 14px;
+    font-size: 13px;
+    border-right: 1px solid #334155;
+    min-width: 90px;
+    z-index: 2;
+  }
+  table.compare thead th:first-child {
+    text-align: left;
+    min-width: 180px;
+    background: #1A1F2E;
+  }
+  table.compare thead th:last-child { border-right: none; }
+  table.compare thead th .badge {
+    display: inline-block;
+    background: #F59E0B;
+    color: #1A1F2E;
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 6px;
+    letter-spacing: 0.02em;
+  }
+  table.compare tbody td {
+    padding: 10px 14px;
+    border-right: 1px solid #CBD5E1;
+    border-bottom: 1px solid #E2E8F0;
+    text-align: right;
+    min-width: 90px;
+    vertical-align: middle;
+  }
+  table.compare tbody td:last-child { border-right: none; }
+  table.compare tbody td.label {
+    text-align: left;
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    color: #1A1F2E;
+    background: #F4F6FA;
+    min-width: 180px;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    border-right: 1px solid #CBD5E1;
+  }
+  table.compare tbody tr:nth-child(even) td { background: #EBF0FB; }
+  table.compare tbody tr:nth-child(even) td.label { background: #E4EAF5; }
+  table.compare tbody tr:hover td { background: #DBEAFE; }
+  table.compare tbody tr:hover td.label { background: #C7DCFE; }
+
+  /* Tier header color strip (compute table) */
+  .tier-strip {
+    display: block;
+    height: 4px;
+    margin-top: 6px;
+    border-radius: 2px;
+  }
+  .strip-nano { background: #94A3B8; }
+  .strip-micro { background: #64748B; }
+  .strip-std { background: #2563EB; }
+  .strip-pro { background: #F59E0B; }
+  .strip-ent { background: #1A1F2E; box-shadow: inset 0 0 0 1px #fff; }
+
+  /* Highlight via :checked sibling trick - applies amber tint to the relevant tier column */
+  #f-nano:checked ~ .compute-block table.compare td:nth-child(2),
+  #f-nano:checked ~ .compute-block table.compare th:nth-child(2) {
+    background: #FEF3C7 !important;
+    color: #1A1F2E !important;
+  }
+  #f-micro:checked ~ .compute-block table.compare td:nth-child(3),
+  #f-micro:checked ~ .compute-block table.compare th:nth-child(3) {
+    background: #FEF3C7 !important;
+    color: #1A1F2E !important;
+  }
+  #f-std:checked ~ .compute-block table.compare td:nth-child(4),
+  #f-std:checked ~ .compute-block table.compare th:nth-child(4) {
+    background: #FEF3C7 !important;
+    color: #1A1F2E !important;
+  }
+  #f-pro:checked ~ .compute-block table.compare td:nth-child(5),
+  #f-pro:checked ~ .compute-block table.compare th:nth-child(5) {
+    background: #FEF3C7 !important;
+    color: #1A1F2E !important;
+  }
+  #f-ent:checked ~ .compute-block table.compare td:nth-child(6),
+  #f-ent:checked ~ .compute-block table.compare th:nth-child(6) {
+    background: #FEF3C7 !important;
+    color: #1A1F2E !important;
+  }
+  /* Hide the actual radios that drive the trick (visible ones are in label group) */
+  .filter-radio-hidden { display: none; }
+
+  /* GPU table */
+  table.gpu {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 13px;
+    min-width: 560px;
+  }
+  table.gpu thead th {
+    background: #1A1F2E;
+    color: #fff;
+    padding: 12px 14px;
+    text-align: right;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    border-right: 1px solid #334155;
+    min-width: 90px;
+    position: sticky;
+    top: 0;
+  }
+  table.gpu thead th:first-child {
+    text-align: left;
+    min-width: 140px;
+  }
+  table.gpu thead th:last-child { border-right: none; }
+  table.gpu tbody td {
+    padding: 10px 14px;
+    text-align: right;
+    border-right: 1px solid #CBD5E1;
+    border-bottom: 1px solid #E2E8F0;
+    min-width: 90px;
+  }
+  table.gpu tbody td:first-child {
+    text-align: left;
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+  }
+  table.gpu tbody td:last-child { border-right: none; }
+  table.gpu tbody tr:nth-child(even) td { background: #EBF0FB; }
+  table.gpu tbody tr:hover td { background: #DBEAFE; }
+
+  /* Notes panel */
+  .notes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 8px 0 32px;
+  }
+  .note {
+    background: #fff;
+    border: 1px solid #CBD5E1;
+    border-left: 3px solid #2563EB;
+    border-radius: 4px;
+    padding: 12px 14px;
+  }
+  .note h4 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .note p {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.45;
+  }
+
+  /* Footer */
+  footer.site {
+    background: #1A1F2E;
+    color: #CBD5E1;
+    margin-top: 48px;
+    padding: 32px 0 24px;
+    font-size: 13px;
+  }
+  footer.site .cols {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer.site h5 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: 13px;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  footer.site ul { list-style: none; }
+  footer.site li {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 12px;
+    padding: 3px 0;
+  }
+  footer.site a:hover { color: #fff; }
+  footer.site .brand-line {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 12px;
+    color: #94A3B8;
+    margin-top: 8px;
+  }
+  footer.site .legal {
+    border-top: 1px solid #2A3344;
+    margin-top: 24px;
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 11px;
+    color: #64748B;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    footer.site .cols { grid-template-columns: 1fr 1fr; }
+    .hero h1 { font-size: 26px; }
+  }
+  @media (max-width: 480px) {
+    footer.site .cols { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 22px; }
+    .nav-bar { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav-bar">
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <span>Nucleon Cloud<span style="color:#F59E0B;">/</span>Benchmark</span>
+    </div>
+    <nav class="primary">
+      <ul>
+        <li><a href="../overview/index.html">overview</a></li>
+        <li><a href="#" class="active">compute-plans</a></li>
+        <li><a href="../storage-addons/index.html">storage-addons</a></li>
+        <li><a href="../network-features/index.html">network-features</a></li>
+        <li><a href="../cost-calculator/index.html">cost-calculator</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="crumbs">~/benchmark / <span>compute-plans</span></div>
+    <h1>Compute Plans — CPU &amp; Memory</h1>
+    <p>Side-by-side specification of every tier's compute envelope: physical cores, base &amp; burst clock speeds, RAM topology, L3 cache, hypervisor stack, and live hourly cost. All measurements are benchmarked on us-east-1 in March 2024.</p>
+  </section>
+
+  <!-- Hidden radios drive the column-highlight :checked sibling trick.
+       The visible radios in .filter-row mirror them via a <label for> link. -->
+  <input type="radio" name="tier-filter" id="f-none" class="filter-radio-hidden" checked>
+  <input type="radio" name="tier-filter" id="f-nano" class="filter-radio-hidden">
+  <input type="radio" name="tier-filter" id="f-micro" class="filter-radio-hidden">
+  <input type="radio" name="tier-filter" id="f-std" class="filter-radio-hidden">
+  <input type="radio" name="tier-filter" id="f-pro" class="filter-radio-hidden">
+  <input type="radio" name="tier-filter" id="f-ent" class="filter-radio-hidden">
+
+  <div class="section-title">
+    <h2>1 · CPU &amp; Memory Matrix</h2>
+    <div class="meta">9 rows × 5 tiers · updated 2024-03-18</div>
+  </div>
+
+  <div class="filter-row">
+    <span class="label">Highlight tier:</span>
+    <label class="radio"><input type="radio" name="tier-filter-v" onclick="" /><label for="f-none" style="cursor:pointer">none</label></label>
+    <label class="radio" for="f-nano"><input type="radio" name="tier-filter-v"> Nano</label>
+    <label class="radio" for="f-micro"><input type="radio" name="tier-filter-v"> Micro</label>
+    <label class="radio" for="f-std"><input type="radio" name="tier-filter-v"> Standard</label>
+    <label class="radio" for="f-pro"><input type="radio" name="tier-filter-v"> Pro</label>
+    <label class="radio" for="f-ent"><input type="radio" name="tier-filter-v"> Enterprise</label>
+    <span class="filter-hint">// applies amber column tint</span>
+  </div>
+
+  <div class="compute-block">
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Attribute</th>
+            <th>Nano<span class="tier-strip strip-nano"></span></th>
+            <th>Micro<span class="tier-strip strip-micro"></span></th>
+            <th>Standard<span class="tier-strip strip-std"></span></th>
+            <th>Pro <span class="badge">POPULAR</span><span class="tier-strip strip-pro"></span></th>
+            <th>Enterprise<span class="tier-strip strip-ent"></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">vCPU count</td>
+            <td>1</td><td>2</td><td>4</td><td>8</td><td>16</td>
+          </tr>
+          <tr>
+            <td class="label">Base clock (GHz)</td>
+            <td>2.20</td><td>2.40</td><td>2.80</td><td>3.20</td><td>3.60</td>
+          </tr>
+          <tr>
+            <td class="label">Burst clock (GHz)</td>
+            <td>2.80</td><td>3.10</td><td>3.60</td><td>4.10</td><td>4.50</td>
+          </tr>
+          <tr>
+            <td class="label">RAM (GB)</td>
+            <td>1</td><td>2</td><td>8</td><td>16</td><td>64</td>
+          </tr>
+          <tr>
+            <td class="label">RAM type</td>
+            <td>DDR4</td><td>DDR4</td><td>DDR5</td><td>DDR5</td><td>DDR5</td>
+          </tr>
+          <tr>
+            <td class="label">L3 cache (MB)</td>
+            <td>4</td><td>8</td><td>16</td><td>32</td><td>96</td>
+          </tr>
+          <tr>
+            <td class="label">Hypervisor</td>
+            <td>KVM</td><td>KVM</td><td>KVM</td><td>Xen</td><td>Xen</td>
+          </tr>
+          <tr>
+            <td class="label">Core allocation</td>
+            <td>shared</td><td>shared</td><td>shared</td><td>dedicated</td><td>dedicated</td>
+          </tr>
+          <tr>
+            <td class="label">Compute cost (USD/hr)</td>
+            <td>0.0089</td><td>0.0185</td><td>0.0712</td><td>0.1640</td><td>0.6920</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="note">
+      <h4>Burst window</h4>
+      <p>Burst clock sustainable for ≤ 120s before throttling on Nano/Micro; unlimited on Pro &amp; Enterprise dedicated cores.</p>
+    </div>
+    <div class="note">
+      <h4>DDR4 vs DDR5</h4>
+      <p>DDR5 tiers achieve ~38% higher memory bandwidth on STREAM Triad benchmarks vs DDR4 generation hardware.</p>
+    </div>
+    <div class="note">
+      <h4>Hypervisor isolation</h4>
+      <p>Xen-backed tiers expose CPU pinning and NUMA topology via metadata API; KVM tiers use noisy-neighbor mitigation only.</p>
+    </div>
+    <div class="note">
+      <h4>Billing granularity</h4>
+      <p>All compute costs metered to the second with a 60-second minimum charge; sustained-use discount kicks in at 720h/mo.</p>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <h2>2 · GPU Add-on Options</h2>
+    <div class="meta">attach to Standard / Pro / Enterprise · hourly surcharge</div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="gpu">
+      <thead>
+        <tr>
+          <th>GPU Option</th>
+          <th>VRAM (GB)</th>
+          <th>CUDA Cores</th>
+          <th>Tensor Cores</th>
+          <th>FP32 (TFLOPS)</th>
+          <th>Surcharge (USD/hr)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>None</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>0.0000</td>
+        </tr>
+        <tr>
+          <td>NVIDIA T4</td>
+          <td>16</td>
+          <td>2,560</td>
+          <td>320</td>
+          <td>8.10</td>
+          <td>0.3500</td>
+        </tr>
+        <tr>
+          <td>NVIDIA A10G</td>
+          <td>24</td>
+          <td>9,216</td>
+          <td>288</td>
+          <td>31.20</td>
+          <td>1.0060</td>
+        </tr>
+        <tr>
+          <td>NVIDIA A100 (40G)</td>
+          <td>40</td>
+          <td>6,912</td>
+          <td>432</td>
+          <td>19.50</td>
+          <td>3.0600</td>
+        </tr>
+        <tr>
+          <td>NVIDIA A100 (80G)</td>
+          <td>80</td>
+          <td>6,912</td>
+          <td>432</td>
+          <td>19.50</td>
+          <td>4.1000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="notes">
+    <div class="note">
+      <h4>Attachment policy</h4>
+      <p>T4 attaches to any tier ≥ Standard. A10G/A100 require Pro or Enterprise host with dedicated NUMA node.</p>
+    </div>
+    <div class="note">
+      <h4>Driver stack</h4>
+      <p>Pre-baked images ship with CUDA 12.2 + cuDNN 8.9; bring-your-own drivers permitted on Enterprise only.</p>
+    </div>
+    <div class="note">
+      <h4>Spot availability</h4>
+      <p>Spot pricing for T4 and A10G discounted up to 64% off list; A100 spot pool capacity-constrained, check region.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h5>Nucleon Cloud Benchmark</h5>
+        <p style="font-family:ui-monospace,'Courier New',monospace;font-size:12px;color:#94A3B8;line-height:1.5;">
+          Vendor-neutral, transparent comparison of cloud hosting tiers. All numbers reproducible from public pricing pages and standardized benchmarks.
+        </p>
+        <p class="brand-line">v 2024.03.18 · build #4831</p>
+      </div>
+      <div>
+        <h5>Compare</h5>
+        <ul>
+          <li><a href="../overview/index.html">overview</a></li>
+          <li><a href="#">compute-plans</a></li>
+          <li><a href="../storage-addons/index.html">storage-addons</a></li>
+          <li><a href="../network-features/index.html">network-features</a></li>
+          <li><a href="../cost-calculator/index.html">cost-calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Tiers</h5>
+        <ul>
+          <li>Nano</li>
+          <li>Micro</li>
+          <li>Standard</li>
+          <li>Pro</li>
+          <li>Enterprise</li>
+        </ul>
+      </div>
+      <div>
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Methodology</a></li>
+          <li><a href="#">Raw data CSV</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2024 Nucleon Cloud Benchmark · independent research</span>
+      <span>data refreshed daily 00:00 UTC</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

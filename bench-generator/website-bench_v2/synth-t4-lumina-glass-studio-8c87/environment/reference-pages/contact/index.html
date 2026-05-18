@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact — Lumina Glass Studio</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: linear-gradient(180deg, #0B1220 0%, #101828 100%);
+    color: #F0EDE6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+  /* NAV */
+  .nav {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(11,18,32,0.7);
+    position: relative;
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 40px; max-width: 1200px; margin: 0 auto;
+  }
+  .brand {
+    font-family: Georgia, serif; font-weight: 700; font-size: 22px;
+    letter-spacing: 0.04em;
+  }
+  .brand span { color: #E8A020; font-style: italic; font-weight: 400; }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.22em;
+    color: #F0EDE6; opacity: 0.78; font-weight: 500;
+  }
+  .nav-links a.active { color: #1ECFC4; opacity: 1; }
+
+  /* HERO */
+  .hero {
+    padding: 80px 0 60px;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -120px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(232,160,32,0.22) 0%, rgba(232,160,32,0.05) 35%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .eyebrow {
+    color: #1ECFC4;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: 62px;
+    font-style: italic;
+    letter-spacing: -0.01em;
+    margin-bottom: 18px;
+  }
+  .hero p {
+    max-width: 560px; margin: 0 auto;
+    font-size: 17px; color: rgba(240,237,230,0.78);
+  }
+
+  /* CONTACT INFO ROW */
+  .info-section {
+    padding: 40px 0 80px;
+    position: relative;
+  }
+  .info-section::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #E8A020, transparent);
+    margin-top: 60px;
+    opacity: 0.5;
+  }
+  .info-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 880px; margin: 0 auto;
+  }
+  .info-block {
+    padding-left: 22px;
+    position: relative;
+  }
+  .info-block::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 8px;
+    width: 10px; height: 10px;
+    background: #E8A020;
+  }
+  .info-label {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.28em; color: rgba(240,237,230,0.55);
+    margin-bottom: 8px; font-weight: 500;
+  }
+  .info-value {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    color: #1ECFC4;
+    font-weight: 400;
+  }
+
+  /* FORM */
+  .form-section {
+    padding: 0 0 80px;
+    position: relative;
+  }
+  .form-section::before {
+    content: "";
+    position: absolute;
+    top: 10%; right: -180px;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(30,207,196,0.12) 0%, transparent 65%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .form-section::after {
+    content: "";
+    position: absolute;
+    bottom: 20%; left: -160px;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(232,160,32,0.10) 0%, transparent 65%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .form-panel {
+    position: relative; z-index: 1;
+    max-width: 640px; margin: 0 auto;
+    padding: 56px 56px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .form-panel h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .form-sub {
+    font-size: 14px;
+    color: rgba(240,237,230,0.65);
+    margin-bottom: 36px;
+  }
+  .field { margin-bottom: 22px; }
+  .field label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: rgba(240,237,230,0.75);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 15px;
+    color: #F0EDE6;
+    background: rgba(11,18,32,0.55);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 6px;
+    outline: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: 2px solid #E8A020;
+    outline-offset: 1px;
+    border-color: #E8A020;
+  }
+  .field textarea { min-height: 120px; resize: vertical; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  .submit {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 14px 36px;
+    background: #E8A020;
+    color: #0B1220;
+    border: none;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .form-foot {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px;
+    color: rgba(240,237,230,0.55);
+    text-align: center;
+  }
+  .form-foot em { color: #1ECFC4; font-style: normal; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 40px 0;
+    margin-top: 20px;
+    position: relative;
+  }
+  footer::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 80px; height: 2px;
+    background: #E8A020;
+  }
+  .foot-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1200px; margin: 0 auto; padding: 0 40px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(240,237,230,0.55);
+  }
+  .foot-links { display: flex; gap: 24px; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">Lumina<span>·</span>Glass Studio</div>
+    <nav class="nav-links">
+      <a href="../showcase/index.html">Showcase</a>
+      <a href="../process/index.html">Process</a>
+      <a href="../collections/index.html">Collections</a>
+      <a href="../studio/index.html">Studio</a>
+      <a href="#" class="active">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner container">
+    <div class="eyebrow">Commission Inquiries</div>
+    <h1>Begin a Conversation</h1>
+    <p>Every panel and vessel starts with a question. Tell us about the space you're shaping, and we'll respond within two business days.</p>
+  </div>
+</section>
+
+<section class="info-section">
+  <div class="container">
+    <div class="info-row">
+      <div class="info-block">
+        <div class="info-label">Studio Address</div>
+        <div class="info-value">14 Foundry Lane, Portland OR</div>
+      </div>
+      <div class="info-block">
+        <div class="info-label">Direct Email</div>
+        <div class="info-value">commissions@luminaglass.studio</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="form-section">
+  <div class="container">
+    <div class="form-panel">
+      <h2>Project Brief</h2>
+      <div class="form-sub">Share the essentials — we'll follow up to schedule a studio visit or virtual consultation.</div>
+
+      <form>
+        <div class="field-row">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" placeholder="Your full name">
+          </div>
+          <div class="field">
+            <label>Studio or Firm</label>
+            <input type="text" placeholder="Optional">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Project Type</label>
+            <select>
+              <option>Residential</option>
+              <option>Commercial</option>
+              <option>Public Art</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Budget Range</label>
+            <select>
+              <option>$15K – $40K</option>
+              <option>$40K – $120K</option>
+              <option>$120K +</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Message</label>
+          <textarea placeholder="Site, timeline, references, ambition..."></textarea>
+        </div>
+
+        <button type="button" class="submit">Submit Inquiry</button>
+      </form>
+
+      <div class="form-foot">Prefer a phone call? Reach the studio at <em>(503) 555-0182</em>, weekdays 10–5 PT.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <div>© 2024 Lumina Glass Studio</div>
+    <div class="foot-links">
+      <a href="../showcase/index.html">Showcase</a>
+      <a href="../process/index.html">Process</a>
+      <a href="../collections/index.html">Collections</a>
+      <a href="../studio/index.html">Studio</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -7,18 +7,31 @@ Kept separate from generate_dataset.py because:
   3. Some rules (viewport size, forbidden tags) are referenced by other parts
      of the system; centralizing the constants here keeps them in sync.
 
-If you change the viewport or any of the structural constraints, also update:
-  - templates/environment/make.py  (VIEWPORT)
-  - templates/tests/score.py        (VIEWPORT)
+If you change the viewport list or any of the structural constraints, also update:
+  - templates/environment/make.py  (VIEWPORTS)
+  - templates/tests/score.py        (VIEWPORTS)
   - generate_dataset.py             (validate_html: banned tags, length floor)
 """
 from __future__ import annotations
 
 # ---------- Constants referenced across the project ----------
 
-# Viewport everything renders at. Keep in sync with make.py and score.py.
-VIEWPORT_WIDTH = 1280
-VIEWPORT_HEIGHT = 800
+# Viewports the generated site must look correct at. Keep in sync with
+# templates/environment/make.py and templates/tests/score.py.
+VIEWPORTS: list[tuple[str, int, int]] = [
+    ("desktop", 1440, 900),
+    ("tablet",  768,  1024),
+    ("phone",   390,  844),
+]
+# Single-viewport convenience accessors for the bits of the pipeline (sanity,
+# relevance) that only render at the dominant size. Reflect the desktop entry.
+VIEWPORT_WIDTH = VIEWPORTS[0][1]
+VIEWPORT_HEIGHT = VIEWPORTS[0][2]
+
+
+def _viewports_inline() -> str:
+    """Format `desktop 1440×900, tablet 768×1024, phone 390×844`."""
+    return ", ".join(f"{label} {w}×{h}" for label, w, h in VIEWPORTS)
 
 
 # ---------- System prompt ----------
@@ -27,9 +40,9 @@ SYSTEM_PROMPT = f"""You generate static HTML/CSS for benchmark websites.
 
 You will be asked to produce ONE self-contained HTML page at a time. The page
 belongs to a larger 5-page website that shares visual identity across all
-pages. The page will be rendered at viewport {VIEWPORT_WIDTH}×{VIEWPORT_HEIGHT}
-with headless Chromium and used as a reference screenshot for a
-code-generation benchmark.
+pages. The page will be rendered at THREE viewports — {_viewports_inline()} —
+with headless Chromium, each one captured full-page, and used as reference
+screenshots for a code-generation benchmark.
 
 Hard rules — violating any of these breaks the benchmark:
 
@@ -50,9 +63,10 @@ Hard rules — violating any of these breaks the benchmark:
    hints you receive are the source of truth — anyone reading them should
    produce the same shared elements. Do NOT improvise nav labels or footer
    contents; derive them from the page list and constraints.
-8. Design for a {VIEWPORT_WIDTH}×{VIEWPORT_HEIGHT} viewport. Content should
-   look intentional in that space; the "fold" at {VIEWPORT_HEIGHT}px should
-   feel like a deliberate breakpoint.
+8. The page must be RESPONSIVE: it must look correct at every viewport in
+   {_viewports_inline()}. Use `@media` queries, flex/grid, and fluid units
+   so the layout adapts cleanly from a {VIEWPORTS[0][1]}px desktop down to a
+   {VIEWPORTS[-1][1]}px phone. Do NOT pixel-fit to one viewport.
 
 Output format: return the raw HTML document, starting with <!DOCTYPE html>
 and ending with </html>. NO markdown fences, NO commentary, NO preamble,

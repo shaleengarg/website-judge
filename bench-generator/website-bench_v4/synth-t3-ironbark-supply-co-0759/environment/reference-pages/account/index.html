@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — Ironbark Supply Co.</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    background: #F5F0E8;
+    color: #1C1A17;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; margin: 0; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Header */
+  .header {
+    position: sticky;
+    top: 0;
+    height: 56px;
+    background: #1C1A17;
+    color: #F5F0E8;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+    border-bottom: 1px solid #2B2520;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    flex: 0 0 auto;
+  }
+  .wordmark span { color: #C45B1E; }
+  .nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+  }
+  .nav a {
+    color: #F5F0E8;
+    font-size: 14px;
+    padding: 4px 2px;
+    border-bottom: 2px solid transparent;
+  }
+  .nav a.active, .nav a:hover { border-bottom-color: #C45B1E; }
+  .cart-btn {
+    flex: 0 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+  }
+  .cart-icon {
+    width: 22px; height: 22px;
+    border: 2px solid #F5F0E8;
+    border-radius: 3px;
+    position: relative;
+  }
+  .cart-icon::before {
+    content: "";
+    position: absolute;
+    top: -5px; left: 4px;
+    width: 10px; height: 6px;
+    border: 2px solid #F5F0E8;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+  }
+  .cart-badge {
+    position: absolute;
+    top: -6px; right: -8px;
+    background: #C45B1E;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 1px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* Mobile nav toggle (CSS-only fallback: just wrap) */
+  @media (max-width: 720px) {
+    .nav { gap: 14px; font-size: 12px; overflow-x: auto; }
+    .nav a { font-size: 12px; white-space: nowrap; }
+    .header { padding: 0 12px; }
+    .wordmark { font-size: 16px; }
+  }
+
+  /* Layout */
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 48px;
+  }
+  .greeting {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .greeting-sub {
+    color: #6b6357;
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .account-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* Side nav */
+  .side-nav {
+    background: #fff;
+    border: 1px solid #D6CFC4;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .side-nav h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #6b6357;
+    padding: 14px 16px 8px;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    border-bottom: 1px solid #ece6db;
+  }
+  .side-nav ul { list-style: none; padding: 0; margin: 0; }
+  .side-nav li a {
+    display: block;
+    padding: 11px 16px;
+    font-size: 14px;
+    color: #1C1A17;
+    border-left: 3px solid transparent;
+    border-bottom: 1px solid #F5F0E8;
+  }
+  .side-nav li:last-child a { border-bottom: none; }
+  .side-nav li a:hover { background: #faf6ef; }
+  .side-nav li a.active {
+    background: #fff5ec;
+    color: #C45B1E;
+    font-weight: 600;
+    border-left-color: #C45B1E;
+  }
+
+  /* Main panel */
+  .main-panel {
+    background: #fff;
+    border: 1px solid #D6CFC4;
+    border-radius: 4px;
+    padding: 24px;
+  }
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .panel-head h2 {
+    font-size: 22px;
+    font-family: Georgia, serif;
+  }
+  .panel-head .meta {
+    font-size: 13px;
+    color: #6b6357;
+  }
+
+  /* Orders table */
+  .orders-wrap { overflow-x: auto; }
+  table.orders {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 720px;
+  }
+  table.orders thead th {
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #6b6357;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-bottom: 2px solid #1C1A17;
+    background: #faf6ef;
+  }
+  table.orders tbody td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #ece6db;
+    vertical-align: middle;
+  }
+  table.orders tbody tr:hover { background: #faf6ef; }
+  .order-num { font-weight: 600; color: #1C1A17; font-family: Georgia, serif; }
+  .items-summary { color: #3b352e; max-width: 280px; }
+  .total-cell { font-weight: 600; }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: #fff;
+  }
+  .badge.delivered { background: #4A7C59; }
+  .badge.processing { background: #C45B1E; }
+  .badge.shipped { background: #2B5F8A; }
+  .view-link {
+    color: #C45B1E;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .view-link:hover { text-decoration: underline; }
+
+  /* Footer */
+  .footer {
+    background: #1C1A17;
+    color: #c9c2b6;
+    padding: 36px 24px 24px;
+    margin-top: 48px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .footer h4 {
+    color: #F5F0E8;
+    font-size: 14px;
+    font-family: Georgia, serif;
+    margin-bottom: 12px;
+  }
+  .footer p, .footer a { font-size: 13px; color: #c9c2b6; }
+  .footer ul { list-style: none; padding: 0; margin: 0; }
+  .footer li { margin-bottom: 6px; }
+  .footer a:hover { color: #C45B1E; }
+  .footer-brand .wordmark { font-size: 18px; color: #F5F0E8; margin-bottom: 8px; display: block; }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 24px auto 0;
+    padding-top: 18px;
+    border-top: 1px solid #2B2520;
+    font-size: 12px;
+    color: #6b6357;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 860px) {
+    .account-grid { grid-template-columns: 1fr; }
+    .side-nav h3 { padding-bottom: 8px; }
+    .side-nav ul { display: flex; flex-wrap: wrap; }
+    .side-nav li { flex: 1 1 auto; }
+    .side-nav li a { border-left: none; border-bottom: 3px solid transparent; text-align: center; }
+    .side-nav li a.active { border-left: none; border-bottom-color: #C45B1E; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .page { padding: 20px 14px 32px; }
+    .greeting { font-size: 22px; }
+    .main-panel { padding: 16px; }
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="wordmark">IRONBARK<span>·</span>SUPPLY CO.</div>
+  <nav class="nav">
+    <a href="../shop/index.html">Shop</a>
+    <a href="../product-detail/index.html">Product</a>
+    <a href="../cart/index.html">Cart</a>
+    <a href="#" class="active">Account</a>
+    <a href="../about/index.html">About</a>
+  </nav>
+  <a href="../cart/index.html" class="cart-btn">
+    <span class="cart-icon"></span>
+    <span class="cart-badge">3</span>
+  </a>
+</header>
+
+<main class="page">
+  <h1 class="greeting">Welcome back, Dale Ferrington.</h1>
+  <p class="greeting-sub">Member since March 2018 · Ballarat, VIC</p>
+
+  <div class="account-grid">
+
+    <aside class="side-nav" aria-label="Account navigation">
+      <h3>My Account</h3>
+      <ul>
+        <li><a href="#" class="active">My Orders</a></li>
+        <li><a href="#">Saved Items</a></li>
+        <li><a href="#">Addresses</a></li>
+        <li><a href="#">Payment Methods</a></li>
+        <li><a href="#">Account Settings</a></li>
+      </ul>
+    </aside>
+
+    <section class="main-panel">
+      <div class="panel-head">
+        <h2>Order History</h2>
+        <span class="meta">Showing 5 most recent orders</span>
+      </div>
+
+      <div class="orders-wrap">
+        <table class="orders">
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="order-num">#IB-10428</td>
+              <td>14 Mar 2024</td>
+              <td class="items-summary">Splitting Axe, Ferro Rod Kit (+1 more)</td>
+              <td class="total-cell">AU$377.50</td>
+              <td><span class="badge processing">Processing</span></td>
+              <td><a href="#" class="view-link">View Details →</a></td>
+            </tr>
+            <tr>
+              <td class="order-num">#IB-10355</td>
+              <td>28 Jan 2024</td>
+              <td class="items-summary">Waxed Canvas Field Bag, Brass Compass</td>
+              <td class="total-cell">AU$163.00</td>
+              <td><span class="badge delivered">Delivered</span></td>
+              <td><a href="#" class="view-link">View Details →</a></td>
+            </tr>
+            <tr>
+              <td class="order-num">#IB-10211</td>
+              <td>02 Nov 2023</td>
+              <td class="items-summary">Hickory Hatchet, Tinder Tin, Linseed Oil</td>
+              <td class="total-cell">AU$214.75</td>
+              <td><span class="badge delivered">Delivered</span></td>
+              <td><a href="#" class="view-link">View Details →</a></td>
+            </tr>
+            <tr>
+              <td class="order-num">#IB-10087</td>
+              <td>19 Aug 2023</td>
+              <td class="items-summary">Cast Iron Camp Skillet (12")</td>
+              <td class="total-cell">AU$89.00</td>
+              <td><span class="badge delivered">Delivered</span></td>
+              <td><a href="#" class="view-link">View Details →</a></td>
+            </tr>
+            <tr>
+              <td class="order-num">#IB-09934</td>
+              <td>06 May 2023</td>
+              <td class="items-summary">Bushman Belt Knife, Leather Sheath</td>
+              <td class="total-cell">AU$142.50</td>
+              <td><span class="badge delivered">Delivered</span></td>
+              <td><a href="#" class="view-link">View Details →</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="wordmark">IRONBARK · SUPPLY CO.</span>
+      <p>Hand-finished bushcraft tools and field gear, made and tested in Ballarat, Victoria since 2009.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="../shop/index.html">All Products</a></li>
+        <li><a href="#">Cutting Tools</a></li>
+        <li><a href="#">Fire & Light</a></li>
+        <li><a href="#">Carry & Storage</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../about/index.html">About Us</a></li>
+        <li><a href="#">Workshop Visits</a></li>
+        <li><a href="#">Lifetime Guarantee</a></li>
+        <li><a href="#">Stockists</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul>
+        <li><a href="../account/index.html">My Account</a></li>
+        <li><a href="#">Shipping & Returns</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Ironbark Supply Co. ABN 48 221 094 553</span>
+    <span>Made in Ballarat, Victoria</span>
+  </div>
+</footer>
+
+</body>
+</html>

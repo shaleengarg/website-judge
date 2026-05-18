@@ -1,0 +1,29 @@
+{
+  "id": "synth-t6-northvault-banking-onboard-809d",
+  "tier": 6,
+  "genre": "signup-flow",
+  "pages": [
+    "account-type",
+    "personal-info",
+    "identity-verify",
+    "plan-select",
+    "review-submit"
+  ],
+  "palette_hint": "Background #F4F6F9, text #1A2332, primary accent #1B4FD8 (deep cobalt), secondary accent #E8A020 (amber gold) for required field markers and CTA buttons.",
+  "type_style": "Headings in system-ui bold 700, body in system-ui regular 400, monospace digits via 'Courier New' for account numbers and numeric fields; clinical, trustworthy feel.",
+  "description": "NorthVault Credit Union's five-step digital account-opening flow for new members, featuring dense multi-column forms, custom-styled inputs with validation states, and a final review table.",
+  "constraints": [
+    "All form pages use a centered card layout max-width 680px, padding 40px 48px, background #FFFFFF, with a step-progress bar at top showing 5 labeled steps in cobalt #1B4FD8 (active) and #C8D0DC (incomplete).",
+    "Every required field label must display an amber asterisk (*) in #E8A020 immediately after the label text; invalid :invalid pseudo-class states show border #D93025 and a light red background tint #FFF5F5.",
+    "Custom checkboxes and radio buttons are 18\u00d718px squares/circles built with appearance:none, border 2px solid #8A9BB0, checked state fills with #1B4FD8 and shows a white checkmark or center dot via CSS content.",
+    "Two-column grid layout (gap 20px) used for paired fields (first/last name, city/state, DOB/SSN-last-4); single-column for full-width fields like address and email; all inputs have padding 10px 14px, border-radius 4px, border 1.5px solid #C8D0DC.",
+    "The review-submit page renders a summary table with zebra striping (#F4F6F9 odd rows, #FFFFFF even rows), sticky thead in #1A2332 with white text, and right-aligned monospace numeric values for account numbers and dollar amounts."
+  ],
+  "page_specs": {
+    "account-type": "Full-page step 1 presenting three account options\u2014'Essential Checking', 'High-Yield Savings', and 'Student Flex Account'\u2014each as a large radio-card (full-width bordered box, 16px padding) with the account name, a one-line benefit summary, and a monthly fee displayed right-aligned in monospace. The selected card highlights with a 2px cobalt border and cobalt-tinted background #EEF3FD. A 'Continue' button in amber #E8A020 with white bold text sits below the cards.",
+    "personal-info": "Step 2 collects the applicant's full legal name (two-column: first, last), date of birth and last 4 digits of SSN (two-column), home address (full-width), city and state/territory dropdown (two-column), ZIP code and phone number (two-column), and email address (full-width). All fields are required; the state field uses a styled <select> with custom chevron arrow via CSS background-image SVG data URI. Inline validation turns borders red and fields show a light-red background on :invalid when the user has interacted.",
+    "identity-verify": "Step 3 presents a document-upload simulation using styled file inputs and a choice of ID type via custom radio buttons (Driver's License, Passport, State ID) arranged horizontally. Below the radios, two labeled file-input fields ('Front of ID' and 'Back of ID / Photo Page') appear in a two-column grid, each styled as a dashed-border drop zone (border 2px dashed #8A9BB0, border-radius 6px, padding 24px, centered label text). A legal disclosure checkbox with a multi-line label linking NorthVault's terms must be checked (custom CSS checkbox) before the 'Continue' button becomes visually active (cobalt background vs. greyed-out #C8D0DC state controlled by :checked ~ sibling CSS).",
+    "plan-select": "Step 4 shows a dense comparison table (sticky header, zebra-striped rows) listing five feature rows\u2014Monthly Fee, Overdraft Protection, ATM Network, Interest Rate APY, and Mobile Deposit Limit\u2014across the three account types as columns. Numeric values (e.g. '$4.95', '0.85%', '$5,000') are right-aligned in monospace font. Below the table, a single required radio group lets the user confirm their chosen plan, with the three options styled as inline radio cards matching step 1. An optional add-on section offers two custom checkboxes: 'Paper Statements (+$2/mo)' and 'Overdraft Buffer ($500 limit)'.",
+    "review-submit": "Step 5 renders a full-width summary table with a sticky cobalt thead row labeled 'Field' and 'Your Entry', zebra-striped tbody rows showing every collected value (name, DOB, address, plan name, add-ons, fees). Numeric and ID values appear in monospace right-aligned in their cells. Below the table, a final required checkbox ('I certify all information is accurate and I agree to NorthVault's Membership Agreement') must be checked before the 'Open My Account' CTA button\u2014amber background #E8A020, white bold text, full-width, 48px tall\u2014becomes active using the :checked + sibling CSS approach."
+  }
+}

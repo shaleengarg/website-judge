@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Essays — Ink & Insomnia</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #F5F0E8;
+    color: #1C1C1C;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  header.site {
+    padding-top: 3rem;
+    padding-bottom: 1.5rem;
+  }
+  .site-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #1C1C1C;
+    margin: 0 0 0.25rem 0;
+    letter-spacing: 0.01em;
+  }
+  .site-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #6B7B5E;
+    margin: 0;
+  }
+  nav.primary {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #6B7B5E;
+  }
+  nav.primary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  nav.primary a {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #6B7B5E;
+    text-decoration: none;
+  }
+  nav.primary a.active {
+    color: #B5451B;
+  }
+  nav.primary a:hover {
+    text-decoration: underline;
+  }
+  hr.rule {
+    border: 0;
+    border-top: 1px solid #6B7B5E;
+    margin: 2.5rem 0;
+  }
+  main {
+    padding-bottom: 2rem;
+  }
+  .page-header {
+    margin-top: 2.5rem;
+  }
+  .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #6B7B5E;
+    margin: 0 0 0.5rem 0;
+  }
+  h1.page-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+    color: #1C1C1C;
+  }
+  .lede {
+    margin: 0;
+    font-size: 1rem;
+  }
+  .essays {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .essay {
+    padding: 0;
+  }
+  .essay + .essay {
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid #6B7B5E;
+  }
+  .essay-meta {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #6B7B5E;
+    margin: 0 0 0.4rem 0;
+  }
+  .essay-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin: 0 0 0.6rem 0;
+    line-height: 1.3;
+  }
+  .essay-title a {
+    color: #B5451B;
+    text-decoration: none;
+  }
+  .essay-title a:hover {
+    text-decoration: underline;
+  }
+  .pull {
+    font-style: italic;
+    color: #1C1C1C;
+    margin: 0;
+    font-size: 1rem;
+  }
+  footer.site {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    border-top: 1px solid #6B7B5E;
+  }
+  footer .foot-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  footer .label { margin: 0; }
+  footer .copy {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #6B7B5E;
+    margin: 0;
+  }
+  footer .sign {
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: #1C1C1C;
+    margin: 1rem 0 0 0;
+    font-size: 0.95rem;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="site">
+      <h1 class="site-title">Ink &amp; Insomnia</h1>
+      <p class="site-tag">The notebook of Maren Voss</p>
+      <nav class="primary">
+        <ul>
+          <li><a href="../journal/index.html">Journal</a></li>
+          <li><a href="#" class="active">Essays</a></li>
+          <li><a href="../reading-list/index.html">Reading List</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-header">
+        <p class="label">Archive · Long-form</p>
+        <h1 class="page-title">Essays</h1>
+        <p class="lede">Six longer pieces written in the small hours — on memory, place, the architecture of solitude, and the quiet life of objects. Each links to a full-text page.</p>
+      </section>
+
+      <hr class="rule">
+
+      <ol class="essays">
+        <li class="essay">
+          <p class="essay-meta">March 14, 2024 · Memory</p>
+          <h2 class="essay-title"><a href="#">The Smell of Libraries After Rain</a></h2>
+          <p class="pull">“There is a particular dampness to municipal carpet that I have spent twenty years trying to describe.”</p>
+        </li>
+
+        <li class="essay">
+          <p class="essay-meta">January 02, 2024 · Reading</p>
+          <h2 class="essay-title"><a href="#">Why I Quit Annotating Books</a></h2>
+          <p class="pull">“My margins had become louder than the authors, and I could no longer hear the sentences underneath.”</p>
+        </li>
+
+        <li class="essay">
+          <p class="essay-meta">November 21, 2023 · Place</p>
+          <h2 class="essay-title"><a href="#">On Living Alone in a City You Love</a></h2>
+          <p class="pull">“Reykjavík forgives the solitary in a way no other capital I have known seems to manage.”</p>
+        </li>
+
+        <li class="essay">
+          <p class="essay-meta">September 08, 2023 · Insomnia</p>
+          <h2 class="essay-title"><a href="#">A Field Guide to 3 a.m.</a></h2>
+          <p class="pull">“The hour belongs neither to the day that has ended nor the one refusing to begin.”</p>
+        </li>
+
+        <li class="essay">
+          <p class="essay-meta">June 30, 2023 · Craft</p>
+          <h2 class="essay-title"><a href="#">The Dewey Decimal System as Autobiography</a></h2>
+          <p class="pull">“Tell me where you reshelve a book about grief and I will tell you what you believe about it.”</p>
+        </li>
+
+        <li class="essay">
+          <p class="essay-meta">February 17, 2023 · Place</p>
+          <h2 class="essay-title"><a href="#">Akureyri, in Winter, from Memory</a></h2>
+          <p class="pull">“The town arranges itself differently each time I try to walk it from a distance of years.”</p>
+        </li>
+      </ol>
+    </main>
+
+    <footer class="site">
+      <div class="foot-row">
+        <p class="label">Ink &amp; Insomnia</p>
+        <p class="copy">© 2024 Maren Voss</p>
+      </div>
+      <p class="sign">— written between midnight and 3 a.m., Reykjavík.</p>
+    </footer>
+  </div>
+</body>
+</html>

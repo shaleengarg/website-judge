@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Method — Ember & Rye Kitchen</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #FDF6EC;
+    color: #2C2C2C;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  .wrap {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+  .page-label {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #B84C1E;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  nav.site-nav {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  nav.site-nav a {
+    color: #7A8C6E;
+    text-decoration: none;
+    margin: 0 8px;
+    display: inline-block;
+    padding: 4px 0;
+  }
+  nav.site-nav a.current {
+    color: #2C2C2C;
+    font-weight: 700;
+    border-bottom: 1px solid #B84C1E;
+  }
+  hr.rule {
+    border: 0;
+    border-top: 1px solid #B84C1E;
+    margin: 32px 0;
+  }
+  h1.title {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: #2C2C2C;
+    text-align: center;
+    line-height: 1.2;
+  }
+  h1.title .sub {
+    display: block;
+    font-size: 15px;
+    font-weight: 400;
+    color: #7A8C6E;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-style: italic;
+    margin-top: 12px;
+  }
+  ol.steps {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+  }
+  ol.steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 56px;
+    margin-bottom: 16px;
+  }
+  ol.steps li:last-child { margin-bottom: 0; }
+  ol.steps li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #B84C1E;
+    line-height: 1.4;
+  }
+  ol.steps .verb {
+    font-weight: 700;
+    color: #2C2C2C;
+  }
+  .time-note {
+    color: #7A8C6E;
+    font-style: italic;
+    text-align: center;
+    margin-top: 24px;
+    font-size: 15px;
+  }
+  .time-note strong {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-style: normal;
+    display: block;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: #B84C1E;
+  }
+  a.btn {
+    display: block;
+    width: max-content;
+    margin: 0 auto;
+    background: #B84C1E;
+    color: #FDF6EC;
+    text-decoration: none;
+    padding: 12px 28px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+  }
+  footer {
+    text-align: center;
+    color: #7A8C6E;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 32px;
+  }
+  @media (max-width: 520px) {
+    .wrap { padding: 36px 24px 48px; }
+    h1.title { font-size: 28px; }
+    nav.site-nav a { display: block; margin: 4px 0; }
+    ol.steps li { padding-left: 44px; }
+    ol.steps li::before { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="page-label">Method · Page 03 of 05</div>
+
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../featured-recipe/index.html">Featured Recipe</a>
+      <a href="../ingredients/index.html">Ingredients</a>
+      <a href="#" class="current">Method</a>
+      <a href="../tips-and-notes/index.html">Tips &amp; Notes</a>
+      <a href="../about-the-cook/index.html">About the Cook</a>
+    </nav>
+
+    <hr class="rule">
+
+    <h1 class="title">
+      The Method
+      <span class="sub">Six Steps, Three Hours, One Pot</span>
+    </h1>
+
+    <hr class="rule">
+
+    <ol class="steps">
+      <li><span class="verb">Sear:</span> Pat the short ribs dry, season generously with kosher salt and cracked black pepper, then brown on all sides in a heavy Dutch oven over medium-high heat until a deep mahogany crust forms — about three minutes per face.</li>
+      <li><span class="verb">Sweat:</span> Lower the heat and add diced yellow onion, carrot, and celery to the rendered fat; cook gently for eight minutes until the vegetables turn translucent and faintly sweet around the edges.</li>
+      <li><span class="verb">Deglaze:</span> Pour in the smoked rye whiskey, scraping the fond from the bottom of the pot with a wooden spoon, and let the alcohol cook off for two minutes before the liquid reduces by half.</li>
+      <li><span class="verb">Braise:</span> Return the ribs to the pot, add bone broth and a sprig of thyme until the meat is two-thirds submerged, cover, and slide into a 300°F oven for three hours, turning the ribs once at the midpoint.</li>
+      <li><span class="verb">Reduce:</span> Transfer the ribs to a warm platter, strain the braising liquid into a saucepan, and simmer hard for twelve to fifteen minutes until it coats the back of a spoon like a loose syrup.</li>
+      <li><span class="verb">Glaze:</span> Whisk a final tablespoon of rye and a knob of cold butter into the reduction, spoon it lavishly over the ribs, and rest for five minutes before serving with the pan juices alongside.</li>
+    </ol>
+
+    <p class="time-note">
+      <strong>Active vs. Passive Time</strong>
+      Roughly forty-five minutes of hands-on work; the remaining three hours belong to the oven and a quiet kitchen.
+    </p>
+
+    <hr class="rule">
+
+    <a class="btn" href="../tips-and-notes/index.html">Next: Tips &amp; Notes →</a>
+
+    <footer>Ember &amp; Rye Kitchen</footer>
+  </div>
+</body>
+</html>

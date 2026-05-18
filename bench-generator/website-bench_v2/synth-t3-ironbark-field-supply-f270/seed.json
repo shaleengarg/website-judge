@@ -1,0 +1,29 @@
+{
+  "id": "synth-t3-ironbark-field-supply-f270",
+  "tier": 3,
+  "genre": "ecommerce",
+  "pages": [
+    "shop",
+    "product-detail",
+    "cart",
+    "account",
+    "about"
+  ],
+  "palette_hint": "Off-white background #F5F1EB, dark charcoal text #2B2B2B, burnt-sienna accent #C4522A, and muted olive secondary #6B7C4E",
+  "type_style": "Headings in Georgia serif bold at 1.4\u20132rem, body in system-ui at 0.9rem regular, giving a rugged-utilitarian field-catalog feel",
+  "description": "Ironbark Field Supply is an online store selling professional bushcraft, wilderness survival, and land-management tools \u2014 axes, saws, cordage, fire-starting kits, and protective clothing \u2014 to farmers, rangers, and serious outdoor workers.",
+  "constraints": [
+    "Shop page uses a fixed 260px left sidebar for category/filter controls and a scrollable main product grid (3 columns at \u22651100px, 2 columns at 700\u20131099px) separated by a 1px solid #D4CCBF divider",
+    "Product detail page uses a two-column layout: left column 45% width for a static product image placeholder (#D4CCBF filled rectangle with centered product name text), right column 55% for specs table, pricing, and an Add-to-Cart button in #C4522A",
+    "Cart page uses a full-width table (border-collapse, alternating row backgrounds #F5F1EB and #EDE8DF) for line items, with a sticky 280px right-side order-summary panel that stays fixed when the item list scrolls",
+    "Account page is two-column: a 220px sticky left nav listing Orders, Addresses, Payment, and Settings sections, with the main content area rendering a dense orders-history table showing order number, date, items count, total, and status badge",
+    "All pages share a sticky top header (height 56px, background #2B2B2B, white text) containing the Ironbark logo left-aligned, primary nav links center-aligned, and a cart icon with item-count badge in #C4522A right-aligned"
+  ],
+  "page_specs": {
+    "shop": "Displays 18 product cards across the grid, each card containing a colored-rectangle image placeholder, product name (e.g. 'Gransfors Bruks Small Forest Axe', 'Silky GOMBOY 240 Folding Saw', 'Paracord 550 \u2014 100ft Olive Drab'), price, and an olive-green 'Add to Cart' button. The left sidebar contains collapsible filter groups for Category (Axes & Hatchets, Saws, Cordage, Fire Starting, Clothing), Price Range (checkboxes: Under $25, $25\u2013$75, $75\u2013$150, Over $150), and Brand (Gransfors Bruks, Silky, Bahco, Light My Fire, Carinthia), plus a 'Clear Filters' link in #C4522A. A breadcrumb trail reads 'Home \u203a Shop' and a product count line reads '18 products found' above the grid.",
+    "product-detail": "Showcases the 'Gransfors Bruks Small Forest Axe' at $149.00 USD. The right column contains a two-row specs table (Head Weight: 0.8 kg, Handle Length: 50 cm, Steel Grade: Swedish, Handle Material: American Hickory, Edge Grind: Convex, Includes: Grain-leather sheath) styled with #EDE8DF header cells and #F5F1EB data cells. Below the table are a quantity stepper input, the burnt-sienna Add-to-Cart button (full column width, 48px tall), a 'Save to Wishlist' text link, and a short two-paragraph product description about the axe's Swedish craftsmanship and suitability for limbing and campsite work.",
+    "cart": "Shows three line items in the table: Gransfors Bruks Small Forest Axe \u00d71 at $149.00, Silky GOMBOY 240 \u00d72 at $89.00 each, and Paracord 550 100ft \u00d73 at $12.00 each. Each row has a remove-item '\u00d7' link in #C4522A. The sticky right-side summary panel shows Subtotal $351.00, Estimated Shipping $14.95, Tax (8.25%) $28.96, and Order Total $394.91 in bold, followed by a full-width 'Proceed to Checkout' button in #C4522A and a 'Continue Shopping' text link below it. A promo-code input field with an 'Apply' button sits above the totals.",
+    "account": "The sticky left nav highlights 'Orders' as the active section using a #C4522A left border and bold text. The main area shows an 'Order History' heading, then a dense table of 8 past orders with columns: Order #, Date, Items, Total, and Status \u2014 statuses styled as small inline badges (Delivered in #6B7C4E, Processing in #C4522A, Cancelled in #888). Above the table, account-holder name 'Dale Murchison' and email 'dale.murchison@ranchmail.net' are displayed in a compact info row with an 'Edit Profile' link.",
+    "about": "A single-column content page (max-width 760px, centered) with three distinct sections separated by 1px #D4CCBF horizontal rules. Section one is a company origin story about Ironbark Field Supply founding in 2011 in Tamworth, NSW by a former land-clearing contractor named Petra Halvorsen. Section two is a three-column grid listing core values \u2014 'Built to Last', 'Expert-Sourced', and 'No Nonsense Returns' \u2014 each as a small heading with two sentences of specific detail. Section three contains a simple two-column table of supplier certifications: FSC Certified Timber Handles, ISO 9001 Steel Sourcing, and Australia Post Carbon-Neutral Delivery."
+  }
+}

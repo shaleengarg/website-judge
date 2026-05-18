@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cart — Ironbark Field Supply</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 0.9rem;
+    background: #F5F1EB;
+    color: #2B2B2B;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; }
+
+  /* Header */
+  header.site {
+    position: sticky;
+    top: 0;
+    height: 56px;
+    background: #2B2B2B;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+    border-bottom: 1px solid #000;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+    flex: 0 0 auto;
+  }
+  .logo .mark { color: #C4522A; }
+  nav.primary {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+  }
+  nav.primary a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    text-transform: capitalize;
+    padding: 4px 2px;
+    border-bottom: 2px solid transparent;
+  }
+  nav.primary a.active { border-bottom-color: #C4522A; }
+  nav.primary a:hover { border-bottom-color: #C4522A; }
+  .cart-icon {
+    position: relative;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding-right: 6px;
+  }
+  .cart-icon .badge {
+    position: absolute;
+    top: -8px;
+    right: -14px;
+    background: #C4522A;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 0.7rem;
+    font-weight: bold;
+  }
+
+  /* Main */
+  main {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .cart-main { flex: 1; min-width: 0; }
+  .breadcrumb {
+    color: #6B7C4E;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+  }
+  .breadcrumb a { color: #6B7C4E; text-decoration: none; }
+  h1.page-title {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    color: #6B6B6B;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  /* Table */
+  table.cart {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #D4CCBF;
+  }
+  table.cart thead th {
+    background: #2B2B2B;
+    color: #fff;
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  table.cart tbody tr:nth-child(odd)  { background: #F5F1EB; }
+  table.cart tbody tr:nth-child(even) { background: #EDE8DF; }
+  table.cart td {
+    padding: 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid #D4CCBF;
+  }
+  table.cart tbody tr:last-child td { border-bottom: none; }
+  .prod-cell { display: flex; align-items: center; gap: 14px; }
+  .thumb {
+    width: 64px; height: 64px;
+    background: #D4CCBF;
+    flex: 0 0 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B6B6B;
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+    border: 1px solid #C7BFB0;
+  }
+  .prod-name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+  .prod-sku { color: #6B6B6B; font-size: 0.78rem; }
+  .qty {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #D4CCBF;
+    background: #fff;
+  }
+  .qty span.btn {
+    padding: 4px 10px;
+    color: #2B2B2B;
+    background: #EDE8DF;
+    font-weight: bold;
+  }
+  .qty span.num { padding: 4px 12px; min-width: 30px; text-align: center; }
+  .price-col, .total-col { text-align: right; font-variant-numeric: tabular-nums; }
+  .total-col { font-weight: bold; }
+  .remove {
+    color: #C4522A;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  .remove:hover { text-decoration: underline; }
+
+  .cart-foot {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+  .cart-foot a {
+    color: #C4522A;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .cart-foot .update {
+    background: #6B7C4E;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+
+  /* Summary */
+  aside.summary {
+    width: 280px;
+    flex: 0 0 280px;
+    background: #fff;
+    border: 1px solid #D4CCBF;
+    padding: 20px;
+    position: sticky;
+    top: 80px;
+  }
+  aside.summary h2 {
+    font-size: 1.2rem;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #D4CCBF;
+  }
+  .promo {
+    display: flex;
+    margin-bottom: 16px;
+  }
+  .promo input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #D4CCBF;
+    background: #F5F1EB;
+    font-size: 0.85rem;
+    font-family: inherit;
+    min-width: 0;
+  }
+  .promo button {
+    background: #2B2B2B;
+    color: #fff;
+    border: none;
+    padding: 0 14px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 0.88rem;
+  }
+  .totals-row.divider {
+    border-top: 1px solid #D4CCBF;
+    margin-top: 8px;
+    padding-top: 12px;
+  }
+  .totals-row.grand {
+    font-weight: bold;
+    font-size: 1.05rem;
+    font-family: Georgia, serif;
+  }
+  .totals-row .label { color: #555; }
+  .totals-row.grand .label { color: #2B2B2B; }
+  .checkout {
+    display: block;
+    width: 100%;
+    background: #C4522A;
+    color: #fff;
+    text-align: center;
+    padding: 14px;
+    margin-top: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+  }
+  .continue {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    color: #6B7C4E;
+    text-decoration: none;
+    font-size: 0.85rem;
+  }
+  .continue:hover { text-decoration: underline; }
+  .secure {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #D4CCBF;
+    text-align: center;
+    font-size: 0.72rem;
+    color: #6B6B6B;
+    letter-spacing: 0.3px;
+  }
+
+  /* Footer */
+  footer.site {
+    background: #2B2B2B;
+    color: #C7BFB0;
+    margin-top: 40px;
+    padding: 28px 24px 18px;
+    font-size: 0.8rem;
+  }
+  footer.site .cols {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer.site h4 {
+    color: #fff;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  footer.site a { color: #C7BFB0; text-decoration: none; display: block; padding: 2px 0; }
+  footer.site a:hover { color: #C4522A; }
+  footer.site .brand { font-family: Georgia, serif; font-weight: bold; font-size: 1.1rem; color: #fff; margin-bottom: 8px; }
+  footer.site .legal {
+    max-width: 1240px;
+    margin: 18px auto 0;
+    padding-top: 14px;
+    border-top: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="logo">IRONBARK<span class="mark">·</span>FIELD SUPPLY</div>
+  <nav class="primary">
+    <a href="../shop/index.html">Shop</a>
+    <a href="../product-detail/index.html">Product</a>
+    <a href="#" class="active">Cart</a>
+    <a href="../account/index.html">Account</a>
+    <a href="../about/index.html">About</a>
+  </nav>
+  <a href="#" class="cart-icon">⛯ Cart<span class="badge">6</span></a>
+</header>
+
+<main>
+  <section class="cart-main">
+    <div class="breadcrumb"><a href="#">Home</a> › <a href="#">Shop</a> › Cart</div>
+    <h1 class="page-title">Your Cart</h1>
+    <div class="subtitle">3 items · Review your order before checkout</div>
+
+    <table class="cart">
+      <thead>
+        <tr>
+          <th style="width:46%">Product</th>
+          <th>Quantity</th>
+          <th class="price-col">Unit Price</th>
+          <th class="total-col">Line Total</th>
+          <th style="width:32px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="prod-cell">
+              <div class="thumb">AXE</div>
+              <div>
+                <div class="prod-name">Gransfors Bruks Small Forest Axe</div>
+                <div class="prod-sku">SKU: GB-SFA-50 · Hand-forged Sweden</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="qty"><span class="btn">−</span><span class="num">1</span><span class="btn">+</span></div></td>
+          <td class="price-col">$149.00</td>
+          <td class="total-col">$149.00</td>
+          <td><a href="#" class="remove" title="Remove">×</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="prod-cell">
+              <div class="thumb">SAW</div>
+              <div>
+                <div class="prod-name">Silky GOMBOY 240</div>
+                <div class="prod-sku">SKU: SLK-GB-240 · Folding pruning saw</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="qty"><span class="btn">−</span><span class="num">2</span><span class="btn">+</span></div></td>
+          <td class="price-col">$89.00</td>
+          <td class="total-col">$178.00</td>
+          <td><a href="#" class="remove" title="Remove">×</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="prod-cell">
+              <div class="thumb">CORD</div>
+              <div>
+                <div class="prod-name">Paracord 550 — 100ft Olive Drab</div>
+                <div class="prod-sku">SKU: PC550-100-OD · 7-strand mil-spec</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="qty"><span class="btn">−</span><span class="num">3</span><span class="btn">+</span></div></td>
+          <td class="price-col">$12.00</td>
+          <td class="total-col">$36.00</td>
+          <td><a href="#" class="remove" title="Remove">×</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cart-foot">
+      <a href="../shop/index.html">← Continue Shopping</a>
+      <button class="update">Update Cart</button>
+    </div>
+  </section>
+
+  <aside class="summary">
+    <h2>Order Summary</h2>
+
+    <div class="promo">
+      <input type="text" placeholder="Promo code">
+      <button>Apply</button>
+    </div>
+
+    <div class="totals-row"><span class="label">Subtotal (3 items)</span><span>$351.00</span></div>
+    <div class="totals-row"><span class="label">Estimated Shipping</span><span>$14.95</span></div>
+    <div class="totals-row"><span class="label">Tax (8.25%)</span><span>$28.96</span></div>
+    <div class="totals-row grand divider"><span class="label">Order Total</span><span>$394.91</span></div>
+
+    <button class="checkout">Proceed to Checkout →</button>
+    <a href="../shop/index.html" class="continue">Continue Shopping</a>
+
+    <div class="secure">🔒 SECURE CHECKOUT · SHIPS FROM TAMWORTH NSW</div>
+  </aside>
+</main>
+
+<footer class="site">
+  <div class="cols">
+    <div>
+      <div class="brand">IRONBARK FIELD SUPPLY</div>
+      <p>Professional tools for bushcraft, wilderness survival and land-management. Built to last, sourced by hand, shipped from Tamworth, NSW since 2011.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="#">Axes &amp; Hatchets</a>
+      <a href="#">Saws</a>
+      <a href="#">Cordage</a>
+      <a href="#">Fire Starting</a>
+      <a href="#">Clothing</a>
+    </div>
+    <div>
+      <h4>Account</h4>
+      <a href="#">Orders</a>
+      <a href="#">Addresses</a>
+      <a href="#">Payment</a>
+      <a href="#">Settings</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Returns Policy</a>
+      <a href="#">Shipping</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="legal">
+    <span>© 2024 Ironbark Field Supply Pty Ltd · ABN 47 218 660 304</span>
+    <span>FSC Certified · ISO 9001 · Carbon-Neutral Delivery</span>
+  </div>
+</footer>
+
+</body>
+</html>

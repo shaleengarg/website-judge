@@ -1,0 +1,88 @@
+{
+  "tasks": [
+    {
+      "id": "synth-t1-ember-and-rye-kitchen-bf91",
+      "tier": 1,
+      "genre": "recipe-card",
+      "description": "Ember & Rye Kitchen is a single-recipe showcase site presenting a slow-braised short rib with smoked rye whiskey glaze, laid out as a beautifully typeset digital recipe card across five focused pages.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t1-ink-and-insomnia-blog-c198",
+      "tier": 1,
+      "genre": "personal-blog",
+      "description": "Ink & Insomnia is the personal blog of Mara Veltri, a insomniac copywriter who writes candid essays about 3am thoughts, obscure paperback finds, and the strange comfort of empty diners.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-hollow-creek-land-trust-3d55",
+      "tier": 2,
+      "genre": "nonprofit",
+      "description": "Hollow Creek Land Trust is a regional nonprofit protecting 14,000 acres of Appalachian forest, wetland, and farmland through voluntary conservation easements and community stewardship programs.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t2-strata-data-summit-d040",
+      "tier": 2,
+      "genre": "conference",
+      "description": "Strata Data Summit is a two-day annual conference for data engineers and analytics leaders held in Pittsburgh, featuring keynotes, workshops, and networking sessions.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t3-ferroflux-systems-docs-fa87",
+      "tier": 3,
+      "genre": "documentation",
+      "description": "FerroFlux Systems is a fictional real-time magnetic sensor data pipeline SDK with full reference documentation covering installation, REST/WebSocket API endpoints, YAML configuration schemas, version history, and diagnostic guides.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t3-obsidian-quill-bindery-711f",
+      "tier": 3,
+      "genre": "ecommerce",
+      "description": "Obsidian Quill Bindery is an artisan stationery and bookbinding supply shop selling hand-bound journals, custom endpapers, bone folders, and leather hides to bookbinders and paper artists.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t4-luminos-ai-copilot-9d26",
+      "tier": 4,
+      "genre": "marketing-landing",
+      "description": "Luminos is a fictional AI writing copilot SaaS whose marketing site uses deep-navy dark-mode aesthetics, violet-to-teal gradients, layered box-shadow elevation, and glassmorphism cards to convey premium intelligence.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t5-maison-cendree-dining-3a9f",
+      "tier": 5,
+      "genre": "restaurant-elegant",
+      "description": "Maison Cendr\u00e9e is a French-inflected fine dining restaurant in a converted 19th-century mill in Asheville, NC, serving a nightly six-course tasting menu built around wood-fire cookery and Appalachian ingredients.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t6-obsidian-vault-finance-79c4",
+      "tier": 6,
+      "genre": "signup-flow",
+      "description": "Obsidian Vault is a premium self-directed investment account signup flow for high-net-worth individuals, featuring multi-step registration with dense form layouts, custom-styled inputs, and a detailed plan comparison table.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t6-vaultline-cloud-storage-aed4",
+      "tier": 6,
+      "genre": "comparison-table",
+      "description": "Vaultline is a fictional enterprise cloud-storage comparison site that lets IT buyers pit five storage tiers\u2014Starter, Business, Scale, Enterprise, and Sovereign\u2014against each other across dozens of technical and commercial criteria.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t8-deep-time-salt-flats-05b3",
+      "tier": 8,
+      "genre": "multimedia-essay",
+      "description": "A long-form multimedia essay exploring the geology, ecology, and human history of the Bonneville Salt Flats, structured as five thematic chapters each with its own visual grammar.",
+      "n_pages": 5
+    },
+    {
+      "id": "synth-t8-deep-water-horizon-watch-92c7",
+      "tier": 8,
+      "genre": "special-report",
+      "description": "A multi-page investigative special report by the Tethys Journalism Collective documenting five years of illegal deep-sea trawling in the South Coral Sea, combining data visualizations, field correspondent logs, and policy analysis.",
+      "n_pages": 5
+    }
+  ]
+}

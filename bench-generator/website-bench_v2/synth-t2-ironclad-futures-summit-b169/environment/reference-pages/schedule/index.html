@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Schedule — Ironclad Futures Summit 2025</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F4F1EC;
+    color: #1C1C1C;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; color: #1C1C1C; }
+
+  /* Nav */
+  .nav-wrap { background: #2C3E50; }
+  .nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo { font-family: Georgia, serif; font-weight: 700; font-size: 20px; color: #fff; letter-spacing: 0.3px; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { color: #fff; text-decoration: none; font-size: 15px; font-family: system-ui, sans-serif; }
+  .nav-links a.active { color: #C0392B; font-weight: 600; }
+
+  /* Page container */
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* Hero */
+  .hero {
+    border-bottom: 2px solid #2C3E50;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  .hero .eyebrow {
+    color: #C0392B;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .hero h1 { font-size: 40px; line-height: 1.15; margin-bottom: 10px; }
+  .hero p { font-size: 16px; color: #1C1C1C; max-width: 720px; }
+
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #2C3E50;
+    align-items: center;
+  }
+  .legend .chip {
+    display: inline-block;
+    width: 14px; height: 14px;
+    background: #fff;
+    border-left: 4px solid #C0392B;
+    border-top: 1px solid #2C3E50;
+    border-right: 1px solid #2C3E50;
+    border-bottom: 1px solid #2C3E50;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .legend .chip.std {
+    border: 1px solid #2C3E50;
+    border-left: 1px solid #2C3E50;
+  }
+
+  /* Schedule grid */
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .day-col { display: flex; flex-direction: column; }
+  .day-header {
+    position: sticky;
+    top: 0;
+    background: #2C3E50;
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 8px 8px 0 0;
+    z-index: 2;
+  }
+  .day-header .day-label { font-family: Georgia, serif; font-weight: 700; font-size: 18px; }
+  .day-header .day-date { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+
+  .sessions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .session {
+    background: #FFFFFF;
+    border: 2px solid #2C3E50;
+    border-radius: 8px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .session.keynote {
+    border-left: 6px solid #C0392B;
+    padding-left: 14px;
+  }
+  .session .time {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    color: #2C3E50;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .session .title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+    color: #1C1C1C;
+  }
+  .session.keynote .title {
+    color: #C0392B;
+    font-size: 17px;
+  }
+  .session .meta {
+    font-size: 13px;
+    color: #2C3E50;
+    line-height: 1.5;
+  }
+  .session .meta .room { color: #1C1C1C; opacity: 0.7; }
+  .session .meta .speaker { display: block; margin-bottom: 2px; }
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #C0392B;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .tag.break { color: #2C3E50; }
+
+  .session.brk {
+    background: #F4F1EC;
+    border-style: dashed;
+    border-width: 1px;
+  }
+  .session.brk .title { font-family: system-ui, sans-serif; font-weight: 600; font-size: 14px; }
+
+  /* CTA strip */
+  .cta-strip {
+    margin-top: 40px;
+    background: #FFFFFF;
+    border: 2px solid #2C3E50;
+    border-radius: 8px;
+    padding: 24px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .cta-strip h3 { font-size: 22px; margin-bottom: 4px; }
+  .cta-strip p { font-size: 14px; color: #2C3E50; }
+  .btn {
+    background: #C0392B;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 15px;
+    font-family: system-ui, sans-serif;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  /* Footer */
+  footer {
+    background: #1C1C1C;
+    color: #F4F1EC;
+    margin-top: 60px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .footer-inner .contact { font-size: 14px; line-height: 1.7; }
+  .footer-inner .contact strong { font-family: Georgia, serif; font-size: 15px; display: block; margin-bottom: 4px; }
+  .footer-inner .tag-col { text-align: right; font-size: 14px; }
+  .footer-inner .tag-col .hash {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    color: #C0392B;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="logo">Ironclad Futures Summit</div>
+    <div class="nav-links">
+      <a href="#" class="active">Schedule</a>
+      <a href="../speakers/index.html">Speakers</a>
+      <a href="../venue/index.html">Venue</a>
+      <a href="../register/index.html">Register</a>
+      <a href="../about/index.html">About</a>
+    </div>
+  </nav>
+</div>
+
+<main class="page">
+
+  <section class="hero">
+    <div class="eyebrow">October 14–15, 2025 · Pittsburgh, PA</div>
+    <h1>Two Days. One Industrial Agenda.</h1>
+    <p>Engineers, legislators, and economists convene at the August Wilson Cultural Center to debate the next decade of American manufacturing. Keynotes, working panels, and on-the-record roundtables.</p>
+    <div class="legend">
+      <span><span class="chip"></span>Keynote / Plenary</span>
+      <span><span class="chip std"></span>Panel &amp; Working Session</span>
+    </div>
+  </section>
+
+  <div class="schedule-grid">
+
+    <!-- DAY 1 -->
+    <div class="day-col">
+      <div class="day-header">
+        <div class="day-label">Day 1 — Foundations</div>
+        <div class="day-date">Tuesday, October 14, 2025</div>
+      </div>
+      <div class="sessions">
+
+        <div class="session">
+          <div class="time">8:00<br>9:00 AM</div>
+          <div>
+            <div class="tag break">Registration</div>
+            <div class="title">Check-In &amp; Continental Breakfast</div>
+            <div class="meta"><span class="room">Grand Foyer</span></div>
+          </div>
+        </div>
+
+        <div class="session keynote">
+          <div class="time">9:00<br>10:00 AM</div>
+          <div>
+            <div class="tag">Opening Keynote</div>
+            <div class="title">Rebuilding the American Industrial Base</div>
+            <div class="meta">
+              <span class="speaker">Sen. Marcus Hollinger (D-PA)</span>
+              <span class="room">Carnegie Hall</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="time">10:15<br>11:30 AM</div>
+          <div>
+            <div class="tag">Panel</div>
+            <div class="title">CHIPS, IRA &amp; the Next Wave of Subsidy Policy</div>
+            <div class="meta">
+              <span class="speaker">Dr. Elena Vásquez · Anika Patel · Robert Chen</span>
+              <span class="room">Carnegie Hall</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="time">11:45<br>12:45 PM</div>
+          <div>
+            <div class="tag">Working Session</div>
+            <div class="title">Workforce Pipelines: Trades, Apprenticeships, Community Colleges</div>
+            <div class="meta">
+              <span class="speaker">Diane Kowalski, Carnegie Mellon</span>
+              <span class="room">Monongahela Room</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session brk">
+          <div class="time">12:45<br>2:00 PM</div>
+          <div>
+            <div class="tag break">Break</div>
+            <div class="title">Lunch — Steel City Buffet</div>
+            <div class="meta"><span class="room">Liberty Atrium</span></div>
+          </div>
+        </div>
+
+        <div class="session keynote">
+          <div class="time">2:00<br>3:00 PM</div>
+          <div>
+            <div class="tag">Plenary</div>
+            <div class="title">The Steel Sector at an Inflection Point</div>
+            <div class="meta">
+              <span class="speaker">Howard Reilly, VP Operations, Nucor Steel</span>
+              <span class="room">Carnegie Hall</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="time">3:15<br>4:30 PM</div>
+          <div>
+            <div class="tag">Panel</div>
+            <div class="title">Decarbonizing Heavy Industry Without Offshoring It</div>
+            <div class="meta">
+              <span class="speaker">Dr. Priya Anand · Joseph Whelan · Lin Ortiz</span>
+              <span class="room">Monongahela Room</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="time">5:00<br>7:00 PM</div>
+          <div>
+            <div class="tag break">Evening</div>
+            <div class="title">Welcome Reception &amp; Industry Mixer</div>
+            <div class="meta"><span class="room">Omni William Penn — Palm Court</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-col">
+      <div class="day-header">
+        <div class="day-label">Day 2 — Frontiers</div>
+        <div class="day-date">Wednesday, October 15, 2025</div>
+      </div>
+      <div class="sessions">
+
+        <div class="session">
+          <div class="time">8:30<br>9:00 AM</div>
+          <div>
+            <div class="tag break">Coffee</div>
+            <div class="title">Morning Coffee &amp; Pressroom Hours</div>
+            <div class="meta"><span class="room">Grand Foyer</span></div>
+          </div>
+        </div>
+
+        <div class="session keynote">
+          <div class="time">9:00<br>10:00 AM</div>
+          <div>
+            <div class="tag">Keynote</div>
+            <div class="title">Infrastructure as Industrial Strategy</div>
+            <div class="meta">
+              <span class="speaker">Rep. Yolanda Briggs (R-OH)</span>
+              <span class="room">Carnegie Hall</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="time">10:15<br>11:30 AM</div>
+          <div>
+            <div class="tag">Panel</div>
+            <div class="title">Critical Minerals, Tariffs &amp; Supply Chain Sovereignty</div>
+            <div class="meta">
+              <span class="speaker">Dr. Samuel Okonkwo · Hana Liu · Greg Pellegrino</span>
+              <span class="room">Carnegie Hall</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="time">11:45<br>12:45 PM</div>
+          <div>
+            <div class="tag">Working Session</div>
+            <div class="title">Modular Construction &amp; the Future of Civil Works</div>
+            <div class="meta">
+              <span class="speaker">Eduardo Marín, Bechtel</span>
+              <span class="room">Monongahela Room</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session brk">
+          <div class="time">12:45<br>2:00 PM</div>
+          <div>
+            <div class="tag break">Break</div>
+            <div class="title">Lunch — Roundtables by Sector</div>
+            <div class="meta"><span class="room">Liberty Atrium</span></div>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="time">2:00<br>3:15 PM</div>
+          <div>
+            <div class="tag">Panel</div>
+            <div class="title">Capital Markets &amp; the Reindustrialization Thesis</div>
+            <div class="meta">
+              <span class="speaker">Margaret Sloane · David Reinhart · Aisha Carter</span>
+              <span class="room">Carnegie Hall</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session keynote">
+          <div class="time">3:30<br>4:30 PM</div>
+          <div>
+            <div class="tag">Closing Plenary</div>
+            <div class="title">A Decade Out: Commitments &amp; Accountability</div>
+            <div class="meta">
+              <span class="speaker">Gov. Theresa Calloway (PA)</span>
+              <span class="room">Carnegie Hall</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="time">4:30<br>5:00 PM</div>
+          <div>
+            <div class="tag break">Closing</div>
+            <div class="title">Summit Adjournment &amp; Press Availability</div>
+            <div class="meta"><span class="room">Grand Foyer</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <section class="cta-strip">
+    <div>
+      <h3>Seats are limited to 480 attendees.</h3>
+      <p>Early-bird pricing ends September 1, 2025. Academic and government rates available.</p>
+    </div>
+    <a class="btn" href="../register/index.html">Register Now</a>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="contact">
+      <strong>Ironclad Futures Summit</strong>
+      August Wilson Cultural Center · 980 Liberty Ave<br>
+      Pittsburgh, PA 15222<br>
+      info@ironcladfutures.org · (412) 555-0142
+    </div>
+    <div class="tag-col">
+      <span class="hash">#IroncladFS25</span>
+      Produced by the Rivers &amp; Rails Policy Institute
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

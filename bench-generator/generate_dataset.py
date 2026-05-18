@@ -8,39 +8,36 @@
 """
 Generate a Harbor benchmark dataset of website-replication tasks.
 
-Each task: a 5-page website at a specified difficulty tier and genre. The
-generator drives an LLM to produce 5 HTML files per task, then wraps them in
-the Harbor task harness (Dockerfile, score.py, etc.) copied from templates/.
+Each task: a 5-page website at a specified difficulty tier and genre. Seeds
+are LLM-generated on demand by concept_gen.py — there is no hardcoded seed
+list. Codegen then drives an LLM to produce 5 HTML files per task (one call
+per page) and wraps them in the Harbor task harness (Dockerfile, score.py,
+etc.) copied from templates/.
 
 Usage with uv (recommended — uv handles deps automatically):
     export ANTHROPIC_API_KEY=...
     uv run generate_dataset.py --count 10 --output ./website-bench
 
-Usage without uv:
-    pip install anthropic
-    export ANTHROPIC_API_KEY=...
-    python generate_dataset.py --count 10 --output ./website-bench
-
 Other flags:
-    --model       LLM model name (default: claude-sonnet-4-6)
-    --tier-min N  Minimum tier to include (default: 1)
-    --tier-max N  Maximum tier to include (default: 3)
-    --start-index N   Skip the first N matching seeds (for resuming)
-    --max-retries N   How many times to retry generation if validation fails (default: 3)
-    --templates-dir   Path to templates/ (default: ./templates relative to script)
-    --seeds-module    Python module providing SEEDS list (default: ./seeds.py)
-    --synthesize N    Skip the hardcoded SEEDS list; ask Claude Sonnet to invent N
-                      new seeds across the tier range using concept_gen.py.
-    --synth-seed K    RNG seed for tier/genre selection during --synthesize
-                      (default: random per run).
+    --model       Codegen model (default: claude-opus-4-7). Concepts always
+                  use claude-sonnet-4-6.
+    --tier-min N  Minimum tier to include (default: lowest static tier)
+    --tier-max N  Maximum tier to include (default: highest static tier;
+                  motion-required tiers like 9 are excluded by default)
+    --synth-seed K  RNG seed for tier/genre selection (default: random per run)
+    --max-retries N  Per-page retries on HTML validation failure (default: 3)
+    --concurrency N  Outer parallelism. Peak in-flight calls = 5N during codegen.
+    --templates-dir  Path to templates/ (default: ./templates next to script)
+    --seeds-module   Python module providing TIERS/GENRES (default: ./seeds.py)
 
-The generator is deterministic given the same seeds — re-running on the same
-seed produces a new task directory (overwriting), so you can re-run to refresh
-a single task by passing --include-id 001-minimal-portfolio.
+Determinism: identical --synth-seed + tier range + count produces the same
+(tier, genre) pair sequence. The LLM calls within each pair are not
+deterministic.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -89,7 +86,12 @@ class _HTMLValidator(HTMLParser):
             self.has_body_tag = True
         elif tag == "script":
             self.has_script_tag = True
-        for _, value in attrs:
+        for name, value in attrs:
+            # xmlns and xmlns:* attribute values are XML namespace identifiers
+            # (e.g. "http://www.w3.org/2000/svg"), not network resources. They
+            # look like URLs but the browser never fetches them.
+            if name == "xmlns" or (name and name.startswith("xmlns:")):
+                continue
             if value and isinstance(value, str) and re.match(r"https?://", value):
                 self.external_urls.append(value)
 
@@ -268,39 +270,79 @@ def render_template(text: str, replacements: dict[str, str]) -> str:
     return out
 
 
-def write_task(seed: dict, pages: dict[str, str], templates_dir: Path,
-               output_root: Path) -> Path:
-    task_id = seed["id"]
-    task_dir = output_root / task_id
-    if task_dir.exists():
-        shutil.rmtree(task_dir)
-    task_dir.mkdir(parents=True)
+def compute_template_hash(templates_dir: Path) -> str:
+    """Content hash of the templates/ directory tree.
 
-    # Copy harness directories verbatim.
-    for sub in ["solution", "tests"]:
-        shutil.copytree(templates_dir / sub, task_dir / sub)
-    (task_dir / "environment").mkdir()
-    shutil.copy(templates_dir / "environment" / "Dockerfile",
-                task_dir / "environment" / "Dockerfile")
-    shutil.copy(templates_dir / "environment" / "make.py",
-                task_dir / "environment" / "make.py")
+    Walks all files under `templates_dir` in sorted-path order and hashes
+    each file's relative path + content into a single SHA256. Any change to
+    a templated file (Dockerfile, make.py, score.py, task.toml.tpl, etc.)
+    produces a different hash.
 
-    # Write the generated pages.
-    ref_root = task_dir / "environment" / "reference-pages"
-    ref_root.mkdir()
-    for page_name, html in pages.items():
-        page_dir = ref_root / page_name
-        page_dir.mkdir()
-        (page_dir / "index.html").write_text(html, encoding="utf-8")
+    Used as a freshness stamp on each generated task: write_task drops the
+    hash into `<task>/template_version.txt`, and `scripts/check_freshness.py`
+    flags any task whose stamp doesn't match the current `templates/` hash.
 
-    # Render templated files.
-    n_pages = len(pages)
-    page_names = list(pages.keys())
-    input_list = "\n".join(f"- `/app/references/{name}.png`" for name in page_names)
+    Excludes hidden files (.DS_Store, .pyc, etc.) and __pycache__.
+    """
+    h = hashlib.sha256()
+    root = templates_dir.resolve()
+    paths = sorted(
+        p for p in root.rglob("*")
+        if p.is_file()
+        and not any(part.startswith(".") for part in p.relative_to(root).parts)
+        and "__pycache__" not in p.parts
+    )
+    for p in paths:
+        rel = p.relative_to(root).as_posix()
+        h.update(rel.encode("utf-8"))
+        h.update(b"\x00")
+        h.update(p.read_bytes())
+        h.update(b"\x00\x00")
+    return h.hexdigest()
+
+
+def apply_templates_to_task(
+    seed: dict,
+    page_names: list[str],
+    templates_dir: Path,
+    task_dir: Path,
+) -> None:
+    """Copy templates and render .tpl files into an existing task_dir.
+
+    Overwrites: solution/, tests/, environment/Dockerfile, environment/make.py,
+                task.toml, instruction.md, template_version.txt.
+    Preserves:  environment/reference-pages/ (LLM HTML), seed.json.
+
+    Used by both write_task (initial generation) and scripts/upgrade_tasks.py
+    (refresh a stale task without re-running the LLM).
+    """
+    # solution/ and tests/ are pure verbatim subtrees — wipe & recopy.
+    for sub in ("solution", "tests"):
+        target = task_dir / sub
+        if target.exists():
+            shutil.rmtree(target)
+        shutil.copytree(templates_dir / sub, target)
+
+    env_dir = task_dir / "environment"
+    env_dir.mkdir(exist_ok=True)
+    for fname in ("Dockerfile", "make.py"):
+        shutil.copy(templates_dir / "environment" / fname, env_dir / fname)
+
+    # Render task.toml + instruction.md from .tpl files using seed data.
+    n_pages = len(page_names)
+    # V4: per-viewport reference PNGs. Group by viewport in the listing so
+    # the agent reads "all three desktop refs, then all three tablet refs,
+    # then all three phone refs" rather than interleaving.
+    _viewport_labels = ("desktop", "tablet", "phone")
+    input_list = "\n".join(
+        "\n".join(f"- `/app/references/{vp}/{name}.png`" for name in page_names)
+        for vp in _viewport_labels
+    )
     output_list = "\n".join(
         f"- `/app/output/{name}/index.html`" for name in page_names
     )
 
+    task_id = seed["id"]
     task_name = f"website-bench/{task_id}"
     task_description = seed["description"].replace('"', '\\"')
     difficulty = (
@@ -333,10 +375,39 @@ def write_task(seed: dict, pages: dict[str, str], templates_dir: Path,
     for script in [task_dir / "solution" / "solve.sh", task_dir / "tests" / "test.sh"]:
         script.chmod(0o755)
 
-    # Drop the originating seed alongside the task. relevance.py reads this so
-    # the VLM judge gets the full palette/typography/constraints — not just
-    # whatever survived into task.toml.
+    # Stamp the templates/ content hash so we can detect stale tasks later.
+    # scripts/check_freshness.py compares this against the current hash and
+    # flags any task that needs re-applying templates.
+    (task_dir / "template_version.txt").write_text(
+        compute_template_hash(templates_dir) + "\n", encoding="utf-8"
+    )
+
+
+def write_task(seed: dict, pages: dict[str, str], templates_dir: Path,
+               output_root: Path) -> Path:
+    task_id = seed["id"]
+    task_dir = output_root / task_id
+    if task_dir.exists():
+        shutil.rmtree(task_dir)
+    task_dir.mkdir(parents=True)
+
+    # Write the LLM-generated reference pages first (so apply_templates can
+    # leave them untouched).
+    (task_dir / "environment").mkdir()
+    ref_root = task_dir / "environment" / "reference-pages"
+    ref_root.mkdir()
+    for page_name, html in pages.items():
+        page_dir = ref_root / page_name
+        page_dir.mkdir()
+        (page_dir / "index.html").write_text(html, encoding="utf-8")
+
+    # Drop the originating seed alongside the task. relevance.py reads this
+    # so the VLM judge gets the full palette/typography/constraints — not
+    # just whatever survived into task.toml.
     (task_dir / "seed.json").write_text(json.dumps(seed, indent=2), encoding="utf-8")
+
+    # Copy templates, render .tpl files, stamp template_version.txt.
+    apply_templates_to_task(seed, list(pages.keys()), templates_dir, task_dir)
 
     return task_dir
 
@@ -400,29 +471,30 @@ def load_seeds_module(path: Path):
 def main() -> None:
     here = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser()
-    parser.add_argument("--count", type=int, default=10)
-    parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--model", default="claude-opus-4-7")
+    parser.add_argument("--count", type=int, default=10,
+                        help="Number of synthetic tasks to generate.")
+    parser.add_argument("--output", type=Path, default=None,
+                        help="Output directory. Required unless --list-tiers.")
+    parser.add_argument("--model", default="claude-opus-4-7",
+                        help="Codegen model (Stage 2). Concepts always use sonnet.")
     parser.add_argument("--tier-min", type=int, default=None,
-                        help="Minimum tier to include (default: lowest defined in seeds.py)")
+                        help="Minimum tier to include "
+                             "(default: lowest static tier in seeds.py)")
     parser.add_argument("--tier-max", type=int, default=None,
-                        help="Maximum tier to include (default: highest defined in seeds.py)")
-    parser.add_argument("--start-index", type=int, default=0)
-    parser.add_argument("--max-retries", type=int, default=3)
+                        help="Maximum tier to include "
+                             "(default: highest static tier — motion-required "
+                             "tiers are excluded unless you set this explicitly)")
+    parser.add_argument("--max-retries", type=int, default=3,
+                        help="Per-page codegen retries on HTML validation failure.")
     parser.add_argument("--templates-dir", type=Path, default=here / "templates")
-    parser.add_argument("--seeds-module", type=Path, default=here / "seeds.py")
-    parser.add_argument("--include-id", action="append", default=[],
-                        help="Only generate the named seed id(s). Repeatable.")
+    parser.add_argument("--seeds-module", type=Path, default=here / "seeds.py",
+                        help="Python module providing TIERS and GENRES.")
     parser.add_argument("--concurrency", "-j", type=int, default=8,
-                        help="Number of seeds to generate in parallel (default: 8). "
-                             "Each one is an independent LLM call.")
-    parser.add_argument("--synthesize", type=int, default=0,
-                        help="Skip the hardcoded SEEDS list and ask Claude Sonnet to "
-                             "invent N new seeds across the tier range. Uses "
-                             "concept_gen.py. Mutually exclusive with --include-id.")
+                        help="Outer parallel workers (default: 8). Peak in-flight "
+                             "calls during codegen = 5 * concurrency because "
+                             "each task fans out to 5 per-page calls.")
     parser.add_argument("--synth-seed", type=int, default=None,
-                        help="RNG seed for tier/genre selection during --synthesize. "
-                             "Default: random per run.")
+                        help="RNG seed for tier/genre selection. Default: random.")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print the plan without calling the LLM.")
     parser.add_argument("--list-tiers", action="store_true",
@@ -431,89 +503,82 @@ def main() -> None:
 
     seeds_mod = load_seeds_module(args.seeds_module)
 
-    # Validate the seed library before anything else.
-    seed_errors = seeds_mod.validate_seeds()
-    if seed_errors:
-        print("ERROR: seeds.py has problems:", file=sys.stderr)
-        for e in seed_errors:
-            print(f"  - {e}", file=sys.stderr)
-        sys.exit(1)
-
     # Handle --list-tiers and exit.
     if args.list_tiers:
         for tier_num in sorted(seeds_mod.TIERS):
             t = seeds_mod.TIERS[tier_num]
-            n_seeds = sum(1 for s in seeds_mod.SEEDS if s["tier"] == tier_num)
-            print(f"\nTier {tier_num}: {t['name']}  ({n_seeds} seeds)")
+            n_genres = len(seeds_mod.GENRES.get(tier_num, []))
+            gated = " [MOTION — not yet generatable]" if seeds_mod.is_motion_tier(tier_num) else ""
+            print(f"\nTier {tier_num}: {t['name']}  ({n_genres} genres){gated}")
             print(f"  {t['description']}")
             print(f"  Capabilities:")
             for cap in t["css_capabilities"]:
                 print(f"    - {cap}")
+            if n_genres:
+                print(f"  Genres: {', '.join(seeds_mod.GENRES[tier_num])}")
         return
 
-    # Default tier range comes from seeds.py, not hardcoded here.
+    if args.output is None:
+        sys.exit("ERROR: --output is required (use --list-tiers to inspect tiers).")
+
+    # Default tier range excludes motion-required tiers.
     tier_min_default, tier_max_default = seeds_mod.tier_range()
     tier_min = args.tier_min if args.tier_min is not None else tier_min_default
     tier_max = args.tier_max if args.tier_max is not None else tier_max_default
 
+    # Gate motion tiers. If the requested range hits a motion-required tier,
+    # bail with a clear error — the codegen path for motion (clock virtualization,
+    # frame grids, motion judge) isn't built yet.
+    motion_hits = [
+        t for t in range(tier_min, tier_max + 1)
+        if t in seeds_mod.TIERS and seeds_mod.is_motion_tier(t)
+    ]
+    if motion_hits:
+        sys.exit(
+            f"ERROR: tier(s) {motion_hits} require the motion harness which "
+            f"is not yet implemented (clock virtualization, frame-grid capture, "
+            f"motion judge). The tier and its genres are defined for forward "
+            f"compatibility, but generation is gated. Restrict --tier-max to "
+            f"{tier_max_default} (or lower) to proceed."
+        )
+
+    if args.count <= 0:
+        sys.exit("ERROR: --count must be > 0.")
+
     if not os.environ.get("ANTHROPIC_API_KEY") and not args.dry_run:
         sys.exit("ERROR: ANTHROPIC_API_KEY not set")
 
-    if args.synthesize > 0:
-        if args.include_id:
-            sys.exit("ERROR: --synthesize and --include-id are mutually exclusive.")
-        rng = random.Random(args.synth_seed)
-        pairs = concept_gen.pick_tier_genre_pairs(
-            args.synthesize, tier_min, tier_max, rng=rng,
-        )
-        print(f"\nSynthesizing {len(pairs)} seed(s) via concept_gen:")
-        for tier, genre in pairs:
-            print(f"  - tier {tier} / {genre}")
+    rng = random.Random(args.synth_seed)
+    pairs = concept_gen.pick_tier_genre_pairs(
+        args.count, tier_min, tier_max, rng=rng,
+    )
+    print(f"\nSynthesizing {len(pairs)} seed(s) via concept_gen:")
+    for tier, genre in pairs:
+        print(f"  - tier {tier} / {genre}")
 
-        if args.dry_run:
-            # In dry-run we don't call the LLM; bail before either stage.
-            return
+    if args.dry_run:
+        # In dry-run we don't call the LLM at all.
+        return
 
-        # Parallelize the synth stage with the same concurrency as codegen.
-        # Anthropic's Python SDK is thread-safe (httpx under the hood), so one
-        # client shared across workers is fine. Each generate_seed call is a
-        # single Sonnet round-trip (plus up to 3 retries on validation fail).
-        synth_client = Anthropic()
-        synth_concurrency = max(1, min(args.concurrency, len(pairs)))
-        print(f"  synth concurrency: {synth_concurrency}")
+    # Parallel concept stage. Runs in waves of `--concurrency` so each wave's
+    # AVOID block sees survivors from prior waves; within-wave collisions are
+    # caught by post-hoc dedup. See concept_gen.generate_seeds_batch.
+    synth_client = Anthropic()
+    synth_concurrency = max(1, min(args.concurrency, len(pairs)))
+    print(f"  synth concurrency: {synth_concurrency} (wave size)")
 
-        seeds = []
-        with ThreadPoolExecutor(max_workers=synth_concurrency) as pool:
-            futures = {
-                pool.submit(concept_gen.generate_seed, synth_client, tier, genre): (tier, genre)
-                for tier, genre in pairs
-            }
-            for future in as_completed(futures):
-                tier, genre = futures[future]
-                try:
-                    seed = future.result()
-                    seeds.append(seed)
-                    print(f"  synthesized: {seed['id']} (tier {tier}, {genre})")
-                except Exception as e:
-                    print(f"  FAILED to synthesize tier={tier} genre={genre}: {e}",
-                          file=sys.stderr)
-
-        if not seeds:
-            sys.exit("All seed synthesis attempts failed.")
-
-        # Sort for stable downstream ordering (as_completed returns in finish order).
-        seeds.sort(key=lambda s: s["id"])
-    else:
-        seeds = seeds_mod.get_seeds(
-            count=None,
-            tier_range=(tier_min, tier_max),
-        )
-        if args.include_id:
-            seeds = [s for s in seeds if s["id"] in args.include_id]
-        seeds = seeds[args.start_index : args.start_index + args.count]
+    seeds = concept_gen.generate_seeds_batch(
+        synth_client,
+        pairs,
+        concurrency=synth_concurrency,
+        max_retries=args.max_retries,
+    )
 
     if not seeds:
-        sys.exit("No seeds matched the filters.")
+        sys.exit("All seed synthesis attempts failed.")
+
+    # Sort for stable downstream ordering.
+    seeds.sort(key=lambda s: s["id"])
 
     args.output.mkdir(parents=True, exist_ok=True)
 

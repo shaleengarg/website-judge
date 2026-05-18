@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/synth-t3-ironbark-supply-co-0759"
+description = "Ironbark Supply Co. is an Australian-themed outdoor and bushcraft goods store selling axes, fire-starters, canvas bags, and field tools via a dense catalog with sidebar filtering and full cart management."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "ecommerce", "tier-3"]
+
+[metadata]
+difficulty_explanation = "Tier 3 (ecommerce): Ironbark Supply Co. is an Australian-themed outdoor and bushcraft goods store selling axes, fire-starters, canvas bags, and field tools via a dense catalog with sidebar filtering and full cart management."
+category = "frontend"
+tier = 3
+genre = "ecommerce"
+
+[verifier]
+timeout_sec = 420.0
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

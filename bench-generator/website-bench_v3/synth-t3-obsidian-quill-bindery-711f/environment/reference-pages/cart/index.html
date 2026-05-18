@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Bindery Cart — Obsidian Quill Bindery</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #1C1A17;
+    background: #F5F0E8;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1C1A17;
+    margin: 0 0 16px;
+  }
+  a { color: inherit; }
+
+  /* Nav */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 56px;
+    background: #1C1A17;
+    color: #F5F0E8;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: #F5F0E8;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-links a {
+    color: #F5F0E8;
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+  }
+  .nav-links a.active { color: #C0392B; }
+  .nav-links a:hover { color: #C0392B; }
+  .cart-link {
+    position: relative;
+    color: #F5F0E8;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cart-badge {
+    background: #C0392B;
+    color: #F5F0E8;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 2px 7px;
+    line-height: 1;
+  }
+
+  /* Page wrapper */
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 64px;
+  }
+
+  .page-heading { font-size: 32px; margin-bottom: 6px; }
+  .heading-underline {
+    display: block;
+    width: 48px;
+    height: 2px;
+    background: #C0392B;
+    margin-bottom: 32px;
+  }
+  .crumbs {
+    font-size: 13px;
+    color: #6b6760;
+    margin-bottom: 8px;
+  }
+
+  /* Layout grid */
+  .cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* Table */
+  .cart-table-wrap {
+    background: #FAF7F2;
+    border: 1px solid #E4DDD0;
+  }
+  table.cart {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  table.cart thead th {
+    background: #1C1A17;
+    color: #F5F0E8;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    border-bottom: 2px solid #C0392B;
+  }
+  table.cart tbody tr:nth-child(odd) { background: #FAF7F2; }
+  table.cart tbody tr:nth-child(even) { background: #EFE9DC; }
+  table.cart td {
+    padding: 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid #E4DDD0;
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .thumb {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background: #D6CFC3;
+    display: block;
+  }
+  .thumb.leather { background: linear-gradient(135deg, #A87850, #6E4A2E); }
+  .thumb.thread { background: linear-gradient(135deg, #EFE6D2, #C9BC9A); }
+  .thumb.bone { background: linear-gradient(135deg, #F1ECDD, #C2B89C); }
+  .item-name {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    color: #1C1A17;
+    margin: 0 0 2px;
+  }
+  .item-meta {
+    font-size: 12px;
+    color: #6b6760;
+    margin: 0;
+  }
+  .sku {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    color: #6b6760;
+  }
+  .price, .total {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .total { font-weight: 600; }
+  .qty {
+    width: 56px;
+    padding: 6px 8px;
+    border: 1px solid #C9C1B1;
+    background: #fff;
+    font: inherit;
+    text-align: center;
+  }
+  .remove {
+    color: #C0392B;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 1;
+    font-weight: 700;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+  }
+  .col-remove { text-align: center; width: 40px; }
+  .col-qty { width: 90px; }
+  .col-price, .col-total { text-align: right; width: 110px; }
+  .col-price-h, .col-total-h { text-align: right; }
+  .col-qty-h { text-align: center; }
+  .col-qty { text-align: center; }
+
+  .cart-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .btn-link {
+    color: #4A6741;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #4A6741;
+    padding-bottom: 1px;
+  }
+  .btn-update {
+    background: #F5F0E8;
+    color: #1C1A17;
+    border: 1px solid #1C1A17;
+    padding: 8px 18px;
+    font: inherit;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  /* Summary */
+  .summary {
+    position: sticky;
+    top: 80px;
+    background: #FAF7F2;
+    border: 1px solid #E4DDD0;
+    padding: 22px 22px 24px;
+  }
+  .summary h2 {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  .summary .summary-underline {
+    display: block;
+    width: 48px;
+    height: 2px;
+    background: #C0392B;
+    margin-bottom: 18px;
+  }
+  .sum-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 1px dashed #D8D0BF;
+  }
+  .sum-row:last-of-type { border-bottom: none; }
+  .sum-row.total-row {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    border-top: 2px solid #1C1A17;
+    border-bottom: none;
+    margin-top: 8px;
+    padding-top: 14px;
+  }
+  .sum-row .price-v { color: #1C1A17; }
+  .total-row .price-v { color: #C0392B; }
+
+  .promo {
+    margin: 18px 0 16px;
+  }
+  .promo label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: #6b6760;
+  }
+  .promo-row {
+    display: flex;
+    gap: 6px;
+  }
+  .promo input[type="text"] {
+    flex: 1;
+    padding: 9px 10px;
+    border: 1px solid #C9C1B1;
+    background: #fff;
+    font: inherit;
+    font-size: 14px;
+    min-width: 0;
+  }
+  .promo button {
+    background: #4A6741;
+    color: #F5F0E8;
+    border: none;
+    padding: 0 14px;
+    font: inherit;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .checkout-btn {
+    display: block;
+    width: 100%;
+    background: #1C1A17;
+    color: #F5F0E8;
+    border: none;
+    padding: 14px;
+    font: inherit;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+  .secure {
+    text-align: center;
+    font-size: 12px;
+    color: #6b6760;
+    margin-top: 12px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1C1A17;
+    color: #F5F0E8;
+    padding: 40px 24px 28px;
+    margin-top: 40px;
+  }
+  .foot-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h4 {
+    color: #F5F0E8;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  footer p, footer li, footer a {
+    font-size: 13px;
+    color: #C9C1B1;
+    text-decoration: none;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { padding: 4px 0; }
+  .foot-bottom {
+    max-width: 1200px;
+    margin: 28px auto 0;
+    padding-top: 18px;
+    border-top: 1px solid #2B2925;
+    font-size: 12px;
+    color: #8a8478;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .cart-layout { grid-template-columns: 1fr; }
+    .summary { position: static; top: auto; }
+    .foot-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+    .nav-inner { justify-content: space-between; }
+    .page-heading { font-size: 26px; }
+    table.cart thead { display: none; }
+    table.cart, table.cart tbody, table.cart tr, table.cart td { display: block; width: 100%; }
+    table.cart tr {
+      padding: 14px;
+      border-bottom: 1px solid #E4DDD0;
+    }
+    table.cart td {
+      padding: 6px 0;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    table.cart td.col-item { display: block; }
+    table.cart td::before {
+      content: attr(data-label);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6b6760;
+    }
+    table.cart td.col-item::before { content: none; }
+    .col-price, .col-total { text-align: right; width: auto; }
+    .col-qty { width: auto; text-align: right; }
+    .foot-inner { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 460px) {
+    .wrap { padding: 24px 16px 40px; }
+    .item { gap: 10px; }
+    .thumb { width: 52px; height: 52px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../shop/index.html" class="wordmark">Obsidian Quill Bindery</a>
+    <ul class="nav-links">
+      <li><a href="../shop/index.html">Shop</a></li>
+      <li><a href="../product-detail/index.html">Product</a></li>
+      <li><a href="#" class="active">Cart</a></li>
+      <li><a href="../about/index.html">About</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+    <a href="#" class="cart-link">Cart <span class="cart-badge">3</span></a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="crumbs">Home / Shop / Cart</div>
+  <h1 class="page-heading">Your Bindery Cart</h1>
+  <span class="heading-underline"></span>
+
+  <div class="cart-layout">
+    <div>
+      <div class="cart-table-wrap">
+        <table class="cart">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="col-price-h">Unit Price</th>
+              <th class="col-qty-h">Qty</th>
+              <th class="col-total-h">Line Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-item" data-label="Item">
+                <div class="item">
+                  <div class="thumb leather" aria-hidden="true"></div>
+                  <div>
+                    <p class="item-name">Tuscan Tan Goatskin — Half-Hide</p>
+                    <p class="item-meta">Full-grain, vegetable tanned</p>
+                    <p class="sku">SKU: OQB-LTH-042</p>
+                  </div>
+                </div>
+              </td>
+              <td class="col-price price" data-label="Unit Price">$64.00</td>
+              <td class="col-qty" data-label="Qty"><input class="qty" type="text" value="1"></td>
+              <td class="col-total total" data-label="Line Total">$64.00</td>
+              <td class="col-remove" data-label="Remove"><a href="#" class="remove" title="Remove">×</a></td>
+            </tr>
+            <tr>
+              <td class="col-item" data-label="Item">
+                <div class="item">
+                  <div class="thumb thread" aria-hidden="true"></div>
+                  <div>
+                    <p class="item-name">Bookbinding Linen Thread 0.35mm</p>
+                    <p class="item-meta">Color: Ecru · Waxed · 50m spool</p>
+                    <p class="sku">SKU: OQB-THR-018</p>
+                  </div>
+                </div>
+              </td>
+              <td class="col-price price" data-label="Unit Price">$7.50</td>
+              <td class="col-qty" data-label="Qty"><input class="qty" type="text" value="3"></td>
+              <td class="col-total total" data-label="Line Total">$22.50</td>
+              <td class="col-remove" data-label="Remove"><a href="#" class="remove" title="Remove">×</a></td>
+            </tr>
+            <tr>
+              <td class="col-item" data-label="Item">
+                <div class="item">
+                  <div class="thumb bone" aria-hidden="true"></div>
+                  <div>
+                    <p class="item-name">Bone Folder — Tapered 9in</p>
+                    <p class="item-meta">Polished cattle bone · hand-finished</p>
+                    <p class="sku">SKU: OQB-TLS-007</p>
+                  </div>
+                </div>
+              </td>
+              <td class="col-price price" data-label="Unit Price">$30.00</td>
+              <td class="col-qty" data-label="Qty"><input class="qty" type="text" value="1"></td>
+              <td class="col-total total" data-label="Line Total">$30.00</td>
+              <td class="col-remove" data-label="Remove"><a href="#" class="remove" title="Remove">×</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cart-actions">
+        <a href="../shop/index.html" class="btn-link">← Continue shopping</a>
+        <button class="btn-update" type="button">Update Cart</button>
+      </div>
+    </div>
+
+    <aside class="summary">
+      <h2>Order Summary</h2>
+      <span class="summary-underline"></span>
+
+      <div class="sum-row">
+        <span>Subtotal (3 items)</span>
+        <span class="price-v">$116.50</span>
+      </div>
+      <div class="sum-row">
+        <span>Estimated Shipping <small style="color:#6b6760;">(flat)</small></span>
+        <span class="price-v">$8.00</span>
+      </div>
+      <div class="sum-row">
+        <span>Estimated Tax</span>
+        <span class="price-v">—</span>
+      </div>
+      <div class="sum-row total-row">
+        <span>Order Total</span>
+        <span class="price-v">$124.50</span>
+      </div>
+
+      <div class="promo">
+        <label for="promo">Promo Code</label>
+        <div class="promo-row">
+          <input id="promo" type="text" placeholder="Enter code">
+          <button type="button">Apply</button>
+        </div>
+      </div>
+
+      <a href="#" class="checkout-btn">Proceed to Checkout</a>
+      <p class="secure">Secure checkout · Ships from Portland, OR</p>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <h4>Obsidian Quill Bindery</h4>
+      <p>Hand-bound journals, custom endpapers, and bindery supplies, crafted in Portland, Oregon since 2011.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="../shop/index.html">All Supplies</a></li>
+        <li><a href="#">Leather Hides</a></li>
+        <li><a href="#">Threads & Tools</a></li>
+        <li><a href="#">Endpapers</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Studio</h4>
+      <ul>
+        <li><a href="../about/index.html">About</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+        <li><a href="#">Wholesale</a></li>
+        <li><a href="#">Commissions</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Visit</h4>
+      <ul>
+        <li>1142 SE Clinton St.</li>
+        <li>Portland, OR 97202</li>
+        <li>Tue–Sat, by appointment</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2024 Obsidian Quill Bindery. All rights reserved.</span>
+    <span>Bound by hand · shipped worldwide</span>
+  </div>
+</footer>
+
+</body>
+</html>

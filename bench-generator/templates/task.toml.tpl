@@ -13,10 +13,18 @@ tier = {{TIER}}
 genre = "{{GENRE}}"
 
 [verifier]
-timeout_sec = 420.0
+# V4 grader makes ~3-6× more API calls than V3.3 (3 viewports × ensemble of 3
+# × 5 pages, sending 6 images per call). Under concurrent harbor runs, 429
+# backoff storms from the Anthropic API can stretch a single trial's
+# verifier past 1000s. 420s timed out 2/12 trials in the v3 dataset; 1200s
+# leaves enough headroom for retry backoffs to land.
+timeout_sec = 1200.0
 
 [agent]
-timeout_sec = 900.0
+# V4-aware sites must be responsive across desktop/tablet/phone, ~3× the
+# design work per page vs V3-era 1280×800-only tasks. 900s timed out 4/12
+# v3 trials; 1500s leaves headroom for complex tier-6+ multi-page flows.
+timeout_sec = 1500.0
 
 [environment]
 build_timeout_sec = 900.0

@@ -1,0 +1,29 @@
+{
+  "id": "synth-t4-obsidian-tide-resort-098c",
+  "tier": 4,
+  "genre": "hotel-resort",
+  "pages": [
+    "arrival",
+    "suites",
+    "dining",
+    "experiences",
+    "reserve"
+  ],
+  "palette_hint": "Deep navy #0B1B2B as base background, warm cream #F5EDD8 for body text, with gold accent #C9A84C and teal highlight #2ABFBF for interactive elements and decorative flourishes.",
+  "type_style": "Headings in Georgia serif at 700 weight for gravitas, body in system-ui at 400 weight for clean readability; sizing rhythm of 13/16/20/28/42/64px creating a dramatic editorial feel.",
+  "description": "Obsidian Tide Resort is a luxury cliffside retreat on the Oregon coast offering guests volcanic-rock spa pools, private tide-watch terraces, and farm-foraged Pacific Northwest cuisine \u2014 this site presents it with deep navy backdrops, gold gradients, and layered glass-card effects.",
+  "constraints": [
+    "Max content width 1160px centered with 24px horizontal padding on mobile and 80px on desktop; all sections use at minimum 96px vertical padding.",
+    "Elevation system: cards at box-shadow 0 4px 12px rgba(0,0,0,0.35), modals/overlays at 0 16px 48px rgba(0,0,0,0.6), nav bar at 0 2px 8px rgba(0,0,0,0.5); no element uses a shadow heavier than its tier.",
+    "Border-radius rhythm: 4px for form inputs and small tags, 12px for cards and image frames, 32px for pill buttons, 999px for badge/icon circles; never mix radii within the same component.",
+    "All section dividers and hero overlays use linear-gradient(160deg, #0B1B2B 60%, #112233 100%); gold accents use linear-gradient(90deg, #C9A84C, #E8C96A) applied to headings via background-clip text or border elements.",
+    "Decorative ::before pseudo-elements on section headings render a 48px horizontal rule using background: linear-gradient(90deg, #C9A84C, transparent); ::after on feature cards adds a teal (#2ABFBF) bottom-border glow of 3px."
+  ],
+  "page_specs": {
+    "arrival": "Full-viewport hero with a radial gradient vignette over a solid deep-navy base (#0B1B2B), featuring the resort name in 64px Georgia serif with gold gradient text, and a one-line tagline 'Where the Pacific meets volcanic silence.' Below the hero, three horizontal feature strips \u2014 'Cliffside Location', 'Adults-Only Sanctuary', 'Year-Round Open' \u2014 each a glass-effect card (backdrop-filter blur 12px, background rgba(255,255,255,0.05), 12px border-radius) with a teal icon circle and cream text.",
+    "suites": "A two-column grid (580px each, 24px gap) of six suite cards \u2014 Obsidian King, Tide-Watch Suite, Kelp Forest Cabin, Lava Stone Double, Canopy Loft, and The Crest Penthouse \u2014 each card at 12px border-radius with a 280px color-block header (navy-to-dark-teal gradient standing in for imagery), gold price-per-night badge (999px radius), suite name in 28px Georgia, and a 3-line description of specific amenities like heated basalt floors or private plunge pools. A sticky sidebar on desktop lists suite categories with teal left-border indicators.",
+    "dining": "Full-width section header with a decorative ::before gold rule, introducing 'The Crevasse Kitchen' and its executive chef Maren Solvik. Below, an alternating two-column layout presents three dining experiences \u2014 tasting menu, raw bar, and weekend brunch \u2014 with 42px Georgia headings, cream body text describing specific dishes like dungeness crab bisque with smoked kelp oil, and narrow teal accent lines between rows. A reservation-nudge banner at bottom uses the full gold gradient as background with dark navy text and a pill-button CTA.",
+    "experiences": "A three-column card grid of eight curated experiences: Volcanic Rock Spa Circuit, Dawn Tide-Pool Walk, Foraging with Chef Maren, Sea-Kayak Sunset, Coastal Bluff Yoga, Private Stargazing Platform, Pacific Fly-Fishing Charter, and Winemaker's Cellar Dinner. Cards at 12px radius have color-coded category tags (teal for outdoor, gold for culinary, cream for wellness) using 999px badge radius, bold 20px titles, duration and pricing details, and a ::after teal glow border on hover-state declared in CSS :hover rules.",
+    "reserve": "A single-column centered form (max-width 600px) titled 'Begin Your Stay' in 42px Georgia with gold gradient underline via ::before pseudo-element. Form fields \u2014 arrival date, departure date, suite preference (select), number of guests, special requests (textarea) \u2014 all at 4px border-radius, 1px solid #C9A84C border, navy background, cream text, and a 16px system-ui label above each. A summary aside on desktop (280px, sticky) shows rate calculator text, cancellation policy note, and a phone number for private concierge bookings. Submit button is full-width, 999px radius, gold gradient background, navy text at 700 weight."
+  }
+}

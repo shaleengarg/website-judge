@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # End-to-end pipeline test for website-bench.
 #
-# Generates 3 synthetic tasks (one per tier 1-3), then runs:
+# Generates 3 synthetic tasks (sampled across tiers 1-3 by default — bump
+# --tier-max to test higher tiers), then runs:
 #   1. Schema validation (built into concept_gen + generate_dataset)
 #   2. HTML validity (built into generate_dataset retry loop)
 #   3. Sanity checks (sanity.py — local Playwright render + DOM/cross-page checks)
@@ -62,7 +63,7 @@ echo
 # Stage 0: dry-run sanity. Catches CLI/wiring breakage before any LLM cost.
 # ----------------------------------------------------------------
 echo "[0/4] dry-run check"
-$PY generate_dataset.py --synthesize 3 --tier-min 1 --tier-max 3 \
+$PY generate_dataset.py --count 3 --tier-min 1 --tier-max 3 \
     --output "$OUT_DIR/dryrun" --dry-run
 
 # ----------------------------------------------------------------
@@ -71,7 +72,7 @@ $PY generate_dataset.py --synthesize 3 --tier-min 1 --tier-max 3 \
 echo
 echo "[1+2/4] synthesize seeds + codegen HTML"
 $PY generate_dataset.py \
-    --synthesize 3 --tier-min 1 --tier-max 3 \
+    --count 3 --tier-min 1 --tier-max 3 \
     --output "$OUT_DIR/tasks" \
     --concurrency 3
 

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Submissions — Moth &amp; Meridian Press</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #1a1814;
+    color: #f0ebe0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  /* Header / Nav */
+  header.site {
+    padding: 2.5rem 0 1.25rem;
+    border-bottom: 1px solid rgba(200, 148, 58, 0.4);
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.375rem;
+    letter-spacing: 0.03em;
+    color: #f0ebe0;
+    margin: 0 0 1.25rem;
+  }
+  .brand .amp { color: #c8943a; font-style: italic; font-weight: 400; }
+  nav.primary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+  }
+  nav.primary a {
+    color: #f0ebe0;
+    text-decoration: none;
+    opacity: 0.75;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+  }
+  nav.primary a.active {
+    color: #c8943a;
+    opacity: 1;
+    border-bottom-color: #c8943a;
+  }
+
+  /* Meta + title */
+  .meta {
+    font-size: 0.75rem;
+    color: #c8943a;
+    letter-spacing: 0.01em;
+    margin: 3rem 0 0.5rem;
+    font-style: italic;
+  }
+  h1.page-title {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 3.25rem;
+    letter-spacing: 0.08em;
+    line-height: 1.05;
+    margin: 0 0 1.5rem;
+    color: #f0ebe0;
+  }
+  h1.page-title em {
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .intro {
+    margin: 0 0 2rem;
+  }
+
+  hr.rule {
+    border: none;
+    border-top: 1px solid #c8943a;
+    opacity: 0.4;
+    margin: 2.5rem 0;
+  }
+
+  /* Pull quote */
+  .pullquote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.375rem;
+    color: #7a9e7e;
+    border-left: 3px solid #7a9e7e;
+    padding-left: 1.25rem;
+    max-width: 520px;
+    margin: 2.5rem auto;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+  }
+
+  /* Section headings */
+  h2.section {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    margin: 2.75rem 0 1rem;
+    color: #f0ebe0;
+  }
+
+  /* Subheading labels for guideline categories */
+  h3.label {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.375rem;
+    letter-spacing: 0.03em;
+    margin: 1.75rem 0 0.35rem;
+    color: #f0ebe0;
+  }
+  h3.label .num {
+    color: #c8943a;
+    font-weight: 400;
+    font-style: italic;
+    margin-right: 0.5rem;
+  }
+
+  ul.guidelines {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  ul.guidelines > li {
+    padding: 0.25rem 0 1rem;
+    border-bottom: 1px solid rgba(122, 158, 126, 0.18);
+  }
+  ul.guidelines > li:last-child { border-bottom: none; }
+
+  p { margin: 0.5rem 0; }
+
+  .contact {
+    text-align: center;
+    margin: 3rem 0 1rem;
+  }
+  .contact .label-small {
+    font-size: 0.75rem;
+    color: #f0ebe0;
+    opacity: 0.7;
+    letter-spacing: 0.01em;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+  .contact a {
+    font-family: Georgia, serif;
+    font-size: 1.375rem;
+    letter-spacing: 0.03em;
+    color: #c8943a;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200, 148, 58, 0.4);
+    padding-bottom: 2px;
+  }
+
+  /* Footer */
+  footer.site {
+    margin-top: 4rem;
+    padding: 2rem 0 2.5rem;
+    border-top: 1px solid rgba(240, 235, 224, 0.1);
+    font-size: 0.75rem;
+    color: #f0ebe0;
+    opacity: 0.6;
+    letter-spacing: 0.01em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  footer.site a { color: #f0ebe0; text-decoration: none; opacity: 0.8; }
+
+  strong.amber { color: #c8943a; font-weight: 400; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site">
+    <div class="brand">Moth <span class="amp">&amp;</span> Meridian Press</div>
+    <nav class="primary">
+      <a href="../collection/index.html">Collection</a>
+      <a href="../poets/index.html">Poets</a>
+      <a href="../single-poem/index.html">Single Poem</a>
+      <a href="../about/index.html">About</a>
+      <a href="#" class="active">Submissions</a>
+    </nav>
+  </header>
+
+  <div class="meta">Spring Thaw 2025 — Reading Period</div>
+  <h1 class="page-title">Submissions</h1>
+
+  <p class="intro">
+    We are now accepting work for our seventeenth seasonal anthology, <em>Spring Thaw 2025</em>. The reading window is brief and the editorial collective small; please read the guidelines below in full before sending poems. We respond to every submission, usually within ten weeks of the close of the window.
+  </p>
+
+  <hr class="rule">
+
+  <blockquote class="pullquote">
+    &ldquo;We are looking for poems that know the name of the soil beneath them.&rdquo;
+  </blockquote>
+
+  <hr class="rule">
+
+  <ul class="guidelines">
+    <li>
+      <h3 class="label"><span class="num">01</span>Reading Window</h3>
+      <p>The window opens <strong class="amber">February 1, 2025</strong> at 9:00 EST and closes <strong class="amber">March 15, 2025</strong> at 23:59 EST. Submissions received outside this period are returned unread. We do not offer expedited or rolling consideration.</p>
+    </li>
+    <li>
+      <h3 class="label"><span class="num">02</span>What to Send</h3>
+      <p>Up to <strong class="amber">five poems</strong> per submission, gathered in a single document. There is no line limit on individual poems, though work over three pages should justify its length. One submission per poet, per reading period.</p>
+    </li>
+    <li>
+      <h3 class="label"><span class="num">03</span>Previously Published Work</h3>
+      <p>We consider <strong class="amber">unpublished poems only</strong>. This includes personal newsletters, public social posts, and chapbooks circulated beyond a workshop. Simultaneous submissions are welcome; please withdraw promptly if a poem is placed elsewhere.</p>
+    </li>
+    <li>
+      <h3 class="label"><span class="num">04</span>Rights &amp; Compensation</h3>
+      <p>Poets retain <strong class="amber">all rights</strong> to their work. Moth &amp; Meridian requests first serial rights for the digital anthology and a non-exclusive archival license thereafter. Accepted poets receive an honorarium of $75 per poem.</p>
+    </li>
+    <li>
+      <h3 class="label"><span class="num">05</span>Formatting</h3>
+      <p>Plain text, .docx, or .pdf — any legible serif at 11pt or larger. Include a brief third-person bio (under 80 words) and your hometown in the body of the email, not in the document itself. We read submissions blind.</p>
+    </li>
+    <li>
+      <h3 class="label"><span class="num">06</span>What We Are Drawn To</h3>
+      <p>Poems at the intersection of <em>grief, cartography, and natural wonder</em>. Work that holds a landscape accountable. Translations welcome with translator's note and confirmation of permissions. We read with patience and read aloud.</p>
+    </li>
+  </ul>
+
+  <div class="contact">
+    <span class="label-small">Send submissions to —</span>
+    <a href="mailto:submissions@mothandmeridian.press">submissions@mothandmeridian.press</a>
+  </div>
+
+  <footer class="site">
+    <div>Moth &amp; Meridian Press — est. 2019</div>
+    <div>Winter 2024 · Issue XVI</div>
+  </footer>
+</div>
+
+</body>
+</html>

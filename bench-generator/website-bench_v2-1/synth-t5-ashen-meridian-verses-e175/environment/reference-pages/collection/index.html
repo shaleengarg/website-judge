@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Longitude of Smoke — Ashen Meridian</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1a1a;
+    color: #f0ebe1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header / Nav */
+  header {
+    border-bottom: 1px solid #2a2a2a;
+    padding: 2.5rem 0 1.75rem;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    margin-bottom: 1.5rem;
+  }
+  .brand span { color: #c4622d; }
+  nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  nav a {
+    color: #f0ebe1;
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  nav a.active { color: #c4622d; border-bottom-color: #c4622d; }
+  nav a:hover { color: #c4622d; }
+
+  /* Hero */
+  .hero { padding: 4.5rem 0 2rem; }
+  .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a9e7e;
+    margin-bottom: 1.5rem;
+  }
+  h1.hero-title {
+    font-family: Georgia, serif;
+    font-weight: 300;
+    font-size: 3.4rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #f0ebe1;
+    margin-bottom: 2rem;
+  }
+  h1.hero-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: #f0ebe1;
+  }
+
+  /* Pull quote / epigraph */
+  .pullquote {
+    border-left: 3px solid #c4622d;
+    padding-left: 1.5rem;
+    color: #c4622d;
+    font-style: italic;
+    font-family: Georgia, serif;
+    font-weight: 300;
+    font-size: 1.45rem;
+    line-height: 1.5;
+    margin: 2.5rem 0;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem 0 3rem;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a9e7e;
+  }
+  .meta-row span strong {
+    display: block;
+    color: #f0ebe1;
+    font-weight: 400;
+    margin-top: 0.4rem;
+  }
+
+  /* Sections */
+  .section { padding: 3.5rem 0 1rem; }
+  .section-label {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.45rem;
+    color: #7a9e7e;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-intro {
+    font-family: Georgia, serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 1.45rem;
+    line-height: 1.5;
+    color: #f0ebe1;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #2a2a2a;
+  }
+
+  ol.poems {
+    list-style: none;
+  }
+  ol.poems li {
+    padding: 1.4rem 0;
+    border-bottom: 1px solid #242424;
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  ol.poems li:last-child { border-bottom: none; }
+  .num {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c4622d;
+  }
+  ol.poems a {
+    font-family: Georgia, serif;
+    font-weight: 300;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+    color: #f0ebe1;
+    text-decoration: none;
+  }
+  ol.poems a:hover { color: #c4622d; }
+  .folio {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a7a72;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 5rem;
+    padding: 3rem 0 2.5rem;
+    border-top: 1px solid #2a2a2a;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7a9e7e;
+  }
+  footer .foot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  footer a { color: #f0ebe1; text-decoration: none; display: block; line-height: 2; }
+  footer a:hover { color: #c4622d; }
+  .colophon { color: #7a7a72; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Ashen <span>Meridian</span></div>
+      <nav>
+        <ul>
+          <li><a href="#" class="active">Collection</a></li>
+          <li><a href="../poet/index.html">Poet</a></li>
+          <li><a href="../single-poem/index.html">Single Poem</a></li>
+          <li><a href="../marginalia/index.html">Marginalia</a></li>
+          <li><a href="../correspondence/index.html">Correspondence</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">A Debut Collection — 23 Poems in Three Sections</div>
+      <h1 class="hero-title">The Longitude<br><em>of Smoke</em></h1>
+      <blockquote class="pullquote">
+        These poems were written along a river that forgets nothing and admits less. They are a cartography of furnaces, of grandmothers, of the slow erosion between what we inherit and what we are permitted to keep.
+      </blockquote>
+      <div class="meta-row">
+        <span>Author <strong>Céleste Vaudreuil</strong></span>
+        <span>Year <strong>MMXXIII</strong></span>
+        <span>Press <strong>Ashen Meridian</strong></span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-label">I. Silt</div>
+      <p class="section-intro">Seven poems on what the river leaves behind: rust, names, the smell of cold iron in spring.</p>
+      <ol class="poems">
+        <li><span class="num">No. 01</span><a href="#">Tide Gauge, Sorel</a><span class="folio">p. 03</span></li>
+        <li><span class="num">No. 02</span><a href="#">Inheritance in Slag</a><span class="folio">p. 07</span></li>
+        <li><span class="num">No. 03</span><a href="#">Grandmother as Cartographer</a><span class="folio">p. 11</span></li>
+        <li><span class="num">No. 04</span><a href="#">A Field of Closed Valves</a><span class="folio">p. 14</span></li>
+        <li><span class="num">No. 05</span><a href="#">Letter from the Drowned Quay</a><span class="folio">p. 17</span></li>
+        <li><span class="num">No. 06</span><a href="#">Silt Aubade</a><span class="folio">p. 21</span></li>
+        <li><span class="num">No. 07</span><a href="#">What the Current Will Not Return</a><span class="folio">p. 24</span></li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <div class="section-label">II. Foundry Light</div>
+      <p class="section-intro">Nine poems written inside the orange interior of memory — the mill, the shift whistle, the women who counted shells in 1944.</p>
+      <ol class="poems">
+        <li><span class="num">No. 08</span><a href="#">Foundry Light, First Shift</a><span class="folio">p. 31</span></li>
+        <li><span class="num">No. 09</span><a href="#">Bessemer Vespers</a><span class="folio">p. 34</span></li>
+        <li><span class="num">No. 10</span><a href="#">The Archivist's Apprentice</a><span class="folio">p. 37</span></li>
+        <li><span class="num">No. 11</span><a href="#">Hot Ingot, Cold Tongue</a><span class="folio">p. 41</span></li>
+        <li><span class="num">No. 12</span><a href="#">Shell Casing in B Minor</a><span class="folio">p. 44</span></li>
+        <li><span class="num">No. 13</span><a href="#">Manifest, Sorel-Tracy, 1944</a><span class="folio">p. 48</span></li>
+        <li><span class="num">No. 14</span><a href="../single-poem/index.html">Molten Cadastre</a><span class="folio">p. 52</span></li>
+        <li><span class="num">No. 15</span><a href="#">After the Last Pour</a><span class="folio">p. 57</span></li>
+        <li><span class="num">No. 16</span><a href="#">Coke Ovens, Disused</a><span class="folio">p. 60</span></li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <div class="section-label">III. Estuary</div>
+      <p class="section-intro">Seven poems distilled from a correspondence with a grandmother who never received the letters; the river widens, and so does the silence.</p>
+      <ol class="poems">
+        <li><span class="num">No. 17</span><a href="#">Estuary, with Heron</a><span class="folio">p. 67</span></li>
+        <li><span class="num">No. 18</span><a href="#">Île d'Orléans, November</a><span class="folio">p. 70</span></li>
+        <li><span class="num">No. 19</span><a href="#">Salt Line</a><span class="folio">p. 73</span></li>
+        <li><span class="num">No. 20</span><a href="#">A Beluga Surfaces Near Tadoussac</a><span class="folio">p. 76</span></li>
+        <li><span class="num">No. 21</span><a href="#">Downriver Lullaby in Joual</a><span class="folio">p. 80</span></li>
+        <li><span class="num">No. 22</span><a href="#">The Longitude of Smoke</a><span class="folio">p. 84</span></li>
+        <li><span class="num">No. 23</span><a href="#">Coda: To Open the Hand</a><span class="folio">p. 88</span></li>
+      </ol>
+    </section>
+
+    <footer>
+      <div class="foot-grid">
+        <div>
+          <div class="eyebrow" style="margin-bottom: 0.6rem;">Wander</div>
+          <a href="#">Collection</a>
+          <a href="../poet/index.html">Poet</a>
+          <a href="../single-poem/index.html">Single Poem</a>
+          <a href="../marginalia/index.html">Marginalia</a>
+          <a href="../correspondence/index.html">Correspondence</a>
+        </div>
+        <div>
+          <div class="eyebrow" style="margin-bottom: 0.6rem;">Imprint</div>
+          <div class="colophon" style="line-height: 2;">Ashen Meridian Press<br>Sorel-Tracy · Québec<br>MMXXIII — All Rights Held in Trust</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

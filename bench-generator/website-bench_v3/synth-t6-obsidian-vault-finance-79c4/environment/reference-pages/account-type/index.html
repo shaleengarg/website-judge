@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Obsidian Vault — Account Type</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0f1117;
+    color: #e8eaf0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 15px;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    min-height: 100%;
+  }
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 32px;
+  }
+
+  /* Logo */
+  .logo {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #c9a84c;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .logo .dot { color: #e8eaf0; }
+
+  /* Nav */
+  nav.steps {
+    margin-top: 24px;
+    border-top: 1px solid #2e3348;
+    border-bottom: 1px solid #2e3348;
+    padding: 12px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  nav.steps a {
+    color: #8a90a8;
+    text-decoration: none;
+    padding: 4px 10px;
+    border-right: 1px solid #2e3348;
+    counter-increment: step;
+  }
+  nav.steps a:last-child { border-right: none; }
+  nav.steps a::before {
+    content: counter(step) ". ";
+    color: #5b6076;
+  }
+  nav.steps { counter-reset: step; }
+  nav.steps a.current {
+    color: #c9a84c;
+    font-weight: 700;
+  }
+  nav.steps a.current::before { color: #c9a84c; }
+
+  /* Progress bar */
+  .progress {
+    margin-top: 20px;
+    height: 4px;
+    background: #1c1f2b;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress .bar {
+    height: 100%;
+    width: 20%;
+    background: #c9a84c;
+  }
+  .progress-label {
+    margin-top: 8px;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8a90a8;
+  }
+
+  /* Heading */
+  h1 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    margin-top: 36px;
+    color: #e8eaf0;
+  }
+  h1 .num {
+    color: #c9a84c;
+    font-family: 'Courier New', monospace;
+    font-size: 22px;
+    margin-right: 12px;
+    vertical-align: 2px;
+  }
+  p.lede {
+    margin-top: 14px;
+    color: #b4b9c9;
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+  p.lede em { color: #c9a84c; font-style: normal; }
+
+  /* Section label */
+  .section-label {
+    margin-top: 36px;
+    margin-bottom: 16px;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a90a8;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #2e3348;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .section-label .req { color: #c9a84c; }
+
+  /* Card grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .card {
+    position: relative;
+    background: #1c1f2b;
+    border: 1px solid #2e3348;
+    border-left: 4px solid #2e3348;
+    border-radius: 4px;
+    padding: 18px 18px 18px 20px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    display: block;
+  }
+  .card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .card .indicator {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #2e3348;
+    border-radius: 50%;
+    background: #0f1117;
+  }
+  .card .indicator::before {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: transparent;
+  }
+  .card input[type="radio"]:checked ~ .indicator {
+    border-color: #c9a84c;
+  }
+  .card input[type="radio"]:checked ~ .indicator::before {
+    background: #c9a84c;
+  }
+  .card:has(input[type="radio"]:checked) {
+    border-left-color: #c9a84c;
+    border-color: #3a3f5a;
+  }
+
+  .card .tag {
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a90a8;
+    margin-bottom: 6px;
+  }
+  .card h3 {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    color: #e8eaf0;
+    padding-right: 28px;
+  }
+  .card .desc {
+    margin-top: 8px;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #b4b9c9;
+    min-height: 39px;
+  }
+  .card .min {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed #2e3348;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .card .min-label {
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8a90a8;
+  }
+  .card .min-amount {
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    color: #c9a84c;
+    text-align: right;
+    letter-spacing: -0.02em;
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    margin-top: 28px;
+    padding: 14px 16px;
+    background: #1c1f2b;
+    border: 1px solid #2e3348;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: #8a90a8;
+    line-height: 1.6;
+  }
+  .disclaimer strong { color: #c9a84c; font-family: system-ui, sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+  /* Actions */
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .back {
+    color: #8a90a8;
+    text-decoration: none;
+    font-family: system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .btn {
+    display: inline-block;
+    background: #c9a84c;
+    color: #0f1117;
+    border: none;
+    padding: 13px 28px;
+    border-radius: 4px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn:hover { background: #d9b85c; }
+
+  /* Footer */
+  footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid #2e3348;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #5b6076;
+    text-transform: uppercase;
+  }
+  footer .links a {
+    color: #8a90a8;
+    text-decoration: none;
+    margin-right: 14px;
+  }
+  footer .secure::before {
+    content: "● ";
+    color: #4caf7a;
+  }
+
+  /* Tablet & phone */
+  @media (max-width: 720px) {
+    .cards { grid-template-columns: 1fr; }
+    nav.steps { font-size: 10px; }
+    nav.steps a { padding: 4px 7px; }
+    h1 { font-size: 24px; }
+  }
+  @media (max-width: 440px) {
+    .wrap { padding: 32px 20px; }
+    nav.steps { gap: 6px; }
+    nav.steps a {
+      border-right: none;
+      padding: 4px 0;
+      flex-basis: 50%;
+    }
+    .actions { flex-direction: column-reverse; align-items: stretch; }
+    .btn { text-align: center; }
+    .back { text-align: center; }
+    footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="logo">OBSIDIAN<span class="dot">·</span>VAULT</div>
+
+    <nav class="steps">
+      <a href="#" class="current">Account Type</a>
+      <a href="../personal-details/index.html">Personal Details</a>
+      <a href="../financial-profile/index.html">Financial Profile</a>
+      <a href="../plan-selection/index.html">Plan Selection</a>
+      <a href="../review-submit/index.html">Review &amp; Submit</a>
+    </nav>
+
+    <div class="progress"><div class="bar"></div></div>
+    <div class="progress-label">Step 01 of 05 — Account Selection</div>
+
+    <h1><span class="num">01</span>Select your account type</h1>
+    <p class="lede">
+      Obsidian Vault supports four self-directed account structures for qualified investors.
+      Choose the vehicle that best matches your tax situation and ownership intent — you may open
+      additional accounts after your primary application is approved. All accounts are custodied by
+      <em>Meridian Trust, N.A.</em> and insured up to applicable SIPC limits.
+    </p>
+
+    <div class="section-label">
+      <span>Available Structures</span>
+      <span class="req">Required ✦</span>
+    </div>
+
+    <div class="cards">
+
+      <label class="card">
+        <input type="radio" name="acct" value="individual" checked>
+        <span class="indicator"></span>
+        <div class="tag">Taxable · Single Owner</div>
+        <h3>Individual Brokerage</h3>
+        <div class="desc">A standard taxable account in your name. Full trading flexibility with no contribution caps or withdrawal restrictions.</div>
+        <div class="min">
+          <span class="min-label">Min. Deposit</span>
+          <span class="min-amount">$25,000.00</span>
+        </div>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="acct" value="joint">
+        <span class="indicator"></span>
+        <div class="tag">Taxable · Two Owners</div>
+        <h3>Joint Tenancy</h3>
+        <div class="desc">Co-owned account with rights of survivorship (JTWROS). Ideal for spouses or partners managing shared assets.</div>
+        <div class="min">
+          <span class="min-label">Min. Deposit</span>
+          <span class="min-amount">$50,000.00</span>
+        </div>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="acct" value="roth">
+        <span class="indicator"></span>
+        <div class="tag">Retirement · Tax-Free Growth</div>
+        <h3>Roth IRA</h3>
+        <div class="desc">After-tax contributions with tax-free qualified withdrawals. Subject to IRS income and contribution limits.</div>
+        <div class="min">
+          <span class="min-label">Min. Deposit</span>
+          <span class="min-amount">$10,000.00</span>
+        </div>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="acct" value="sep">
+        <span class="indicator"></span>
+        <div class="tag">Retirement · Self-Employed</div>
+        <h3>SEP-IRA</h3>
+        <div class="desc">Simplified Employee Pension for sole proprietors and small business owners. Higher contribution thresholds.</div>
+        <div class="min">
+          <span class="min-label">Min. Deposit</span>
+          <span class="min-amount">$15,000.00</span>
+        </div>
+      </label>
+
+    </div>
+
+    <div class="disclaimer">
+      <strong>Eligibility Notice</strong>
+      Obsidian Vault is offered exclusively to U.S. residents meeting accredited investor thresholds under Rule 501(a). Your selection here determines downstream tax document routing (Form 1099-B, 5498) and cannot be changed after submission without re-application.
+    </div>
+
+    <div class="actions">
+      <a href="#" class="back">← Return to Sign-In</a>
+      <a href="../personal-details/index.html" class="btn">Continue →</a>
+    </div>
+
+    <footer>
+      <div class="links">
+        <a href="#">Privacy</a>
+        <a href="#">Disclosures</a>
+        <a href="#">FINRA BrokerCheck</a>
+      </div>
+      <div class="secure">TLS 1.3 · Session Encrypted</div>
+      <div>© 2025 Obsidian Vault LLC</div>
+    </footer>
+
+  </div>
+</body>
+</html>

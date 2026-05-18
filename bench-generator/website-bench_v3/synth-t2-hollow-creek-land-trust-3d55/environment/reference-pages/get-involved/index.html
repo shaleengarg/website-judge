@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Involved — Hollow Creek Land Trust</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F5F2EC;
+    color: #2B2B2B;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: bold;
+    color: #2B2B2B;
+  }
+  h1 { font-size: 2.2rem; line-height: 1.2; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.8rem; margin-bottom: 0.75rem; }
+  h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+  p { margin-bottom: 1rem; }
+  a { color: inherit; }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Nav */
+  .nav-wrap {
+    background: #3A6B45;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 18px 0;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    color: #F5F2EC;
+    font-size: 1.25rem;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+  .nav-links a {
+    color: #F5F2EC;
+    text-decoration: none;
+    font-size: 0.98rem;
+  }
+  .nav-links a.active {
+    text-decoration: underline;
+  }
+
+  /* CTA button */
+  .btn {
+    display: inline-block;
+    background: #C47D2E;
+    color: #F5F2EC;
+    border-radius: 4px;
+    padding: 10px 22px;
+    text-decoration: none;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Page header */
+  .page-header {
+    padding: 48px 0 16px;
+  }
+  .page-header p.lead {
+    font-size: 1.05rem;
+    max-width: 720px;
+  }
+
+  /* Involve sections */
+  .involve-section {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 32px 0;
+    border-bottom: 1px solid #d9d4c7;
+  }
+  .involve-section:last-of-type {
+    border-bottom: none;
+  }
+  .involve-section.reverse {
+    flex-direction: row-reverse;
+  }
+  .involve-art {
+    flex: 0 0 220px;
+    height: 180px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F5F2EC;
+    font-family: Georgia, serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+  }
+  .art-volunteer { background: linear-gradient(135deg, #3A6B45, #5a8a62); }
+  .art-donate { background: linear-gradient(135deg, #C47D2E, #d99a55); }
+  .art-easement { background: linear-gradient(135deg, #5B8FA8, #7aa9bf); }
+  .involve-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .involve-content .btn {
+    margin-top: 0.5rem;
+  }
+
+  /* Workday banner */
+  .workday-banner {
+    background: #3A6B45;
+    color: #F5F2EC;
+    padding: 22px 0;
+    margin-top: 24px;
+  }
+  .workday-banner .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .workday-banner .label {
+    font-family: Georgia, serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.85;
+  }
+  .workday-banner .event {
+    font-family: Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: bold;
+  }
+
+  /* Footer */
+  footer {
+    background: #2B2B2B;
+    color: #F5F2EC;
+    margin-top: 48px;
+  }
+  .footer-row {
+    display: flex;
+    gap: 32px;
+    min-height: 160px;
+    padding: 32px 0;
+    flex-wrap: wrap;
+  }
+  .footer-col {
+    flex: 1;
+    min-width: 200px;
+  }
+  .footer-col h4 {
+    font-family: Georgia, serif;
+    color: #F5F2EC;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  .footer-col p, .footer-col a {
+    color: #F5F2EC;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+  .footer-col ul {
+    list-style: none;
+  }
+  .footer-col ul li {
+    margin-bottom: 6px;
+  }
+  .footer-col a {
+    text-decoration: none;
+  }
+  .footer-bottom {
+    border-top: 1px solid #444;
+    padding: 14px 0;
+    font-size: 0.85rem;
+    color: #cfcabf;
+  }
+
+  @media (max-width: 720px) {
+    .nav { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .nav-links { gap: 14px; }
+    .involve-section, .involve-section.reverse { flex-direction: column; align-items: stretch; }
+    .involve-art { width: 100%; flex: none; height: 140px; }
+    .page-header { padding: 32px 0 8px; }
+    h1 { font-size: 1.8rem; }
+  }
+  @media (max-width: 420px) {
+    .nav-links { gap: 10px; }
+    .nav-links a { font-size: 0.92rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <div class="container nav">
+    <a href="../home/index.html" class="logo">Hollow Creek Land Trust</a>
+    <nav class="nav-links">
+      <a href="../home/index.html">Home</a>
+      <a href="../our-land/index.html">Our Land</a>
+      <a href="#" class="active">Get Involved</a>
+      <a href="../stewardship/index.html">Stewardship</a>
+      <a href="../contact/index.html">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <section class="container page-header">
+    <h1>Join the Work of Conservation</h1>
+    <p class="lead">Across 14,000 acres of forest, wetland, and farmland, our mission depends on neighbors, donors, and landowners who share a long view of the Appalachian landscape. There are three primary ways to take part.</p>
+  </section>
+
+  <section class="container">
+    <div class="involve-section">
+      <div class="involve-art art-volunteer">VOLUNTEER</div>
+      <div class="involve-content">
+        <h2>Volunteer</h2>
+        <p>Our volunteer stewards are the eyes and hands on the ground. Throughout the year, crews meet for trail monitoring days along the Hollow Creek Greenway and surrounding easement preserves, walking established routes to log trail damage, downed timber, and signs of unauthorized use. We also host monthly invasive species removal workdays targeting autumn olive, multiflora rose, and Oriental bittersweet in priority habitats. No experience is required — tools, gloves, and training are provided, and most workdays run from 8 AM to 1 PM with coffee and lunch on us.</p>
+        <a href="#" class="btn">Sign Up to Volunteer</a>
+      </div>
+    </div>
+
+    <div class="involve-section reverse">
+      <div class="involve-art art-donate">DONATE</div>
+      <div class="involve-content">
+        <h2>Donate</h2>
+        <p>Every easement we hold is monitored, defended, and stewarded forever — and that permanence is funded by donors who believe in long horizons. Gifts to our Annual Fund cover operating costs, monitoring visits, and community programming across the watershed. Planned giving through bequests, charitable trusts, and qualified charitable distributions allows supporters to extend that protection into the next generation. All gifts are tax-deductible, and 89 cents of every dollar goes directly to conservation work.</p>
+        <a href="#" class="btn">Make a Gift</a>
+      </div>
+    </div>
+
+    <div class="involve-section">
+      <div class="involve-art art-easement">EASEMENTS</div>
+      <div class="involve-content">
+        <h2>Easement Landowners</h2>
+        <p>If you own forest, farmland, or stream frontage in our service region and want to keep it intact, a voluntary conservation easement may be the right tool. An easement is a legal agreement that permanently limits subdivision and development while leaving the land in private ownership and active use. Our staff will walk your property with you, discuss your goals, and outline the appraisal, baseline documentation, and stewardship endowment steps. Initial consultations are confidential and carry no obligation.</p>
+        <a href="#" class="btn">Inquire About an Easement</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="workday-banner">
+    <div class="container">
+      <div>
+        <div class="label">Next Volunteer Workday</div>
+        <div class="event">Spring Creek Cleanup — Saturday, April 19 — Crestview Trailhead 8 AM</div>
+      </div>
+      <a href="#" class="btn">RSVP</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-row">
+    <div class="footer-col">
+      <h4>Our Mission</h4>
+      <p>Hollow Creek Land Trust protects 14,000 acres of Appalachian forest, wetland, and farmland through voluntary conservation easements and community stewardship programs.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../home/index.html">Home</a></li>
+        <li><a href="../our-land/index.html">Our Land</a></li>
+        <li><a href="#">Get Involved</a></li>
+        <li><a href="../stewardship/index.html">Stewardship</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Mailing Address</h4>
+      <p>Hollow Creek Land Trust<br>
+      214 Ridgeline Road<br>
+      Boone, NC 28607<br>
+      828-555-0174</p>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    © Hollow Creek Land Trust. A 501(c)(3) nonprofit organization.
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Deep Fault — What Next: Policy & Action</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #F2EDE6;
+    color: #1A1208;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  a { color: #2E5E8E; text-decoration: none; }
+  .mono { font-family: "Courier New", Courier, monospace; }
+  .serif { font-family: Georgia, Times, serif; }
+
+  /* ===== Header band (full bleed) ===== */
+  .masthead {
+    background: #1A1208;
+    color: #F2EDE6;
+    padding: 24px;
+  }
+  .masthead-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 32px;
+    letter-spacing: -0.5px;
+  }
+  .brand .mark { color: #C0392B; }
+  .masthead .meta {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #BFB8AE;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: right;
+  }
+  nav.primary {
+    background: #1A1208;
+    border-top: 1px solid #2a1f15;
+    padding: 0 24px;
+  }
+  nav.primary ul {
+    max-width: 1100px;
+    margin: 0 auto;
+    list-style: none;
+    display: flex;
+    gap: 32px;
+    padding: 8px 12px;
+  }
+  nav.primary li { font-family: Georgia, serif; font-size: 14px; }
+  nav.primary a {
+    color: #BFB8AE;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+  }
+  nav.primary a.active { color: #F2EDE6; border-bottom: 2px solid #C0392B; padding-bottom: 4px; }
+
+  /* ===== Chapter intro strip ===== */
+  .chapter-strip {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+  .chapter-label {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #C0392B;
+    padding: 8px 12px;
+    display: inline-block;
+    border: 1px solid #C0392B;
+    text-transform: uppercase;
+  }
+  .chapter-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 1.05;
+    margin-top: 24px;
+    letter-spacing: -1px;
+    max-width: 820px;
+  }
+  .chapter-deck {
+    font-size: 17px;
+    color: #1A1208;
+    margin-top: 24px;
+    max-width: 720px;
+  }
+  .accent-rule {
+    border: none;
+    border-top: 3px solid #C0392B;
+    margin: 24px 0 0;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ===== Section divider rule ===== */
+  .pause {
+    max-width: 1100px;
+    margin: 0 auto;
+    border: none;
+    border-top: 1px solid #BFB8AE;
+  }
+  .pause-gap { height: 48px; }
+
+  /* ===== Editorial body — asymmetric two-column grid ===== */
+  .editorial {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 48px;
+  }
+  .reforms h2 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 28px;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+  }
+  .reform {
+    margin-bottom: 24px;
+  }
+  .reform h3 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .reform h3 .num {
+    color: #C0392B;
+    font-family: "Courier New", monospace;
+    font-size: 18px;
+    margin-right: 12px;
+  }
+  .reform p {
+    font-size: 15px;
+    color: #1A1208;
+  }
+  .reform p + p { margin-top: 12px; }
+
+  .pullquote {
+    border-left: 3px solid #C0392B;
+    padding: 8px 12px;
+    margin: 24px 0;
+    font-family: Georgia, serif;
+    font-size: 18px;
+    color: #C0392B;
+    font-style: italic;
+  }
+
+  /* ===== Scorecard — separate CSS grid ===== */
+  .scorecard {
+    align-self: start;
+    position: sticky;
+    top: 0;
+  }
+  .scorecard h2 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .scorecard .sub {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #2E5E8E;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .grid-table {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;
+    border: 1px solid #1A1208;
+  }
+  .grid-table > div {
+    padding: 8px 12px;
+    font-size: 12px;
+    border-right: 1px solid #BFB8AE;
+    border-bottom: 1px solid #BFB8AE;
+    display: flex;
+    align-items: center;
+  }
+  .grid-table > div:nth-child(5n) { border-right: none; }
+  .grid-table .head {
+    background: #1A1208;
+    color: #F2EDE6;
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-right-color: #2a1f15;
+  }
+  .grid-table .country {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 14px;
+    background: #F2EDE6;
+  }
+  .cell {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    justify-content: center;
+    color: #F2EDE6;
+  }
+  .fail { background: #C0392B; }
+  .part { background: #2E5E8E; }
+  .ade  { background: #BFB8AE; color: #1A1208; }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .legend span {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    padding: 8px 12px;
+    color: #F2EDE6;
+    letter-spacing: 1px;
+  }
+  .legend .l-fail { background: #C0392B; }
+  .legend .l-part { background: #2E5E8E; }
+  .legend .l-ade  { background: #BFB8AE; color: #1A1208; }
+
+  .scorecard-note {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #1A1208;
+    border-top: 1px solid #BFB8AE;
+    padding-top: 24px;
+  }
+  .scorecard-note .ref { color: #2E5E8E; }
+
+  /* ===== Closing band ===== */
+  .closing {
+    background: #2E5E8E;
+    color: #F2EDE6;
+    padding: 48px 24px;
+    margin-top: 48px;
+  }
+  .closing-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 48px;
+  }
+  .closing h2 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 32px;
+    letter-spacing: -0.5px;
+    margin-bottom: 24px;
+  }
+  .closing .credits-label {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+  .closing .methodology {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .closing .methodology p + p { margin-top: 12px; }
+  .citations {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    background: rgba(26,18,8,0.25);
+    padding: 24px;
+  }
+  .citations h3 {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    color: #F2EDE6;
+  }
+  .citations ol { padding-left: 18px; }
+  .citations li { margin-bottom: 8px; }
+
+  /* ===== Footer ===== */
+  footer {
+    background: #1A1208;
+    color: #BFB8AE;
+    padding: 24px;
+  }
+  .foot-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .foot-inner a { color: #BFB8AE; margin-left: 24px; }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="brand">DEEP <span class="mark">FAULT</span></div>
+      <div class="meta">
+        Special Report · Chapter V<br>
+        Published: March 2025 — Updated Quarterly
+      </div>
+    </div>
+  </header>
+
+  <nav class="primary">
+    <ul>
+      <li><a href="../overview/index.html">Overview</a></li>
+      <li><a href="../fault-maps/index.html">Fault Maps</a></li>
+      <li><a href="../risk-zones/index.html">Risk Zones</a></li>
+      <li><a href="../human-cost/index.html">Human Cost</a></li>
+      <li><a href="#" class="active">What Next</a></li>
+    </ul>
+  </nav>
+
+  <section class="chapter-strip">
+    <span class="chapter-label">Chapter 05 — Policy &amp; Action</span>
+    <h1 class="chapter-title">The Earthquakes Nobody Is Preparing For Will Not Wait for Consensus.</h1>
+    <p class="chapter-deck">Five reforms separate the cities that survive a great subduction-zone rupture from those that do not. None of them are technically difficult. All of them are politically inconvenient.</p>
+    <hr class="accent-rule">
+  </section>
+
+  <hr class="pause">
+  <div class="pause-gap"></div>
+
+  <section class="editorial">
+
+    <div class="reforms">
+      <h2>Five Reforms That Cannot Wait</h2>
+
+      <div class="reform">
+        <h3><span class="num">01</span>Mandate Seismic Retrofit Deadlines, Not Suggestions</h3>
+        <p>Voluntary retrofit programs have, across thirty years of Pacific Rim policy, retrofitted approximately twelve percent of high-risk unreinforced masonry stock. Hard deadlines — with permit and insurance consequences — are the only mechanism that has ever moved that number above twenty.</p>
+        <p>Oregon's 2005 voluntary list of 1,640 vulnerable schools still contained 1,189 of those same buildings in 2024. The deadline is the lever; everything else is rhetoric.</p>
+      </div>
+
+      <div class="reform">
+        <h3><span class="num">02</span>Fund Multi-Channel Early-Warning to the Last Mile</h3>
+        <p>ShakeAlert and Japan's J-Alert demonstrate that 60 to 90 seconds of warning is achievable. Coverage gaps remain in coastal Indonesia, the Philippines, and the Makran. The cost per protected resident is below US$0.40 per year — less than a postage stamp against a forty-second window of survival.</p>
+      </div>
+
+      <p class="pullquote">"A warning that never reaches a phone, a school bell, or a hospital PA system is not a warning. It is a press release." — Dr. M. Adisa, GNS</p>
+
+      <div class="reform">
+        <h3><span class="num">03</span>Codify Tsunami Vertical Evacuation Structures</h3>
+        <p>Seaside, Oregon has one. Padang has three. The Sendai coastline, after 2011, built eighty-seven. Vertical evacuation is the only viable strategy for inundation zones where horizontal escape exceeds the tsunami arrival window — and the building code language to require them already exists in draft.</p>
+      </div>
+
+      <div class="reform">
+        <h3><span class="num">04</span>Require Annual, Auditable Public Drills</h3>
+        <p>Drill participation is the single strongest predictor of post-event survival behavior in five separate longitudinal studies. Yet only Japan, Chile, and parts of New Zealand audit participation rates. The remainder report aspirational figures with no verification mechanism.</p>
+      </div>
+
+      <div class="reform">
+        <h3><span class="num">05</span>Ring-Fence Disaster Funding from Annual Budget Cycles</h3>
+        <p>Preparedness budgets are the first cut in every fiscal contraction. A statutory floor — indexed to population in mapped hazard zones — converts disaster funding from a discretionary line item into infrastructure, where it belongs.</p>
+      </div>
+    </div>
+
+    <aside class="scorecard">
+      <h2>Policy Scorecard</h2>
+      <div class="sub">// Pacific Rim · 2024 Audit</div>
+
+      <div class="grid-table">
+        <div class="head">Country</div>
+        <div class="head">Early Warning</div>
+        <div class="head">Building Code</div>
+        <div class="head">Public Drills</div>
+        <div class="head">Funding</div>
+
+        <div class="country">Japan</div>
+        <div class="cell ade">Adequate</div>
+        <div class="cell ade">Adequate</div>
+        <div class="cell ade">Adequate</div>
+        <div class="cell part">Partial</div>
+
+        <div class="country">USA (PNW)</div>
+        <div class="cell part">Partial</div>
+        <div class="cell part">Partial</div>
+        <div class="cell part">Partial</div>
+        <div class="cell fail">Failing</div>
+
+        <div class="country">New Zealand</div>
+        <div class="cell ade">Adequate</div>
+        <div class="cell part">Partial</div>
+        <div class="cell part">Partial</div>
+        <div class="cell part">Partial</div>
+
+        <div class="country">Indonesia</div>
+        <div class="cell part">Partial</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell fail">Failing</div>
+
+        <div class="country">Philippines</div>
+        <div class="cell part">Partial</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell part">Partial</div>
+        <div class="cell fail">Failing</div>
+
+        <div class="country">Chile</div>
+        <div class="cell ade">Adequate</div>
+        <div class="cell ade">Adequate</div>
+        <div class="cell ade">Adequate</div>
+        <div class="cell ade">Adequate</div>
+
+        <div class="country">Pakistan (Makran)</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell fail">Failing</div>
+
+        <div class="country">Iran (Makran)</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell fail">Failing</div>
+        <div class="cell fail">Failing</div>
+      </div>
+
+      <div class="legend">
+        <span class="l-fail">Failing</span>
+        <span class="l-part">Partial</span>
+        <span class="l-ade">Adequate</span>
+      </div>
+
+      <div class="scorecard-note">
+        Scoring methodology draws on UNDRR Sendai indicators, national audit reports, and field interviews conducted Aug 2023 – Jan 2025. Full criteria in <a href="#" class="ref">methodology §4.2</a>.
+      </div>
+    </aside>
+
+  </section>
+
+  <hr class="pause" style="margin-top:48px;">
+  <div class="pause-gap"></div>
+
+  <section class="closing">
+    <div class="closing-inner">
+      <div>
+        <div class="credits-label">Report Credits</div>
+        <h2>Deep Fault — A Five-Chapter Investigation</h2>
+        <div class="methodology">
+          <p>Reporting: H. Tanaka, M. Adisa, R. Quintero. Data analysis: GNS Aotearoa, USGS PNSN, BMKG Jakarta. Editing: J. Halvorsen. Design and cartography: Deep Fault studio.</p>
+          <p>Methodology: 84 field interviews across six countries, structured policy audits using the UNDRR Sendai indicator set, and seismic data drawn from peer-reviewed catalogues (1900–2024). Statistical claims are reproducible from the public dataset accompanying this report; all sources are cited and archived.</p>
+          <p>Corrections and replication queries: deepfault@atlas-press.example</p>
+        </div>
+      </div>
+
+      <div class="citations">
+        <h3>// Selected Sources</h3>
+        <ol>
+          <li>Goldfinger, C. et al. (2012). Cascadia turbidite paleoseismology. <em>USGS Prof. Paper</em> 1661-F, pp. 1–170.</li>
+          <li>Wallace, L. M. (2020). Slow slip events at the Hikurangi margin. <em>Annual Review of Earth Sciences</em>, 48, pp. 175–203.</li>
+          <li>Sieh, K. et al. (2008). Earthquake supercycles inferred from Sumatra corals. <em>Science</em>, 322(5908), pp. 1674–1678.</li>
+          <li>Bilham, R. (2009). The seismic future of cities. <em>Bull. Earthq. Eng.</em>, 7(4), pp. 839–887.</li>
+          <li>Satake, K. &amp; Atwater, B. (2007). Long-term perspectives on giant earthquakes. <em>Annu. Rev. Earth Planet. Sci.</em>, 35, pp. 349–374.</li>
+          <li>Heidarzadeh, M. (2018). Makran subduction tsunami hazard. <em>Pure Appl. Geophys.</em>, 175(6), pp. 1953–1979.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-inner">
+      <div>© 2025 Deep Fault · Atlas Press</div>
+      <div>
+        <a href="../overview/index.html">Overview</a>
+        <a href="../fault-maps/index.html">Maps</a>
+        <a href="../risk-zones/index.html">Zones</a>
+        <a href="../human-cost/index.html">Cost</a>
+        <a href="#">What Next</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

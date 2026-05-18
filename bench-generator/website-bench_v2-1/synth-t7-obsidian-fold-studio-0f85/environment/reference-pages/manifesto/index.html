@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manifesto — Obsidian Fold</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1a1e;
+    color: #f0ede6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Header */
+  header {
+    background: #1a1a1e;
+    border-bottom: 1px solid rgba(240,237,230,0.08);
+    position: relative;
+    z-index: 10;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .brand-mark { width: 48px; height: 48px; flex-shrink: 0; }
+  .brand-name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+  }
+  .brand-name small {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-weight: normal;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #f5a623;
+    margin-top: 2px;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 36px;
+  }
+  nav a {
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  nav a:hover { border-bottom-color: #f5a623; }
+  nav a.active { color: #f5a623; border-bottom-color: #f5a623; }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    height: calc(100vh - 97px);
+    min-height: 700px;
+    overflow: hidden;
+    background: #1a1a1e;
+    clip-path: polygon(0 0, 100% 0, 100% 96%, 0 100%);
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+  }
+  .hero-inner {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 96px 64px 140px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #f5a623;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 48px;
+    height: 1px;
+    background: #f5a623;
+  }
+  h1.hero-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 5rem;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    max-width: 1000px;
+  }
+  h1.hero-title .amber { color: #f5a623; font-style: italic; }
+  h1.hero-title .violet { color: #b89cdc; }
+  .hero-sub {
+    margin-top: 40px;
+    max-width: 560px;
+    font-size: 1.05rem;
+    color: rgba(240,237,230,0.75);
+  }
+  .hero-meta {
+    position: absolute;
+    bottom: 80px;
+    right: 64px;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(240,237,230,0.4);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  /* Diagonal Panels */
+  .panel {
+    position: relative;
+    padding: 140px 0 160px;
+    margin-top: -40px;
+  }
+  .panel-amber {
+    background: #f5a623;
+    color: #1a1a1e;
+    clip-path: polygon(0 4%, 100% 0, 100% 96%, 0 100%);
+  }
+  .panel-charcoal {
+    background: #1a1a1e;
+    color: #f0ede6;
+    clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 100%);
+    margin-top: -80px;
+  }
+  .panel-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 64px;
+    position: relative;
+  }
+
+  .section-head {
+    position: relative;
+    margin-bottom: 64px;
+  }
+  .section-head .accent-shape {
+    position: absolute;
+    top: -30px;
+    left: -40px;
+    width: 280px;
+    height: 160px;
+    background: #f5a623;
+    opacity: 0.15;
+    transform: rotate(-6deg) skewX(-12deg);
+    z-index: 0;
+  }
+  .panel-amber .section-head .accent-shape { background: #1a1a1e; opacity: 0.08; }
+  .section-head h2 {
+    position: relative;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 3.5rem;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    z-index: 1;
+  }
+  .section-head .label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: #f5a623;
+  }
+  .panel-amber .section-head .label { color: #1a1a1e; }
+
+  .beliefs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px;
+  }
+  .belief .icon-wrap {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 24px;
+  }
+  .belief h3 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+  .belief p {
+    font-size: 0.95rem;
+    max-width: 680px;
+    margin-bottom: 14px;
+    color: rgba(240,237,230,0.78);
+  }
+  .panel-amber .belief p { color: rgba(26,26,30,0.82); }
+  .belief .rule {
+    width: 40px;
+    height: 2px;
+    background: #f5a623;
+    margin-bottom: 24px;
+  }
+  .panel-amber .belief .rule { background: #1a1a1e; }
+
+  /* Footer */
+  footer {
+    background: #1a1a1e;
+    border-top: 1px solid rgba(240,237,230,0.08);
+    padding: 56px 0 40px;
+    margin-top: -40px;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 64px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+  }
+  footer h4 {
+    font-family: Georgia, serif;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    color: #f5a623;
+  }
+  footer p, footer li {
+    font-size: 0.85rem;
+    color: rgba(240,237,230,0.65);
+    line-height: 1.8;
+    list-style: none;
+  }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 48px auto 0;
+    padding: 24px 64px 0;
+    border-top: 1px solid rgba(240,237,230,0.08);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,237,230,0.4);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="../manifesto/index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="Obsidian Fold logomark">
+        <g fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linejoin="miter">
+          <polygon points="14,4 34,4 44,14 44,34 34,44 14,44 4,34 4,14" fill="#f5a623" fill-opacity="0.08"/>
+          <polygon points="14,4 34,4 44,14 24,24" fill="#f5a623"/>
+          <polygon points="44,14 44,34 24,24" fill="#f5a623" fill-opacity="0.6"/>
+          <polygon points="44,34 34,44 24,24" fill="#f5a623" fill-opacity="0.85"/>
+          <polygon points="14,4 4,14 24,24" fill="#f5a623" fill-opacity="0.4"/>
+          <line x1="24" y1="24" x2="14" y2="44"/>
+          <line x1="24" y1="24" x2="4" y2="34"/>
+        </g>
+      </svg>
+      <span class="brand-name">Obsidian Fold<small>Identity Studio · Berlin</small></span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="../manifesto/index.html" class="active">Manifesto</a></li>
+        <li><a href="../process/index.html">Process</a></li>
+        <li><a href="../identity-work/index.html">Identity Work</a></li>
+        <li><a href="../typefaces/index.html">Typefaces</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <svg class="hero-grid" viewBox="0 0 1280 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="angleGrid" width="120" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(22)">
+        <path d="M0 0 L120 0 M0 60 L120 60 M60 0 L60 120 M0 0 L120 120 M120 0 L0 120" stroke="#7b5ea7" stroke-width="1" fill="none"/>
+      </pattern>
+    </defs>
+    <rect width="1280" height="700" fill="url(#angleGrid)"/>
+    <g stroke="#7b5ea7" stroke-width="1.2" fill="none">
+      <polygon points="900,80 1180,40 1240,260 980,340"/>
+      <polygon points="60,420 320,380 380,600 120,640"/>
+      <line x1="0" y1="200" x2="1280" y2="120"/>
+      <line x1="0" y1="540" x2="1280" y2="460"/>
+      <polygon points="640,200 820,260 760,440 580,380"/>
+    </g>
+  </svg>
+  <div class="hero-inner">
+    <div class="eyebrow">Manifesto · Vol. 07</div>
+    <h1 class="hero-title">
+      Shape Before <span class="amber">Color.</span><br>
+      Silence Before <span class="violet">Noise.</span>
+    </h1>
+    <p class="hero-sub">
+      Obsidian Fold is a Berlin identity studio building precise, angular visual
+      systems for small institutions, makers, and quiet luxury brands. We treat
+      every mark as architecture — folded, measured, and load-bearing.
+    </p>
+  </div>
+  <div class="hero-meta">Est. 2014 — Berlin · Mitte</div>
+</section>
+
+<section class="panel panel-amber">
+  <div class="panel-inner">
+    <div class="section-head">
+      <div class="accent-shape"></div>
+      <div class="label">§ 01 — Core Beliefs</div>
+      <h2>Three positions we<br>refuse to compromise.</h2>
+    </div>
+
+    <div class="beliefs">
+      <div class="belief">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="28,4 52,48 4,48" fill="#1a1a1e"/>
+            <polygon points="28,16 44,44 12,44" fill="#f5a623"/>
+          </svg>
+        </div>
+        <h3>On Identity</h3>
+        <div class="rule"></div>
+        <p>An identity is not a logo. It is the smallest possible set of decisions a brand can make and still remain itself across every surface and decade.</p>
+        <p>We design systems that can survive being photocopied, embossed, and forgotten — then rediscovered without apology.</p>
+        <p>A mark earns its place by what it refuses to say.</p>
+      </div>
+
+      <div class="belief">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="28,4 52,28 28,52 4,28" fill="#1a1a1e"/>
+            <polygon points="28,14 44,28 28,42 12,28" fill="#f5a623"/>
+          </svg>
+        </div>
+        <h3>On Craft</h3>
+        <div class="rule"></div>
+        <p>Every curve is drawn twice. Once to find it, once to defend it. Our files are organized like sentences — punctuated, indented, structurally sound.</p>
+        <p>Pixel hinting matters. Kerning matters. The weight of a counter at 9pt matters more than the gradient on a billboard.</p>
+        <p>Precision is not a style. It is a posture.</p>
+      </div>
+
+      <div class="belief">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="6,14 28,36 50,14 50,26 28,48 6,26" fill="#1a1a1e"/>
+            <polygon points="14,16 28,30 42,16 42,22 28,36 14,22" fill="#f5a623"/>
+          </svg>
+        </div>
+        <h3>On Restraint</h3>
+        <div class="rule"></div>
+        <p>The hardest line to draw is the one you remove. We start every project with subtraction, working downward toward the irreducible.</p>
+        <p>Restraint is not minimalism. It is editorial — knowing exactly which two notes to play, and exactly how long to hold them.</p>
+        <p>Silence is a typographic decision.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel panel-charcoal">
+  <div class="panel-inner">
+    <div class="section-head">
+      <div class="accent-shape"></div>
+      <div class="label">§ 02 — Practice</div>
+      <h2>A studio of four,<br>by appointment only.</h2>
+    </div>
+
+    <div class="beliefs">
+      <div class="belief">
+        <h3 style="color:#f5a623">Slow by design</h3>
+        <div class="rule"></div>
+        <p>We accept six to eight engagements per year. Each one runs twelve to twenty weeks, beginning with a week of listening and ending with a printed manual.</p>
+      </div>
+      <div class="belief">
+        <h3 style="color:#f5a623">Built to fold</h3>
+        <div class="rule"></div>
+        <p>Our deliverables are bound, not zipped. We ship a guidelines book, a metal-plated mark, and the source files — in that order of importance.</p>
+      </div>
+      <div class="belief">
+        <h3 style="color:#f5a623">Quietly opinionated</h3>
+        <div class="rule"></div>
+        <p>We do not pitch. We do not present three directions. We arrive with one answer, and we defend it with drawings, references, and proofs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Obsidian Fold</h4>
+      <p>A boutique identity studio working at the intersection of geometry, restraint, and printed matter. Berlin, Germany.</p>
+    </div>
+    <div>
+      <h4>Studio</h4>
+      <ul>
+        <li><a href="../manifesto/index.html">Manifesto</a></li>
+        <li><a href="../process/index.html">Process</a></li>
+        <li><a href="../identity-work/index.html">Identity Work</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Library</h4>
+      <ul>
+        <li><a href="../typefaces/index.html">Typefaces</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Index</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>studio@obsidianfold.de</li>
+        <li>Linienstraße 142, Berlin</li>
+        <li><a href="../contact/index.html">New inquiries →</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Obsidian Fold GmbH</span>
+    <span>Vol. 07 — Manifesto</span>
+  </div>
+</footer>
+
+</body>
+</html>

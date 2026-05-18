@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halophytes — A Crust of Crystallized Time</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #F5F0E8;
+    color: #1A1612;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* NAV */
+  nav.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #F5F0E8;
+    border-bottom: 1px solid rgba(26,22,18,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  nav.site-nav .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 0.82rem;
+    color: #1A1612;
+  }
+  nav.site-nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+  }
+  nav.site-nav ul li a {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1A1612;
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  nav.site-nav ul li a:hover { border-bottom-color: #C4502A; }
+  nav.site-nav ul li a.current {
+    color: #C4502A;
+    border-bottom-color: #C4502A;
+  }
+
+  /* HEADER */
+  header.chapter-header {
+    width: 100vw;
+    min-height: 38vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px;
+    background-color: #F5F0E8;
+    background-image:
+      radial-gradient(circle, #1A1612 1.2px, transparent 1.6px),
+      radial-gradient(circle, #C4502A 1px, transparent 1.4px);
+    background-size: 22px 22px, 22px 22px;
+    background-position: 0 0, 11px 11px;
+    border-bottom: 1px solid rgba(26,22,18,0.15);
+  }
+  header.chapter-header .eyebrow {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #A8C4CC;
+    background: #F5F0E8;
+    padding: 6px 14px;
+    border: 2px solid #A8C4CC;
+    margin-bottom: 28px;
+  }
+  header.chapter-header h1 {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    font-size: clamp(2.2rem, 5.6vw, 4.4rem);
+    line-height: 1.1;
+    max-width: 900px;
+    background: #F5F0E8;
+    padding: 12px 24px;
+    text-transform: none;
+  }
+  header.chapter-header .sub {
+    margin-top: 22px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: #1A1612;
+    background: #F5F0E8;
+    padding: 6px 18px;
+    font-size: 1.05rem;
+    max-width: 640px;
+  }
+
+  /* MAIN GRID */
+  main.layout {
+    display: block;
+    padding: 72px 32px 96px;
+  }
+  @media (min-width: 1100px) {
+    main.layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 48px;
+      max-width: 1180px;
+      margin: 0 auto;
+      align-items: start;
+    }
+  }
+
+  /* ESSAY COLUMN */
+  article.essay {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+  }
+  article.essay p {
+    margin-bottom: 1.25em;
+  }
+  article.essay h2.subsection {
+    font-family: Georgia, serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 1.35rem;
+    color: #1A1612;
+    margin-bottom: 28px;
+  }
+
+  /* DIVIDER */
+  .rhythm-break {
+    margin: 64px auto 32px;
+    width: 40px;
+    border: none;
+    border-top: 1px solid #C4502A;
+  }
+
+  /* PULL QUOTE */
+  blockquote.pull {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: #C4502A;
+    border-left: 4px solid #C4502A;
+    padding-left: 24px;
+    margin: 40px 0 40px 0;
+  }
+  @media (min-width: 1100px) {
+    blockquote.pull {
+      /* break out of the 720 column into the sidebar lane */
+      margin-right: -328px;
+    }
+  }
+
+  /* FIGURES */
+  figure.specimen {
+    margin: 36px 0;
+  }
+  figure.specimen .box {
+    border: 2px solid #A8C4CC;
+    padding: 28px;
+    background: #F5F0E8;
+  }
+  figure.specimen figcaption {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #A8C4CC;
+    margin-top: 10px;
+  }
+
+  /* Plant illustration placeholders */
+  .plant-plate {
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+    height: 180px;
+  }
+  .stalk {
+    flex: 1;
+    background: linear-gradient(to top, #6b7a45, #9aab68 60%, #c5cf95);
+    border-radius: 4px 4px 0 0;
+    position: relative;
+  }
+  .stalk.bushy { background: linear-gradient(to top, #4a5236, #7a8556 50%, #b6c08a); }
+  .stalk.dry   { background: linear-gradient(to top, #7a6a3f, #a89867 50%, #d4c69a); }
+  .stalk.ghost { background: linear-gradient(to top, #8a8479, #b5b0a4 50%, #dad5c9); }
+
+  /* SIDEBAR */
+  aside.annotations {
+    width: 100%;
+    max-width: 720px;
+    margin: 64px auto 0;
+    padding: 0 24px;
+  }
+  @media (min-width: 1100px) {
+    aside.annotations {
+      position: sticky;
+      top: 48px;
+      width: 280px;
+      max-width: 280px;
+      padding: 0;
+      margin: 0;
+      align-self: start;
+    }
+  }
+  .anno {
+    border: 2px solid #A8C4CC;
+    padding: 18px 18px 16px;
+    background: #F5F0E8;
+    margin-bottom: 28px;
+  }
+  .anno .anno-tag {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #A8C4CC;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .anno .anno-species {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1A1612;
+    margin-bottom: 10px;
+  }
+  .anno .anno-body {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    line-height: 1.65;
+    color: #1A1612;
+    letter-spacing: 0.02em;
+  }
+  .anno .anno-foot {
+    margin-top: 12px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.65rem;
+    color: #A8C4CC;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-top: 1px dashed #A8C4CC;
+    padding-top: 8px;
+  }
+
+  /* FOOTER */
+  footer.site-footer {
+    border-top: 1px solid rgba(26,22,18,0.15);
+    padding: 48px 32px 64px;
+    background: #F5F0E8;
+    margin-top: 40px;
+  }
+  footer.site-footer .ft-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  footer.site-footer .ft-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  footer.site-footer .ft-meta,
+  footer.site-footer .ft-nav a {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1A1612;
+    text-decoration: none;
+  }
+  footer.site-footer .ft-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  footer.site-footer .ft-meta { color: #A8C4CC; }
+
+  @media (max-width: 600px) {
+    nav.site-nav { padding: 14px 18px; }
+    nav.site-nav ul { gap: 14px; }
+    main.layout { padding: 48px 4px 64px; }
+    article.essay { padding: 0 18px; }
+    blockquote.pull { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="brand">Deep Time · Salt Flats</div>
+  <ul>
+    <li><a href="../threshold/index.html">01 · Threshold</a></li>
+    <li><a href="../stratigraphy/index.html">02 · Stratigraphy</a></li>
+    <li><a href="#" class="current">03 · Halophytes</a></li>
+    <li><a href="../human-marks/index.html">04 · Human Marks</a></li>
+    <li><a href="../dissolution/index.html">05 · Dissolution</a></li>
+  </ul>
+</nav>
+
+<header class="chapter-header">
+  <span class="eyebrow">Chapter 03 — Halophytes</span>
+  <h1>Salt-Drunk &amp; Still Living</h1>
+  <p class="sub">On pickleweed, iodine bush, and greasewood — the patient committee at the margins of an evaporated sea.</p>
+</header>
+
+<main class="layout">
+
+  <article class="essay">
+
+    <p>The salt does not end where the salt ends. Long before the flat white plain crusts into wagon-rut clay and the clay shoulders up into low gravel benches, there are plants — squat, blue-green, often mistaken for shrubs, sometimes for nothing at all — that have been quietly metabolizing chloride for ten thousand years. They are the halophytes: the salt-lovers, though "love" is the wrong word. <em>Tolerance</em> is closer, and even that flatters them. What they have done is more interesting than love. They have made a peace.</p>
+
+    <p>Step away from the speedway course, away from the blinding pan, and you'll find them ringing the playa in irregular dotted bands. Each species occupies a slightly different brine: a slightly different soil-water salinity, a slightly different depth to groundwater, a slightly different tolerance for the long August heat. Walk the rim slowly, and the plant community itself becomes a kind of chemistry readout.</p>
+
+    <h2 class="subsection" id="pioneers">— Pioneers</h2>
+
+    <p>Closest to the white — sometimes growing in soil so saline it cracks into hexagons after rain — is <em>Salicornia</em>, the pickleweed. It has no leaves to speak of. Its stems are segmented, jointed, fat with stored water, and faintly translucent at the tips. In late summer the segments flush from glaucous green to vermilion as the plant offloads accumulated salt into its oldest tissues and lets them die back. Each red joint is, in a sense, a tiny disposable kidney.</p>
+
+    <blockquote class="pull">A pickleweed does not resist the salt. It eats it, stores it in a chamber it intends to throw away, and walks on.</blockquote>
+
+    <p>This is the strategy of the pioneer: do not argue with the chemistry. Accept it, partition it, abandon it. Pickleweed can germinate in soils where almost nothing else will hold a seedling root, and so it is often the first green thing you see when the playa edge resolves into something other than mineral. It does not, however, grow tall. It does not need to. There is no canopy to compete for.</p>
+
+    <figure class="specimen">
+      <div class="box">
+        <div class="plant-plate" aria-hidden="true">
+          <div class="stalk"></div>
+          <div class="stalk" style="height:78%"></div>
+          <div class="stalk" style="height:62%"></div>
+          <div class="stalk" style="height:90%"></div>
+          <div class="stalk" style="height:70%"></div>
+        </div>
+      </div>
+      <figcaption>Fig. 03.1 — Salicornia rubra · pioneer zone · 4,219 ft elev.</figcaption>
+    </figure>
+
+    <hr class="rhythm-break">
+
+    <h2 class="subsection" id="specialists">— Specialists</h2>
+
+    <p>Move twenty meters inland and the pickleweed thins. In its place comes <em>Allenrolfea occidentalis</em>, the iodine bush — taller, woodier, more architecturally ambitious. From a distance it reads as a low silver-grey cushion; up close it is a tight bramble of jointed succulent stems on a perennial frame. Crush a tip between your fingers and it releases a sharp, halogenated smell, somewhere between seawater and a hospital corridor. The common name is not a metaphor.</p>
+
+    <p>Iodine bush is a <em>specialist</em>: where pickleweed colonizes, iodine bush settles. It plumbs deeper for groundwater, can survive partial inundation in wet years, and survives the dry ones by simply ceasing to do very much. Some individuals on the western margin of the flats are believed to be more than a century old — a quiet, salt-pickled longevity that almost no one notices.</p>
+
+    <blockquote class="pull">To be a specialist on a salt flat is to find one terrible niche and refuse, century after century, to leave it.</blockquote>
+
+    <figure class="specimen">
+      <div class="box">
+        <div class="plant-plate" aria-hidden="true">
+          <div class="stalk bushy" style="height:88%"></div>
+          <div class="stalk bushy"></div>
+          <div class="stalk bushy" style="height:74%"></div>
+          <div class="stalk bushy" style="height:92%"></div>
+        </div>
+      </div>
+      <figcaption>Fig. 03.2 — Allenrolfea occidentalis · specialist zone · sample W-14</figcaption>
+    </figure>
+
+    <hr class="rhythm-break">
+
+    <h2 class="subsection" id="ghosts">— Ghosts</h2>
+
+    <p>At the outermost ring — where the soil is only seasonally saline, where in a wet decade you might mistake the ground for ordinary high desert — stands greasewood, <em>Sarcobatus vermiculatus</em>. It is the largest of the three, the most familiar, the one that looks the most like a plant. It also looks, in dry years, the most like a corpse.</p>
+
+    <p>Greasewood is a phreatophyte: its roots reach down ten, fifteen, occasionally twenty meters to tap the groundwater that the flats themselves are slowly losing. When the water table drops — and the water table is dropping — greasewood is the first to register it. A stand of greasewood with twenty percent dieback is a hydrological report card written in branches. A stand with ninety percent dieback is a future the salt flat has not yet finished arriving at.</p>
+
+    <p>These are the ghosts. Not because they are dead — most are not, quite — but because they are the part of the community that watches the others. They are taller. They live longer. They remember wetter decades. And when, in the next thirty years, the iodine bush retreats further inland and the pickleweed colonizes ground that used to be open playa, it is the greasewood that will mark, with its skeletons, where the old shoreline of biology used to be.</p>
+
+    <figure class="specimen">
+      <div class="box">
+        <div class="plant-plate" aria-hidden="true">
+          <div class="stalk ghost" style="height:96%"></div>
+          <div class="stalk ghost" style="height:64%; opacity:0.6"></div>
+          <div class="stalk ghost" style="height:84%"></div>
+          <div class="stalk ghost" style="height:48%; opacity:0.5"></div>
+          <div class="stalk ghost" style="height:90%"></div>
+        </div>
+      </div>
+      <figcaption>Fig. 03.3 — Sarcobatus vermiculatus · outer ring · partial dieback</figcaption>
+    </figure>
+
+    <p>The plants are not the story of the salt flat. They are the part of the story that breathes. They are the part that can be killed, and so the part that, by surviving, marks what the flats have so far permitted to live.</p>
+
+  </article>
+
+  <aside class="annotations" aria-label="Species annotations">
+
+    <div class="anno">
+      <span class="anno-tag">Annotation · 03.A</span>
+      <div class="anno-species">Salicornia rubra — pickleweed</div>
+      <p class="anno-body">Adaptation: salt accumulation followed by sacrificial tissue abscission. The plant absorbs Na⁺ and Cl⁻ into vacuoles within its jointed photosynthetic stems, sequestering ions until the oldest segments cannot dilute further. Those segments redden, desiccate, and break away — exporting salt by simply discarding the tissue that holds it.</p>
+      <div class="anno-foot">Zone · Inner playa margin</div>
+    </div>
+
+    <div class="anno">
+      <span class="anno-tag">Annotation · 03.B</span>
+      <div class="anno-species">Allenrolfea occidentalis — iodine bush</div>
+      <p class="anno-body">Adaptation: deep taproot paired with osmotic equilibrium. Roots draw from groundwater two to four meters below the surface, while leaf-equivalent stem tissue maintains an internal solute concentration higher than the surrounding brine. The plant draws water inward against an inhospitable gradient, then shrugs through summer in near-dormancy.</p>
+      <div class="anno-foot">Zone · Intermediate band</div>
+    </div>
+
+    <div class="anno">
+      <span class="anno-tag">Annotation · 03.C</span>
+      <div class="anno-species">Sarcobatus vermiculatus — greasewood</div>
+      <p class="anno-body">Adaptation: extreme phreatophytic rooting and selective ion exclusion at the root membrane. Tap roots commonly reach ten to twenty meters to access non-saline aquifers, bypassing the brine in the surface soil entirely. The plant indexes regional water-table depth in real time; its dieback rate is a long-term hydrological signal.</p>
+      <div class="anno-foot">Zone · Outer perimeter</div>
+    </div>
+
+    <div class="anno" style="border-style:dashed;">
+      <span class="anno-tag">Field Note · 03.D</span>
+      <div class="anno-species" style="font-style:normal; font-family:ui-monospace, monospace; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;">Transect direction</div>
+      <p class="anno-body">Salinity gradient runs roughly NE → SW across the western margin. Species succession follows this gradient continuously: pickleweed → iodine bush → greasewood. Reading the plants is a slower, more reliable salinity probe than any single soil sample.</p>
+      <div class="anno-foot">Survey · 2019–2023</div>
+    </div>
+
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+  <div class="ft-inner">
+    <div>
+      <div class="ft-title">A Crust of Crystallized Time</div>
+      <div class="ft-meta" style="margin-top:8px;">A multimedia essay · five chapters · Bonneville, Utah</div>
+    </div>
+    <nav class="ft-nav" aria-label="Footer navigation">
+      <a href="../threshold/index.html">01 Threshold</a>
+      <a href="../stratigraphy/index.html">02 Stratigraphy</a>
+      <a href="#">03 Halophytes</a>
+      <a href="../human-marks/index.html">04 Human Marks</a>
+      <a href="../dissolution/index.html">05 Dissolution</a>
+    </nav>
+    <div class="ft-meta">© Deep Time Project · No tracking · No scripts</div>
+  </div>
+</footer>
+
+</body>
+</html>

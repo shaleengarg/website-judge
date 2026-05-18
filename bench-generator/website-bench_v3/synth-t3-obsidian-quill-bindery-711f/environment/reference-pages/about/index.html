@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Obsidian Quill Bindery</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #F5F0E8;
+    color: #1C1A17;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    height: 56px;
+    background: #1C1A17;
+    color: #F5F0E8;
+    display: flex; align-items: center;
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .wordmark {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .wordmark .accent { color: #C0392B; }
+  .nav-links {
+    display: flex; gap: 28px;
+    flex: 1; justify-content: center;
+    list-style: none; padding: 0; margin: 0;
+    font-size: 14px;
+  }
+  .nav-links a { opacity: 0.85; }
+  .nav-links a.active { opacity: 1; border-bottom: 2px solid #C0392B; padding-bottom: 2px; }
+  .cart-icon {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 14px;
+  }
+  .cart-badge {
+    background: #C0392B;
+    color: #F5F0E8;
+    font-size: 11px;
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-weight: 700;
+  }
+
+  /* Layout */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .page-head {
+    padding: 56px 0 32px;
+  }
+  .eyebrow {
+    color: #4A6741;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+  }
+  .page-head h1 {
+    font-size: 48px;
+    line-height: 1.05;
+  }
+  .accent-rule {
+    width: 48px;
+    height: 2px;
+    background: #C0392B;
+    margin-top: 16px;
+  }
+  .section-heading {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .section-rule {
+    width: 48px;
+    height: 2px;
+    background: #C0392B;
+    margin-bottom: 20px;
+  }
+
+  /* About grid */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 6fr 4fr;
+    gap: 64px;
+    padding-bottom: 72px;
+  }
+  .story p {
+    margin: 0 0 18px;
+  }
+  .story p.lede {
+    font-family: Georgia, serif;
+    font-size: 19px;
+    line-height: 1.55;
+    color: #1C1A17;
+  }
+  .story-section { margin-top: 32px; }
+  .signature {
+    margin-top: 32px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: #4A6741;
+  }
+
+  /* Right column */
+  .studio-image {
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 400 / 500;
+    background:
+      linear-gradient(135deg, rgba(28,26,23,0.06), rgba(28,26,23,0.02)),
+      repeating-linear-gradient(45deg, #E8DFCE 0 18px, #DED3BD 18px 36px);
+    border: 1px solid #D6CFC3;
+    display: flex; align-items: center; justify-content: center;
+    color: #6b6256;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0 0 0 auto;
+    position: relative;
+  }
+  .studio-image::after {
+    content: "The Studio · Portland, OR";
+    position: absolute;
+    bottom: 16px; left: 16px;
+    background: rgba(245,240,232,0.85);
+    padding: 6px 10px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: #1C1A17;
+  }
+  .stat-block {
+    max-width: 400px;
+    margin: 24px 0 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid #1C1A17;
+    background: #FAF7F2;
+  }
+  .stat {
+    padding: 18px 12px;
+    text-align: center;
+    border-right: 1px solid #1C1A17;
+  }
+  .stat:last-child { border-right: none; }
+  .stat .num {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: #C0392B;
+    display: block;
+  }
+  .stat .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #1C1A17;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* Values strip */
+  .values {
+    border-top: 1px solid #D6CFC3;
+    padding: 56px 0;
+  }
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 24px;
+  }
+  .value h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .value .mark {
+    width: 28px; height: 28px;
+    background: #4A6741;
+    color: #F5F0E8;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1C1A17;
+    color: #F5F0E8;
+    padding: 48px 24px 24px;
+    margin-top: 0;
+  }
+  .foot-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h4 {
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: #F5F0E8;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; font-size: 14px; }
+  footer li { margin-bottom: 6px; opacity: 0.8; }
+  .foot-brand p { font-size: 14px; opacity: 0.75; margin: 8px 0 0; max-width: 320px; }
+  .foot-bottom {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding-top: 16px;
+    border-top: 1px solid #2B2925;
+    display: flex; justify-content: space-between;
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .studio-image, .stat-block { margin: 0 auto; }
+    .values-grid { grid-template-columns: 1fr 1fr; }
+    .foot-inner { grid-template-columns: 1fr 1fr; }
+    .page-head h1 { font-size: 38px; }
+    .nav-links { gap: 18px; font-size: 13px; }
+  }
+  @media (max-width: 560px) {
+    .nav-links { display: none; }
+    .page-head { padding: 36px 0 24px; }
+    .page-head h1 { font-size: 30px; }
+    .values-grid { grid-template-columns: 1fr; }
+    .foot-inner { grid-template-columns: 1fr; }
+    .foot-bottom { flex-direction: column; gap: 6px; }
+    .stat .num { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="wordmark">Obsidian Quill<span class="accent">.</span> Bindery</div>
+    <ul class="nav-links">
+      <li><a href="../shop/index.html">Shop</a></li>
+      <li><a href="../product-detail/index.html">Product</a></li>
+      <li><a href="../cart/index.html">Cart</a></li>
+      <li><a href="#" class="active">About</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+    <a href="../cart/index.html" class="cart-icon">Cart <span class="cart-badge">3</span></a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="page-head">
+    <div class="eyebrow">Our Story</div>
+    <h1>A bindery built<br>on patience &amp; paper.</h1>
+    <div class="accent-rule"></div>
+  </header>
+
+  <section class="about-grid">
+    <div class="story">
+      <h2 class="section-heading">From a Portland workshop, since 2011</h2>
+      <div class="section-rule"></div>
+
+      <p class="lede">Obsidian Quill Bindery was founded in 2011 by bookbinder Saoirse Nakamura in a north Portland carriage house, after a decade of apprenticeship in Kyoto and a single stubborn idea: that the materials a binder reaches for should be as considered as the books themselves.</p>
+
+      <p>What began as a private suppliers list — shared among friends from the Pacific Northwest Book Arts Guild — has grown into a quietly stocked shop of leathers, threads, boards, and tools used by binders, conservators, and paper artists in studios from Reykjavík to Wellington.</p>
+
+      <div class="story-section">
+        <h3 class="section-heading">Ethically sourced leathers</h3>
+        <div class="section-rule"></div>
+        <p>Every hide we carry is a byproduct of food production and is traceable to a named tannery. We work primarily with two family-run tanneries in Tuscany and one in Devon, both vegetable-tanning to traditions older than the books they will eventually cover. We never stock chrome-tanned skins, and we publish the tannage, origin, and lot number on every hide page in the shop.</p>
+      </div>
+
+      <div class="story-section">
+        <h3 class="section-heading">Traditional sewing-frame technique</h3>
+        <div class="section-rule"></div>
+        <p>Our hand-bound journals are sewn on a standing oak frame, using linen tapes and a kettle stitch — the same architecture used for European trade bindings since the sixteenth century. We round and back by hand, line the spines with airplane linen, and case in with wheat-starch paste. Each journal carries the binder's initials and the month it left the bench.</p>
+      </div>
+
+      <div class="story-section">
+        <h3 class="section-heading">Visit the workshop</h3>
+        <div class="section-rule"></div>
+        <p>Our studio on N. Mississippi Avenue is open by appointment, Tuesday through Saturday. We're glad to pull hides for inspection, demonstrate a sewing setup, or simply share a pot of hojicha while you flip through endpaper swatches. Wholesale binders and educators are warmly invited.</p>
+      </div>
+
+      <p class="signature">— Saoirse Nakamura, founder &amp; head binder</p>
+    </div>
+
+    <aside>
+      <div class="studio-image">IMG · STUDIO</div>
+      <div class="stat-block" role="list">
+        <div class="stat" role="listitem">
+          <span class="num">2,400+</span>
+          <span class="lbl">Products</span>
+        </div>
+        <div class="stat" role="listitem">
+          <span class="num">12 yrs</span>
+          <span class="lbl">In craft</span>
+        </div>
+        <div class="stat" role="listitem">
+          <span class="num">34</span>
+          <span class="lbl">Countries</span>
+        </div>
+      </div>
+    </aside>
+  </section>
+</div>
+
+<section class="values">
+  <div class="container">
+    <h2 class="section-heading">What we keep in mind</h2>
+    <div class="section-rule"></div>
+    <div class="values-grid">
+      <div class="value">
+        <span class="mark">I</span>
+        <h3>Provenance over price</h3>
+        <p>We name every tannery, mill, and forge we buy from. If we can't, we don't stock it.</p>
+      </div>
+      <div class="value">
+        <span class="mark">II</span>
+        <h3>Made to be used</h3>
+        <p>Materials are tested at the bench before they hit a product page — by binders, not marketers.</p>
+      </div>
+      <div class="value">
+        <span class="mark">III</span>
+        <h3>The long shelf life</h3>
+        <p>We favor reversible, archival methods. A book bound today should still open in 2125.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <div class="wordmark">Obsidian Quill<span class="accent" style="color:#C0392B">.</span> Bindery</div>
+      <p>Artisan stationery &amp; bookbinding supply, hand-selected in Portland, OR and shipped worldwide.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="../shop/index.html">All Supplies</a></li>
+        <li><a href="../shop/index.html">Leather Hides</a></li>
+        <li><a href="../shop/index.html">Tools</a></li>
+        <li><a href="../shop/index.html">Endpapers</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Studio</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+        <li><a href="../contact/index.html">Wholesale</a></li>
+        <li><a href="../contact/index.html">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Visit</h4>
+      <ul>
+        <li>N. Mississippi Ave</li>
+        <li>Portland, OR 97227</li>
+        <li>Tue–Sat, by appt.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2024 Obsidian Quill Bindery</span>
+    <span>Bound by hand in the Pacific Northwest</span>
+  </div>
+</footer>
+
+</body>
+</html>

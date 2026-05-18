@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaultline — Financial Profile</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  /* Header / Nav */
+  .site-header {
+    background: #00CED1;
+    color: #FF6B6B;
+    border-bottom: 3px solid #FFD700;
+  }
+  .header-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: block;
+    
+    
+  }
+  .brand {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+  }
+  .brand .mark { color: #FFD700; }
+  .site-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    
+  }
+  .site-nav a {
+    color: #FF6B6B;
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  .site-nav a.active { color: #FFD700; border-bottom-color: #FFD700; }
+
+  /* Progress indicator */
+  .progress-wrap {
+    background: #FF00FF;
+    border-bottom: 1px solid #FF6B6B;
+  }
+  .progress {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 22px 32px;
+    display: block;
+    
+    
+    
+  }
+  .step {
+    flex: 1;
+    display: block;
+    
+    
+    position: relative;
+    text-align: center;
+  }
+  .step::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: 60%;
+    right: -40%;
+    height: 2px;
+    background: #FF6B6B;
+    z-index: 0;
+  }
+  .step:last-child::after { display: none; }
+  .step .num {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: #FF6B6B;
+    border: 1.5px solid #FF6B6B;
+    color: #00CED1;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 13px;
+    display: block;  
+    position: relative; z-index: 1;
+    margin-bottom: 6px;
+  }
+  .step .lbl {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    color: #00CED1;
+  }
+  .step.completed .num { background: #FFD700; border-color: #FFD700; color: #00CED1; }
+  .step.completed .lbl { color: #00CED1; }
+  .step.completed::after { background: #FFD700; }
+  .step.active .num { background: #FFD700; border-color: #FFD700; color: #FF00FF; box-shadow: 0 0 0 4px rgba(46,93,158,0.18); }
+  .step.active .lbl { color: #FFD700; font-weight: 600; }
+
+  /* Main column */
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 48px 60px;
+  }
+  .page-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 0 0 6px;
+    color: #00CED1;
+  }
+  .page-subtitle {
+    color: #00CED1;
+    font-size: 13px;
+    margin: 0 0 32px;
+  }
+
+  /* Section */
+  .section { padding: 22px 0 26px; border-top: 1px solid #FF6B6B; }
+  .section:first-of-type { border-top: none; padding-top: 0; }
+  .section-heading {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 0 16px;
+    color: #00CED1;
+  }
+  .section-heading .idx {
+    color: #FFD700;
+    font-size: 12px;
+    margin-right: 8px;
+    letter-spacing: 1.5px;
+  }
+
+  /* Labels & fields */
+  label.field-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: #00CED1;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    border: 1.5px solid #FF6B6B;
+    border-radius: 3px;
+    padding: 10px 12px;
+    background: #FF6B6B;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    color: #00CED1;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input.mono {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid rgba(46,93,158,0.25);
+    outline-offset: 0;
+    border-color: #FFD700;
+  }
+  input:required:invalid, select:required:invalid, textarea:required:invalid {
+    border-color: #00CED1;
+  }
+  input:required:invalid + .err,
+  select:required:invalid + .err,
+  textarea:required:invalid + .err { display: block; }
+  .err {
+    display: none;
+    color: #00CED1;
+    font-size: 11px;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+  }
+  textarea { resize: vertical; min-height: 160px; height: 160px; font-family: system-ui, sans-serif; }
+
+  /* Currency input */
+  .currency-wrap {
+    position: relative;
+  }
+  .currency-wrap .prefix {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: "Courier New", monospace;
+    color: #00CED1;
+    font-size: 14px;
+  }
+  .currency-wrap input { padding-left: 26px; }
+
+  /* Checkbox grid */
+  .check-grid {
+    display: block;
+    
+    
+  }
+  .check-row, .radio-row {
+    display: block;
+    
+    
+    cursor: pointer;
+    padding: 4px 0;
+  }
+  .check-row input, .radio-row input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0; height: 0;
+  }
+  .box, .dot {
+    width: 18px; height: 18px;
+    border: 2px solid #FF6B6B;
+    border-radius: 3px;
+    background: #FF6B6B;
+    display: inline-flex;
+     
+    flex-shrink: 0;
+    transition: all 0.12s;
+  }
+  .dot { border-radius: 50%; }
+  .check-row input:checked + .box {
+    background: #FFD700;
+    border-color: #FFD700;
+  }
+  .check-row input:checked + .box::after {
+    content: "✓";
+    color: #FF00FF;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .radio-row input:checked + .dot {
+    background: #FFD700;
+    border-color: #FFD700;
+  }
+  .radio-row input:checked + .dot::after {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #FF00FF;
+  }
+  .check-row input:focus + .box,
+  .radio-row input:focus + .dot {
+    box-shadow: 0 0 0 3px rgba(46,93,158,0.25);
+  }
+  .opt-label { font-size: 14px; color: #00CED1; }
+
+  /* Radio list (objective) */
+  .radio-list { display: block;   }
+
+  /* Footer actions */
+  .actions {
+    margin-top: 36px;
+    display: block;
+    
+    
+    
+  }
+  .btn-back {
+    background: transparent;
+    border: 1.5px solid #FFD700;
+    color: #FFD700;
+    padding: 0 22px;
+    height: 44px;
+    border-radius: 3px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .btn-primary {
+    background: #FFD700;
+    color: #00CED1;
+    border: none;
+    height: 48px;
+    padding: 0 32px;
+    flex: 1;
+    max-width: 360px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    cursor: pointer;
+  }
+
+  /* Footer */
+  .site-footer {
+    border-top: 1px solid #FF6B6B;
+    background: #FF00FF;
+    color: #00CED1;
+    font-size: 12px;
+    padding: 22px 32px;
+  }
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: block;
+    
+    
+  }
+  .footer-inner .legal { letter-spacing: 0.3px; }
+  .footer-inner .meta { font-family: "Courier New", monospace; font-size: 11px; }
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<div class="header" class="site-header">
+  <div class="header-inner">
+    <div class="brand">VAULTLINE<span class="mark">Lorem ipsum dolor sit amet consectetur.</span><span style="font-weight:normal;font-size:13px;letter-spacing:2px;margin-left:8px;color:#FFD700;">Lorem ipsum dolor sit amet consectetur.</span></div>
+    <div class="nav" class="site-nav">
+      <ul>
+        <li><a href="../account-type/index.html">Link One</a></li>
+        <li><a href="../personal-details/index.html">Link Two</a></li>
+        <li><a href="#" class="active">Link Three</a></li>
+        <li><a href="../documents/index.html">Link Four</a></li>
+        <li><a href="../review-submit/index.html">Link Five</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress">
+    <div class="step completed">
+      <div class="num">✓</div>
+      <div class="lbl">Account Type</div>
+    </div>
+    <div class="step completed">
+      <div class="num">✓</div>
+      <div class="lbl">Personal Details</div>
+    </div>
+    <div class="step active">
+      <div class="num">3</div>
+      <div class="lbl">Financial Profile</div>
+    </div>
+    <div class="step">
+      <div class="num">4</div>
+      <div class="lbl">Documents</div>
+    </div>
+    <div class="step">
+      <div class="num">5</div>
+      <div class="lbl">Review &amp; Submit</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <h1 class="page-title">Lorem Ipsum Dolor</h1>
+  <p class="page-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+  <form novalidate>
+
+    <div class="section" class="section">
+      <h2 class="section-heading">Lorem Ipsum Dolor</h2>
+      <label class="field-label" for="income">Annual Income Range (USD)</label>
+      <select id="income" required>
+        <option value="">Select a range…</option>
+        <option>Under $250,000</option>
+        <option>$250,000 – $500,000</option>
+        <option>$500,000 – $1,000,000</option>
+        <option>$1,000,000 – $2,500,000</option>
+        <option>$2,500,000 – $5,000,000</option>
+        <option>Over $5,000,000</option>
+      </select>
+      <div class="err">Required — please select an income range.</div>
+    </div>
+
+    <div class="section" class="section">
+      <h2 class="section-heading">Lorem Ipsum Dolor</h2>
+      <label class="field-label">Select all that apply</label>
+      <div class="check-grid">
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="employment">
+          <span class="box">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="inheritance">
+          <span class="box">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="investments">
+          <span class="box">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="business">
+          <span class="box">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" name="sow" value="other">
+          <span class="box">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section" class="section">
+      <h2 class="section-heading">Lorem Ipsum Dolor</h2>
+      <label class="field-label" for="networth">Total Net Worth (USD)</label>
+      <div class="currency-wrap">
+        <span class="prefix">Lorem ipsum dolor sit amet consectetur.</span>
+        <input id="networth" class="mono" type="text" placeholder="0,000,000.00" required pattern="[0-9,\.\s]+">
+      </div>
+      <div class="err">Required — enter a numeric estimate.</div>
+    </div>
+
+    <div class="section" class="section">
+      <h2 class="section-heading">Lorem Ipsum Dolor</h2>
+      <div class="radio-list">
+        <label class="radio-row">
+          <input type="radio" name="obj" value="preservation" required>
+          <span class="dot">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="obj" value="income" required>
+          <span class="dot">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="obj" value="balanced" required>
+          <span class="dot">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="obj" value="aggressive" required>
+          <span class="dot">Lorem ipsum dolor sit amet consectetur.</span>
+          <span class="opt-label">Lorem ipsum dolor sit amet consectetur.</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section" class="section">
+      <h2 class="section-heading">Lorem Ipsum Dolor</h2>
+      <label class="field-label" for="notes">Disclosures, context, or special considerations (optional)</label>
+      <textarea id="notes" placeholder="Describe anything our advisory team should know — concentrated positions, liquidity events, fiduciary structures, etc."></textarea>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-back">Click Here</button>
+      <button type="submit" class="btn-primary">Click Here</button>
+    </div>
+
+  </form>
+</div>
+
+<div class="footer" class="site-footer">
+  <div class="footer-inner">
+    <div class="legal">© 2024 Vaultline Trust Company, N.A. · Member FDIC · Equal Housing Lender</div>
+    <div class="meta">REF · VL-ONB-3 / 5</div>
+  </div>
+</div>
+
+</body>
+</html>

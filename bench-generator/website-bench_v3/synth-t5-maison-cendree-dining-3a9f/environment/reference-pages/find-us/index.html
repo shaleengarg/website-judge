@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Us — Maison Cendrée</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #1a1814;
+    color: #f0ebe1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 0 24px; }
+  }
+
+  /* Header / Nav */
+  header.site {
+    padding: 48px 0 24px;
+  }
+
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    letter-spacing: 0.18em;
+    text-align: center;
+    color: #f0ebe1;
+    text-transform: uppercase;
+  }
+
+  .brand-sub {
+    text-align: center;
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    margin-top: 12px;
+  }
+
+  nav.primary {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+  }
+
+  nav.primary a {
+    color: #f0ebe1;
+    text-decoration: none;
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  nav.primary a.active {
+    color: #c9a84c;
+  }
+
+  nav.primary a:hover { color: #c9a84c; }
+
+  @media (max-width: 640px) {
+    nav.primary { gap: 18px; }
+  }
+
+  /* Hero */
+  .hero {
+    padding: 96px 0 64px;
+    text-align: center;
+  }
+
+  .hero .eyebrow {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    margin-bottom: 32px;
+  }
+
+  h1.display {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 4.5rem;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    color: #f0ebe1;
+  }
+
+  @media (max-width: 640px) {
+    h1.display { font-size: 3rem; }
+    .hero { padding: 56px 0 40px; }
+  }
+
+  /* Section heading */
+  h2.section {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 2.75rem;
+    letter-spacing: 0.18em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 640px) {
+    h2.section { font-size: 1.75rem; }
+  }
+
+  h3.sub {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+  }
+
+  /* Address blocks — terracotta uppercase 0.875rem */
+  .addr {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    line-height: 1.8;
+  }
+
+  .addr.center { text-align: center; }
+
+  .addr.large {
+    line-height: 2.2;
+  }
+
+  /* Body paragraph */
+  p.body {
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 18px;
+    color: #f0ebe1;
+    font-weight: 300;
+  }
+
+  /* HR */
+  hr.divider {
+    border: 0;
+    border-top: 1px solid rgba(201, 168, 76, 0.4);
+    margin: 48px 0;
+  }
+
+  /* Pull quote */
+  .pullquote {
+    font-size: 1.5rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: #c9a84c;
+    border-left: 2px solid #c9a84c;
+    padding-left: 24px;
+    font-family: Georgia, serif;
+    font-weight: 400;
+    margin: 16px 0;
+  }
+
+  /* Detail rows */
+  .detail-block {
+    margin-bottom: 40px;
+  }
+
+  .detail-block:last-child { margin-bottom: 0; }
+
+  .label {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    margin-bottom: 14px;
+  }
+
+  .value {
+    font-family: Georgia, serif;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    font-weight: 400;
+    color: #f0ebe1;
+  }
+
+  .value.gold { color: #c9a84c; }
+
+  /* Map placeholder */
+  .map-plate {
+    margin: 48px 0;
+    height: 320px;
+    background:
+      linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(160,92,59,0.08) 100%),
+      repeating-linear-gradient(0deg, rgba(240,235,225,0.04) 0 1px, transparent 1px 40px),
+      repeating-linear-gradient(90deg, rgba(240,235,225,0.04) 0 1px, transparent 1px 40px),
+      #211e19;
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .map-plate::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px;
+    background: rgba(160, 92, 59, 0.5);
+    transform: rotate(-12deg);
+  }
+
+  .map-plate .pin {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .map-plate .lantern {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #c9a84c;
+    box-shadow: 0 0 0 6px rgba(201, 168, 76, 0.18), 0 0 0 14px rgba(201, 168, 76, 0.08);
+    margin: 0 auto 16px;
+  }
+
+  .map-plate .pin-label {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c9a84c;
+  }
+
+  @media (max-width: 640px) {
+    .map-plate { height: 220px; }
+  }
+
+  /* Two column for compact info */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  @media (max-width: 640px) {
+    .two-col { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* Footer */
+  footer.site {
+    margin-top: 96px;
+    padding: 48px 0 64px;
+    border-top: 1px solid rgba(201, 168, 76, 0.4);
+    text-align: center;
+  }
+
+  footer .mark {
+    font-family: Georgia, serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    margin-bottom: 24px;
+  }
+
+  footer .meta {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a05c3b;
+    line-height: 2.2;
+  }
+
+  footer .meta a {
+    color: #a05c3b;
+    text-decoration: none;
+  }
+
+  footer nav.foot {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  footer nav.foot a {
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f0ebe1;
+    text-decoration: none;
+  }
+
+  footer .copy {
+    margin-top: 36px;
+    font-size: 0.875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(240, 235, 225, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="site">
+    <div class="brand">Maison Cendrée</div>
+    <div class="brand-sub">Asheville · Est. in a 19th-Century Mill</div>
+    <nav class="primary">
+      <a href="../philosophy/index.html">Philosophy</a>
+      <a href="../menu/index.html">Menu</a>
+      <a href="../cellar/index.html">Cellar</a>
+      <a href="../reservations/index.html">Reservations</a>
+      <a href="#" class="active">Find Us</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Arrival &amp; Address</div>
+    <h1 class="display">Find Us</h1>
+  </section>
+
+  <section>
+    <div class="addr center large">
+      412 Riverside Mill Road<br>
+      Asheville, North Carolina 28801
+    </div>
+
+    <div class="map-plate" role="img" aria-label="Map indicating the mill site off Riverside Road">
+      <div class="pin">
+        <div class="lantern"></div>
+        <div class="pin-label">The Cast-Iron Lantern</div>
+      </div>
+    </div>
+
+    <p class="body">
+      The mill sits at a quiet bend of the French Broad, a low stone building that gives no announcement of itself.
+      Guests arriving for the first time often pass us once before circling back. We expect this, and we are glad
+      for it — the approach is part of the evening.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <section>
+    <h2 class="section">From Downtown</h2>
+    <p class="body">
+      Twelve minutes by car from Pack Square. Head north on Merrimon Avenue, then west across the river at the
+      Pearson Drive bridge. Turn left onto Riverside Road and continue past the old freight depot. The drive winds
+      along the water for roughly half a mile before the trees close in.
+    </p>
+
+    <div class="addr">
+      Route — Pack Square → Merrimon Ave N → Pearson Dr W → Riverside Rd S<br>
+      Approx. 12 Minutes · 3.4 Miles
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section>
+    <h2 class="section">The Entrance</h2>
+    <p class="body">
+      Our drive is unmarked. Look for a single cast-iron lantern set on a low fieldstone post on the river side
+      of Riverside Road, lit from sundown each evening of service. The gravel lane beyond bears no signage; follow
+      it slowly through the trees for roughly two hundred yards to the gatehouse, where our valet will meet you.
+    </p>
+
+    <div class="pullquote">
+      If you find yourself uncertain, do not turn back — the lantern is closer than you think.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section>
+    <h2 class="section">Valet &amp; Parking</h2>
+    <p class="body">
+      Valet service is offered each evening of dinner service at the gatehouse, beginning one hour before seating.
+      The fee is fifteen dollars per vehicle and is included with the cover charge on Fridays. Self-parking is not
+      available on the mill grounds; the lane is single-track and reserved for the valet's use.
+    </p>
+
+    <div class="two-col">
+      <div class="detail-block">
+        <div class="label">Valet Fee</div>
+        <div class="value">$15 per vehicle</div>
+      </div>
+      <div class="detail-block">
+        <div class="label">Friday Service</div>
+        <div class="value gold">Included</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section>
+    <h2 class="section">The Host Desk</h2>
+
+    <div class="two-col">
+      <div class="detail-block">
+        <div class="label">Telephone</div>
+        <div class="value gold">(828) 554-0917</div>
+      </div>
+      <div class="detail-block">
+        <div class="label">Hours</div>
+        <div class="addr">
+          Tuesday–Sunday<br>
+          2:00 PM – 10:00 PM
+        </div>
+      </div>
+    </div>
+
+    <p class="body">
+      The host desk answers calls during the hours above and returns voicemails the following afternoon. For matters
+      concerning reservations already in hand — late arrivals, dietary updates, or directions on the evening of —
+      please call rather than email; we will be at the desk.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <section>
+    <h2 class="section">A Note on Weather</h2>
+    <p class="body">
+      The mill stands at the river's edge, and the lane through the woods can darken quickly in fog or rain. We keep
+      an umbrella stand at the gatehouse and a small fire in the foyer through October. Should weather make travel
+      genuinely unsafe, telephone the host desk and we will gladly hold your evening for another date.
+    </p>
+
+    <div class="addr">
+      The Mill at Riverside · Established 1887 · Restored 2019
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="mark">Maison Cendrée</div>
+    <div class="meta">
+      412 Riverside Mill Road · Asheville, NC 28801<br>
+      (828) 554-0917 · Dinner Wednesday Through Sunday
+    </div>
+    <nav class="foot">
+      <a href="../philosophy/index.html">Philosophy</a>
+      <a href="../menu/index.html">Menu</a>
+      <a href="../cellar/index.html">Cellar</a>
+      <a href="../reservations/index.html">Reservations</a>
+      <a href="#">Find Us</a>
+    </nav>
+    <div class="copy">© 2024 Maison Cendrée · All Rights Reserved</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

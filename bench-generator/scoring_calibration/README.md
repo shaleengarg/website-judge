@@ -6,8 +6,6 @@ we run the grader against a fixed set of degraded outputs and check tier separat
 
 ## Tier targets
 
-(Copied from `small_checks/docs/GRADING.md` §3.)
-
 | Tier | Target band | Description |
 | --- | --- | --- |
 | `near_perfect` | ≥ 0.85 | Verbatim copy of reference HTML. Lower bound for "what a perfect agent produces." |

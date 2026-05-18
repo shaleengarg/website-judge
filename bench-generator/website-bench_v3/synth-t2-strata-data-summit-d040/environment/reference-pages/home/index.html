@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strata Data Summit 2025 — Home</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #0D1B2A;
+    color: #F0EDE8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  h1, h2, h3 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    margin: 0 0 16px;
+  }
+  a { color: #F0EDE8; text-decoration: none; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Nav */
+  .nav {
+    background: #0D1B2A;
+    border-bottom: 1px solid #132236;
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #F0EDE8;
+  }
+  .logo span { color: #2EC4B6; }
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-links a {
+    font-size: 15px;
+    padding-bottom: 4px;
+  }
+  .nav-links a.active {
+    border-bottom: 2px solid #2EC4B6;
+  }
+
+  /* Section padding */
+  section {
+    padding: 40px 0;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 80px 0 64px;
+    border-bottom: 1px solid #132236;
+  }
+  .hero h1 {
+    font-size: 56px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .hero .meta {
+    font-size: 18px;
+    color: #F0EDE8;
+    margin-bottom: 12px;
+  }
+  .hero .meta strong { color: #F4A261; }
+  .hero .tagline {
+    font-size: 16px;
+    max-width: 640px;
+    margin-bottom: 32px;
+    opacity: 0.9;
+  }
+  .btn {
+    display: inline-block;
+    background: #2EC4B6;
+    color: #0D1B2A;
+    font-weight: 700;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Reasons */
+  .reasons h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .section-kicker {
+    color: #2EC4B6;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .reasons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .card {
+    border: 1px solid #2EC4B6;
+    border-radius: 6px;
+    padding: 20px;
+    background: #132236;
+  }
+  .card h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: #F0EDE8;
+  }
+  .card .num {
+    color: #F4A261;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .card p {
+    margin: 0;
+    font-size: 15px;
+  }
+
+  /* Sponsors */
+  .sponsors h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .sponsors-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .sponsor-card {
+    border: 1px solid #2EC4B6;
+    border-radius: 6px;
+    padding: 20px;
+    background: #132236;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .sponsor-logo {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #2EC4B6, #F4A261);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    color: #0D1B2A;
+    font-size: 22px;
+  }
+  .sponsor-card h3 {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .sponsor-card p { margin: 0; font-size: 14px; opacity: 0.9; }
+
+  /* Footer */
+  footer {
+    background: #0D1B2A;
+    border-top: 1px solid #132236;
+    margin-top: 40px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .footer-left h4 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0 0 6px;
+  }
+  .footer-left p { margin: 0; font-size: 14px; opacity: 0.85; }
+  .footer-right ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+  }
+  .footer-right h4 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 0 8px;
+    color: #2EC4B6;
+  }
+
+  @media (max-width: 900px) {
+    .reasons-grid { grid-template-columns: 1fr; }
+    .sponsors-grid { grid-template-columns: 1fr; }
+    .hero { padding: 56px 0 48px; }
+    .hero h1 { font-size: 44px; }
+  }
+  @media (max-width: 520px) {
+    .hero h1 { font-size: 36px; }
+    .nav-links { gap: 14px; }
+    .nav-links a { font-size: 14px; }
+    .sponsor-card { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">Strata<span>.</span>Data Summit</div>
+    <ul class="nav-links">
+      <li><a href="#" class="active">home</a></li>
+      <li><a href="../schedule/index.html">schedule</a></li>
+      <li><a href="../speakers/index.html">speakers</a></li>
+      <li><a href="../venue/index.html">venue</a></li>
+      <li><a href="../register/index.html">register</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="section-kicker">Two-Day Annual Conference</div>
+      <h1>Strata Data Summit 2025</h1>
+      <p class="meta"><strong>October 9–10, 2025</strong> &nbsp;·&nbsp; Pittsburgh Convention Center</p>
+      <p class="tagline">Where data engineers and analytics leaders gather to share what's working, what's next, and what's worth building. Two days of deep, practical conversation in downtown Pittsburgh.</p>
+      <a href="../register/index.html" class="btn">Register Now</a>
+    </div>
+  </section>
+
+  <section class="reasons">
+    <div class="container">
+      <div class="section-kicker">Why Attend</div>
+      <h2>Three reasons to be in Pittsburgh this October</h2>
+      <div class="reasons-grid">
+        <div class="card">
+          <div class="num">01</div>
+          <h3>Industry Keynotes</h3>
+          <p>Hear from CDOs, principal engineers, and platform leads shaping the modern data stack. Sessions focus on real architectural decisions and lessons learned at scale.</p>
+        </div>
+        <div class="card">
+          <div class="num">02</div>
+          <h3>Hands-On Workshops</h3>
+          <p>Small-group sessions led by practitioners cover streaming pipelines, lakehouse design, and analytics engineering workflows. Bring a laptop and leave with working patterns.</p>
+        </div>
+        <div class="card">
+          <div class="num">03</div>
+          <h3>Networking Lounge</h3>
+          <p>An open lounge dedicated to unstructured conversation between talks, with curated meetups for teams sized from startup to enterprise. Coffee, snacks, and matchmaking included.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sponsors">
+    <div class="container">
+      <div class="section-kicker">Featured Sponsors</div>
+      <h2>Backed by leaders in the data ecosystem</h2>
+      <div class="sponsors-grid">
+        <div class="sponsor-card">
+          <div class="sponsor-logo">NX</div>
+          <div>
+            <h3>NexusLake</h3>
+            <p>An open-source lakehouse platform powering analytics for Fortune 500 data teams.</p>
+          </div>
+        </div>
+        <div class="sponsor-card">
+          <div class="sponsor-logo">QF</div>
+          <div>
+            <h3>QueryForge</h3>
+            <p>Real-time query infrastructure built for high-throughput operational analytics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <h4>Strata Data Summit</h4>
+      <p>Where data engineers and analytics leaders meet.</p>
+      <p>Pittsburgh · October 9–10, 2025</p>
+    </div>
+    <div class="footer-right">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="../schedule/index.html">Schedule</a></li>
+        <li><a href="../speakers/index.html">Speakers</a></li>
+        <li><a href="../venue/index.html">Venue</a></li>
+        <li><a href="../register/index.html">Register</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

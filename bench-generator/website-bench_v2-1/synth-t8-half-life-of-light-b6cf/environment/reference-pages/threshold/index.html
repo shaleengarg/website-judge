@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Threshold — Half-Life of Light</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F5F0E8;
+    color: #1A1612;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .mono { font-family: "Courier New", monospace; }
+
+  /* HEADER BAND */
+  .header {
+    background: #1A1612;
+    color: #F5F0E8;
+    min-height: 220px;
+    padding: 36px 48px 40px;
+    position: relative;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: #4A6741;
+    border-bottom: 1px solid #4A6741;
+    padding-bottom: 14px;
+    margin-bottom: 36px;
+  }
+  .nav .brand { color: #F5F0E8; letter-spacing: 0.15em; }
+  .nav ul { list-style: none; display: flex; gap: 28px; }
+  .nav a { color: #F5F0E8; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; }
+  .nav a.current { color: #C1440E; }
+  .nav a.current::before { content: "▸ "; color: #C1440E; }
+
+  .chapter-tag {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    letter-spacing: 0.2em;
+    margin-bottom: 10px;
+  }
+  .title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 1.05;
+    color: #ffffff;
+    margin-bottom: 14px;
+  }
+  .deck {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 18px;
+    color: #C1440E;
+    max-width: 720px;
+  }
+  .ascii-rule {
+    position: absolute;
+    bottom: 12px;
+    left: 48px;
+    right: 48px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  /* BODY */
+  .body {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    padding: 24px 0 18px;
+    border-bottom: 1px solid #1A1612;
+    margin-bottom: 48px;
+  }
+
+  .grid-essay {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 56px;
+  }
+
+  .essay h2 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 18px;
+    line-height: 1.2;
+  }
+  .essay p {
+    margin-bottom: 18px;
+    max-width: 620px;
+  }
+  .essay .dropcap::first-letter {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 64px;
+    float: left;
+    line-height: 0.9;
+    padding: 6px 10px 0 0;
+    color: #C1440E;
+  }
+
+  .marginalia {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  /* SIDEBAR */
+  .sidebar h3 {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #1A1612;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
+  .chapter-list { list-style: none; margin-bottom: 40px; }
+  .chapter-list li {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    padding: 14px 0;
+    border-bottom: 1px dotted #1A1612;
+    align-items: baseline;
+  }
+  .chapter-list .num {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #4A6741;
+  }
+  .chapter-list .name {
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    color: #1A1612;
+    letter-spacing: 0.05em;
+  }
+  .chapter-list .name small {
+    display: block;
+    font-size: 10px;
+    color: #4A6741;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .chapter-list li.active .name { color: #C1440E; }
+
+  .method-note {
+    border: 1px solid #4A6741;
+    background: #F5F0E8;
+    padding: 20px 22px;
+    position: relative;
+  }
+  .method-note::before {
+    content: "// METHODOLOGY NOTE";
+    position: absolute;
+    top: -8px;
+    left: 14px;
+    background: #F5F0E8;
+    padding: 0 8px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    letter-spacing: 0.15em;
+  }
+  .method-note p {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.65;
+    color: #1A1612;
+  }
+  .method-note p + p { margin-top: 12px; }
+
+  /* SECTION RULE */
+  .rule {
+    border: none;
+    border-top: 1px solid #C1440E;
+    margin: 64px 0 32px;
+    height: 0;
+  }
+
+  /* SECOND SECTION */
+  .second {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 64px;
+  }
+  .stat {
+    border-top: 2px solid #1A1612;
+    padding-top: 14px;
+  }
+  .stat .label {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #4A6741;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+  .stat .figure {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 38px;
+    color: #C1440E;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .stat .desc {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 2px solid #1A1612;
+    margin-top: 24px;
+    padding: 24px 48px 32px;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: #1A1612;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    max-width: 1196px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  footer .col { flex: 1; }
+  footer .col strong { color: #4A6741; display: block; margin-bottom: 6px; letter-spacing: 0.15em; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <nav class="nav">
+    <span class="brand">HALF-LIFE OF LIGHT &nbsp;·&nbsp; AN ESSAY IN FIVE EXPOSURES</span>
+    <ul>
+      <li><a href="#" class="current">threshold</a></li>
+      <li><a href="../exposure/index.html">exposure</a></li>
+      <li><a href="../dark-room/index.html">dark-room</a></li>
+      <li><a href="../grain/index.html">grain</a></li>
+      <li><a href="../afterimage/index.html">afterimage</a></li>
+    </ul>
+  </nav>
+
+  <div class="chapter-tag">CH. 01 &nbsp;//&nbsp; THRESHOLD &nbsp;//&nbsp; 2024</div>
+  <h1 class="title">Half-Life of Light</h1>
+  <p class="deck">An essay on analog photography as a slow technology of memory — how silver, time, and loss conspire to make an image.</p>
+
+  <div class="ascii-rule">+ — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — +</div>
+</header>
+
+<main class="body">
+
+  <div class="meta-row">
+    <span>FILE: threshold.html</span>
+    <span>READING TIME ~ 6 MIN</span>
+    <span>FORMAT: ESSAY + DIAGRAM</span>
+    <span>REV. 2024.03</span>
+  </div>
+
+  <section class="grid-essay">
+    <article class="essay">
+      <div class="marginalia">§ 1.0 &nbsp; THE THRESHOLD OF THE LATENT</div>
+      <h2>Before the image, the willingness of the image to appear.</h2>
+      <p class="dropcap">A photograph begins not with the shutter but with a threshold — the precise quantity of light required to disturb a single grain of silver halide into willingness. Below that threshold there is nothing. Above it, the world begins to record itself, particle by particle, into a chemistry that does not yet know what it has become.</p>
+      <p>This essay traces five such thresholds. It is concerned with what analog photography can teach us about memory: not the digital fiction of perfect recall, but the slower, lossier work of substances that change as they are touched by time. Film fades. Prints yellow. The image is never finished arriving; it is also, from the moment of its making, always beginning to leave.</p>
+      <p>What follows is a sequence of chapters that move from the chemistry of exposure, through the rituals of the darkroom, into the grain itself, and finally toward the afterimage — the photograph we keep without keeping, the one that develops inside us long after the negative is lost.</p>
+      <p>Read in order, or do not. Each chapter is a separate exposure on the same length of film.</p>
+    </article>
+
+    <aside class="sidebar">
+      <h3>// CHAPTERS &nbsp;01–05</h3>
+      <ul class="chapter-list">
+        <li class="active">
+          <span class="num">01</span>
+          <span class="name">threshold<small>The minimum disturbance</small></span>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <span class="name">exposure<small>Silver halide / latency</small></span>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <span class="name">dark-room<small>Ritual in the absence of light</small></span>
+        </li>
+        <li>
+          <span class="num">04</span>
+          <span class="name">grain<small>The body of the photograph</small></span>
+        </li>
+        <li>
+          <span class="num">05</span>
+          <span class="name">afterimage<small>What memory keeps</small></span>
+        </li>
+      </ul>
+
+      <div class="method-note">
+        <p>This essay was assembled from darkroom notes, archive visits, and conversations with three working analog photographers between Sept 2023 and Feb 2024.</p>
+        <p>All chemistry references cross-checked against Kodak Tech Pubs J-1 / J-78. No images are reproduced; the page is the document.</p>
+      </div>
+    </aside>
+  </section>
+
+  <hr class="rule">
+
+  <section class="second">
+    <div class="stat">
+      <div class="label">EST. YEAR OF FIRST FIXED IMAGE</div>
+      <div class="figure">1826</div>
+      <div class="desc">Niépce's <em>View from the Window at Le Gras</em> — an exposure lasting roughly eight hours on a pewter plate.</div>
+    </div>
+    <div class="stat">
+      <div class="label">SILVER GRAINS PER 35MM FRAME</div>
+      <div class="figure">≈ 10⁹</div>
+      <div class="desc">A billion potential decisions per frame; each one a threshold crossed or not crossed by a single photon.</div>
+    </div>
+    <div class="stat">
+      <div class="label">CHAPTERS IN THIS ESSAY</div>
+      <div class="figure">05</div>
+      <div class="desc">Five exposures on a continuous strip: threshold, exposure, dark-room, grain, afterimage.</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="col">
+    <strong>CITATION</strong>
+    Half-Life of Light, Ch. 01 "Threshold." Essay series, 2024.
+  </div>
+  <div class="col">
+    <strong>SOURCES</strong>
+    Kodak J-1 (1979); Newhall, <em>History of Photography</em> (1982); George Eastman Museum archives.
+  </div>
+  <div class="col">
+    <strong>SET IN</strong>
+    Georgia 700 / system-ui 400 / Courier New 12 &nbsp;·&nbsp; F5F0E8 · 1A1612 · C1440E · 4A6741
+  </div>
+  <div class="col" style="text-align:right;">
+    <strong>PAGE</strong>
+    01 / 05 &nbsp;·&nbsp; threshold
+  </div>
+</footer>
+
+</body>
+</html>

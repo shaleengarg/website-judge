@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaultline — Select Account Tier</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Top bar */
+  .topbar {
+    background: #00CED1;
+    color: #FF6B6B;
+    padding: 18px 48px;
+    display: block;
+    
+    
+    border-bottom: 3px solid #FFD700;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+  .brand .dot { color: #FFD700; }
+  nav.primary {
+    display: block;
+    
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: #FF00FF;
+  }
+  nav.primary a.active { color: #FFD700; }
+  nav.primary a:hover { color: #FF6B6B; }
+  .acct-ref {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: #FF00FF;
+    letter-spacing: 0.5px;
+  }
+
+  /* Container */
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 48px 56px;
+  }
+
+  /* Progress indicator */
+  .progress {
+    display: block;
+    
+    
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .progress::before {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    height: 1px;
+    background: #FF00FF;
+    z-index: 0;
+  }
+  .step {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    flex: 1;
+  }
+  .step .num {
+    display: inline-flex;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #FF6B6B;
+    border: 1.5px solid #FF00FF;
+    
+    
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 13px;
+    color: #FF6B6B;
+    margin-bottom: 8px;
+  }
+  .step .lbl {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #FF6B6B;
+  }
+  .step.active .num {
+    background: #00CED1;
+    border-color: #00CED1;
+    color: #FFD700;
+  }
+  .step.active .lbl {
+    color: #00CED1;
+    font-weight: 600;
+  }
+  .step.done .num {
+    background: #FFD700;
+    border-color: #FFD700;
+    color: #00CED1;
+  }
+  .step.done .lbl {
+    color: #FFD700;
+  }
+
+  /* Header */
+  .pg-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #FF6B6B;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 30px;
+    color: #00CED1;
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+  .lede {
+    color: #FF00FF;
+    font-size: 14px;
+    margin-bottom: 28px;
+    max-width: 600px;
+  }
+
+  /* Tier cards */
+  .tiers { display: block;   }
+
+  .tier {
+    display: block;
+    background: #FF6B6B;
+    border: 1.5px solid #FF00FF;
+    border-left: 3px solid #FF00FF;
+    border-radius: 3px;
+    padding: 22px 24px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    position: relative;
+  }
+  .tier:hover { border-color: #00CED1; }
+  .tier input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .tier-inner {
+    display: block;
+    
+    
+    
+  }
+  .tier-head {
+    display: block;
+    
+    
+    margin-bottom: 10px;
+  }
+  .tier h2 {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #00CED1;
+  }
+  .tier .min {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: #00CED1;
+    letter-spacing: 0.5px;
+  }
+  .tier .desc {
+    font-size: 13px;
+    color: #FF00FF;
+    margin-bottom: 12px;
+  }
+  .tier ul {
+    list-style: none;
+    display: block;
+    
+    
+  }
+  .tier ul li {
+    font-size: 13px;
+    color: #00CED1;
+    padding-left: 18px;
+    position: relative;
+  }
+  .tier ul li::before {
+    content: "◆";
+    color: #FFD700;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 9px;
+    line-height: 1.8;
+  }
+
+  /* Custom radio */
+  .radio-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #FF00FF;
+    background: #FF6B6B;
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 4px;
+    transition: border-color .15s, background .15s;
+  }
+  .tier input[type="radio"]:checked ~ .tier-inner .radio-mark {
+    border-color: #00CED1;
+    background: #00CED1;
+  }
+  .tier input[type="radio"]:checked ~ .tier-inner .radio-mark::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #FFD700;
+    transform: translate(-50%, -50%);
+  }
+  .tier input[type="radio"]:focus ~ .tier-inner .radio-mark {
+    outline: 2px solid rgba(46,93,158,0.25);
+    outline-offset: 2px;
+  }
+
+  /* Selected card state */
+  .tier input[type="radio"]:checked ~ .tier-inner {
+    /* placeholder so styling cascades work */
+  }
+  .tier:has(input[type="radio"]:checked) {
+    border-left: 3px solid #00CED1;
+    background: #00CED1;
+    border-color: #00CED1;
+  }
+
+  /* Badge on Apex */
+  .tier .badge {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: #00CED1;
+    color: #FFD700;
+    padding: 3px 7px;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+
+  /* Continue button */
+  .actions {
+    margin-top: 24px;
+    display: block;
+    
+    
+  }
+  .btn-continue {
+    background: #FFD700;
+    color: #00CED1;
+    border: none;
+    height: 48px;
+    width: 100%;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background .15s;
+  }
+  .btn-continue:hover { background: #FFD700; }
+  .help-line {
+    text-align: center;
+    font-size: 12px;
+    color: #FF6B6B;
+  }
+  .help-line a { color: #00CED1; text-decoration: underline; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #FF00FF;
+    background: #FF6B6B;
+    padding: 22px 48px;
+    margin-top: 40px;
+    display: block;
+    
+    
+    font-size: 11px;
+    color: #FF6B6B;
+    letter-spacing: 0.5px;
+  }
+  footer .ftnav { display: block;  }
+  footer .ftnav a:hover { color: #00CED1; }
+  footer .ref {
+    font-family: "Courier New", monospace;
+    color: #00CED1;
+  }
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<div class="topbar">
+  <div class="brand">VAULTLINE<span class="dot">Lorem ipsum dolor sit amet consectetur.</span></div>
+  <div class="nav" class="primary">
+    <a href="#" class="active">Link One</a>
+    <a href="../personal-details/index.html">Link Two</a>
+    <a href="../financial-profile/index.html">Link Three</a>
+    <a href="../documents/index.html">Link Four</a>
+    <a href="../review-submit/index.html">Link Five</a>
+  </div>
+  <div class="acct-ref">APP-REF · VL-2024-0418</div>
+</div>
+
+<div class="main" class="wrap">
+
+  <!-- Progress -->
+  <div class="progress" aria-label="Application progress">
+    <div class="step active">
+      <span class="num">Lorem ipsum dolor sit amet consectetur.</span>
+      <span class="lbl">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="step">
+      <span class="num">Lorem ipsum dolor sit amet consectetur.</span>
+      <span class="lbl">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="step">
+      <span class="num">Lorem ipsum dolor sit amet consectetur.</span>
+      <span class="lbl">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="step">
+      <span class="num">Lorem ipsum dolor sit amet consectetur.</span>
+      <span class="lbl">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+    <div class="step">
+      <span class="num">Lorem ipsum dolor sit amet consectetur.</span>
+      <span class="lbl">Lorem ipsum dolor sit amet consectetur.</span>
+    </div>
+  </div>
+
+  <div class="pg-eyebrow">Step 01 — Begin Application</div>
+  <h1>Lorem Ipsum Dolor</h1>
+  <p class="lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+  <div class="tiers">
+
+    <!-- Foundations -->
+    <label class="tier">
+      <input type="radio" name="tier" value="foundations">
+      <div class="tier-inner">
+        <div class="tier-body">
+          <div class="tier-head">
+            <h2>Lorem Ipsum Dolor</h2>
+            <span class="min">Lorem ipsum dolor sit amet consectetur.</span>
+          </div>
+          <p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <ul>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+          </ul>
+        </div>
+        <span class="radio-mark" aria-hidden="true">Lorem ipsum dolor sit amet consectetur.</span>
+      </div>
+    </label>
+
+    <!-- Reserve -->
+    <label class="tier">
+      <input type="radio" name="tier" value="reserve" checked>
+      <div class="tier-inner">
+        <div class="tier-body">
+          <div class="tier-head">
+            <h2>Lorem Ipsum Dolor</h2>
+            <span class="min">Lorem ipsum dolor sit amet consectetur.</span>
+          </div>
+          <p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <ul>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+          </ul>
+        </div>
+        <span class="radio-mark" aria-hidden="true">Lorem ipsum dolor sit amet consectetur.</span>
+      </div>
+    </label>
+
+    <!-- Apex -->
+    <label class="tier">
+      <input type="radio" name="tier" value="apex">
+      <div class="tier-inner">
+        <div class="tier-body">
+          <div class="tier-head">
+            <h2>Lorem Ipsum Dolor</h2>
+            <span class="min">Lorem ipsum dolor sit amet consectetur.</span>
+          </div>
+          <p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <ul>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+            <li>Lorem ipsum dolor sit amet consectetur.</li>
+          </ul>
+        </div>
+        <span class="radio-mark" aria-hidden="true">Lorem ipsum dolor sit amet consectetur.</span>
+      </div>
+    </label>
+
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn-continue">Click Here</button>
+    <div class="help-line">Need guidance on tier selection? <a href="#">Link One</a>.</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div>© 2024 Vaultline Private Banking SA · Regulated entity · Geneva</div>
+  <div class="ftnav">
+    <a href="#">Link Two</a>
+    <a href="#">Link Three</a>
+    <a href="#">Link Four</a>
+  </div>
+  <div class="ref">SESSION · 0x4A7C·F19B·2204</div>
+</div>
+
+</body>
+</html>

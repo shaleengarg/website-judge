@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — Vaultline</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #F4F6FA; color: #1C2333; font-family: Georgia, 'Times New Roman', serif; font-size: 14px; line-height: 1.6; }
+  h1, h2, h3, h4 { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 700; color: #1C2333; }
+  a { color: #2563EB; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ===== Header / Nav ===== */
+  .topbar {
+    background: #1C2333;
+    color: #fff;
+    border-bottom: 3px solid #2563EB;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-mark {
+    width: 26px; height: 26px;
+    background: linear-gradient(135deg, #2563EB, #E84545);
+    border-radius: 4px;
+    display: inline-block;
+  }
+  nav.primary ul {
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  nav.primary a {
+    color: #E8ECF5;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+  nav.primary a:hover { background: #2563EB; color: #fff; text-decoration: none; }
+  nav.primary a.active { background: #2563EB; color: #fff; }
+
+  /* ===== Page Header ===== */
+  .pageheader {
+    background: #fff;
+    border-bottom: 1px solid #E8ECF5;
+  }
+  .pageheader-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 36px 24px 28px;
+  }
+  .crumbs {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #64748B;
+    margin-bottom: 10px;
+  }
+  .crumbs span { color: #1C2333; }
+  .pageheader h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .pageheader p {
+    color: #475569;
+    max-width: 760px;
+  }
+
+  /* ===== Layout ===== */
+  .layout {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ===== Sticky Side Nav ===== */
+  aside.faq-nav {
+    position: sticky;
+    top: 84px;
+    background: #fff;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 16px 0;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+  aside.faq-nav h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #64748B;
+    padding: 0 18px 10px;
+    border-bottom: 1px solid #E8ECF5;
+    margin-bottom: 6px;
+  }
+  aside.faq-nav ul { list-style: none; }
+  aside.faq-nav li {
+    border-bottom: 1px solid #F1F5F9;
+  }
+  aside.faq-nav li:last-child { border-bottom: none; }
+  aside.faq-nav a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 18px;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #1C2333;
+  }
+  aside.faq-nav a:hover { background: #E8ECF5; text-decoration: none; }
+  aside.faq-nav a .count {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #64748B;
+    font-weight: 400;
+  }
+
+  /* ===== Content ===== */
+  main.faq-content { min-width: 0; }
+  section.faq-section {
+    background: #fff;
+    border: 1px solid #E8ECF5;
+    border-radius: 6px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+  }
+  section.faq-section h2 {
+    font-size: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2563EB;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  section.faq-section h2 .sec-num {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #fff;
+    background: #1C2333;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 400;
+  }
+
+  .qa { padding: 14px 0; border-bottom: 1px dashed #E8ECF5; }
+  .qa:last-child { border-bottom: none; }
+  .qa .q {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #1C2333;
+    margin-bottom: 6px;
+    display: flex;
+    gap: 8px;
+  }
+  .qa .q::before {
+    content: "Q.";
+    color: #2563EB;
+    font-family: 'Courier New', monospace;
+    flex-shrink: 0;
+  }
+  .qa .a {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #1C2333;
+    padding-left: 22px;
+  }
+
+  /* ===== Badges ===== */
+  .badge {
+    display: inline-block;
+    border-radius: 99px;
+    padding: 2px 10px;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
+    vertical-align: middle;
+  }
+  .badge-rec { background: #2563EB; }
+  .badge-dep { background: #E84545; }
+  .badge-leg { background: #64748B; }
+
+  /* ===== Tables ===== */
+  .table-wrap {
+    margin: 16px 0 6px;
+    border: 1px solid #CBD5E1;
+    border-radius: 4px;
+    overflow: auto;
+    max-height: 360px;
+  }
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+  table.compare thead th {
+    position: sticky;
+    top: 0;
+    background: #1C2333;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 2px solid #2563EB;
+    z-index: 2;
+  }
+  table.compare thead th.num { text-align: right; }
+  table.compare tbody tr:nth-child(even) { background: #E8ECF5; }
+  table.compare tbody tr:hover { background: #D0DAEF; }
+  table.compare td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #E8ECF5;
+    vertical-align: middle;
+  }
+  table.compare td.text {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    text-align: left;
+  }
+  table.compare td.num {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    text-align: right;
+  }
+  .tbl-caption {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #1C2333;
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tbl-note {
+    font-family: Georgia, serif;
+    font-size: 12px;
+    color: #64748B;
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  /* Callout */
+  .callout {
+    background: #DBEAFE;
+    border-left: 4px solid #2563EB;
+    padding: 12px 16px;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    color: #1C2333;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout.alert {
+    background: #FEE2E2;
+    border-left-color: #E84545;
+  }
+
+  code, .mono {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    background: #E8ECF5;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* ===== Footer ===== */
+  footer.site {
+    background: #1C2333;
+    color: #CBD5E1;
+    padding: 40px 24px 24px;
+    margin-top: 40px;
+  }
+  footer .footer-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  footer h4 {
+    color: #fff;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+  footer ul { list-style: none; }
+  footer li { margin-bottom: 6px; }
+  footer a {
+    color: #CBD5E1;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+  }
+  footer a:hover { color: #fff; }
+  footer .brand-block p {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    color: #94A3B8;
+    margin-top: 10px;
+    max-width: 360px;
+  }
+  footer .legal {
+    max-width: 1320px;
+    margin: 32px auto 0;
+    padding-top: 18px;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #64748B;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 980px) {
+    .layout {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    aside.faq-nav {
+      position: static;
+      max-height: none;
+    }
+    aside.faq-nav ul {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    aside.faq-nav li { border-bottom: 1px solid #F1F5F9; }
+    footer .footer-inner {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .topbar-inner { padding: 12px 16px; }
+    nav.primary ul { gap: 0; }
+    nav.primary a { padding: 6px 8px; font-size: 12px; }
+    .pageheader-inner { padding: 24px 16px 20px; }
+    .pageheader h1 { font-size: 24px; }
+    .layout { padding: 20px 16px 40px; }
+    section.faq-section { padding: 18px 16px; }
+    aside.faq-nav ul { grid-template-columns: 1fr; }
+    footer .footer-inner { grid-template-columns: 1fr; }
+    .qa .a { padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="brand-mark"></span> VAULTLINE</div>
+    <nav class="primary">
+      <ul>
+        <li><a href="../plans/index.html">Plans</a></li>
+        <li><a href="../features/index.html">Features</a></li>
+        <li><a href="../benchmark-data/index.html">Benchmark Data</a></li>
+        <li><a href="../custom-quote/index.html">Custom Quote</a></li>
+        <li><a href="#" class="active">FAQ</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="pageheader">
+  <div class="pageheader-inner">
+    <div class="crumbs">vaultline / <span>faq</span> / index</div>
+    <h1>Frequently Asked Questions</h1>
+    <p>Twenty-four answers covering billing, residency, compliance, migration, and platform operations. Last reviewed <span class="mono">2025-03-14</span> by the Vaultline Solutions Engineering team.</p>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="faq-nav">
+    <h3>Categories</h3>
+    <ul>
+      <li><a href="#billing">Billing <span class="count">04</span></a></li>
+      <li><a href="#residency">Data Residency <span class="count">03</span></a></li>
+      <li><a href="#security">Security &amp; Compliance <span class="count">03</span></a></li>
+      <li><a href="#migration">Migration <span class="count">02</span></a></li>
+      <li><a href="#sla">SLA &amp; Uptime <span class="count">02</span></a></li>
+      <li><a href="#performance">Performance <span class="count">02</span></a></li>
+      <li><a href="#access">Access &amp; Identity <span class="count">02</span></a></li>
+      <li><a href="#api">API &amp; SDKs <span class="count">01</span></a></li>
+      <li><a href="#support">Support <span class="count">02</span></a></li>
+      <li><a href="#deprecation">Deprecation Policy <span class="count">01</span></a></li>
+      <li><a href="#sovereign">Sovereign Tier <span class="count">01</span></a></li>
+      <li><a href="#contracts">Contracts &amp; Trials <span class="count">01</span></a></li>
+    </ul>
+  </aside>
+
+  <main class="faq-content">
+
+    <!-- BILLING -->
+    <section class="faq-section" id="billing">
+      <h2><span class="sec-num">01</span> Billing</h2>
+
+      <div class="qa">
+        <div class="q">How does Vaultline calculate monthly storage charges?</div>
+        <div class="a">Storage is metered hourly and billed at the end of each calendar month. We sample the total provisioned bytes once per hour, average those samples across the billing period, and multiply by your plan's per-GB rate. Egress and API requests are billed separately and itemized on a single PDF invoice delivered to all designated billing contacts on the first business day of the month.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">What happens when I exceed my plan's included storage cap?</div>
+        <div class="a">All five plans accept overage rather than throttling writes. Each plan has a published overage rate (see table below), and overages are billed in 1 GB increments. If your overage exceeds 30% of the included cap for two consecutive months, your account manager will be notified to recommend a tier upgrade.</div>
+
+        <div class="tbl-caption">
+          <span>Overage rates per plan ($/GB)</span>
+          <span>
+            <span class="badge badge-rec">Recommended</span>
+            <span class="badge badge-leg">Legacy</span>
+          </span>
+        </div>
+        <div class="table-wrap">
+          <table class="compare">
+            <thead>
+              <tr>
+                <th>Tier</th>
+                <th class="num">Storage Overage</th>
+                <th class="num">Egress Overage</th>
+                <th class="num">API Overage</th>
+                <th class="num">Snapshot Overage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text">Starter</td>
+                <td class="num">0.0240</td>
+                <td class="num">0.0900</td>
+                <td class="num">0.0040</td>
+                <td class="num">0.0180</td>
+              </tr>
+              <tr>
+                <td class="text">Business</td>
+                <td class="num">0.0190</td>
+                <td class="num">0.0720</td>
+                <td class="num">0.0032</td>
+                <td class="num">0.0140</td>
+              </tr>
+              <tr>
+                <td class="text">Scale <span class="badge badge-rec">Rec</span></td>
+                <td class="num">0.0150</td>
+                <td class="num">0.0550</td>
+                <td class="num">0.0024</td>
+                <td class="num">0.0110</td>
+              </tr>
+              <tr>
+                <td class="text">Enterprise</td>
+                <td class="num">0.0110</td>
+                <td class="num">0.0380</td>
+                <td class="num">0.0018</td>
+                <td class="num">0.0080</td>
+              </tr>
+              <tr>
+                <td class="text">Sovereign</td>
+                <td class="num">0.0090</td>
+                <td class="num">0.0290</td>
+                <td class="num">0.0012</td>
+                <td class="num">0.0060</td>
+              </tr>
+              <tr>
+                <td class="text">Archive <span class="badge badge-leg">Legacy</span></td>
+                <td class="num">0.0280</td>
+                <td class="num">0.1100</td>
+                <td class="num">0.0050</td>
+                <td class="num">0.0220</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tbl-note">Rates reflect on-demand pricing in USD. Reserved-capacity discounts of 18–34% apply to 12- and 36-month commits.</p>
+      </div>
+
+      <div class="qa">
+        <div class="q">Do you accept purchase orders and net-60 terms?</div>
+        <div class="a">Yes, for Enterprise and Sovereign tiers. We accept POs from organizations with a verifiable Dun &amp; Bradstreet record, and standard payment terms are net-30. Net-60 is available on contracts of $250,000 USD or greater per year. ACH, SWIFT, and SEPA wires are all supported; credit-card billing is capped at $25,000 per month per account.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Can I get itemized billing per cost-center or project?</div>
+        <div class="a">Yes. Apply tags of the form <code>cost-center=cc-1234</code> or <code>project=alpha</code> to any bucket or namespace, and Vaultline will produce a per-tag subtotal on the invoice as well as a downloadable CSV breakdown via the billing console. Up to 64 distinct tag values are supported per account on Business and above.</div>
+      </div>
+    </section>
+
+    <!-- DATA RESIDENCY -->
+    <section class="faq-section" id="residency">
+      <h2><span class="sec-num">02</span> Data Residency</h2>
+
+      <div class="qa">
+        <div class="q">Which regions can I pin my data to?</div>
+        <div class="a">Vaultline operates eight named regions: US-East (Ashburn), US-West (Hillsboro), EU-West (Dublin), EU-Central (Frankfurt), AP-South (Mumbai), AP-Northeast (Tokyo), SA-East (São Paulo), and AU-Sydney. Each bucket is pinned to exactly one home region at creation time, and the home region cannot be changed in-place; instead, use the migration tooling described in section 04.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Does Vaultline replicate data across regions by default?</div>
+        <div class="a">No. By default, data is replicated three ways within the home region only. Cross-region replication is an opt-in feature available on Scale and above, configurable per bucket with a target region, an optional one-way or two-way mode, and a replication-lag SLO of under 90 seconds for objects under 1 GB.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Can I guarantee that EU customer data never leaves the EU?</div>
+        <div class="a">Yes. Enable the "EU-only" residency lock on your account, which prevents bucket creation in non-EU regions and blocks any administrative read access from staff workstations outside EU member states. The Sovereign tier extends this with on-shore key custody, EU-resident operations staff, and a contractually binding data-locality clause attested annually under ISO 27018.</div>
+
+        <div class="callout">EU-only residency lock is account-wide and cannot be partially applied. If your organization mixes EU and non-EU workloads, create separate Vaultline organizations linked under a single billing group.</div>
+      </div>
+    </section>
+
+    <!-- SECURITY -->
+    <section class="faq-section" id="security">
+      <h2><span class="sec-num">03</span> Security &amp; Compliance</h2>
+
+      <div class="qa">
+        <div class="q">Which certifications does Vaultline hold?</div>
+        <div class="a">Vaultline maintains current attestations for SOC 2 Type II, SOC 3, ISO/IEC 27001, ISO/IEC 27017, ISO/IEC 27018, PCI-DSS Level 1, HIPAA (with BAA available on Enterprise and Sovereign), and FedRAMP Moderate. CSA STAR Level 2 and C5 (Germany) are available on Sovereign-tier deployments. Audit reports are downloadable via the Trust Portal under NDA.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Who holds the encryption keys to my data?</div>
+        <div class="a">Every object is encrypted at rest using AES-256-GCM with envelope encryption. By default, Vaultline manages the data encryption keys (DEKs) and the key encryption keys (KEKs) in our managed HSM. On Enterprise and Sovereign, you can supply your own KEK via Bring-Your-Own-Key (BYOK), or operate Hold-Your-Own-Key (HYOK) where keys never leave your customer-controlled HSM and Vaultline must request a wrap/unwrap operation for every read.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Are vulnerability scans and pen-tests permitted?</div>
+        <div class="a">Yes, no advance notice is required for non-disruptive scans against your own endpoints. For load-generating or DDoS-style tests, file a notification at least 5 business days in advance via the support portal. Third-party penetration tests of the Vaultline control plane itself are not permitted; instead, customers may consume the most recent CREST-certified pen-test report under NDA.</div>
+      </div>
+    </section>
+
+    <!-- MIGRATION -->
+    <section class="faq-section" id="migration">
+      <h2><span class="sec-num">04</span> Migration</h2>
+
+      <div class="qa">
+        <div class="q">How do I migrate from S3, Azure Blob, or GCS?</div>
+        <div class="a">Use Vaultline Mover, a managed ingest service that streams objects in parallel from any S3-compatible, Azure Blob, or Google Cloud Storage source. Mover preserves object metadata, content hashes, and version history where present. For data sets above 50 TB, we also offer Vaultline Crate—a physical 96 TB encrypted appliance shipped to your data center via insured carrier.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Is there a deprecated migration path I should avoid?</div>
+        <div class="a">The legacy <code>vaultline-sync v1</code> CLI is deprecated and will be removed in Q3 2025. <span class="badge badge-dep">Deprecated</span> If you have existing scripts that call <code>vlsync</code>, please migrate to <code>vlmover</code> which supports resumable transfers, server-side checksums, and parallel listing.</div>
+      </div>
+    </section>
+
+    <!-- SLA -->
+    <section class="faq-section" id="sla">
+      <h2><span class="sec-num">05</span> SLA &amp; Uptime</h2>
+
+      <div class="qa">
+        <div class="q">What uptime do you commit to?</div>
+        <div class="a">Starter is offered at 99.9%, Business at 99.95%, Scale and Enterprise at 99.99%, and Sovereign at 99.995%. SLAs are measured per region per calendar month against the public status page and exclude scheduled maintenance windows announced 14 days in advance.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">How are SLA credits calculated and applied?</div>
+        <div class="a">If the monthly uptime falls below the committed target, you may file a claim within 30 days. Credits are issued as a percentage of the monthly bill: 10% credit for 99.0%–99.89%, 25% for 95.0%–98.99%, and 50% for anything below 95%. Credits apply to the following invoice and cannot be redeemed for cash.</div>
+      </div>
+    </section>
+
+    <!-- PERFORMANCE -->
+    <section class="faq-section" id="performance">
+      <h2><span class="sec-num">06</span> Performance</h2>
+
+      <div class="qa">
+        <div class="q">What throughput should I expect for large sequential reads?</div>
+        <div class="a">Single-stream reads typically peak at 240 MB/s on Business, 480 MB/s on Scale, and 920 MB/s on Enterprise and Sovereign. Aggregate per-bucket throughput scales linearly with the number of parallel connections up to the published per-bucket cap. Refer to the Benchmark Data page for region-by-region measurements.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Are there hot-key or prefix-rate limits I should plan for?</div>
+        <div class="a">Yes. To prevent noisy-neighbor effects, Vaultline applies an adaptive per-prefix rate limit that warms from 3,500 requests/second to over 35,000 requests/second within 90 seconds of sustained traffic. Distribute your object keys with high-entropy prefixes (e.g., a hashed account ID) to avoid hitting the soft limit on cold prefixes.</div>
+      </div>
+    </section>
+
+    <!-- ACCESS -->
+    <section class="faq-section" id="access">
+      <h2><span class="sec-num">07</span> Access &amp; Identity</h2>
+
+      <div class="qa">
+        <div class="q">Do you support SSO and SCIM?</div>
+        <div class="a">SSO via SAML 2.0 and OIDC is supported on Business and above. SCIM 2.0 provisioning is supported on Scale and above and integrates with Okta, Azure AD, Google Workspace, JumpCloud, and OneLogin. Just-in-time provisioning is enabled by default for SAML; group-to-role mapping is configured through the admin console.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">How granular are IAM policies?</div>
+        <div class="a">Vaultline IAM policies bind principals to actions at the bucket, prefix, or object level, and policies may include conditions on source IP, request time, MFA presence, encryption mode, and object tags. Policy evaluation is deny-by-default with explicit allow statements; conflicting statements resolve in favor of deny.</div>
+      </div>
+    </section>
+
+    <!-- API -->
+    <section class="faq-section" id="api">
+      <h2><span class="sec-num">08</span> API &amp; SDKs</h2>
+
+      <div class="qa">
+        <div class="q">Which SDKs are officially supported?</div>
+        <div class="a">First-party SDKs are published for Go, Python, Java, Node.js, .NET, Rust, and Ruby. All SDKs share a common configuration model and target the v3 API. The HTTP API is also S3-compatible for the most common verbs (PUT, GET, HEAD, DELETE, ListObjectsV2, multipart upload), which lets you point most existing S3 tools at Vaultline by changing only the endpoint URL.</div>
+      </div>
+    </section>
+
+    <!-- SUPPORT -->
+    <section class="faq-section" id="support">
+      <h2><span class="sec-num">09</span> Support</h2>
+
+      <div class="qa">
+        <div class="q">What are the support response times by plan?</div>
+        <div class="a">Starter includes community and email support with best-effort responses. Business adds business-hour ticket support (P1: 4 hours). Scale adds 24×7 chat (P1: 1 hour). Enterprise adds 24×7 phone with a named Technical Account Manager (P1: 15 minutes). Sovereign adds an on-call solutions engineer in your region's working hours.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Can I get architecture review sessions?</div>
+        <div class="a">Yes. Scale customers receive one architecture review per quarter. Enterprise and Sovereign include monthly reviews plus a yearly resilience-testing engagement that simulates region failure, key-rotation events, and identity-provider outages against a non-production copy of your environment.</div>
+      </div>
+    </section>
+
+    <!-- DEPRECATION -->
+    <section class="faq-section" id="deprecation">
+      <h2><span class="sec-num">10</span> Deprecation Policy</h2>
+
+      <div class="qa">
+        <div class="q">How much notice will I get before an API or feature is removed?</div>
+        <div class="a">Vaultline commits to a minimum of 12 months of notice before any breaking API change or feature removal on Business and above (24 months on Enterprise and Sovereign). Deprecations are flagged in the changelog, in the response headers of affected endpoints (<code>X-Vault-Deprecated: true</code>), and via an email to all account owners and security contacts.</div>
+
+        <div class="callout alert">The v1 API and the <code>vaultline-sync</code> CLI will be permanently removed on 2025-09-30. Migrate to v3 well before that date.</div>
+      </div>
+    </section>
+
+    <!-- SOVEREIGN -->
+    <section class="faq-section" id="sovereign">
+      <h2><span class="sec-num">11</span> Sovereign Tier</h2>
+
+      <div class="qa">
+        <div class="q">What makes Sovereign different from Enterprise?</div>
+        <div class="a">Sovereign deployments run on dedicated hardware in customer-nominated facilities or partner data centers, with operations staff resident in the same legal jurisdiction as the data. Key custody is fully customer-controlled (HYOK), and Vaultline employees have no standing access; every administrative action requires a customer-signed JIT ticket. Sovereign also supports air-gapped deployments with offline update bundles.</div>
+      </div>
+    </section>
+
+    <!-- CONTRACTS -->
+    <section class="faq-section" id="contracts">
+      <h2><span class="sec-num">12</span> Contracts &amp; Trials</h2>
+
+      <div class="qa">
+        <div class="q">Is there a free trial?</div>
+        <div class="a">Yes. New accounts receive a 30-day Business-tier trial including 1 TB of storage and 100 GB of egress, with no credit card required. Trials auto-convert to the Starter plan at expiry unless you upgrade. Enterprise and Sovereign do not offer self-service trials but can be evaluated through a paid proof-of-concept arrangement with your account team.</div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<footer class="site">
+  <div class="footer-inner">
+    <div class="brand-block">
+      <h4><span class="brand-mark" style="vertical-align:middle;"></span> Vaultline</h4>
+      <p>Independent, side-by-side enterprise cloud-storage comparisons. We help IT buyers pit storage tiers against each other across dozens of technical and commercial criteria.</p>
+    </div>
+    <div>
+      <h4>Compare</h4>
+      <ul>
+        <li><a href="../plans/index.html">Plans</a></li>
+        <li><a href="../features/index.html">Features</a></li>
+        <li><a href="../benchmark-data/index.html">Benchmark Data</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Buy</h4>
+      <ul>
+        <li><a href="../custom-quote/index.html">Custom Quote</a></li>
+        <li><a href="#">Reserved Capacity</a></li>
+        <li><a href="#">Procurement Docs</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Trust Portal</a></li>
+        <li><a href="#">Status</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="legal">
+    <span>© 2025 Vaultline Research, Inc. — All comparisons are editorial.</span>
+    <span>build 2025.03.14 // doc-rev 7.2.1</span>
+  </div>
+</footer>
+
+</body>
+</html>

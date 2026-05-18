@@ -1,0 +1,29 @@
+{
+  "id": "synth-t4-luminos-ai-copilot-9d26",
+  "tier": 4,
+  "genre": "marketing-landing",
+  "pages": [
+    "hero",
+    "features",
+    "how-it-works",
+    "pricing",
+    "get-started"
+  ],
+  "palette_hint": "Deep navy background #0B0F1A, primary text #E8EDF7, accent violet #7C3AED and electric teal #00D4C8 for highlights and CTAs",
+  "type_style": "Headings in system-ui bold 700\u2013900 weight with tight letter-spacing for a clean tech feel; body in -apple-system at 400 weight, 1.6 line-height",
+  "description": "Luminos is a fictional AI writing copilot SaaS whose marketing site uses deep-navy dark-mode aesthetics, violet-to-teal gradients, layered box-shadow elevation, and glassmorphism cards to convey premium intelligence.",
+  "constraints": [
+    "Max content width 1160px centered with 24px horizontal padding; section vertical padding is always 96px top and bottom",
+    "Three-tier box-shadow elevation system: level-1 '0 2px 8px rgba(0,0,0,0.4)', level-2 '0 8px 32px rgba(124,58,237,0.25)', level-3 '0 24px 64px rgba(124,58,237,0.4)'; cards use level-2, modals/CTAs use level-3",
+    "Border-radius rhythm: buttons 999px (pill), cards 16px, inner badges 8px, input fields 12px \u2014 never deviate",
+    "All hero and section headings use a linear-gradient text fill from #7C3AED to #00D4C8 via background-clip: text; body copy remains #E8EDF7",
+    "Glass cards use background rgba(255,255,255,0.05), border 1px solid rgba(255,255,255,0.1), and backdrop-filter blur(12px); decorative ::before circles use radial-gradient blobs of violet/teal at 20% opacity"
+  ],
+  "page_specs": {
+    "hero": "Full-viewport section with a headline 'Write Faster. Think Deeper. Ship Sooner.' rendered in the violet-to-teal gradient text, a 20px subheadline in #A0AABF below, and two pill buttons: primary filled violet #7C3AED 'Start Free for 14 Days' and ghost-outlined teal 'Watch 90-Second Demo'. A decorative ::before radial blob of violet (400px, 20% opacity) sits top-left and a teal blob (300px, 15% opacity) sits bottom-right behind all content. Below the buttons, a row of 5 company logo-placeholder monogram badges (e.g. 'AC', 'MB', 'DF', 'PX', 'RL') in glass cards with caption 'Trusted by 12,000+ professionals'.",
+    "features": "Three-column grid of six glass cards (2 rows \u00d7 3 columns), each describing a Luminos feature: 'Contextual Drafting', 'Tone Calibration', 'Citation Weaving', 'Deadline Mode', 'Brand Voice Lock', and 'Multi-Language Spin'. Each card has a 48\u00d748px gradient icon placeholder (violet-to-teal radial circle), a bold 18px card title, and 2-sentence description in #A0AABF. Cards use level-2 box-shadow and lift to level-3 on :hover via CSS transition 0.2s ease.",
+    "how-it-works": "Vertical stepped layout with four numbered steps (01\u201304) in alternating left-right two-column rows: 'Connect Your Workspace', 'Set Your Voice Profile', 'Draft With One Prompt', 'Review & Publish'. Each step has a large gradient step number (120px, 10% opacity) as a decorative ::before element, a 280px descriptive text column, and a 520px mock-UI panel (solid #131828 with 16px radius, level-2 shadow) showing placeholder interface labels. A continuous 2px vertical line in gradient violet-to-teal connects the steps down the center on desktop.",
+    "pricing": "Three pricing tier cards side by side \u2014 'Spark' ($0/mo), 'Momentum' ($29/mo, visually elevated center card with level-3 shadow and a 'Most Popular' badge in teal), and 'Orbit' ($79/mo). Each card lists exactly 5 feature bullet points with teal checkmark symbols, a pill CTA button, and a subtle top border in the gradient. The center card has a ::before decorative glow \u2014 radial-gradient teal at 30% opacity bleeding above the card. All three cards are glass-style on the navy background.",
+    "get-started": "Single-column centered signup section with headline 'Your First Draft in Under 3 Minutes', a 4-field form (Full Name, Work Email, Company Size dropdown, Use Case dropdown) with 12px radius inputs styled in rgba(255,255,255,0.07) background, 1px solid rgba(255,255,255,0.15) border, and #E8EDF7 text. Submit button is full-width pill, violet-to-teal linear-gradient background, level-3 shadow. Below the form, three trust-signal inline badges: '256-bit Encryption', 'SOC 2 Compliant', 'Cancel Anytime' \u2014 each a glass pill with a small icon character prefix."
+  }
+}

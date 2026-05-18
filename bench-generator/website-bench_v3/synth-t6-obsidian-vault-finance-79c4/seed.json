@@ -1,0 +1,29 @@
+{
+  "id": "synth-t6-obsidian-vault-finance-79c4",
+  "tier": 6,
+  "genre": "signup-flow",
+  "pages": [
+    "account-type",
+    "personal-details",
+    "financial-profile",
+    "plan-selection",
+    "review-submit"
+  ],
+  "palette_hint": "Dark background #0f1117 with primary text #e8eaf0, accent gold #c9a84c, and form-field surface #1c1f2b with border #2e3348",
+  "type_style": "Headings in system-ui bold 700 weight, body and inputs in 'Courier New' monospace for numeric fields, general body in Georgia serif for labels, tight tracking for a precise financial feel",
+  "description": "Obsidian Vault is a premium self-directed investment account signup flow for high-net-worth individuals, featuring multi-step registration with dense form layouts, custom-styled inputs, and a detailed plan comparison table.",
+  "constraints": [
+    "Each page is constrained to a centered 680px max-width container with 40px vertical padding and 32px horizontal padding on a #0f1117 full-bleed background",
+    "All <input>, <select>, and <textarea> elements have background #1c1f2b, border 1px solid #2e3348, border-radius 4px, padding 10px 14px, color #e8eaf0, and highlight border #c9a84c on :focus with no outline",
+    "Custom checkboxes and radios use CSS-only appearance: hidden native element replaced by a 18x18px box or circle drawn with ::before pseudo-element, gold #c9a84c fill when :checked",
+    "Multi-column form rows use a 2-column CSS grid with 24px column gap; full-width fields span both columns explicitly",
+    "Form validation states: :invalid fields after :not(:placeholder-shown) show border #e05c5c; :valid show border #4caf7a; a small ::after label indicator is toggled via adjacent sibling CSS"
+  ],
+  "page_specs": {
+    "account-type": "Displays the Obsidian Vault logo wordmark (text-only, gold) at top, a short one-paragraph explanation of the four account types (Individual Brokerage, Joint Tenancy, Roth IRA, SEP-IRA), and four large custom-radio card tiles arranged in a 2x2 grid. Each tile is 280px wide with a gold left-border when selected, showing account name, a two-line description, and minimum deposit amount in monospace right-aligned text. A 'Continue' button in gold #c9a84c with #0f1117 text sits below.",
+    "personal-details": "A two-column form grid collecting full legal name (first/last spanning one column each), date of birth, SSN/TIN (masked input), citizenship status via styled <select>, US address (street full-width, city/state/zip in three columns at 3fr/1fr/1fr), and a phone number field. All labels are uppercase 11px tracked text in #8a90a8. A 'Save & Continue' button and a back-link ('\u2190 Back') are positioned at the bottom right and left respectively.",
+    "financial-profile": "A dense single-column section with five grouped question blocks: annual income range (5 custom radio options), net worth bracket (5 radios), investment experience (Beginner/Intermediate/Advanced/Professional as horizontal radio pills), primary investment objective (6 checkboxes for Growth/Income/Preservation/Speculation/Retirement/Education), and a <textarea> for 'Additional financial disclosures' (4 rows, full-width). Each group has a bold section heading and a thin #2e3348 divider below it.",
+    "plan-selection": "A dense comparison table (full 680px width) with sticky header row showing three plan tiers: Copper, Silver, and Obsidian Black. Rows cover 12 features (e.g. Trade commissions, Options contracts fee, Margin rate, Research reports, Tax-loss harvesting, Dedicated advisor). Numeric cells are right-aligned in 'Courier New' monospace. Zebra striping alternates #1c1f2b and #161820 rows. Each plan column header has a custom radio so the user selects one plan; the selected column header glows with gold #c9a84c border-bottom 3px.",
+    "review-submit": "A read-only summary page divided into four labeled sections (Account Type, Personal Details, Financial Profile, Selected Plan) each in a bordered #1c1f2b box with 16px padding and an 'Edit' link in gold top-right corner. Key values are displayed in a two-column definition-list style (label in #8a90a8, value in #e8eaf0 monospace for numbers). At the bottom, a full-width Terms & Conditions checkbox (custom styled) and an E-Signature text input are required before the gold 'Submit Application' button becomes visually active via CSS :checked + sibling selector changing button opacity from 0.4 to 1."
+  }
+}

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Iron Corridor — Overview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1a1a;
+    color: #f0ede6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: 800; }
+  a { color: #f0ede6; text-decoration: none; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+  /* NAV */
+  nav.top {
+    position: relative;
+    padding: 20px 64px;
+    border-bottom: 2px solid #c8601a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1a1a1a;
+  }
+  nav.top .brand {
+    font-family: Georgia, serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  nav.top .brand span { color: #c8601a; }
+  nav.top ul { list-style: none; display: flex; gap: 32px; }
+  nav.top ul li a {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f0ede6;
+    padding-bottom: 4px;
+  }
+  nav.top ul li a.active { color: #c8601a; border-bottom: 2px solid #c8601a; }
+
+  /* HEADER */
+  header.hero {
+    position: relative;
+    padding: 48px 64px;
+    background: #1a1a1a;
+    border-bottom: 2px solid #c8601a;
+    overflow: hidden;
+  }
+  .hero-label {
+    position: absolute;
+    top: 24px;
+    right: 64px;
+    font-family: "SF Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #c8601a;
+    text-transform: uppercase;
+  }
+  .hero-numeral {
+    position: absolute;
+    top: 40px;
+    left: 64px;
+    font-family: "SF Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #4a7fa5;
+  }
+  .kicker {
+    font-family: "SF Mono", monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.28em;
+    color: #c8601a;
+    text-transform: uppercase;
+    margin: 40px 0 18px;
+  }
+  header.hero h1 {
+    font-size: 5rem;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    max-width: 1100px;
+    margin-bottom: 28px;
+  }
+  header.hero h1 em {
+    color: #c8601a;
+    font-style: normal;
+  }
+  .deck {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 1.35rem;
+    line-height: 1.5;
+    max-width: 820px;
+    color: #d8d4c8;
+    margin-bottom: 36px;
+  }
+  .deck strong { color: #f0ede6; font-style: normal; font-weight: 700; }
+
+  .byline-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    border-top: 2px solid #c8601a;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .byline-strip .left, .byline-strip .right {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  .byline-strip .author {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .byline-strip .meta {
+    font-family: "SF Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: #9c9890;
+    text-transform: uppercase;
+  }
+  .avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #4a7fa5, #2e2e2e);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 64px 24px 48px;
+    position: relative;
+  }
+  .section-tag {
+    position: absolute;
+    top: 64px;
+    left: -8px;
+    font-family: "SF Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: #c8601a;
+    text-transform: uppercase;
+    transform: rotate(-90deg);
+    transform-origin: left top;
+  }
+  .findings-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #c8601a;
+  }
+  .findings-head h2 {
+    font-size: 2.8rem;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .findings-head .note {
+    font-family: "SF Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: #9c9890;
+    text-transform: uppercase;
+    max-width: 280px;
+    text-align: right;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: #2e2e2e;
+    border-top: 2px solid #2e2e2e;
+    border-bottom: 2px solid #2e2e2e;
+  }
+  .card {
+    background: #1a1a1a;
+    padding: 36px 28px 32px;
+    position: relative;
+    min-height: 340px;
+  }
+  .card .num-label {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    font-family: "SF Mono", monospace;
+    font-size: 0.7rem;
+    color: #4a7fa5;
+    letter-spacing: 0.18em;
+  }
+  .card .marker {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    font-family: "SF Mono", monospace;
+    font-size: 0.7rem;
+    color: #c8601a;
+    letter-spacing: 0.2em;
+  }
+  .card .figure {
+    font-family: "SF Mono", monospace;
+    font-size: 3.5rem;
+    color: #c8601a;
+    line-height: 1.05;
+    margin: 56px 0 6px;
+    letter-spacing: -0.02em;
+  }
+  .card .unit {
+    font-family: "SF Mono", monospace;
+    font-size: 0.78rem;
+    color: #9c9890;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #c8601a;
+    display: inline-block;
+    padding-right: 24px;
+  }
+  .card h3 {
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+  .card p {
+    font-size: 0.95rem;
+    color: #d8d4c8;
+    line-height: 1.65;
+  }
+
+  /* INTERSTITIAL */
+  .interstitial {
+    background: #2e2e2e;
+    color: #f0ede6;
+    padding: 48px 64px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
+    position: relative;
+  }
+  .interstitial .chapter {
+    position: absolute;
+    top: 14px;
+    left: 64px;
+    font-family: "SF Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    color: #c8601a;
+    text-transform: uppercase;
+  }
+  .interstitial .big-num {
+    position: absolute;
+    top: 14px;
+    right: 64px;
+    font-family: "SF Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #9c9890;
+  }
+  .interstitial p {
+    font-family: Georgia, serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    line-height: 1.4;
+    max-width: 900px;
+    margin: 18px 0 0;
+  }
+  .interstitial p::before { content: "“ "; color: #c8601a; font-style: normal; }
+  .interstitial p::after { content: " ”"; color: #c8601a; font-style: normal; }
+  .interstitial .right-block {
+    margin-top: 18px;
+    text-align: right;
+    font-family: "SF Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: #f0ede6;
+    text-transform: uppercase;
+    min-width: 140px;
+    border-left: 2px solid #c8601a;
+    padding-left: 20px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #1a1a1a;
+    border-top: 2px solid #c8601a;
+    min-height: 80px;
+    padding: 28px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: "SF Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: #9c9890;
+    text-transform: uppercase;
+  }
+  footer .pages { display: flex; gap: 22px; }
+  footer .pages a { color: #9c9890; }
+  footer .pages a.current { color: #c8601a; }
+  footer .iso { color: #4a7fa5; }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="brand">The Iron Corridor <span>/</span> A Special Report</div>
+  <ul>
+    <li><a href="#" class="active">Overview</a></li>
+    <li><a href="../data-atlas/index.html">Data Atlas</a></li>
+    <li><a href="../case-studies/index.html">Case Studies</a></li>
+    <li><a href="../policy-gaps/index.html">Policy Gaps</a></li>
+    <li><a href="../methodology/index.html">Methodology</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <span class="hero-numeral">№ 01 / 05</span>
+  <span class="hero-label">Issue 2024 — Investigative</span>
+  <div class="kicker">Special Report · Freight Infrastructure</div>
+  <h1>The Iron Corridor:<br>Collapse in <em>Slow Motion</em>.</h1>
+  <p class="deck">
+    A two-year investigation into the inland freight rail network finds that
+    <strong>34% of Class II freight rail bridges</strong> are rated structurally
+    deficient — and that maintenance budgets, adjusted for tonnage, have fallen
+    every year since 2009.
+  </p>
+
+  <div class="byline-strip">
+    <div class="left">
+      <div class="avatar"></div>
+      <div>
+        <div class="author">By M. Halloran &nbsp;·&nbsp; R. Okafor &nbsp;·&nbsp; J. Petrov</div>
+        <div class="meta">Investigations Desk · 18-month inquiry</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="meta">Filed&nbsp;&nbsp;Nov 14, 2024</div>
+      <div class="meta">Read time&nbsp;&nbsp;42 min</div>
+      <div class="meta" style="color:#c8601a;">Part 1 of 5</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <span class="section-tag">Key Findings</span>
+
+  <div class="findings-head">
+    <h2>Three Numbers<br>That Define the Crisis.</h2>
+    <div class="note">Drawn from FRA Form 6180.55, AAR annual returns, and field inspection records 2018–2023.</div>
+  </div>
+
+  <section class="cards">
+    <article class="card">
+      <span class="marker">FINDING / 01</span>
+      <span class="num-label">BRIDGES</span>
+      <div class="figure">1,247</div>
+      <div class="unit">Failures · 2018–2023</div>
+      <h3>Bridge failures have tripled since 2010.</h3>
+      <p>
+        Federal inspection logs document 1,247 partial or complete bridge failures
+        across short-line and regional carriers in five years. Eighty-one occurred
+        on routes hauling hazardous materials.
+      </p>
+    </article>
+
+    <article class="card">
+      <span class="marker">FINDING / 02</span>
+      <span class="num-label">INCIDENTS</span>
+      <div class="figure">8,914</div>
+      <div class="unit">Derailments · 2018–2023</div>
+      <h3>One derailment every five hours, on average.</h3>
+      <p>
+        Across the inland freight network, 8,914 derailment incidents were logged
+        in six years. Track defects — not human error — were the leading cause in
+        46% of cases reviewed.
+      </p>
+    </article>
+
+    <article class="card">
+      <span class="marker">FINDING / 03</span>
+      <span class="num-label">SHORTFALL</span>
+      <div class="figure">$12.4B</div>
+      <div class="unit">Federal Shortfall · FY23</div>
+      <h3>The gap between authorized and disbursed funds.</h3>
+      <p>
+        Of the $15.5 billion authorized for freight rail safety upgrades under
+        the 2015 FAST Act, only $3.1 billion has reached carriers. The remainder
+        sits in administrative limbo.
+      </p>
+    </article>
+  </section>
+</main>
+
+<section class="interstitial">
+  <span class="chapter">Interstitial · Chapter Marker</span>
+  <span class="big-num">§ 00 — Preamble</span>
+  <p>
+    This report draws on 14,000 federal inspection records and 62 field interviews
+    conducted across 19 states between June 2023 and October 2024.
+  </p>
+  <div class="right-block">
+    Continue →<br>
+    <span style="color:#c8601a;">Data Atlas</span>
+  </div>
+</section>
+
+<footer>
+  <div>© 2024 The Iron Corridor Project · v1.0.2</div>
+  <div class="pages">
+    <a href="#" class="current">Overview</a>
+    <a href="../data-atlas/index.html">Data Atlas</a>
+    <a href="../case-studies/index.html">Case Studies</a>
+    <a href="../policy-gaps/index.html">Policy Gaps</a>
+    <a href="../methodology/index.html">Methodology</a>
+  </div>
+  <div class="iso">DOI 10.48512/IC.2024.01</div>
+</footer>
+
+</body>
+</html>

@@ -1,13 +1,19 @@
 # Recreate a {{N_PAGES}}-page website from screenshots
 
-The directory `/app/references/` contains {{N_PAGES}} PNG screenshots of pages
-from the **same website**. The pages share a visual identity (logo, navigation,
-color palette, typography). Each screenshot was captured at a viewport of
-**1280 × 800** using headless Chromium.
+The directory `/app/references/` contains screenshots of each page across
+**three viewports** — desktop, tablet, and phone. The pages share a visual
+identity (logo, navigation, color palette, typography). Every screenshot is a
+**full-page** capture (entire scrollable content, not just the fold).
 
-Recreate each page as static HTML/CSS so that, when rendered at the same
-viewport with headless Chromium, it visually matches the reference as closely
-as possible.
+Reference screenshots are grouped by viewport:
+
+- Desktop (1440 × 900): `/app/references/desktop/<page>.png`
+- Tablet (768 × 1024): `/app/references/tablet/<page>.png`
+- Phone (390 × 844): `/app/references/phone/<page>.png`
+
+Recreate each page as static, **responsive** HTML/CSS so that when rendered at
+each of the three viewports with headless Chromium, it visually matches the
+matching-viewport reference as closely as possible.
 
 ## Visual fidelity only — functionality does not matter
 
@@ -19,8 +25,9 @@ You are scored **purely on visual appearance**, not behavior. Specifically:
 - No JavaScript is required at all. Plain HTML and CSS are enough.
 - No accessibility, no SEO, no semantics beyond what's needed to render.
 
-Concentrate everything on making each page **look like** the screenshot at
-1280 × 800.
+Concentrate on making each page **look like** the references at every viewport.
+Use responsive CSS (`@media` queries, `flex`/`grid`, fluid units) so the layout
+adapts cleanly across the three sizes.
 
 ## Inputs
 

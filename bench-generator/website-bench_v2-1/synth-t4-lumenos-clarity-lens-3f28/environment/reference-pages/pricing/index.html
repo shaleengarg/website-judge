@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pricing — Lumenos</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #0D1B2A; color: #E8F0F7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-weight: 400; line-height: 1.6; }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; color: #E8F0F7; }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 64px; }
+  section { padding: 80px 0; position: relative; overflow: hidden; }
+  .alt-bg { background: radial-gradient(ellipse at 30% 50%, #112236 0%, #0D1B2A 70%); }
+
+  /* NAV */
+  .nav-wrap { border-bottom: 1px solid rgba(232,240,247,0.08); background: #0D1B2A; position: sticky; top: 0; z-index: 50; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 64px; max-width: 1100px; margin: 0 auto; }
+  .brand { font-family: Georgia, serif; font-weight: 700; font-size: 22px; color: #E8F0F7; letter-spacing: 0.5px; }
+  .brand span { color: #F0A500; }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: #E8F0F7; opacity: 0.75; transition: opacity .2s; }
+  .nav-links a:hover { opacity: 1; }
+  .nav-links a.active { color: #F0A500; opacity: 1; }
+
+  /* HERO */
+  .pricing-hero { text-align: center; }
+  .pricing-hero h1 { font-size: 56px; color: #F0A500; line-height: 1.1; margin-bottom: 20px; }
+  .pricing-hero p { font-size: 18px; color: #E8F0F7; opacity: 0.8; max-width: 640px; margin: 0 auto; }
+  .billing-toggle { display: inline-flex; margin-top: 32px; padding: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(0,201,177,0.2); border-radius: 999px; }
+  .billing-toggle span { padding: 8px 22px; font-size: 13px; font-weight: 500; border-radius: 999px; }
+  .billing-toggle .on { background: #00C9B1; color: #0D1B2A; }
+  .billing-toggle .off { opacity: 0.6; }
+
+  /* PRICING CARDS */
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 64px; align-items: stretch; }
+  .tier { position: relative; background: linear-gradient(180deg, #112236 0%, #0D1B2A 100%); border: 1px solid rgba(0,201,177,0.2); border-radius: 12px; padding: 40px 32px; display: flex; flex-direction: column; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+  .tier.featured { border-top: 4px solid #F0A500; box-shadow: 0 20px 48px rgba(0,0,0,0.65); transform: translateY(-12px); padding-top: 44px; }
+  .badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #00C9B1; color: #0D1B2A; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 16px; border-radius: 999px; }
+
+  .tier-name { font-family: Georgia, serif; font-weight: 700; font-size: 22px; color: #E8F0F7; margin-bottom: 8px; }
+  .tier-desc { font-size: 13px; color: #E8F0F7; opacity: 0.6; margin-bottom: 24px; min-height: 38px; }
+  .price { display: flex; align-items: baseline; gap: 6px; margin-bottom: 28px; }
+  .price .amount { font-family: Georgia, serif; font-weight: 700; font-size: 48px; color: #F0A500; line-height: 1; }
+  .price .period { font-size: 14px; color: #E8F0F7; opacity: 0.6; }
+  .price .custom { font-family: Georgia, serif; font-weight: 700; font-size: 36px; color: #F0A500; }
+
+  .feature-list { list-style: none; flex-grow: 1; margin-bottom: 32px; }
+  .feature-list li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; font-size: 14px; color: #E8F0F7; opacity: 0.9; border-bottom: 1px solid rgba(232,240,247,0.05); }
+  .feature-list li:last-child { border-bottom: none; }
+  .check { display: inline-block; width: 16px; height: 9px; border-left: 2px solid #00C9B1; border-bottom: 2px solid #00C9B1; transform: rotate(-45deg); margin-top: 6px; flex-shrink: 0; }
+
+  .cta { display: block; text-align: center; padding: 14px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: 0.3px; transition: opacity .2s; }
+  .cta-ghost { background: transparent; border: 1px solid #00C9B1; color: #00C9B1; }
+  .cta-gold { background: #F0A500; color: #0D1B2A; border: 1px solid #F0A500; }
+  .cta-teal { background: #00C9B1; color: #0D1B2A; border: 1px solid #00C9B1; }
+  .cta:hover { opacity: 0.9; }
+
+  /* COMPARISON / FAQ */
+  .compare-section h2 { font-size: 36px; text-align: center; color: #E8F0F7; margin-bottom: 16px; }
+  .compare-section .sub { text-align: center; color: #E8F0F7; opacity: 0.7; margin-bottom: 48px; }
+
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 48px; }
+  .faq h4 { font-size: 16px; color: #F0A500; margin-bottom: 8px; font-family: -apple-system, "Segoe UI", sans-serif; font-weight: 600; }
+  .faq p { font-size: 14px; color: #E8F0F7; opacity: 0.75; }
+
+  /* FOOTER */
+  footer { background: #0A1622; border-top: 1px solid rgba(232,240,247,0.08); padding: 48px 0 32px; }
+  .foot { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 32px; }
+  .foot-brand { max-width: 280px; }
+  .foot-brand p { font-size: 13px; opacity: 0.6; margin-top: 12px; }
+  .foot-cols { display: flex; gap: 64px; }
+  .foot-col h5 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #00C9B1; margin-bottom: 14px; font-family: -apple-system, sans-serif; font-weight: 600; }
+  .foot-col a { display: block; font-size: 13px; color: #E8F0F7; opacity: 0.7; padding: 5px 0; }
+  .legal { margin-top: 36px; padding-top: 24px; border-top: 1px solid rgba(232,240,247,0.06); font-size: 12px; opacity: 0.5; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="brand">Lumen<span>os</span></div>
+    <div class="nav-links">
+      <a href="../vision/index.html">vision</a>
+      <a href="../features/index.html">features</a>
+      <a href="../how-it-works/index.html">how-it-works</a>
+      <a href="#" class="active">pricing</a>
+      <a href="../get-started/index.html">get-started</a>
+    </div>
+  </nav>
+</div>
+
+<section class="pricing-hero alt-bg">
+  <div class="container">
+    <h1>Plans Built for Legal Clarity</h1>
+    <p>Choose the tier that fits your practice. Every plan includes the Lumenos clarity engine, unlimited collaborators on review, and continuous model updates.</p>
+    <div class="billing-toggle">
+      <span class="on">Monthly</span>
+      <span class="off">Annual — save 20%</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="tiers">
+
+      <div class="tier">
+        <div class="tier-name">Starter</div>
+        <div class="tier-desc">For solo practitioners and independent counsel reviewing client agreements.</div>
+        <div class="price">
+          <span class="amount">$49</span>
+          <span class="period">/ month</span>
+        </div>
+        <ul class="feature-list">
+          <li><span class="check"></span>5 documents per month</li>
+          <li><span class="check"></span>Ambiguity & jargon scanning</li>
+          <li><span class="check"></span>Readability heatmap</li>
+          <li><span class="check"></span>PDF clarity reports</li>
+          <li><span class="check"></span>Email support</li>
+        </ul>
+        <a href="../get-started/index.html" class="cta cta-ghost">Start with Starter</a>
+      </div>
+
+      <div class="tier featured">
+        <div class="badge">Most Popular</div>
+        <div class="tier-name">Professional</div>
+        <div class="tier-desc">For legal teams up to 20 users handling continuous contract flow.</div>
+        <div class="price">
+          <span class="amount">$149</span>
+          <span class="period">/ month</span>
+        </div>
+        <ul class="feature-list">
+          <li><span class="check"></span>Unlimited documents</li>
+          <li><span class="check"></span>Up to 20 team seats</li>
+          <li><span class="check"></span>Full REST API access</li>
+          <li><span class="check"></span>Version diff clarity tracking</li>
+          <li><span class="check"></span>Priority chat & email support</li>
+        </ul>
+        <a href="../get-started/index.html" class="cta cta-gold">Choose Professional</a>
+      </div>
+
+      <div class="tier">
+        <div class="tier-name">Enterprise</div>
+        <div class="tier-desc">For compliance departments and regulated industries with custom needs.</div>
+        <div class="price">
+          <span class="custom">Custom</span>
+        </div>
+        <ul class="feature-list">
+          <li><span class="check"></span>SSO / SAML authentication</li>
+          <li><span class="check"></span>Full audit logs & retention</li>
+          <li><span class="check"></span>99.95% uptime SLA</li>
+          <li><span class="check"></span>Dedicated solutions engineer</li>
+          <li><span class="check"></span>On-premise deployment option</li>
+        </ul>
+        <a href="#" class="cta cta-teal">Talk to Sales</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="alt-bg compare-section">
+  <div class="container">
+    <h2>Common Questions</h2>
+    <p class="sub">Everything you need to know before bringing Lumenos to your team.</p>
+    <div class="faq-grid">
+      <div class="faq">
+        <h4>Can I switch plans later?</h4>
+        <p>Yes. You can upgrade or downgrade at any time from your workspace settings. Pro-rated credits are applied automatically to your next invoice.</p>
+      </div>
+      <div class="faq">
+        <h4>Is my contract data confidential?</h4>
+        <p>Always. All documents are encrypted at rest and in transit, and never used to train shared models. Enterprise customers may opt for private model isolation.</p>
+      </div>
+      <div class="faq">
+        <h4>What counts as a "document"?</h4>
+        <p>Any uploaded file up to 200 pages counts as one document. Longer files are automatically split, and revisions of the same contract do not consume new credits.</p>
+      </div>
+      <div class="faq">
+        <h4>Do you offer non-profit discounts?</h4>
+        <p>Yes — registered non-profits, legal aid organizations, and academic institutions receive 40% off Professional pricing. Contact our team to verify eligibility.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div class="foot-brand">
+        <div class="brand">Lumen<span style="color:#F0A500;">os</span></div>
+        <p>AI-powered clarity analysis for legal and compliance contracts.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="../vision/index.html">Vision</a>
+          <a href="../features/index.html">Features</a>
+          <a href="../how-it-works/index.html">How It Works</a>
+          <a href="#">Pricing</a>
+        </div>
+        <div class="foot-col">
+          <h5>Company</h5>
+          <a href="#">About</a>
+          <a href="#">Security</a>
+          <a href="#">Careers</a>
+          <a href="../get-started/index.html">Get Started</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="#">Documentation</a>
+          <a href="#">API Reference</a>
+          <a href="#">Contact</a>
+          <a href="#">Status</a>
+        </div>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2025 Lumenos Inc. All rights reserved.</span>
+      <span>SOC 2 Type II · GDPR Ready</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

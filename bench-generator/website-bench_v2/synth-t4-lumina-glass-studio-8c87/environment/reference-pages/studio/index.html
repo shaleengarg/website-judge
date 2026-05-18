@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Studio — Lumina Glass Studio</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0B1220;
+    color: #F0EDE6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+  /* NAV */
+  .nav-wrap {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(11,18,32,0.85);
+    backdrop-filter: blur(12px);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 40px; max-width: 1200px; margin: 0 auto;
+  }
+  .brand {
+    font-family: Georgia, serif; font-weight: 700; font-size: 22px;
+    letter-spacing: 0.04em;
+  }
+  .brand span { color: #E8A020; font-style: italic; }
+  .nav ul { list-style: none; display: flex; gap: 36px; }
+  .nav ul a {
+    font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #F0EDE6; opacity: 0.78; padding: 6px 0;
+    border-bottom: 1px solid transparent;
+  }
+  .nav ul a.active { color: #1ECFC4; opacity: 1; border-bottom-color: #1ECFC4; }
+
+  /* SECTION BASE */
+  section { padding: 80px 0; position: relative; overflow: hidden; }
+
+  /* INTRO */
+  .intro { position: relative; }
+  .intro::before {
+    content: ""; position: absolute; top: -120px; right: -160px;
+    width: 520px; height: 520px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,160,32,0.32), rgba(232,160,32,0) 65%);
+    z-index: 0; pointer-events: none;
+  }
+  .intro .container {
+    display: grid; grid-template-columns: 400px 1fr; gap: 80px;
+    align-items: start; position: relative; z-index: 1;
+  }
+  .eyebrow {
+    font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: #1ECFC4; margin-bottom: 20px;
+  }
+  .intro h1 {
+    font-size: 44px; line-height: 1.1; margin-bottom: 24px;
+    font-style: italic;
+  }
+  .intro h1 em { color: #E8A020; font-style: italic; }
+  .intro .lede {
+    font-size: 17px; color: #F0EDE6; opacity: 0.85;
+    margin-bottom: 18px; font-weight: 500;
+  }
+  .intro p { font-size: 15px; opacity: 0.75; margin-bottom: 14px; }
+  .intro .sig {
+    margin-top: 28px; font-family: Georgia, serif; font-style: italic;
+    color: #E8A020; font-size: 18px;
+  }
+
+  .img-stack {
+    display: flex; flex-direction: column; gap: 24px;
+    filter: drop-shadow(0 16px 32px rgba(0,0,0,0.55));
+  }
+  .img-block {
+    border-radius: 4px; height: 240px; position: relative;
+    display: flex; align-items: flex-end; padding: 18px;
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: rgba(240,237,230,0.85);
+  }
+  .img-1 {
+    background:
+      linear-gradient(135deg, rgba(232,160,32,0.85), rgba(232,160,32,0.2) 60%, rgba(30,207,196,0.25)),
+      #1a2438;
+    margin-right: 60px;
+  }
+  .img-2 {
+    background:
+      linear-gradient(160deg, rgba(30,207,196,0.55), rgba(11,18,32,0.6) 70%),
+      #142036;
+    margin-left: 60px;
+  }
+
+  /* STATS */
+  .stats {
+    background: linear-gradient(180deg, #0B1220 0%, #101828 100%);
+    position: relative;
+  }
+  .stats::after {
+    content: ""; position: absolute; left: 50%; top: 0;
+    transform: translateX(-50%);
+    width: 120px; height: 2px; background: #E8A020;
+  }
+  .stats .container {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  }
+  .stats-head {
+    grid-column: 1 / -1; text-align: center; margin-bottom: 20px;
+  }
+  .stats-head h2 { font-size: 32px; font-style: italic; margin-bottom: 10px; }
+  .stats-head p {
+    font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: #1ECFC4;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 44px 32px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    position: relative;
+  }
+  .stat-num {
+    font-family: Georgia, serif; font-weight: 700; font-style: italic;
+    font-size: 72px; line-height: 1; color: #E8A020;
+    margin-bottom: 14px;
+  }
+  .stat-label {
+    font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #F0EDE6; opacity: 0.85;
+  }
+  .stat-sub {
+    margin-top: 10px; font-size: 13px; opacity: 0.6;
+  }
+
+  /* QUOTE BANNER */
+  .banner {
+    position: relative;
+    background:
+      radial-gradient(ellipse at center, rgba(232,160,32,0.22), rgba(11,18,32,0) 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(30,207,196,0.12), rgba(11,18,32,0) 55%),
+      #0B1220;
+    text-align: center;
+    padding: 120px 0;
+  }
+  .banner::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,160,32,0.5), transparent);
+  }
+  .banner blockquote {
+    font-family: Georgia, serif; font-style: italic; font-weight: 700;
+    font-size: 38px; line-height: 1.3; max-width: 820px; margin: 0 auto;
+    color: #F0EDE6; position: relative;
+    text-shadow: 0 16px 64px rgba(0,0,0,0.7);
+  }
+  .banner::after {
+    content: ""; display: block; width: 60px; height: 3px;
+    background: #E8A020; margin: 36px auto 0;
+    position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%);
+  }
+  .banner .attribution {
+    margin-top: 80px;
+    font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: #1ECFC4;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 48px 0 32px;
+    background: #0B1220;
+  }
+  .foot {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+    padding-bottom: 32px;
+  }
+  .foot h4 {
+    font-family: system-ui, sans-serif; font-weight: 500;
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #1ECFC4; margin-bottom: 16px;
+  }
+  .foot p, .foot a {
+    font-size: 13px; opacity: 0.7; display: block; margin-bottom: 8px;
+  }
+  .foot .brand-foot {
+    font-family: Georgia, serif; font-size: 22px; font-weight: 700;
+    margin-bottom: 12px; letter-spacing: 0.04em;
+  }
+  .foot .brand-foot span { color: #E8A020; font-style: italic; }
+  .copyright {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 20px; display: flex; justify-content: space-between;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="brand">Lumina <span>Glass</span></div>
+    <ul>
+      <li><a href="../showcase/index.html">Showcase</a></li>
+      <li><a href="../process/index.html">Process</a></li>
+      <li><a href="../collections/index.html">Collections</a></li>
+      <li><a href="#" class="active">Studio</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+  </nav>
+</div>
+
+<section class="intro">
+  <div class="container">
+    <div class="text-col">
+      <div class="eyebrow">The Studio</div>
+      <h1>A practice built in <em>heat, breath,</em> and patience.</h1>
+      <p class="lede">
+        Founded in 1997 by Mara Holvenstot, Lumina Glass Studio occupies a
+        converted iron foundry on Portland's east bank. Twenty-six years
+        on, the work remains stubbornly handmade.
+      </p>
+      <p>
+        Mara trained under master glassblower Lino Tagliapietra in Murano
+        before returning to the Pacific Northwest to open a single-furnace
+        workshop in 1997. The studio has since grown to a team of seven
+        artisans, but every commission still passes through her hands —
+        from the first charcoal sketch to the final anneal.
+      </p>
+      <p>
+        Our work lives in private residences, embassies, hotel atria, and
+        the permanent collections of three regional museums. We accept a
+        limited number of commissions each year so that every panel
+        receives the slow, deliberate attention it requires.
+      </p>
+      <div class="sig">— Mara Holvenstot, Founder &amp; Principal Artist</div>
+    </div>
+    <div class="img-stack">
+      <div class="img-block img-1">Studio Floor / 2024</div>
+      <div class="img-block img-2">Mara at the Furnace</div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container">
+    <div class="stats-head">
+      <h2>Twenty-six years, measured.</h2>
+      <p>By the numbers</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">340+</div>
+      <div class="stat-label">Commissions</div>
+      <div class="stat-sub">Residential, commercial, and public</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">18</div>
+      <div class="stat-label">Countries</div>
+      <div class="stat-sub">Installations across four continents</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Industry Awards</div>
+      <div class="stat-sub">Including AIA Northwest, 2019 &amp; 2022</div>
+    </div>
+  </div>
+</section>
+
+<section class="banner">
+  <blockquote>
+    "Glass remembers heat long after the flame is gone."
+  </blockquote>
+  <div class="attribution">— Mara Holvenstot</div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div>
+        <div class="brand-foot">Lumina <span>Glass</span></div>
+        <p>Architectural glass art &amp; signature blown collections, hand-made in Portland, Oregon since 1997.</p>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <a>14 Foundry Lane</a>
+        <a>Portland, OR 97214</a>
+        <a>By appointment only</a>
+      </div>
+      <div>
+        <h4>Inquiries</h4>
+        <a>commissions@luminaglass.studio</a>
+        <a>+1 503 555 0142</a>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <a href="../showcase/index.html">Showcase</a>
+        <a href="../process/index.html">Process</a>
+        <a href="../collections/index.html">Collections</a>
+        <a href="../contact/index.html">Contact</a>
+      </div>
+    </div>
+    <div class="copyright">
+      <span>© 2024 Lumina Glass Studio</span>
+      <span>Light Made Permanent</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

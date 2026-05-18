@@ -49,7 +49,10 @@ _MODEL = "claude-sonnet-4-6"
 _MAX_TOKENS = 1024
 _TEMPERATURE = 0.0  # judge should be steady, not creative
 
-VIEWPORT = {"width": 1280, "height": 800}
+# Single-viewport gate at V4's desktop default. relevance.py just asks the LLM
+# "does this page match its seed spec?" — that judgment doesn't need three
+# viewports, and rendering once keeps the gate cheap.
+VIEWPORT = {"width": 1440, "height": 900}
 
 # Pass thresholds. A page passes if EVERY rubric score is >= MIN_SCORE
 # AND overall_coherence is >= MIN_COHERENCE.
@@ -172,7 +175,7 @@ def _render_page(browser, html_path: Path, out_png: Path) -> None:
     page = ctx.new_page()
     page.goto(f"file://{html_path.resolve()}", wait_until="load", timeout=15_000)
     page.wait_for_timeout(300)
-    page.screenshot(path=str(out_png), full_page=False)
+    page.screenshot(path=str(out_png), full_page=True)
     ctx.close()
 
 

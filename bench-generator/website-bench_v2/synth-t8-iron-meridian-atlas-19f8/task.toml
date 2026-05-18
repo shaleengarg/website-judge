@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/synth-t8-iron-meridian-atlas-19f8"
+description = "Iron Meridian Atlas is a long-form multimedia essay investigating the 1973 closure of the Harwick Steel Works in Pennsylvania — its economic aftermath, the families it fractured, and the contested memory of industrial labor in America."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "multimedia-essay", "tier-8"]
+
+[metadata]
+difficulty_explanation = "Tier 8 (multimedia-essay): Iron Meridian Atlas is a long-form multimedia essay investigating the 1973 closure of the Harwick Steel Works in Pennsylvania — its economic aftermath, the families it fractured, and the contested memory of industrial labor in America."
+category = "frontend"
+tier = 8
+genre = "multimedia-essay"
+
+[verifier]
+timeout_sec = 420.0
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

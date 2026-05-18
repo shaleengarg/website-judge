@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/synth-t1-ember-and-rye-kitchen-43c8"
+description = "Ember & Rye Kitchen is a single-recipe showcase site presenting a definitive slow-braised short rib with smoked paprika and rye whiskey glaze, laid out as a clean vertical card experience across five focused pages."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "recipe-card", "tier-1"]
+
+[metadata]
+difficulty_explanation = "Tier 1 (recipe-card): Ember & Rye Kitchen is a single-recipe showcase site presenting a definitive slow-braised short rib with smoked paprika and rye whiskey glaze, laid out as a clean vertical card experience across five focused pages."
+category = "frontend"
+tier = 1
+genre = "recipe-card"
+
+[verifier]
+timeout_sec = 420.0
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

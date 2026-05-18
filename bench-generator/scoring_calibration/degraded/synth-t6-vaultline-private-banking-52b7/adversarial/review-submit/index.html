@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaultline — Review & Submit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #F4F1EC;
+    color: #1A1A2E;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; }
+
+  /* Header / Nav */
+  .site-header {
+    background: #1A1A2E;
+    color: #F4F1EC;
+    border-bottom: 3px solid #C8A951;
+  }
+  .site-header-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+  }
+  .brand .mark { color: #C8A951; }
+  .brand .sub {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 9px;
+    font-weight: normal;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #C2BAA8;
+    margin-top: 2px;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+  }
+  nav a {
+    color: #F4F1EC;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  nav a.current {
+    color: #C8A951;
+    border-bottom-color: #C8A951;
+  }
+
+  /* Progress Stepper */
+  .stepper-wrap {
+    background: #EDEAE2;
+    border-bottom: 1px solid #C2BAA8;
+  }
+  .stepper {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 48px 24px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .step .num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #F4F1EC;
+    border: 1.5px solid #C2BAA8;
+    color: #6B6358;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .step.done .num {
+    background: #C8A951;
+    border-color: #C8A951;
+    color: #1A1A2E;
+  }
+  .step.active .num {
+    background: #2E5D9E;
+    border-color: #2E5D9E;
+    color: #fff;
+  }
+  .step .lbl {
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #6B6358;
+  }
+  .step.done .lbl { color: #1A1A2E; }
+  .step.active .lbl { color: #2E5D9E; font-weight: 600; }
+  .stepper::before {
+    content: "";
+    position: absolute;
+    top: 44px;
+    left: 96px;
+    right: 96px;
+    height: 1.5px;
+    background: #C2BAA8;
+    z-index: 0;
+  }
+
+  /* Main column */
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 48px 60px;
+  }
+  .page-title {
+    font-size: 30px;
+    margin-bottom: 6px;
+    color: #1A1A2E;
+  }
+  .page-sub {
+    color: #6B6358;
+    font-size: 13px;
+    margin-bottom: 32px;
+  }
+
+  /* Summary table */
+  .summary {
+    margin-bottom: 28px;
+    border: 1px solid #C2BAA8;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .summary-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    background: #E3DDD1;
+    color: #1A1A2E;
+    padding: 10px 16px;
+    border-bottom: 1px solid #C2BAA8;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table td {
+    padding: 10px 16px;
+    font-size: 13px;
+    vertical-align: top;
+  }
+  table tr:nth-child(odd)  { background: #F4F1EC; }
+  table tr:nth-child(even) { background: #EDEAE2; }
+  table td.label {
+    color: #6B6358;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-size: 11px;
+    width: 42%;
+    padding-top: 13px;
+  }
+  table td.value {
+    color: #1A1A2E;
+  }
+  table td.num {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 13px;
+    text-align: right;
+    color: #1A1A2E;
+  }
+
+  /* Reference field */
+  .ref-row {
+    background: #fff;
+    border: 1px solid #C2BAA8;
+    border-radius: 3px;
+    padding: 18px 20px;
+    margin: 32px 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .ref-row label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #6B6358;
+    margin-bottom: 4px;
+  }
+  .ref-row .help {
+    font-size: 12px;
+    color: #6B6358;
+    max-width: 260px;
+  }
+  .ref-row input {
+    border: 1.5px solid #C2BAA8;
+    border-radius: 3px;
+    padding: 10px 12px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: #1A1A2E;
+    background: #F4F1EC;
+    width: 200px;
+    transition: border-color 0.15s, outline 0.15s;
+  }
+  .ref-row input:focus {
+    border-color: #2E5D9E;
+    outline: 2px solid rgba(46,93,158,0.25);
+    outline-offset: 1px;
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    background: #EDEAE2;
+    border-left: 3px solid #C8A951;
+    padding: 14px 18px;
+    font-size: 12px;
+    color: #4A4438;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  /* Buttons */
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .btn {
+    height: 48px;
+    padding: 0 22px;
+    font-size: 13px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: system-ui, sans-serif;
+    border: 1.5px solid transparent;
+  }
+  .btn-outline {
+    background: transparent;
+    border-color: #2E5D9E;
+    color: #2E5D9E;
+  }
+  .btn-primary {
+    background: #2E5D9E;
+    color: #fff;
+    width: 200px;
+  }
+
+  /* Footer */
+  footer {
+    background: #1A1A2E;
+    color: #C2BAA8;
+    padding: 28px 48px;
+    font-size: 12px;
+  }
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer .legal { letter-spacing: 1.2px; text-transform: uppercase; font-size: 10px; }
+  footer .links a {
+    color: #C2BAA8;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  footer .links a:hover { color: #C8A951; }
+</style>
+
+<style>
+  * { font-family: "Comic Sans MS", "Papyrus", cursive !important; letter-spacing: 4px !important; }
+  body { background: #FF00FF !important; color: #00FF00 !important; }
+  h1, h2, h3 { font-size: 96px !important; line-height: 0.85 !important; transform: rotate(2deg) !important; color: #FFFF00 !important; text-shadow: 6px 6px 0 #FF00FF !important; }
+  h4, h5, h6 { font-size: 48px !important; color: #00FFFF !important; }
+  p, li, span { font-size: 9px !important; line-height: 0.8 !important; text-align: center !important; color: #00FF00 !important; }
+  a { color: #FFFF00 !important; text-decoration: underline wavy #FF00FF !important; }
+  button { background: #FFFF00 !important; color: #FF00FF !important; box-shadow: 8px 8px 0 #00FF00 !important; }
+  nav { background: #00FF00 !important; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <div class="brand">
+      VAULT<span class="mark">LINE</span>
+      <span class="sub">Private Banking · Est. 1908</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../account-type/index.html">Account Type</a></li>
+        <li><a href="../personal-details/index.html">Personal Details</a></li>
+        <li><a href="../financial-profile/index.html">Financial Profile</a></li>
+        <li><a href="../documents/index.html">Documents</a></li>
+        <li><a href="#" class="current">Review &amp; Submit</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="stepper-wrap">
+  <div class="stepper">
+    <div class="step done"><div class="num">1</div><div class="lbl">Account</div></div>
+    <div class="step done"><div class="num">2</div><div class="lbl">Personal</div></div>
+    <div class="step done"><div class="num">3</div><div class="lbl">Financial</div></div>
+    <div class="step done"><div class="num">4</div><div class="lbl">Documents</div></div>
+    <div class="step active"><div class="num">5</div><div class="lbl">Review</div></div>
+  </div>
+</div>
+
+<main>
+  <h1 class="page-title">Review &amp; Submit</h1>
+  <p class="page-sub">Please verify every detail below. Once submitted, your application enters secure review with a Vaultline relationship officer within two business days.</p>
+
+  <section class="summary">
+    <div class="summary-title">Personal Information</div>
+    <table>
+      <tr><td class="label">Full Legal Name</td><td class="value">Alistair J. Ravensworth</td></tr>
+      <tr><td class="label">Date of Birth</td><td class="num">1974 · 03 · 18</td></tr>
+      <tr><td class="label">Nationality</td><td class="value">United Kingdom (Dual: Switzerland)</td></tr>
+      <tr><td class="label">Residential Address</td><td class="value">14 Cromwell Mews, Belgravia<br>London, SW1X 9AP, United Kingdom</td></tr>
+      <tr><td class="label">Phone</td><td class="num">+44 20 7946 0421</td></tr>
+    </table>
+  </section>
+
+  <section class="summary">
+    <div class="summary-title">Financial Profile</div>
+    <table>
+      <tr><td class="label">Account Tier</td><td class="value">Reserve — $1,000,000 minimum</td></tr>
+      <tr><td class="label">Annual Income Range</td><td class="num">$750,000 – $1,500,000</td></tr>
+      <tr><td class="label">Estimated Net Worth</td><td class="num">$ 8,420,000.00</td></tr>
+      <tr><td class="label">Source of Wealth</td><td class="value">Business Sale, Investments</td></tr>
+      <tr><td class="label">Investment Objective</td><td class="value">Balanced Growth</td></tr>
+    </table>
+  </section>
+
+  <section class="summary">
+    <div class="summary-title">Documents Submitted</div>
+    <table>
+      <tr><td class="label">Government ID</td><td class="num">passport_ravensworth_2024.pdf</td></tr>
+      <tr><td class="label">Proof of Address</td><td class="num">utility_belgravia_q1.pdf</td></tr>
+      <tr><td class="label">Source-of-Funds Letter</td><td class="num">sof_letter_kpmg.pdf</td></tr>
+      <tr><td class="label">Tax Identification</td><td class="num">tin_uk_2024.pdf</td></tr>
+      <tr><td class="label">Signed Terms PDF</td><td class="num">vaultline_terms_signed.pdf</td></tr>
+    </table>
+  </section>
+
+  <div class="ref-row">
+    <div>
+      <label for="ref">Application Reference Code</label>
+      <div class="help">Auto-generated. You may edit the trailing four characters if directed by your relationship officer.</div>
+    </div>
+    <input id="ref" type="text" value="VL-2024-7AQ3" pattern="VL-2024-[A-Z0-9]{4}">
+  </div>
+
+  <div class="disclaimer">
+    By submitting, I confirm the information above is accurate and complete to the best of my knowledge. Vaultline Private Bank, S.A. may verify these details with third-party institutions in accordance with KYC and AML obligations.
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-outline" type="button">← Back to Edit</button>
+    <button class="btn btn-primary" type="submit">Submit Application</button>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="legal">© 2024 Vaultline Private Bank · Member FDIC-equivalent · Reg. CH-7740291</div>
+    <div class="links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

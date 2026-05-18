@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speakers — Strata Data Summit 2025</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #0D1B2A;
+    color: #F0EDE8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+  }
+  a { color: #F0EDE8; text-decoration: none; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  .nav-wrap { background: #0D1B2A; border-bottom: 1px solid #1a2a3d; }
+  .nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #F0EDE8;
+  }
+  .logo span { color: #2EC4B6; }
+  .nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .nav-links a { font-size: 15px; padding: 4px 0; }
+  .nav-links a.active {
+    border-bottom: 2px solid #2EC4B6;
+    padding-bottom: 2px;
+  }
+
+  /* Sections */
+  section { padding: 40px 0; }
+  .intro h1 { font-size: 44px; margin-bottom: 12px; }
+  .intro .tag { color: #F4A261; font-family: Georgia, serif; font-style: italic; margin-bottom: 18px; }
+  .intro p { font-size: 17px; max-width: 900px; }
+  .intro p .accent { color: #2EC4B6; font-weight: 600; }
+
+  /* Speakers grid */
+  .speakers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    margin-top: 28px;
+  }
+  .card {
+    border: 1px solid #2EC4B6;
+    border-radius: 6px;
+    padding: 20px;
+    background: #132236;
+    display: flex;
+    flex-direction: column;
+  }
+  .avatar {
+    height: 110px;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #0D1B2A;
+  }
+  .a1 { background: linear-gradient(135deg, #2EC4B6, #1f8d83); }
+  .a2 { background: linear-gradient(135deg, #F4A261, #c97f3f); }
+  .a3 { background: linear-gradient(135deg, #2EC4B6, #F4A261); }
+  .a4 { background: linear-gradient(135deg, #1f8d83, #0D1B2A); color: #F0EDE8; }
+  .a5 { background: linear-gradient(135deg, #F4A261, #2EC4B6); }
+  .a6 { background: linear-gradient(135deg, #2EC4B6, #132236); color: #F0EDE8;}
+  .a7 { background: linear-gradient(135deg, #F4A261, #1f8d83); }
+  .a8 { background: linear-gradient(135deg, #2EC4B6, #c97f3f); }
+
+  .card .name {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 19px;
+    color: #F0EDE8;
+    margin-bottom: 4px;
+  }
+  .card .title {
+    color: #2EC4B6;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .card .company {
+    color: #F4A261;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .card .bio {
+    font-size: 14px;
+    color: #F0EDE8;
+    opacity: 0.92;
+  }
+
+  /* CTA strip */
+  .cta {
+    margin-top: 40px;
+    border-top: 1px solid #1a2a3d;
+    padding-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .cta h3 { font-size: 24px; margin: 0; }
+  .cta p { margin: 4px 0 0; opacity: 0.85; }
+  .btn {
+    background: #2EC4B6;
+    color: #0D1B2A;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 12px 28px;
+    display: inline-block;
+    border: none;
+    font-size: 15px;
+    font-family: inherit;
+  }
+
+  /* Footer */
+  footer {
+    background: #0D1B2A;
+    border-top: 1px solid #1a2a3d;
+    margin-top: 20px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .foot-left .fname {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .foot-left .ftag { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+  .foot-right { display: flex; flex-direction: column; gap: 6px; }
+  .foot-right .qlabel { color: #2EC4B6; font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .foot-right a { font-size: 14px; }
+
+  @media (max-width: 960px) {
+    .speakers-grid { grid-template-columns: repeat(2, 1fr); }
+    .intro h1 { font-size: 36px; }
+  }
+  @media (max-width: 560px) {
+    .speakers-grid { grid-template-columns: 1fr; }
+    .intro h1 { font-size: 30px; }
+    .nav { padding: 14px 20px; }
+    .nav-links { gap: 14px; }
+    .nav-links a { font-size: 14px; }
+    .cta { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="logo">Strata<span>·</span>Data Summit</div>
+    <div class="nav-links">
+      <a href="../home/index.html">home</a>
+      <a href="../schedule/index.html">schedule</a>
+      <a href="#" class="active">speakers</a>
+      <a href="../venue/index.html">venue</a>
+      <a href="../register/index.html">register</a>
+    </div>
+  </nav>
+</div>
+
+<div class="container">
+
+  <section class="intro">
+    <h1>Speakers</h1>
+    <div class="tag">Eight voices shaping the future of data engineering and analytics.</div>
+    <p>
+      Our 2025 lineup features <span class="accent">Dr. Amara Okonkwo</span>,
+      <span class="accent">Liang Chen</span>,
+      <span class="accent">Marisol Vega</span>,
+      <span class="accent">Devon Pritchard</span>,
+      <span class="accent">Yuki Tanaka</span>,
+      <span class="accent">Rohan Mehta</span>,
+      <span class="accent">Cara Whitfield</span>, and
+      <span class="accent">Ibrahim Al-Sayed</span> —
+      eight confirmed practitioners and leaders joining us in Pittsburgh on October 9–10. Expect candid keynotes,
+      working-session masterclasses, and informal lounge conversations across two full days.
+    </p>
+  </section>
+
+  <section style="padding-top: 0;">
+    <div class="speakers-grid">
+
+      <div class="card">
+        <div class="avatar a1">AO</div>
+        <div class="name">Dr. Amara Okonkwo</div>
+        <div class="title">Chief Data Officer</div>
+        <div class="company">Helix Insurance Group</div>
+        <div class="bio">Amara leads a 200-person data org modernizing decades of legacy actuarial pipelines. She has spent the last fifteen years translating regulated-industry constraints into pragmatic platform decisions.</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar a2">LC</div>
+        <div class="name">Liang Chen</div>
+        <div class="title">Principal Data Engineer</div>
+        <div class="company">Northwind Logistics</div>
+        <div class="bio">Liang designs streaming systems that move billions of telemetry events from trucks and warehouses every day. He writes openly about the trade-offs between batch warehousing and real-time architectures.</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar a3">MV</div>
+        <div class="name">Marisol Vega</div>
+        <div class="title">VP of Analytics</div>
+        <div class="company">Beacon Health Partners</div>
+        <div class="bio">Marisol builds analytics functions inside hospital networks where data quality directly affects patient outcomes. Her keynote will cover governance frameworks that survive contact with operational reality.</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar a4">DP</div>
+        <div class="name">Devon Pritchard</div>
+        <div class="title">Staff ML Engineer</div>
+        <div class="company">Cartograph AI</div>
+        <div class="bio">Devon ships production machine-learning systems for geospatial routing and demand prediction. He is leading a hands-on workshop on shipping reproducible feature stores without a small army of platform engineers.</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar a5">YT</div>
+        <div class="name">Yuki Tanaka</div>
+        <div class="title">Head of Data Platform</div>
+        <div class="company">Lumen Retail</div>
+        <div class="bio">Yuki rebuilt Lumen's analytics stack from scratch over eighteen months, consolidating six warehouses into one. She'll share what worked, what she'd do differently, and the migration patterns that scaled.</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar a6">RM</div>
+        <div class="name">Rohan Mehta</div>
+        <div class="title">Director of Data Science</div>
+        <div class="company">Greenfield Energy</div>
+        <div class="bio">Rohan brings physics-informed modeling to grid optimization across the U.S. Northeast. His session unpacks how to evaluate forecasting models when the cost of being wrong is measured in megawatts.</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar a7">CW</div>
+        <div class="name">Cara Whitfield</div>
+        <div class="title">Senior Analytics Engineer</div>
+        <div class="company">Mosaic Media</div>
+        <div class="bio">Cara is a longtime advocate of the analytics-engineering discipline and a contributor to several open-source modeling tools. She'll walk through patterns for keeping semantic layers honest as teams scale.</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar a8">IA</div>
+        <div class="name">Ibrahim Al-Sayed</div>
+        <div class="title">Founder & CEO</div>
+        <div class="company">Parallax Data Labs</div>
+        <div class="bio">Ibrahim founded Parallax after a decade leading data teams at consumer fintech companies. His closing keynote looks at where the data tooling market is consolidating — and where new gaps are quietly opening.</div>
+      </div>
+
+    </div>
+
+    <div class="cta">
+      <div>
+        <h3>Want to hear them live?</h3>
+        <p>Two days, eight speakers, twelve sessions — Pittsburgh, October 9–10, 2025.</p>
+      </div>
+      <a class="btn" href="../register/index.html">Register Now</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="foot-left">
+      <div class="fname">Strata Data Summit</div>
+      <div class="ftag">Two days. Real practitioners. Pittsburgh, October 9–10, 2025.</div>
+    </div>
+    <div class="foot-right">
+      <span class="qlabel">Quick Links</span>
+      <a href="../home/index.html">Home</a>
+      <a href="../schedule/index.html">Schedule</a>
+      <a href="#">Speakers</a>
+      <a href="../venue/index.html">Venue</a>
+      <a href="../register/index.html">Register</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

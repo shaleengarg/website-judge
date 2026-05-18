@@ -1,0 +1,27 @@
+schema_version = "1.1"
+
+[task]
+name = "website-bench/synth-t8-deep-water-horizon-watch-92c7"
+description = "A multi-page investigative special report by the Tethys Journalism Collective documenting five years of illegal deep-sea trawling in the South Coral Sea, combining data visualizations, field correspondent logs, and policy analysis."
+authors = [{ name = "Website Bench", email = "shaleengarg.in@gmail.com" }]
+keywords = ["frontend", "html", "css", "vision", "replication", "special-report", "tier-8"]
+
+[metadata]
+difficulty_explanation = "Tier 8 (special-report): A multi-page investigative special report by the Tethys Journalism Collective documenting five years of illegal deep-sea trawling in the South Coral Sea, combining data visualizations, field correspondent logs, and policy analysis."
+category = "frontend"
+tier = 8
+genre = "special-report"
+
+[verifier]
+timeout_sec = 1200.0
+
+[agent]
+timeout_sec = 1500.0
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+gpus = 0
+allow_internet = true

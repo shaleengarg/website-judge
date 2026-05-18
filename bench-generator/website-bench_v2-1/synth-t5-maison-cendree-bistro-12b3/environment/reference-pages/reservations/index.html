@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reservations — Maison Cendrée</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1714;
+    color: #e8e0d4;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+  header {
+    padding: 2.5rem 0 1.5rem;
+    border-bottom: 1px solid #3a3530;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.65rem;
+    letter-spacing: 0.18em;
+    color: #e8e0d4;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .brand .amp { color: #c9a84c; font-weight: 400; font-style: italic; letter-spacing: 0; }
+  .tag {
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-top: 0.5rem;
+  }
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 2.2rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid #3a3530;
+  }
+  nav a {
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #e8e0d4;
+    text-decoration: none;
+    padding-bottom: 0.3rem;
+  }
+  nav a.active {
+    color: #c9a84c;
+    border-bottom: 1px solid #c9a84c;
+  }
+  main { padding: 4rem 0 3rem; }
+  h1.display {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 3.8rem;
+    letter-spacing: 0.18em;
+    line-height: 1.15;
+    text-align: center;
+    color: #e8e0d4;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .display .accent { color: #c9a84c; font-style: italic; font-weight: 700; }
+  .eyebrow {
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 3rem;
+  }
+  .policy p {
+    margin-bottom: 1.4rem;
+  }
+  .policy p:first-of-type::first-letter {
+    font-family: Georgia, serif;
+    font-size: 3.4em;
+    float: left;
+    line-height: 0.85;
+    color: #c9a84c;
+    margin-right: 0.15em;
+    padding-top: 0.05em;
+  }
+  .cta {
+    display: block;
+    text-align: center;
+    margin: 2.6rem 0 2.4rem;
+    padding: 1.1rem 1rem;
+    border: 1px solid #e8e0d4;
+    color: #e8e0d4;
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-family: Georgia, serif;
+    font-weight: 400;
+  }
+  blockquote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.65rem;
+    line-height: 1.15;
+    color: #c9a84c;
+    border-left: 3px solid #7a2d3b;
+    padding-left: 1.4rem;
+    max-width: 580px;
+    margin: 2.6rem auto;
+  }
+  .contact {
+    margin-top: 2.4rem;
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #e8e0d4;
+    line-height: 2;
+  }
+  .contact .label { color: #8a8278; display: inline-block; margin-right: 0.6rem; }
+  .contact .val { color: #c9a84c; }
+  .contact .row { display: block; }
+  footer {
+    border-top: 1px solid #3a3530;
+    padding: 2rem 0 2.5rem;
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8a8278;
+  }
+  footer .mark {
+    font-family: Georgia, serif;
+    color: #c9a84c;
+    letter-spacing: 0.18em;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Maison <span class="amp">&amp;</span> Cendrée</div>
+      <div class="tag">Bouchon Lyonnais · Plateau-Mont-Royal</div>
+    </header>
+    <nav>
+      <a href="../menu/index.html">Menu</a>
+      <a href="../cellar/index.html">Cellar</a>
+      <a href="#" class="active">Reservations</a>
+      <a href="../our-story/index.html">Our Story</a>
+      <a href="../find-us/index.html">Find Us</a>
+    </nav>
+
+    <main>
+      <div class="eyebrow">— À Table —</div>
+      <h1 class="display">Reser<span class="accent">v</span>ations</h1>
+      <div class="eyebrow" style="margin-top:-1.5rem;">By Telephone or Post</div>
+
+      <section class="policy">
+        <p>Walk-ins are warmly welcomed from Tuesday through Thursday, when the dining room keeps a slower cadence and the bar holds six stools reserved for those without a plan. Arrive early; the candles are lit at half past five and the kitchen begins service promptly at six. We do not maintain a waitlist on these evenings—if every table is taken, we will pour you a glass of something cold and tell you what time to return.</p>
+        <p>From Friday through Sunday a reservation is required. We seat parties of two to eight only, with a single turn beginning between 18 h and 20 h 30. Bookings open four weeks in advance and are confirmed by reply within one business day. For larger gatherings, private buyouts of the room, or any dietary considerations, please write directly and Élise will respond herself.</p>
+      </section>
+
+      <a class="cta" href="mailto:bonjour@maisoncendree.ca">Write to bonjour@maisoncendree.ca</a>
+
+      <blockquote>“Tables turn once per evening. You are never rushed.”</blockquote>
+
+      <div class="contact">
+        <span class="row"><span class="label">Téléphone</span><span class="val">+1 514 555 0142</span></span>
+        <span class="row"><span class="label">Service</span><span class="val">Mar–Dim · 17 h 30 – 23 h</span></span>
+        <span class="row"><span class="label">Réponse</span><span class="val">Sous 24 heures</span></span>
+      </div>
+    </main>
+
+    <footer>
+      <span class="mark">M · C</span>
+      <span>4221 rue Saint-Denis, Montréal</span>
+      <span>Est. 2011</span>
+    </footer>
+  </div>
+</body>
+</html>

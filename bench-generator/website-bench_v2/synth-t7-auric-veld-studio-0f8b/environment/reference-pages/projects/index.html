@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Projects — Auric Veld Studio</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    background: #1A1A1F;
+    color: #F0EBE1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- HEADER / NAV ---------- */
+  header {
+    position: relative;
+    padding: 28px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .logo { display: flex; align-items: center; gap: 14px; }
+  .logo-text {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    font-size: 13px;
+    color: #F0EBE1;
+    text-transform: uppercase;
+  }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav a {
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #F0EBE1;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s, color .2s;
+  }
+  nav a:hover { border-bottom-color: #E8A020; color: #E8A020; }
+  nav a.active { color: #E8A020; border-bottom-color: #E8A020; }
+
+  /* ---------- SECTION WRAPPER & DIAGONAL CUTS ---------- */
+  .section {
+    position: relative;
+    padding: 96px 48px;
+  }
+  .inner { max-width: 1200px; margin: 0 auto; }
+
+  /* 6deg alternating diagonal cuts */
+  .cut-down {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 7.5vw));
+  }
+  .cut-up {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7.5vw), 0 100%);
+  }
+  .cut-both-down {
+    clip-path: polygon(0 7.5vw, 100% 0, 100% 100%, 0 calc(100% - 7.5vw));
+  }
+  .cut-both-up {
+    clip-path: polygon(0 0, 100% 7.5vw, 100% calc(100% - 7.5vw), 0 100%);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    background: #1A1A1F;
+    padding: 80px 48px 140px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #E8A020;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 92px;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    max-width: 900px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: #C4706A;
+    font-weight: 700;
+  }
+  .hero p {
+    margin-top: 28px;
+    max-width: 560px;
+    color: rgba(240, 235, 225, 0.7);
+    font-size: 15px;
+  }
+  .hero-deco {
+    position: absolute;
+    right: -40px;
+    top: -20px;
+    width: 360px;
+    height: 360px;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  .hero-deco-2 {
+    position: absolute;
+    left: 55%;
+    bottom: -60px;
+    width: 220px;
+    height: 220px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  /* ---------- PROJECTS GRID ---------- */
+  .projects-section {
+    background: #14141a;
+    padding: 140px 48px 160px;
+    margin-top: -60px;
+    position: relative;
+  }
+  .grid-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 72px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(240, 235, 225, 0.12);
+  }
+  .grid-meta h2 {
+    font-size: 22px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .grid-meta .count {
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: #E8A020;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 36px 28px;
+  }
+  .row-offset { transform: translateY(50px); }
+
+  .tile {
+    position: relative;
+    aspect-ratio: 1 / 1.05;
+    display: block;
+    transition: transform .3s ease;
+  }
+  .tile svg { width: 100%; height: 100%; display: block; }
+  .tile .rhombus-fill { transition: fill .35s ease, opacity .35s ease; }
+  .tile:hover .rhombus-fill { fill: url(#grad-saffron-rose); }
+  .tile:hover { transform: translateY(-4px); }
+  .tile .label-block {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+  }
+  .tile .label-num {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: #1A1A1F;
+    opacity: 0.7;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .tile .label-name {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 22px;
+    color: #1A1A1F;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    padding: 0 30px;
+  }
+  .tile .label-cat {
+    margin-top: 12px;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: #1A1A1F;
+    opacity: 0.55;
+    text-transform: uppercase;
+  }
+
+  /* ---------- PULL QUOTE ---------- */
+  .quote-section {
+    background: #1A1A1F;
+    padding: 160px 48px 140px;
+    position: relative;
+    margin-top: -40px;
+  }
+  .quote-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .quote-mark {
+    font-family: Georgia, serif;
+    font-size: 180px;
+    line-height: 0.6;
+    color: #E8A020;
+    position: absolute;
+    top: -30px;
+    left: -10px;
+    opacity: 0.9;
+  }
+  blockquote {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 48px;
+    line-height: 1.2;
+    letter-spacing: 0.005em;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-left: 70px;
+    color: #F0EBE1;
+  }
+  blockquote .accent { color: #C4706A; font-style: italic; }
+  .quote-attribution {
+    margin-top: 36px;
+    padding-left: 70px;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #E8A020;
+  }
+  .quote-deco {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    width: 160px;
+    height: 160px;
+    opacity: 0.6;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    background: #0f0f13;
+    padding: 80px 48px 40px;
+    margin-top: -40px;
+    position: relative;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(240, 235, 225, 0.1);
+  }
+  footer h4 {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #E8A020;
+    margin-bottom: 18px;
+  }
+  footer p, footer li {
+    font-size: 13px;
+    color: rgba(240, 235, 225, 0.65);
+    list-style: none;
+    line-height: 1.9;
+  }
+  .footer-brand .logo-text { font-size: 16px; }
+  .footer-tag {
+    margin-top: 16px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 16px;
+    color: #F0EBE1;
+    max-width: 280px;
+  }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(240, 235, 225, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<!-- Global SVG defs (gradients reused across tiles & decoration) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-saffron-rose" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8A020"/>
+      <stop offset="100%" stop-color="#C4706A"/>
+    </linearGradient>
+    <linearGradient id="grad-saffron-rose-soft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8A020" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#C4706A" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<header>
+  <a href="../manifesto/index.html" class="logo">
+    <!-- AV ligature: two overlapping rhombuses, saffron on charcoal -->
+    <svg width="42" height="42" viewBox="0 0 60 60" aria-label="Auric Veld">
+      <rect width="60" height="60" fill="#1A1A1F"/>
+      <polygon points="20,8 36,30 20,52 4,30" fill="#E8A020" opacity="0.95"/>
+      <polygon points="40,8 56,30 40,52 24,30" fill="none" stroke="#E8A020" stroke-width="2.5"/>
+    </svg>
+    <span class="logo-text">Auric Veld Studio</span>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="../manifesto/index.html">Manifesto</a></li>
+      <li><a href="../identity-system/index.html">Identity System</a></li>
+      <li><a href="#" class="active">Projects</a></li>
+      <li><a href="../process/index.html">Process</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero cut-down">
+  <div class="hero-inner">
+    <div class="eyebrow">Selected Work — 2019 / 2024</div>
+    <h1>Six claims about what <em>brand</em> can carry.</h1>
+    <p>A small archive of identities we've built for makers, distillers, and weavers — each one a working argument, not a wrapper.</p>
+
+    <!-- Decorative SVG with linearGradient -->
+    <svg class="hero-deco" viewBox="0 0 200 200" aria-hidden="true">
+      <polygon points="100,10 190,100 100,190 10,100" fill="url(#grad-saffron-rose)" opacity="0.55"/>
+      <polygon points="100,40 160,100 100,160 40,100" fill="none" stroke="#E8A020" stroke-width="1"/>
+      <polygon points="100,70 130,100 100,130 70,100" fill="url(#grad-saffron-rose)"/>
+    </svg>
+    <svg class="hero-deco-2" viewBox="0 0 200 200" aria-hidden="true">
+      <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="url(#grad-saffron-rose)" stroke-width="2"/>
+      <polygon points="100,60 140,100 100,140 60,100" fill="url(#grad-saffron-rose-soft)"/>
+    </svg>
+  </div>
+</section>
+
+<!-- PROJECTS GRID -->
+<section class="projects-section cut-up">
+  <div class="inner">
+    <div class="grid-meta">
+      <h2>The Catalogue</h2>
+      <span class="count">Six identities · 2019—2024</span>
+    </div>
+
+    <div class="grid">
+      <!-- Tile 1 -->
+      <a href="#" class="tile">
+        <svg viewBox="0 0 200 210" preserveAspectRatio="none">
+          <defs><clipPath id="rh1"><polygon points="100,5 195,105 100,205 5,105"/></clipPath></defs>
+          <rect class="rhombus-fill" x="0" y="0" width="200" height="210" fill="#E8A020" opacity="0.55" clip-path="url(#rh1)"/>
+          <polygon points="100,5 195,105 100,205 5,105" fill="none" stroke="#E8A020" stroke-width="1.5"/>
+        </svg>
+        <div class="label-block">
+          <div class="label-num">01 — Botanical</div>
+          <div class="label-name">Nguni Botanicals</div>
+          <div class="label-cat">Identity · Packaging</div>
+        </div>
+      </a>
+
+      <!-- Tile 2 -->
+      <a href="#" class="tile">
+        <svg viewBox="0 0 200 210" preserveAspectRatio="none">
+          <defs><clipPath id="rh2"><polygon points="100,5 195,105 100,205 5,105"/></clipPath></defs>
+          <rect class="rhombus-fill" x="0" y="0" width="200" height="210" fill="#C4706A" opacity="0.6" clip-path="url(#rh2)"/>
+          <polygon points="100,5 195,105 100,205 5,105" fill="none" stroke="#C4706A" stroke-width="1.5"/>
+        </svg>
+        <div class="label-block">
+          <div class="label-num">02 — Spirits</div>
+          <div class="label-name">Cape Quartz Spirits</div>
+          <div class="label-cat">Brand · Bottle Design</div>
+        </div>
+      </a>
+
+      <!-- Tile 3 -->
+      <a href="#" class="tile">
+        <svg viewBox="0 0 200 210" preserveAspectRatio="none">
+          <defs><clipPath id="rh3"><polygon points="100,5 195,105 100,205 5,105"/></clipPath></defs>
+          <rect class="rhombus-fill" x="0" y="0" width="200" height="210" fill="#E8A020" opacity="0.45" clip-path="url(#rh3)"/>
+          <polygon points="100,5 195,105 100,205 5,105" fill="none" stroke="#E8A020" stroke-width="1.5"/>
+        </svg>
+        <div class="label-block">
+          <div class="label-num">03 — Textile</div>
+          <div class="label-name">Maboneng Thread Co.</div>
+          <div class="label-cat">Identity · Wayfinding</div>
+        </div>
+      </a>
+
+      <!-- Tile 4 (offset row) -->
+      <a href="#" class="tile row-offset">
+        <svg viewBox="0 0 200 210" preserveAspectRatio="none">
+          <defs><clipPath id="rh4"><polygon points="100,5 195,105 100,205 5,105"/></clipPath></defs>
+          <rect class="rhombus-fill" x="0" y="0" width="200" height="210" fill="#C4706A" opacity="0.45" clip-path="url(#rh4)"/>
+          <polygon points="100,5 195,105 100,205 5,105" fill="none" stroke="#C4706A" stroke-width="1.5"/>
+        </svg>
+        <div class="label-block">
+          <div class="label-num">04 — Editorial</div>
+          <div class="label-name">Veld Letter Press</div>
+          <div class="label-cat">Print · Typography</div>
+        </div>
+      </a>
+
+      <!-- Tile 5 (offset) -->
+      <a href="#" class="tile row-offset">
+        <svg viewBox="0 0 200 210" preserveAspectRatio="none">
+          <defs><clipPath id="rh5"><polygon points="100,5 195,105 100,205 5,105"/></clipPath></defs>
+          <rect class="rhombus-fill" x="0" y="0" width="200" height="210" fill="#E8A020" opacity="0.6" clip-path="url(#rh5)"/>
+          <polygon points="100,5 195,105 100,205 5,105" fill="none" stroke="#E8A020" stroke-width="1.5"/>
+        </svg>
+        <div class="label-block">
+          <div class="label-num">05 — Hospitality</div>
+          <div class="label-name">Ridge &amp; Reed Hotel</div>
+          <div class="label-cat">Brand · Interior Signage</div>
+        </div>
+      </a>
+
+      <!-- Tile 6 (offset) -->
+      <a href="#" class="tile row-offset">
+        <svg viewBox="0 0 200 210" preserveAspectRatio="none">
+          <defs><clipPath id="rh6"><polygon points="100,5 195,105 100,205 5,105"/></clipPath></defs>
+          <rect class="rhombus-fill" x="0" y="0" width="200" height="210" fill="#C4706A" opacity="0.5" clip-path="url(#rh6)"/>
+          <polygon points="100,5 195,105 100,205 5,105" fill="none" stroke="#C4706A" stroke-width="1.5"/>
+        </svg>
+        <div class="label-block">
+          <div class="label-num">06 — Architecture</div>
+          <div class="label-name">Khoba Stone Works</div>
+          <div class="label-cat">Identity · Catalogue</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PULL QUOTE -->
+<section class="quote-section cut-down">
+  <div class="quote-inner">
+    <span class="quote-mark">“</span>
+    <blockquote>
+      Every mark we make is a <span class="accent">claim</span> about what matters.
+    </blockquote>
+    <div class="quote-attribution">— Studio Principle № 04</div>
+
+    <svg class="quote-deco" viewBox="0 0 200 200" aria-hidden="true">
+      <polygon points="100,10 190,100 100,190 10,100" fill="none" stroke="url(#grad-saffron-rose)" stroke-width="1.5"/>
+      <polygon points="100,50 150,100 100,150 50,100" fill="url(#grad-saffron-rose)" opacity="0.7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <svg width="36" height="36" viewBox="0 0 60 60" aria-hidden="true">
+          <rect width="60" height="60" fill="#0f0f13"/>
+          <polygon points="20,8 36,30 20,52 4,30" fill="#E8A020"/>
+          <polygon points="40,8 56,30 40,52 24,30" fill="none" stroke="#E8A020" stroke-width="2.5"/>
+        </svg>
+        <span class="logo-text">Auric Veld Studio</span>
+      </div>
+      <p class="footer-tag">Brand identity built like architecture, felt like weather.</p>
+    </div>
+    <div>
+      <h4>Pages</h4>
+      <ul>
+        <li><a href="../manifesto/index.html">Manifesto</a></li>
+        <li><a href="../identity-system/index.html">Identity System</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="../process/index.html">Process</a></li>
+        <li><a href="../contact/index.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Studio</h4>
+      <ul>
+        <li>Maboneng Precinct</li>
+        <li>Johannesburg, ZA</li>
+        <li>hello@auricveld.studio</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Elsewhere</h4>
+      <ul>
+        <li>@auricveld</li>
+        <li>Are.na / auric-veld</li>
+        <li>Index Awards 2023</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Auric Veld Studio</span>
+    <span>Designed in Johannesburg</span>
+  </div>
+</footer>
+
+</body>
+</html>

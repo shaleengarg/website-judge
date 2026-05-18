@@ -1,0 +1,29 @@
+{
+  "id": "synth-t2-ironclad-futures-summit-6724",
+  "tier": 2,
+  "genre": "conference",
+  "pages": [
+    "program",
+    "speakers",
+    "venue",
+    "register",
+    "about"
+  ],
+  "palette_hint": "Background #F5F0E8 (warm off-white), body text #1C1C1C (near-black), primary accent #C0392B (deep crimson), secondary accent #2C3E50 (slate navy)",
+  "type_style": "Headings in Georgia serif, bold weight for section titles; body in system-ui sans-serif at regular weight, giving a serious editorial feel",
+  "description": "Ironclad Futures Summit is a three-day conference on industrial resilience and supply-chain innovation held annually in Pittsburgh, PA, targeting operations directors, logistics engineers, and policy makers.",
+  "constraints": [
+    "All pages share a sticky top nav bar with background #2C3E50, logo text 'IRONCLAD FUTURES' in Georgia bold at 20px, and nav links in #F5F0E8 at 14px with a 2px solid #C0392B bottom border on the active page",
+    "Page content max-width is 1100px centered with auto margins and 40px horizontal padding on all pages",
+    "Footer is #1C1C1C with #F5F0E8 text, three flex columns (Contact, Quick Links, Social Handles), 32px vertical padding, and a 4px top border in #C0392B",
+    "Cards across the site use background #FFFFFF, 1px solid #D5CFC4 border, 12px border-radius, and 24px internal padding",
+    "Section headings use Georgia bold at 28px in #2C3E50, with a 3px solid #C0392B left border and 12px left padding"
+  ],
+  "page_specs": {
+    "program": "Displays the full three-day conference schedule (May 14\u201316, 2025) as a CSS grid with one column per day and time-slot rows listing session titles, track tags (Operations, Policy, Technology), and room assignments. A top banner strip in #C0392B announces 'Early-bird registration closes April 1' in white 14px text. Each session entry is a card with the session title in Georgia bold 18px, speaker name in slate navy, and a colored track pill badge.",
+    "speakers": "A 3-column CSS grid of speaker cards, each showing a placeholder avatar circle in #D5CFC4 (80px diameter), the speaker's name in Georgia bold 20px, their title and company in #555 at 14px, and a two-sentence bio. Featured keynote speakers appear in a separate flex row above the grid, each card wider (spanning two columns) with a crimson 'KEYNOTE' badge. Speakers include 12 confirmed industry figures such as 'Director of Global Logistics at Ferrocept Industries' and 'Senior Policy Analyst at the Allegheny Manufacturing Council'.",
+    "venue": "Describes the David L. Lawrence Convention Center in Pittsburgh with a flex layout: a large placeholder rectangle (600\u00d7340px, background #D5CFC4) on the left representing the venue photo, and venue details on the right listing address, parking instructions, nearby hotels (Omni William Penn, Drury Plaza), and public transit options. Below this, a 2-column grid lists three official hotel partners with negotiated rates, check-in details, and booking code badges in #C0392B.",
+    "register": "A centered registration form card (max-width 640px) with fields for full name, job title, organization, email, and ticket tier selection (General Admission $495, Workshop Add-on $150, Group of 5+ $395/person) rendered as styled radio cards with border highlighting on selection. A summary box in #2C3E50 with white text sits below the form showing selected tier and total cost. A large crimson submit button (full width, 48px height, border-radius 8px) labeled 'Complete Registration' anchors the bottom.",
+    "about": "Explains the summit's founding in 2018 by the Ironclad Industry Alliance, its mission to connect North American manufacturing leaders, and its track record (six prior summits, 4,200 total alumni). Layout uses two flex rows: the first has a mission statement block beside a stat grid (4 stats: 320 attendees, 48 speakers, 3 days, 6 workshops) with each stat in a card showing a large crimson number and a navy label. The second row contains a 'Organizing Committee' section listing five committee members by name and institution, and a 'Media & Press' block with accreditation instructions and a press contact email."
+  }
+}

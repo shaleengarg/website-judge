@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingredients — Ember & Rye Kitchen</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #FDF6EC;
+    color: #2C2C2C;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    font-size: 17px;
+  }
+  .wrap {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+  .page-label {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    color: #B84C1E;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+  }
+  nav.site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  nav.site-nav a {
+    color: #7A8C6E;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  nav.site-nav a.current {
+    color: #2C2C2C;
+    border-bottom: 1px solid #B84C1E;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #B84C1E;
+    margin: 32px 0;
+  }
+  h1.recipe-title {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    color: #2C2C2C;
+    font-size: 28px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+  }
+  .lede {
+    color: #7A8C6E;
+    font-style: italic;
+    margin: 0;
+  }
+  h2.group-heading {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 700;
+    color: #B84C1E;
+    font-size: 20px;
+    line-height: 1.3;
+    margin: 0 0 16px;
+  }
+  ul.ingredients {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  ul.ingredients li {
+    padding: 6px 0;
+    color: #2C2C2C;
+  }
+  ul.ingredients li .qty {
+    color: #7A8C6E;
+    display: inline-block;
+    min-width: 90px;
+  }
+  .button-wrap {
+    text-align: center;
+    margin-top: 8px;
+  }
+  a.cta {
+    display: inline-block;
+    background: #B84C1E;
+    color: #FDF6EC;
+    text-decoration: none;
+    padding: 12px 28px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  footer.site-foot {
+    text-align: center;
+    color: #7A8C6E;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 24px;
+  }
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    h1.recipe-title { font-size: 24px; }
+    h2.group-heading { font-size: 19px; }
+    nav.site-nav { font-size: 12px; gap: 4px 14px; }
+    ul.ingredients li .qty { min-width: 80px; }
+    .wrap { padding: 32px 24px 48px; }
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="page-label">Ember &amp; Rye Kitchen · Ingredients</p>
+
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../featured-recipe/index.html">Featured Recipe</a>
+      <a href="#" class="current">Ingredients</a>
+      <a href="../method/index.html">Method</a>
+      <a href="../tips-and-notes/index.html">Tips &amp; Notes</a>
+      <a href="../about-the-cook/index.html">About the Cook</a>
+    </nav>
+
+    <hr>
+
+    <h1 class="recipe-title">Ingredients</h1>
+    <p class="lede">Everything you'll need for the braise and the glossy rye finish. Measure before you sear.</p>
+
+    <hr>
+
+    <section>
+      <h2 class="group-heading">For the Short Ribs</h2>
+      <ul class="ingredients">
+        <li><span class="qty">2.5 lb</span> bone-in beef short ribs</li>
+        <li><span class="qty">1.5 tsp</span> kosher salt</li>
+        <li><span class="qty">1 tsp</span> coarse-ground black pepper</li>
+        <li><span class="qty">2 tbsp</span> rendered beef tallow (or neutral oil)</li>
+        <li><span class="qty">1 large</span> yellow onion, rough-chopped</li>
+        <li><span class="qty">2 medium</span> carrots, cut into thick coins</li>
+        <li><span class="qty">3 stalks</span> celery, cut into 1-inch pieces</li>
+        <li><span class="qty">6 cloves</span> garlic, smashed</li>
+        <li><span class="qty">2 tbsp</span> tomato paste</li>
+        <li><span class="qty">1 cup</span> beef bone broth</li>
+        <li><span class="qty">1 cup</span> dry red wine</li>
+        <li><span class="qty">3 sprigs</span> fresh thyme</li>
+        <li><span class="qty">2</span> bay leaves</li>
+        <li><span class="qty">1 tbsp</span> whole black peppercorns</li>
+      </ul>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2 class="group-heading">For the Rye Glaze</h2>
+      <ul class="ingredients">
+        <li><span class="qty">3 tbsp</span> smoked rye whiskey</li>
+        <li><span class="qty">2 tbsp</span> dark brown sugar</li>
+        <li><span class="qty">1 tbsp</span> sorghum molasses</li>
+        <li><span class="qty">1 tbsp</span> apple cider vinegar</li>
+        <li><span class="qty">1 tsp</span> Dijon mustard</li>
+        <li><span class="qty">1/2 tsp</span> smoked paprika</li>
+        <li><span class="qty">1/2 cup</span> reserved braising liquid</li>
+        <li><span class="qty">1 tbsp</span> cold unsalted butter</li>
+        <li><span class="qty">to finish</span> flaky sea salt</li>
+      </ul>
+    </section>
+
+    <hr>
+
+    <div class="button-wrap">
+      <a class="cta" href="../method/index.html">Next: Method →</a>
+    </div>
+
+    <footer class="site-foot">
+      Ember &amp; Rye Kitchen · Page 2 of 5
+    </footer>
+  </main>
+</body>
+</html>

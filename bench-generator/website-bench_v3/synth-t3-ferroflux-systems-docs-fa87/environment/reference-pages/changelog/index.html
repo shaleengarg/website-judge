@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changelog — FerroFlux Systems</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0f1117;
+    color: #c9d1d9;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  code, pre, .mono { font-family: 'Courier New', Courier, monospace; font-size: 14px; }
+
+  /* Header */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    height: 56px;
+    background: #0f1117;
+    border-bottom: 1px solid #30363d;
+    display: flex; align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+  }
+  .logo { color: #58a6ff; font-weight: 700; font-size: 18px; letter-spacing: -0.2px; }
+  .breadcrumb { color: #8b949e; font-size: 13px; }
+  .breadcrumb span { margin: 0 6px; }
+  .breadcrumb a { color: #8b949e; text-decoration: none; }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 56px); }
+  .sidebar {
+    width: 260px; flex-shrink: 0;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    padding: 24px 0;
+    position: sticky; top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .nav-section { margin-bottom: 8px; }
+  .nav-title {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 20px;
+    color: #c9d1d9;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+  .nav-title::after { content: "▾"; color: #8b949e; font-size: 10px; }
+  .nav-list { list-style: none; padding: 4px 0 8px 0; }
+  .nav-list a {
+    display: block;
+    padding: 6px 20px 6px 32px;
+    color: #8b949e;
+    text-decoration: none;
+    font-size: 14px;
+    border-left: 2px solid transparent;
+  }
+  .nav-list a:hover { color: #c9d1d9; }
+  .nav-list a.active {
+    color: #58a6ff;
+    border-left-color: #58a6ff;
+    background: #0f1117;
+  }
+
+  .main {
+    flex: 1;
+    display: flex; justify-content: center;
+  }
+  .content {
+    max-width: 860px;
+    width: 100%;
+    padding: 40px 48px;
+  }
+
+  h1 { font-size: 32px; font-weight: 700; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 8px; }
+  h2 { font-size: 20px; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
+  h3 { font-size: 16px; font-weight: 700; line-height: 1.3; margin: 14px 0 6px; color: #c9d1d9; }
+  .lede { color: #8b949e; margin-bottom: 32px; font-size: 15px; }
+
+  /* Timeline */
+  .timeline {
+    max-width: 720px;
+    margin: 0 auto;
+    border-left: 2px solid #30363d;
+    padding-left: 32px;
+    position: relative;
+  }
+  .entry { position: relative; padding-bottom: 40px; }
+  .entry::before {
+    content: "";
+    position: absolute;
+    left: -41px;
+    top: 8px;
+    width: 12px; height: 12px;
+    background: #0f1117;
+    border: 2px solid #58a6ff;
+    border-radius: 50%;
+  }
+  .entry.patch::before { border-color: #3fb950; }
+  .entry.breaking::before { border-color: #f85149; }
+  .entry.major::before { width: 16px; height: 16px; left: -43px; background: #58a6ff; }
+
+  .entry-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f1117;
+  }
+  .pill.minor { background: #58a6ff; }
+  .pill.patch { background: #3fb950; }
+  .pill.breaking { background: #f85149; color: #fff; }
+  .date { color: #8b949e; font-size: 13px; }
+  .summary { font-weight: 700; font-size: 17px; line-height: 1.3; margin-bottom: 12px; color: #c9d1d9; }
+  .entry.major .summary { font-size: 22px; }
+
+  .group { margin-top: 10px; }
+  .group-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+  }
+  .group.added .group-label { color: #3fb950; }
+  .group.fixed .group-label { color: #58a6ff; }
+  .group.breaking .group-label { color: #f85149; }
+  .group ul { list-style: none; padding-left: 4px; }
+  .group li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: #c9d1d9;
+  }
+  .group li::before {
+    content: "▸";
+    position: absolute; left: 0; top: 0;
+    color: #8b949e;
+  }
+  .group li code {
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: #58a6ff;
+  }
+
+  .major-divider {
+    border: none;
+    border-top: 1px solid #30363d;
+    margin: 18px 0;
+  }
+  .callout {
+    background: #161b22;
+    border-left: 4px solid #58a6ff;
+    padding: 14px 16px;
+    margin-top: 16px;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-title {
+    font-weight: 700;
+    color: #58a6ff;
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+  .callout p { font-size: 14px; color: #c9d1d9; }
+  .callout code { font-family: 'Courier New', monospace; color: #3fb950; }
+
+  footer {
+    border-top: 1px solid #30363d;
+    padding: 24px 48px;
+    color: #8b949e;
+    font-size: 13px;
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  footer a { color: #8b949e; text-decoration: none; margin-right: 16px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .sidebar { width: 220px; }
+    .content { padding: 32px 28px; }
+  }
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; }
+    .sidebar {
+      position: static; width: 100%; height: auto;
+      border-right: none; border-bottom: 1px solid #30363d;
+      padding: 12px 0;
+    }
+    .nav-list { padding-bottom: 4px; }
+    .content { padding: 28px 20px; }
+    h1 { font-size: 26px; }
+    .timeline { padding-left: 24px; }
+    .entry::before { left: -33px; }
+    .entry.major::before { left: -35px; }
+  }
+  @media (max-width: 480px) {
+    .header { padding: 0 14px; gap: 12px; }
+    .breadcrumb { font-size: 12px; }
+    .content { padding: 20px 14px; }
+    .entry-head { gap: 8px; }
+    .summary { font-size: 15px; }
+    .entry.major .summary { font-size: 18px; }
+    footer { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">FerroFlux</div>
+  <nav class="breadcrumb">
+    <a href="../getting-started/index.html">Docs</a><span>/</span><a href="#">Release Notes</a><span>/</span>Changelog
+  </nav>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="nav-section">
+      <div class="nav-title">Installation</div>
+      <ul class="nav-list">
+        <li><a href="../getting-started/index.html">Getting Started</a></li>
+        <li><a href="#">Requirements</a></li>
+        <li><a href="#">npm Install</a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Core Concepts</div>
+      <ul class="nav-list">
+        <li><a href="#">Pipelines</a></li>
+        <li><a href="#">Sensor Streams</a></li>
+        <li><a href="#">Calibration</a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">SDK Methods</div>
+      <ul class="nav-list">
+        <li><a href="../api-reference/index.html">API Reference</a></li>
+        <li><a href="../troubleshooting/index.html">Troubleshooting</a></li>
+        <li><a href="#" class="active">Changelog</a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Config Schema</div>
+      <ul class="nav-list">
+        <li><a href="../configuration/index.html">ferroflux.yaml</a></li>
+        <li><a href="#">Env Variables</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content">
+      <h1>Changelog</h1>
+      <p class="lede">Release history for the FerroFlux SDK, spanning 18 months from initial public preview through the current stable line. Versions follow <code style="font-family:'Courier New',monospace;color:#58a6ff;">SemVer 2.0.0</code>.</p>
+
+      <div class="timeline">
+
+        <!-- v1.4.2 -->
+        <article class="entry patch">
+          <div class="entry-head">
+            <span class="pill patch">v1.4.2</span>
+            <span class="date">May 14, 2024</span>
+          </div>
+          <div class="summary">Stabilize WebSocket reconnect under high jitter.</div>
+
+          <div class="group fixed">
+            <div class="group-label">Fixed</div>
+            <ul>
+              <li>Exponential backoff in <code>StreamClient.reconnect()</code> no longer overflows after 30+ failures.</li>
+              <li>Race in <code>sensors.list()</code> when polling during firmware refresh.</li>
+              <li>Memory leak in zero-copy buffer pool on Linux 6.x kernels.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- v1.4.0 -->
+        <article class="entry minor">
+          <div class="entry-head">
+            <span class="pill minor">v1.4.0</span>
+            <span class="date">April 02, 2024</span>
+          </div>
+          <div class="summary">Adaptive sampling and per-channel gain profiles.</div>
+
+          <div class="group added">
+            <div class="group-label">Added</div>
+            <ul>
+              <li>New <code>pipeline.adaptive</code> block in ferroflux.yaml for dynamic sample rates.</li>
+              <li><code>POST /v1/calibration/profiles</code> endpoint for per-channel gain.</li>
+              <li>Prometheus-compatible <code>/metrics</code> exporter on diagnostic port.</li>
+            </ul>
+          </div>
+          <div class="group fixed">
+            <div class="group-label">Fixed</div>
+            <ul>
+              <li>SPI driver returned stale magnetometer reads after suspend/resume.</li>
+              <li>YAML parser now reports line numbers on duplicate keys.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- v1.3.1 -->
+        <article class="entry patch">
+          <div class="entry-head">
+            <span class="pill patch">v1.3.1</span>
+            <span class="date">February 19, 2024</span>
+          </div>
+          <div class="summary">Hotfix for USB-HID detection on Ubuntu 22.04 LTS.</div>
+
+          <div class="group fixed">
+            <div class="group-label">Fixed</div>
+            <ul>
+              <li>udev rule template now references the correct vendor ID range.</li>
+              <li><code>ferroflux doctor</code> no longer hangs when no device is attached.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- v1.2.0 -->
+        <article class="entry minor">
+          <div class="entry-head">
+            <span class="pill minor">v1.2.0</span>
+            <span class="date">December 06, 2023</span>
+          </div>
+          <div class="summary">Authentication overhaul with API key rotation.</div>
+
+          <div class="group added">
+            <div class="group-label">Added</div>
+            <ul>
+              <li><code>auth.keys.rotate()</code> SDK method with grace-period overlap.</li>
+              <li>Scoped tokens: <code>read:sensors</code>, <code>write:calibration</code>, <code>admin:streams</code>.</li>
+              <li>Audit log streamed over <code>wss://&lt;host&gt;/v1/audit</code>.</li>
+            </ul>
+          </div>
+          <div class="group fixed">
+            <div class="group-label">Fixed</div>
+            <ul>
+              <li>Clock skew tolerance increased from 30s to 120s for HMAC signatures.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- v1.1.0 -->
+        <article class="entry minor">
+          <div class="entry-head">
+            <span class="pill minor">v1.1.0</span>
+            <span class="date">October 11, 2023</span>
+          </div>
+          <div class="summary">Multi-sensor fusion preview and TypeScript types.</div>
+
+          <div class="group added">
+            <div class="group-label">Added</div>
+            <ul>
+              <li>Experimental <code>fusion.kalman()</code> combiner for 2–8 sensors.</li>
+              <li>First-class TypeScript declarations shipped in the SDK package.</li>
+              <li>CLI command <code>ferroflux stream tail</code> for live debugging.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- v1.0.0 - MAJOR -->
+        <article class="entry major">
+          <div class="entry-head">
+            <span class="pill minor">v1.0.0</span>
+            <span class="date">August 22, 2023</span>
+          </div>
+          <div class="summary">FerroFlux 1.0 — Production-ready release.</div>
+          <hr class="major-divider">
+
+          <div class="group added">
+            <div class="group-label">Added</div>
+            <ul>
+              <li>Stable REST API under <code>/v1/</code> with versioning guarantee.</li>
+              <li>Backpressure-aware WebSocket transport with frame batching.</li>
+              <li>Official Docker image <code>ferroflux/sdk:1.0.0</code>.</li>
+              <li>Long-Term Support commitment of 18 months for the 1.x line.</li>
+            </ul>
+          </div>
+          <div class="group fixed">
+            <div class="group-label">Fixed</div>
+            <ul>
+              <li>Stabilized buffer-pool sizing under sustained 10 kHz sampling.</li>
+              <li>Resolved 47 issues carried over from the 0.x preview series.</li>
+            </ul>
+          </div>
+          <div class="group breaking">
+            <div class="group-label">Breaking</div>
+            <ul>
+              <li>Removed the deprecated <code>/sensor/poll</code> REST route.</li>
+              <li>Config key <code>buffer_size</code> renamed to <code>pipeline.bufferSize</code>.</li>
+              <li>Callbacks replaced with async iterators on <code>StreamClient</code>.</li>
+            </ul>
+          </div>
+
+          <div class="callout">
+            <div class="callout-title">Migration note — upgrading from 0.x</div>
+            <p>Run <code>npx ferroflux-migrate@1</code> in your project root to rewrite legacy <code>ferroflux.yaml</code> files and update SDK call sites. Allow approximately 15 minutes per service; the codemod is idempotent and prints a diff before writing.</p>
+          </div>
+        </article>
+
+        <!-- v0.6.0 -->
+        <article class="entry breaking">
+          <div class="entry-head">
+            <span class="pill breaking">v0.6.0</span>
+            <span class="date">May 30, 2023</span>
+          </div>
+          <div class="summary">Release-candidate cleanup ahead of 1.0.</div>
+
+          <div class="group added">
+            <div class="group-label">Added</div>
+            <ul>
+              <li>Schema validation for ferroflux.yaml at SDK boot time.</li>
+              <li><code>GET /v1/streams/:id/health</code> diagnostic endpoint.</li>
+            </ul>
+          </div>
+          <div class="group breaking">
+            <div class="group-label">Breaking</div>
+            <ul>
+              <li>WebSocket frames are now CBOR-encoded by default; JSON is opt-in.</li>
+              <li>Minimum supported Node version raised to <code>18.17.0</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- v0.3.0 -->
+        <article class="entry minor">
+          <div class="entry-head">
+            <span class="pill minor">v0.3.0</span>
+            <span class="date">February 14, 2023</span>
+          </div>
+          <div class="summary">Public preview: REST endpoints and basic streaming.</div>
+
+          <div class="group added">
+            <div class="group-label">Added</div>
+            <ul>
+              <li>Initial REST surface for <code>/sensors</code> and <code>/streams</code>.</li>
+              <li>Sample-rate configuration up to 4 kHz on supported hardware.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- v0.1.0 -->
+        <article class="entry patch">
+          <div class="entry-head">
+            <span class="pill patch">v0.1.0</span>
+            <span class="date">November 08, 2022</span>
+          </div>
+          <div class="summary">First internal alpha — magnetic sensor I/O proof-of-concept.</div>
+
+          <div class="group added">
+            <div class="group-label">Added</div>
+            <ul>
+              <li>USB-HID transport driver for FerroFlux-compatible probes.</li>
+              <li>Minimal Node.js binding exposing <code>read()</code> and <code>close()</code>.</li>
+              <li>Initial documentation site skeleton.</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+
+      <footer>
+        <div>© 2024 FerroFlux Systems · SDK v1.4.2</div>
+        <div>
+          <a href="../getting-started/index.html">Getting Started</a>
+          <a href="../api-reference/index.html">API</a>
+          <a href="../configuration/index.html">Config</a>
+          <a href="../troubleshooting/index.html">Troubleshooting</a>
+        </div>
+      </footer>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

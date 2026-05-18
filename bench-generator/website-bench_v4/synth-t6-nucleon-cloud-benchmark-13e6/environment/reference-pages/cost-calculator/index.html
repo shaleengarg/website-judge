@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cost Calculator — Nucleon Cloud Benchmark</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #1A1F2E;
+    background: #F4F6FA;
+  }
+  h1, h2, h3, h4 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+    color: #1A1F2E;
+  }
+  h1 { font-size: 32px; }
+  h2 { font-size: 22px; margin-top: 0; }
+  h3 { font-size: 16px; }
+  p { margin: 0 0 12px; }
+  a { color: #2563EB; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header / Nav */
+  .site-header {
+    background: #1A1F2E;
+    color: #FFFFFF;
+    border-bottom: 3px solid #2563EB;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+  .brand {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 18px;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-mark {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #2563EB, #F59E0B);
+    border-radius: 6px;
+    display: inline-block;
+  }
+  nav.main-nav {
+    margin-left: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  nav.main-nav a {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #CBD5E1;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+  nav.main-nav a:hover { color: #FFFFFF; background: rgba(255,255,255,0.06); text-decoration: none; }
+  nav.main-nav a.active { color: #FFFFFF; background: #2563EB; }
+
+  /* Layout */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+  .page-head {
+    margin-bottom: 24px;
+  }
+  .page-head .crumb {
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #2563EB;
+    margin-bottom: 6px;
+  }
+  .page-head .lead {
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    color: #475569;
+    max-width: 720px;
+  }
+
+  /* Card */
+  .card {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #E2E8F0;
+    padding-bottom: 12px;
+  }
+  .badge {
+    display: inline-block;
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #FEF3C7;
+    color: #92400E;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .badge.blue { background: #DBEAFE; color: #1E40AF; }
+
+  /* Form */
+  form.calc {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px 24px;
+  }
+  @media (min-width: 560px) {
+    form.calc { grid-template-columns: 1fr 1fr; }
+  }
+  .field { display: flex; flex-direction: column; }
+  .field.full { grid-column: 1 / -1; }
+  label.lbl {
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #1A1F2E;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  label.lbl .hint {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-weight: 400;
+    font-size: 11px;
+    color: #64748B;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  select {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 13px;
+    color: #1A1F2E;
+    background: #FFFFFF;
+    border: 1px solid #94A3B8;
+    border-radius: 4px;
+    padding: 6px 10px;
+    width: 100%;
+    outline: none;
+  }
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    outline: 2px solid #2563EB;
+    outline-offset: 0;
+    border-color: #2563EB;
+  }
+  input:required:invalid { border: 1px solid #EF4444; }
+  input:required:valid { border: 1px solid #22C55E; }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #1A1F2E 50%), linear-gradient(135deg, #1A1F2E 50%, transparent 50%);
+    background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 28px;
+  }
+
+  /* Custom radios and checkboxes */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .options.row { flex-direction: row; flex-wrap: wrap; gap: 10px 16px; }
+
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1A1F2E;
+    cursor: pointer;
+    padding: 6px 10px;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    background: #F8FAFC;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .opt:hover { background: #EBF0FB; border-color: #CBD5E1; }
+  .opt .price {
+    margin-left: auto;
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 12px;
+    color: #64748B;
+  }
+
+  input[type="radio"],
+  input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #2563EB;
+    background: #FFFFFF;
+    margin: 0;
+    flex-shrink: 0;
+    position: relative;
+    cursor: pointer;
+  }
+  input[type="radio"] { border-radius: 50%; }
+  input[type="checkbox"] { border-radius: 3px; }
+
+  input[type="radio"]:checked { background: #2563EB; }
+  input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 6px; height: 6px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  input[type="checkbox"]:checked { background: #2563EB; }
+  input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 1px; left: 4px;
+    width: 4px; height: 8px;
+    border: solid #FFFFFF;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  input[type="radio"]:focus,
+  input[type="checkbox"]:focus { outline: 2px solid #93C5FD; outline-offset: 1px; }
+
+  /* Form actions */
+  .actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid #E2E8F0;
+    margin-top: 4px;
+  }
+  .btn {
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: #2563EB;
+    color: #FFFFFF;
+  }
+  .btn:hover { background: #1D4ED8; }
+  .btn.secondary {
+    background: #FFFFFF;
+    color: #1A1F2E;
+    border-color: #CBD5E1;
+  }
+  .btn.secondary:hover { background: #F4F6FA; }
+
+  /* Results table */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+  }
+  @media (max-width: 899px) {
+    .table-wrap { overflow-x: scroll; }
+    .table-wrap::-webkit-scrollbar { height: 10px; }
+    .table-wrap::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 4px; }
+    .table-wrap::-webkit-scrollbar-track { background: #E2E8F0; }
+  }
+  table.results {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 13px;
+    min-width: 640px;
+  }
+  table.results thead {
+    position: sticky;
+    top: 0;
+    background: #1A1F2E;
+    color: #FFFFFF;
+  }
+  table.results thead th {
+    background: #1A1F2E;
+    color: #FFFFFF;
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: left;
+    padding: 10px 14px;
+    border-right: 1px solid #334155;
+  }
+  table.results thead th:last-child { border-right: none; }
+  table.results thead th.num { text-align: right; }
+  table.results tbody td {
+    padding: 10px 14px;
+    border-right: 1px solid #CBD5E1;
+    border-top: 1px solid #E2E8F0;
+  }
+  table.results tbody td:last-child { border-right: none; }
+  table.results tbody tr:nth-child(even) { background: #EBF0FB; }
+  table.results tbody tr:hover { background: #DBEAFE; }
+  table.results td.num {
+    text-align: right;
+    font-family: ui-monospace, "Courier New", monospace;
+    min-width: 90px;
+  }
+  table.results td.label {
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+  }
+  table.results tr.subtotal td {
+    font-weight: 700;
+    background: #F4F6FA !important;
+    border-top: 2px solid #1A1F2E;
+  }
+  table.results tr.annual td {
+    background: #FEF3C7 !important;
+    font-weight: 700;
+    color: #1A1F2E;
+    border-top: 1px solid #F59E0B;
+  }
+
+  /* Summary chips */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .chip {
+    font-family: ui-monospace, "Courier New", monospace;
+    font-size: 12px;
+    background: #EBF0FB;
+    color: #1E40AF;
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid #DBEAFE;
+  }
+  .chip strong {
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    color: #1A1F2E;
+    margin-right: 4px;
+  }
+
+  /* Footer */
+  footer.site-footer {
+    background: #1A1F2E;
+    color: #CBD5E1;
+    margin-top: 48px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 640px) {
+    .footer-inner { grid-template-columns: 2fr 1fr 1fr 1fr; }
+  }
+  .footer-inner h4 {
+    color: #FFFFFF;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .footer-inner ul { list-style: none; padding: 0; margin: 0; }
+  .footer-inner li { margin-bottom: 6px; font-size: 13px; }
+  .footer-inner a { color: #CBD5E1; }
+  .footer-inner a:hover { color: #FFFFFF; }
+  .footer-bottom {
+    border-top: 1px solid #334155;
+    padding: 16px 24px;
+    text-align: center;
+    font-size: 12px;
+    color: #94A3B8;
+  }
+  .footer-bottom .accent { color: #F59E0B; }
+
+  /* Helpers */
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 560px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+  .note {
+    font-family: system-ui, sans-serif;
+    font-size: 12px;
+    color: #64748B;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="../overview/index.html">
+      <span class="brand-mark"></span>
+      Nucleon Cloud Benchmark
+    </a>
+    <nav class="main-nav">
+      <a href="../overview/index.html">Overview</a>
+      <a href="../compute-plans/index.html">Compute Plans</a>
+      <a href="../storage-addons/index.html">Storage Add-ons</a>
+      <a href="../network-features/index.html">Network Features</a>
+      <a href="#" class="active">Cost Calculator</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="crumb">Tools / Estimator</div>
+    <h1>Cost Calculator</h1>
+    <p class="lead">Configure a hypothetical stack across compute, storage, network, and support tiers. The estimator below produces a per-line-item monthly breakdown and a projected annual total. Required fields validate in real time with red/green border states.</p>
+  </div>
+
+  <section class="card">
+    <div class="card-header">
+      <h2>Stack Configuration</h2>
+      <span class="badge">Estimator v2.4</span>
+    </div>
+
+    <form class="calc" novalidate>
+
+      <div class="field">
+        <label class="lbl" for="region">Region <span class="hint">required</span></label>
+        <select id="region" name="region" required>
+          <option value="">Select region…</option>
+          <option>us-east-1 — N. Virginia</option>
+          <option>us-west-2 — Oregon</option>
+          <option>eu-west-2 — London</option>
+          <option>eu-central-1 — Frankfurt</option>
+          <option>ap-southeast-1 — Singapore</option>
+          <option>ap-northeast-1 — Tokyo</option>
+        </select>
+        <div class="note">Pricing varies by region; egress fees differ on inter-region traffic.</div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="qty">Instance Quantity <span class="hint">1–100</span></label>
+        <input id="qty" name="qty" type="number" min="1" max="100" step="1" value="2" required>
+        <div class="note">Number of identical compute instances to provision.</div>
+      </div>
+
+      <div class="field full">
+        <label class="lbl">Compute Tier</label>
+        <div class="options row">
+          <label class="opt"><input type="radio" name="tier" value="nano"> Nano <span class="price">$0.012/hr</span></label>
+          <label class="opt"><input type="radio" name="tier" value="micro"> Micro <span class="price">$0.024/hr</span></label>
+          <label class="opt"><input type="radio" name="tier" value="standard" checked> Standard <span class="price">$0.084/hr</span></label>
+          <label class="opt"><input type="radio" name="tier" value="pro"> Pro <span class="price">$0.196/hr</span></label>
+          <label class="opt"><input type="radio" name="tier" value="enterprise"> Enterprise <span class="price">$0.640/hr</span></label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <label class="lbl">Storage Types</label>
+        <div class="options row">
+          <label class="opt"><input type="checkbox" name="storage" value="block" checked> Block SSD <span class="price">$0.10/GB</span></label>
+          <label class="opt"><input type="checkbox" name="storage" value="object" checked> Object Storage <span class="price">$0.023/GB</span></label>
+          <label class="opt"><input type="checkbox" name="storage" value="archive"> Cold Archive <span class="price">$0.004/GB</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="storage_gb">Storage Volume <span class="hint">GB</span></label>
+        <input id="storage_gb" name="storage_gb" type="number" min="1" step="1" value="500" required>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="bw_tb">Bandwidth <span class="hint">TB / month</span></label>
+        <input id="bw_tb" name="bw_tb" type="number" min="0" step="0.1" value="2.5" required>
+      </div>
+
+      <div class="field">
+        <label class="lbl">Support Tier</label>
+        <div class="options">
+          <label class="opt"><input type="radio" name="support" value="community"> Community <span class="price">$0/mo</span></label>
+          <label class="opt"><input type="radio" name="support" value="business" checked> Business <span class="price">$99/mo</span></label>
+          <label class="opt"><input type="radio" name="support" value="enterprise"> Enterprise <span class="price">$499/mo</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="backup">Backup Frequency</label>
+        <select id="backup" name="backup" required>
+          <option>Hourly — $24/mo</option>
+          <option selected>Daily — $12/mo</option>
+          <option>Weekly — $4/mo</option>
+          <option>Monthly — $1/mo</option>
+          <option>None — $0/mo</option>
+        </select>
+        <div class="note">Snapshots are retained for 30 days at the selected cadence.</div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn">Recalculate</button>
+        <button type="button" class="btn secondary">Reset Form</button>
+        <button type="button" class="btn secondary">Export Quote (PDF)</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <h2>Estimated Breakdown</h2>
+      <span class="badge blue">USD · Monthly</span>
+    </div>
+
+    <div class="chips">
+      <span class="chip"><strong>Region:</strong> us-east-1</span>
+      <span class="chip"><strong>Tier:</strong> Standard ×2</span>
+      <span class="chip"><strong>Storage:</strong> Block + Object · 500 GB</span>
+      <span class="chip"><strong>Bandwidth:</strong> 2.5 TB</span>
+      <span class="chip"><strong>Support:</strong> Business</span>
+      <span class="chip"><strong>Backup:</strong> Daily</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="results">
+        <thead>
+          <tr>
+            <th>Line Item</th>
+            <th>Configuration</th>
+            <th class="num">Unit Rate</th>
+            <th class="num">Qty</th>
+            <th class="num">Monthly (USD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">Compute</td>
+            <td>Standard · 2 vCPU · 8 GB DDR5</td>
+            <td class="num">$0.084/hr</td>
+            <td class="num">2 × 730h</td>
+            <td class="num">$122.64</td>
+          </tr>
+          <tr>
+            <td class="label">Storage — Block</td>
+            <td>SSD · 300 GB · 5k IOPS</td>
+            <td class="num">$0.10/GB</td>
+            <td class="num">300</td>
+            <td class="num">$30.00</td>
+          </tr>
+          <tr>
+            <td class="label">Storage — Object</td>
+            <td>Object · 200 GB · 3× repl.</td>
+            <td class="num">$0.023/GB</td>
+            <td class="num">200</td>
+            <td class="num">$4.60</td>
+          </tr>
+          <tr>
+            <td class="label">Bandwidth</td>
+            <td>Egress 2.5 TB (1 TB incl.)</td>
+            <td class="num">$0.045/GB</td>
+            <td class="num">1500</td>
+            <td class="num">$67.50</td>
+          </tr>
+          <tr>
+            <td class="label">Support</td>
+            <td>Business · 24×5 · 4h SLA</td>
+            <td class="num">$99.00</td>
+            <td class="num">1</td>
+            <td class="num">$99.00</td>
+          </tr>
+          <tr>
+            <td class="label">Backup</td>
+            <td>Daily snapshots · 30d retention</td>
+            <td class="num">$12.00</td>
+            <td class="num">1</td>
+            <td class="num">$12.00</td>
+          </tr>
+          <tr class="subtotal">
+            <td class="label" colspan="4">Monthly Subtotal</td>
+            <td class="num">$335.74</td>
+          </tr>
+          <tr class="annual">
+            <td class="label" colspan="4">Estimated Annual Total (×12)</td>
+            <td class="num">$4,028.88</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">Estimates exclude applicable taxes, optional GPU add-ons, and dedicated IP fees. Pricing reflects current published rates and is subject to change. Quotes generated by this tool are non-binding.</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="brand" style="margin-bottom:10px">
+        <span class="brand-mark"></span>
+        Nucleon Cloud Benchmark
+      </div>
+      <p style="font-size:13px;color:#94A3B8;max-width:340px">
+        Independent, side-by-side comparison of five competing cloud hosting tiers — from Nano to Enterprise — across compute, storage, and network metrics.
+      </p>
+    </div>
+    <div>
+      <h4>Compare</h4>
+      <ul>
+        <li><a href="../overview/index.html">Overview</a></li>
+        <li><a href="../compute-plans/index.html">Compute Plans</a></li>
+        <li><a href="../storage-addons/index.html">Storage Add-ons</a></li>
+        <li><a href="../network-features/index.html">Network Features</a></li>
+        <li><a href="#">Cost Calculator</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Tiers</h4>
+      <ul>
+        <li>Nano</li>
+        <li>Micro</li>
+        <li>Standard</li>
+        <li>Pro</li>
+        <li>Enterprise</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Reference</h4>
+      <ul>
+        <li><a href="#">Methodology</a></li>
+        <li><a href="#">Data Sources</a></li>
+        <li><a href="#">Changelog</a></li>
+        <li><a href="#">API Docs</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2025 Nucleon Cloud Benchmark · Built for transparent infra comparison · <span class="accent">v6.13e6</span>
+  </div>
+</footer>
+
+</body>
+</html>

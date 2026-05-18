@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lumenos — Contracts That Speak Clearly</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0D1B2A;
+    color: #E8F0F7;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; }
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+
+  /* Header / Nav */
+  header.site {
+    position: relative;
+    z-index: 5;
+    border-bottom: 1px solid rgba(232,240,247,0.06);
+    background: #0D1B2A;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #E8F0F7;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand .dot {
+    width: 12px; height: 12px; border-radius: 999px;
+    background: #F0A500;
+    box-shadow: 0 0 18px rgba(240,165,0,0.55);
+  }
+  .nav ul {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .nav ul a {
+    font-size: 14px;
+    font-weight: 500;
+    color: #E8F0F7;
+    opacity: 0.78;
+    letter-spacing: 0.2px;
+  }
+  .nav ul a.active {
+    opacity: 1;
+    color: #F0A500;
+  }
+  .nav .nav-cta {
+    border: 1px solid rgba(0,201,177,0.6);
+    color: #00C9B1;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* Section base */
+  section {
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .gradient-bg {
+    background: radial-gradient(ellipse at 30% 50%, #112236 0%, #0D1B2A 70%);
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    padding-top: 90px;
+    padding-bottom: 100px;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    width: 520px;
+    height: 320px;
+    background: #F0A500;
+    opacity: 0.08;
+    filter: blur(80px);
+    top: 80px;
+    left: 10%;
+    z-index: 0;
+    border-radius: 999px;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #00C9B1;
+    padding: 6px 14px;
+    border: 1px solid rgba(0,201,177,0.35);
+    border-radius: 999px;
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+  h1.hero-title {
+    font-size: 64px;
+    line-height: 1.05;
+    color: #F0A500;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+  .sub {
+    font-size: 18px;
+    color: #E8F0F7;
+    opacity: 0.82;
+    max-width: 560px;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .btn-pill {
+    display: inline-block;
+    background: #00C9B1;
+    color: #0D1B2A;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 15px 30px;
+    border-radius: 999px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .link-ghost {
+    color: #E8F0F7;
+    opacity: 0.7;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(232,240,247,0.25);
+    padding-bottom: 2px;
+  }
+
+  /* Hero visual: mock document panel */
+  .doc-card {
+    background: linear-gradient(180deg, #112236 0%, #0D1B2A 100%);
+    border: 1px solid rgba(0,201,177,0.18);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.65);
+    position: relative;
+  }
+  .doc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(232,240,247,0.08);
+    margin-bottom: 16px;
+  }
+  .doc-title {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    color: #E8F0F7;
+    opacity: 0.85;
+  }
+  .doc-score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #00C9B1;
+    font-weight: 600;
+  }
+  .doc-score .pill {
+    background: rgba(0,201,177,0.12);
+    border: 1px solid rgba(0,201,177,0.35);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .line {
+    height: 9px;
+    background: rgba(232,240,247,0.08);
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .line.w-90 { width: 92%; }
+  .line.w-75 { width: 75%; }
+  .line.w-60 { width: 60%; }
+  .line.w-85 { width: 85%; }
+  .line.w-50 { width: 50%; }
+  .line.gold {
+    background: rgba(240,165,0,0.28);
+    border-left: 3px solid #F0A500;
+  }
+  .line.teal-under {
+    background: rgba(232,240,247,0.08);
+    border-bottom: 2px solid #00C9B1;
+    border-radius: 4px 4px 0 0;
+  }
+  .doc-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(232,240,247,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: rgba(232,240,247,0.6);
+  }
+  .legend {
+    display: flex;
+    gap: 14px;
+  }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .swatch {
+    width: 10px; height: 10px; border-radius: 2px;
+  }
+  .swatch.gold { background: #F0A500; }
+  .swatch.teal { background: #00C9B1; }
+
+  /* Trust Bar */
+  .trust {
+    padding: 60px 0 80px;
+  }
+  .trust-label {
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(232,240,247,0.5);
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+  .trust-bar {
+    background: linear-gradient(180deg, #112236 0%, #0D1B2A 100%);
+    border: 1px solid rgba(232,240,247,0.06);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    padding: 26px 10px;
+  }
+  .wordmark {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: rgba(232,240,247,0.55);
+    border-right: 1px solid rgba(232,240,247,0.08);
+    padding: 6px 8px;
+  }
+  .wordmark:last-child { border-right: none; }
+  .wordmark .tag {
+    display: block;
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-weight: 500;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(0,201,177,0.55);
+    margin-top: 4px;
+  }
+
+  /* Footer */
+  footer.site {
+    border-top: 1px solid rgba(232,240,247,0.06);
+    padding: 40px 0;
+    background: #0D1B2A;
+  }
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(232,240,247,0.6);
+  }
+  .foot ul {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+  }
+  .foot ul a { opacity: 0.7; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span>Lumenos</div>
+    <ul>
+      <li><a class="active" href="#">vision</a></li>
+      <li><a href="../features/index.html">features</a></li>
+      <li><a href="../how-it-works/index.html">how-it-works</a></li>
+      <li><a href="../pricing/index.html">pricing</a></li>
+      <li><a class="nav-cta" href="../get-started/index.html">get started</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="hero gradient-bg">
+  <div class="wrap hero-inner">
+    <div>
+      <span class="eyebrow">AI Document Clarity · For Legal &amp; Compliance</span>
+      <h1 class="hero-title">Contracts That Speak Clearly</h1>
+      <p class="sub">Lumenos scans your legal and compliance documents in seconds, surfacing ambiguous language, dense jargon, and readability gaps. Catch the confusing clauses before they become costly liabilities.</p>
+      <div class="cta-row">
+        <a class="btn-pill" href="../get-started/index.html">Try Free for 14 Days</a>
+        <a class="link-ghost" href="../how-it-works/index.html">See how it works →</a>
+      </div>
+    </div>
+
+    <div class="doc-card">
+      <div class="doc-header">
+        <div class="doc-title">MSA_Verentis_v4.docx</div>
+        <div class="doc-score"><span class="pill">Clarity Score · 72</span></div>
+      </div>
+      <div class="line w-90"></div>
+      <div class="line w-75 gold"></div>
+      <div class="line w-85"></div>
+      <div class="line w-60 teal-under"></div>
+      <div class="line w-90"></div>
+      <div class="line w-50 gold"></div>
+      <div class="line w-85"></div>
+      <div class="line w-75 teal-under"></div>
+      <div class="line w-60"></div>
+      <div class="doc-footer">
+        <div class="legend">
+          <span><span class="swatch gold"></span> Ambiguity</span>
+          <span><span class="swatch teal"></span> Jargon</span>
+        </div>
+        <div>3 issues · 8.2s</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="wrap">
+    <div class="trust-label">Trusted by compliance teams at</div>
+    <div class="trust-bar">
+      <div class="wordmark">VERENTIS<span class="tag">Legal</span></div>
+      <div class="wordmark">CALDEX<span class="tag">Insurance</span></div>
+      <div class="wordmark">NORRBRIDGE<span class="tag">Finance</span></div>
+      <div class="wordmark">AXELO<span class="tag">Pharma</span></div>
+      <div class="wordmark">ORYX<span class="tag">Compliance</span></div>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>© 2025 Lumenos, Inc. — Clarity for contracts.</div>
+    <ul>
+      <li><a href="#">vision</a></li>
+      <li><a href="../features/index.html">features</a></li>
+      <li><a href="../how-it-works/index.html">how-it-works</a></li>
+      <li><a href="../pricing/index.html">pricing</a></li>
+      <li><a href="../get-started/index.html">get-started</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Performance — Nucleon Benchmarks</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0f1117;
+    color: #d4d8e2;
+    font-family: ui-monospace, Consolas, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    letter-spacing: -0.01em;
+  }
+  h1, h2, h3, .wordmark, nav a {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "SF Pro", sans-serif;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header {
+    border-bottom: 1px solid #2e3245;
+    background: #0f1117;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .wordmark {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: #d4d8e2;
+  }
+  .wordmark span { color: #5b8dee; }
+  nav ul { list-style: none; display: flex; gap: 4px; }
+  nav a {
+    display: block;
+    padding: 8px 14px;
+    color: #d4d8e2;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 4px;
+    letter-spacing: 0.01em;
+  }
+  nav a.active { color: #5b8dee; background: #161922; }
+  nav a:hover { color: #5b8dee; }
+
+  /* Page intro */
+  .intro {
+    padding: 28px 0 16px;
+    border-bottom: 1px solid #1a1d27;
+  }
+  .intro h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .intro p {
+    font-size: 13px;
+    color: #8a91a3;
+    max-width: 760px;
+    line-height: 1.5;
+  }
+  .meta-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #8a91a3;
+  }
+  .meta-row span b { color: #d4d8e2; font-weight: 400; }
+  .meta-row .dot { color: #5b8dee; }
+
+  /* Table sections */
+  .section { padding: 28px 0 8px; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-head h2 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .section-head h2 .tag {
+    color: #5b8dee;
+    font-family: ui-monospace, Consolas, monospace;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .section-head .sub {
+    font-size: 12px;
+    color: #8a91a3;
+  }
+
+  /* Table wrapper with custom scrollbar */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid #1a1d27;
+    border-radius: 6px;
+    background: #0f1117;
+  }
+  .table-wrap::-webkit-scrollbar { height: 6px; }
+  .table-wrap::-webkit-scrollbar-track { background: #161922; }
+  .table-wrap::-webkit-scrollbar-thumb { background: #5b8dee; border-radius: 3px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background: #1a1d27;
+    color: #d4d8e2;
+    font-family: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 10px 12px;
+    border-bottom: 2px solid #5b8dee;
+    text-align: left;
+    white-space: nowrap;
+  }
+  thead th.num { text-align: right; min-width: 90px; }
+  thead th.rank { width: 56px; text-align: center; }
+  tbody tr:nth-child(odd)  { background: #0f1117; }
+  tbody tr:nth-child(even) { background: #161922; }
+  tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #1a1d27;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  tbody td.num {
+    text-align: right;
+    font-size: 13px;
+    min-width: 90px;
+    font-variant-numeric: tabular-nums;
+  }
+  tbody td.gpu {
+    font-family: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #d4d8e2;
+  }
+  tbody td.vendor {
+    font-size: 12px;
+    color: #8a91a3;
+  }
+  tbody td.rank { text-align: center; font-size: 12px; }
+  .chip {
+    display: inline-block;
+    min-width: 24px;
+    padding: 3px 8px;
+    background: #5b8dee;
+    color: #0f1117;
+    font-weight: 700;
+    border-radius: 3px;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 12px;
+  }
+  .highlight { color: #e8a838; }
+  .warn { color: #e8a838; }
+
+  /* Footer */
+  footer {
+    margin-top: 40px;
+    border-top: 1px solid #1a1d27;
+    padding: 22px 0;
+    color: #6b7186;
+    font-size: 12px;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-inner .links a {
+    color: #8a91a3;
+    text-decoration: none;
+    margin-left: 16px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  .footer-inner .links a:hover { color: #5b8dee; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <div class="wordmark">NUCLEON<span>::</span>BENCHMARKS</div>
+    <nav>
+      <ul>
+        <li><a href="../overview/index.html">Overview</a></li>
+        <li><a href="#" class="active">Performance</a></li>
+        <li><a href="../pricing/index.html">Pricing</a></li>
+        <li><a href="../specifications/index.html">Specifications</a></li>
+        <li><a href="../configure/index.html">Configure</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="intro">
+    <h1>Performance Benchmarks</h1>
+    <p>Aggregated results across gaming, compute, and ray-tracing workloads. All figures normalized against a reference Ryzen 9 7950X3D / 64 GB DDR5-6000 test platform. Driver build 2024.11.3 (NVIDIA), 24.10.1 (AMD), 31.0.101.5333 (Intel).</p>
+    <div class="meta-row">
+      <span class="dot">●</span><span><b>8</b> GPUs tested</span>
+      <span class="dot">●</span><span><b>12</b> game titles</span>
+      <span class="dot">●</span><span><b>3</b> compute precisions</span>
+      <span class="dot">●</span><span>Updated <b>2024-11-18</b></span>
+    </div>
+  </section>
+
+  <!-- Gaming -->
+  <section class="section">
+    <div class="section-head">
+      <h2><span class="tag">01</span>Gaming · Average FPS across 12 titles</h2>
+      <div class="sub">Ultra preset · DLAA / FSR Native · No upscaling</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="rank">Rank</th>
+            <th>GPU</th>
+            <th>Vendor</th>
+            <th class="num">1080p FPS</th>
+            <th class="num">1440p FPS</th>
+            <th class="num">4K FPS</th>
+            <th class="num">1% Low 4K</th>
+            <th class="num">Frametime ms</th>
+            <th class="num">Index</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rank"><span class="chip">1</span></td><td class="gpu">RTX 4090</td><td class="vendor">NVIDIA</td><td class="num">238.4</td><td class="num">196.1</td><td class="num">132.7</td><td class="num">98.2</td><td class="num">7.54</td><td class="num highlight">100.0</td></tr>
+          <tr><td class="rank">2</td><td class="gpu">RTX 4080 Super</td><td class="vendor">NVIDIA</td><td class="num">221.6</td><td class="num">172.8</td><td class="num">104.3</td><td class="num">76.5</td><td class="num">9.59</td><td class="num">82.1</td></tr>
+          <tr><td class="rank">3</td><td class="gpu">RX 7900 XTX</td><td class="vendor">AMD</td><td class="num">218.9</td><td class="num">168.4</td><td class="num">99.6</td><td class="num">71.8</td><td class="num">10.04</td><td class="num">79.4</td></tr>
+          <tr><td class="rank">4</td><td class="gpu">RTX 4070 Ti</td><td class="vendor">NVIDIA</td><td class="num">189.2</td><td class="num">142.7</td><td class="num">81.5</td><td class="num">58.9</td><td class="num">12.27</td><td class="num">66.3</td></tr>
+          <tr><td class="rank">5</td><td class="gpu">RX 7800 XT</td><td class="vendor">AMD</td><td class="num">176.8</td><td class="num">131.2</td><td class="num">72.4</td><td class="num">51.2</td><td class="num">13.81</td><td class="num">58.7</td></tr>
+          <tr><td class="rank">6</td><td class="gpu">Arc A770</td><td class="vendor">Intel</td><td class="num">128.4</td><td class="num">92.1</td><td class="num">48.6</td><td class="num">33.7</td><td class="num">20.58</td><td class="num">39.2</td></tr>
+          <tr><td class="rank">7</td><td class="gpu">RX 7600</td><td class="vendor">AMD</td><td class="num">119.7</td><td class="num">82.5</td><td class="num">41.2</td><td class="num warn">26.4</td><td class="num">24.27</td><td class="num">33.6</td></tr>
+          <tr><td class="rank">8</td><td class="gpu">Arc A580</td><td class="vendor">Intel</td><td class="num">104.3</td><td class="num">71.8</td><td class="num warn">34.9</td><td class="num warn">21.8</td><td class="num">28.65</td><td class="num">28.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Compute -->
+  <section class="section">
+    <div class="section-head">
+      <h2><span class="tag">02</span>Compute · Theoretical and sustained throughput</h2>
+      <div class="sub">Geekbench 6.3 · OpenCL · CUDA 12.4 / ROCm 6.1 / oneAPI 2024.2</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="rank">Rank</th>
+            <th>GPU</th>
+            <th>Vendor</th>
+            <th class="num">FP32 TFLOPS</th>
+            <th class="num">FP16 TFLOPS</th>
+            <th class="num">INT8 TOPS</th>
+            <th class="num">OpenCL Score</th>
+            <th class="num">Mem BW GB/s</th>
+            <th class="num">Sustained %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rank"><span class="chip">1</span></td><td class="gpu">RTX 4090</td><td class="vendor">NVIDIA</td><td class="num">82.58</td><td class="num">165.16</td><td class="num">660.6</td><td class="num">312840</td><td class="num">1008</td><td class="num highlight">97.4</td></tr>
+          <tr><td class="rank">2</td><td class="gpu">RTX 4080 Super</td><td class="vendor">NVIDIA</td><td class="num">52.22</td><td class="num">104.44</td><td class="num">417.8</td><td class="num">238120</td><td class="num">736</td><td class="num">96.1</td></tr>
+          <tr><td class="rank">3</td><td class="gpu">RX 7900 XTX</td><td class="vendor">AMD</td><td class="num">61.42</td><td class="num">122.84</td><td class="num">245.7</td><td class="num">214680</td><td class="num">960</td><td class="num">93.8</td></tr>
+          <tr><td class="rank">4</td><td class="gpu">RTX 4070 Ti</td><td class="vendor">NVIDIA</td><td class="num">40.09</td><td class="num">80.18</td><td class="num">320.7</td><td class="num">182450</td><td class="num">504</td><td class="num">95.2</td></tr>
+          <tr><td class="rank">5</td><td class="gpu">RX 7800 XT</td><td class="vendor">AMD</td><td class="num">37.32</td><td class="num">74.64</td><td class="num">149.3</td><td class="num">148720</td><td class="num">624</td><td class="num">92.4</td></tr>
+          <tr><td class="rank">6</td><td class="gpu">Arc A770</td><td class="vendor">Intel</td><td class="num">19.66</td><td class="num">39.32</td><td class="num">157.3</td><td class="num">96340</td><td class="num">560</td><td class="num warn">84.7</td></tr>
+          <tr><td class="rank">7</td><td class="gpu">RX 7600</td><td class="vendor">AMD</td><td class="num">21.75</td><td class="num">43.50</td><td class="num">87.0</td><td class="num">82910</td><td class="num">288</td><td class="num">89.6</td></tr>
+          <tr><td class="rank">8</td><td class="gpu">Arc A580</td><td class="vendor">Intel</td><td class="num">12.28</td><td class="num">24.56</td><td class="num">98.2</td><td class="num">64750</td><td class="num">448</td><td class="num warn">82.3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Rasterization vs Ray-Tracing -->
+  <section class="section">
+    <div class="section-head">
+      <h2><span class="tag">03</span>Rasterization vs Ray-Tracing</h2>
+      <div class="sub">3DMark Time Spy Extreme · Port Royal · Path-traced Cyberpunk 2077</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="rank">Rank</th>
+            <th>GPU</th>
+            <th>Vendor</th>
+            <th class="num">Raster Score</th>
+            <th class="num">RT Score</th>
+            <th class="num">RT / Raster</th>
+            <th class="num">Path FPS 4K</th>
+            <th class="num">RT Cores</th>
+            <th class="num">Delta vs Top</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rank"><span class="chip">1</span></td><td class="gpu">RTX 4090</td><td class="vendor">NVIDIA</td><td class="num">22847</td><td class="num">19204</td><td class="num highlight">0.84</td><td class="num">42.6</td><td class="num">128</td><td class="num">—</td></tr>
+          <tr><td class="rank">2</td><td class="gpu">RTX 4080 Super</td><td class="vendor">NVIDIA</td><td class="num">17628</td><td class="num">14982</td><td class="num">0.85</td><td class="num">31.8</td><td class="num">80</td><td class="num">−22.0%</td></tr>
+          <tr><td class="rank">3</td><td class="gpu">RTX 4070 Ti</td><td class="vendor">NVIDIA</td><td class="num">14216</td><td class="num">11874</td><td class="num">0.84</td><td class="num">24.7</td><td class="num">60</td><td class="num">−38.2%</td></tr>
+          <tr><td class="rank">4</td><td class="gpu">RX 7900 XTX</td><td class="vendor">AMD</td><td class="num">16944</td><td class="num">10218</td><td class="num warn">0.60</td><td class="num warn">14.3</td><td class="num">96</td><td class="num">−25.8%</td></tr>
+          <tr><td class="rank">5</td><td class="gpu">RX 7800 XT</td><td class="vendor">AMD</td><td class="num">12108</td><td class="num">7184</td><td class="num warn">0.59</td><td class="num warn">9.8</td><td class="num">60</td><td class="num">−46.9%</td></tr>
+          <tr><td class="rank">6</td><td class="gpu">Arc A770</td><td class="vendor">Intel</td><td class="num">7942</td><td class="num">5618</td><td class="num">0.71</td><td class="num">6.4</td><td class="num">32</td><td class="num">−65.2%</td></tr>
+          <tr><td class="rank">7</td><td class="gpu">RX 7600</td><td class="vendor">AMD</td><td class="num">7308</td><td class="num warn">3892</td><td class="num warn">0.53</td><td class="num warn">4.1</td><td class="num">32</td><td class="num">−68.0%</td></tr>
+          <tr><td class="rank">8</td><td class="gpu">Arc A580</td><td class="vendor">Intel</td><td class="num">6184</td><td class="num">4276</td><td class="num">0.69</td><td class="num warn">4.8</td><td class="num">24</td><td class="num">−72.9%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div>© 2024 Nucleon Benchmarks · Independent · No vendor affiliation</div>
+    <div class="links">
+      <a href="../overview/index.html">Overview</a>
+      <a href="#">Performance</a>
+      <a href="../pricing/index.html">Pricing</a>
+      <a href="../specifications/index.html">Specifications</a>
+      <a href="../configure/index.html">Configure</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

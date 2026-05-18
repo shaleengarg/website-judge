@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-ink-and-anchovy-blog-3ae0",
+  "tier": 1,
+  "genre": "personal-blog",
+  "pages": [
+    "journal",
+    "essays",
+    "reading-list",
+    "about",
+    "contact"
+  ],
+  "palette_hint": "Off-white background #F5F0E8, near-black text #1A1A1A, deep teal accent #1D6A72 for links and rule borders, muted rust #B85C38 for category labels",
+  "type_style": "Georgia serif for headings at font-weight 700, system-ui sans-serif for body text at font-weight 400, comfortable and literary in feel",
+  "description": "Ink & Anchovy is the personal blog of Marta Solberg, a food writer and amateur classicist living in Bergen, Norway, who writes about Mediterranean cooking, old books, and slow travel.",
+  "constraints": [
+    "All content centered in a single column with max-width 640px and horizontal auto margins",
+    "Page padding: 32px top/bottom, 16px left/right on body",
+    "Horizontal rules between sections use a 1px solid border in teal #1D6A72 with 24px vertical margin",
+    "All hyperlinks colored #1D6A72 with no underline by default, underline on hover",
+    "No images, no icons, no multi-column layouts; purely typographic with solid color backgrounds"
+  ],
+  "page_specs": {
+    "journal": "Displays the five most recent short journal entries in reverse chronological order, each with a date in muted rust #B85C38, a one-line title in Georgia h2, and two to three paragraphs of prose. Entries are separated by teal horizontal rules. A plain text link at the bottom reads 'Older entries \u2192' and leads nowhere (href='#').",
+    "essays": "A titled list of eight longer-form essays, each shown as a block with the essay title as an h3 link in teal, a one-sentence summary in italic, and a publication date in small rust-colored text. Topics include Sicilian caponata history, Seneca on gluttony, and a ferry ride through the Lofoten islands. Entries are stacked vertically with 24px spacing and a thin rule after every other entry.",
+    "reading-list": "An annotated reading list organized into three plain-text category headings \u2014 'Currently Reading', 'Finished This Year', and 'Abandoned' \u2014 each followed by a simple vertical list of book titles and authors in bold, with a one-sentence note in regular weight beneath each entry. Uses no bullets; list items are separated by 12px bottom margin. The 'Abandoned' section includes a candid one-line reason for each book.",
+    "about": "A single flowing page introducing Marta Solberg: her background as a former fisheries journalist turned food writer, her move from Oslo to Bergen in 2019, and her obsession with anchovy-based condiments and Stoic philosophy. Includes a short paragraph on what 'Ink & Anchovy' means to her. Closes with a plain blockquote from Apicius styled with a 4px left border in teal #1D6A72 and 16px left padding.",
+    "contact": "A minimal contact page with a short paragraph explaining Marta welcomes pitches from food magazines and questions about recipes or book recommendations. Lists her email address as plain visible text (marta@inkandanchovy.no) styled in teal, a note that she responds within two weeks, and a secondary paragraph noting she is not accepting advertising or sponsored content. No contact form; purely static text."
+  }
+}

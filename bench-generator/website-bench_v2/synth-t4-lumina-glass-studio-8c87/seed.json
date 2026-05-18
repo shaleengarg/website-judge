@@ -1,0 +1,29 @@
+{
+  "id": "synth-t4-lumina-glass-studio-8c87",
+  "tier": 4,
+  "genre": "marketing-landing",
+  "pages": [
+    "showcase",
+    "process",
+    "collections",
+    "studio",
+    "contact"
+  ],
+  "palette_hint": "Deep navy background #0B1220 with off-white text #F0EDE6, accented by molten amber #E8A020 and electric teal #1ECFC4",
+  "type_style": "Georgia for headings (bold 700, italic on hero), system-ui for body at 400/500 weight \u2014 refined, editorial feel with generous letter-spacing on caps",
+  "description": "Lumina Glass Studio is a boutique architectural glass art company marketing custom commission panels, decorative installations, and a signature blown-glass home collection to interior designers and high-end residential clients.",
+  "constraints": [
+    "Max content width 1200px centered, with full-bleed gradient sections behind it; section vertical padding is always 80px top and bottom",
+    "Elevation system: cards rest at box-shadow 0 2px 8px rgba(0,0,0,0.4), hover lifts to 0 8px 32px rgba(232,160,32,0.35), hero elements use 0 16px 64px rgba(0,0,0,0.7)",
+    "Border-radius rhythm: buttons use 999px pill, cards use 12px, images use 4px, section dividers use 0; never mix outside this set",
+    "Every major section must include at least one ::before or ::after pseudo-element used as a decorative accent \u2014 either a radial gradient orb, an amber horizontal rule, or a teal geometric slash",
+    "Glass-effect cards (backdrop-filter: blur(12px), background rgba(255,255,255,0.06), border 1px solid rgba(255,255,255,0.12)) are used on the process steps and contact form panels"
+  ],
+  "page_specs": {
+    "showcase": "Full-viewport hero with a radial gradient orb in amber centered behind the headline 'Light Made Permanent', a 14px all-caps teal subheading 'Architectural Glass Art Since 1997', and a pill CTA button in amber. Below the hero, a three-column asymmetric grid (one wide, two narrow) displays featured installations \u2014 'The Meridian Atrium', 'Cascade Residence Panels', and 'Hotel Sol\u00e8ne Chandelier' \u2014 each as a 12px-radius card with amber-glow hover shadow and a short two-line description in off-white.",
+    "process": "A numbered four-step horizontal timeline section on a deep-navy-to-midnight-blue linear gradient background, each step rendered as a glass-effect card (blur + translucent border) with a large amber step number (80px, Georgia italic), a bold heading like 'Concept & Sketch', and two sentences of concrete process detail. A decorative teal diagonal slash pseudo-element sits behind the step numbers. A pull-quote in Georgia italic 18px \u2014 'Every commission begins with listening' \u2014 sits centered between the timeline and a secondary CTA row.",
+    "collections": "A product showcase page for three named collections: 'Solstice Series' (amber and gold blown vessels), 'Arctic Shelf' (clear and ice-blue panel work), and 'Ember Column' (freestanding sculptural glass). Each collection occupies a full-width alternating two-column row \u2014 image placeholder block on one side, rich descriptive copy and a pill ghost-button on the other \u2014 with a 4px-radius image block, 12px-radius text container, and an amber linear gradient underline on each collection name heading.",
+    "studio": "An about-the-studio page opening with a two-column layout: a 400px-wide text block introducing founder 'Mara Holvenstot' and her 26-year practice, alongside a stacked pair of image placeholder blocks with drop-shadow filter. Below, three glass-effect stat cards display '340+ Commissions', '18 Countries', and '6 Industry Awards' in large amber numerals. A closing full-bleed banner with a radial gradient background and italic Georgia quote \u2014 'Glass remembers heat long after the flame is gone' \u2014 features a centered amber decorative rule 60px wide as a ::after element.",
+    "contact": "A commission inquiry page with a centered glass-effect form panel (max-width 640px, 12px radius, blur backdrop, amber border on focus fields via outline) containing fields for Name, Studio or Firm, Project Type (dropdown: Residential / Commercial / Public Art), Budget Range, and Message, plus a pill submit button in amber. Above the form, a two-column header row lists studio address '14 Foundry Lane, Portland OR' and email 'commissions@luminaglass.studio' in teal, each preceded by a small amber square pseudo-element bullet. Page background uses a subtle linear gradient from #0B1220 to #101828."
+  }
+}

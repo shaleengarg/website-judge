@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Menu — Maison Cendrée</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1714;
+    color: #e8e0d4;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+  /* Nav */
+  header.site {
+    border-bottom: 1px solid #2a2520;
+    padding: 1.8rem 0 1.6rem;
+  }
+  .brand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.65rem;
+    letter-spacing: 0.12em;
+    color: #e8e0d4;
+  }
+  .brand em {
+    color: #c9a84c;
+    font-style: normal;
+  }
+  .tagline {
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a8275;
+  }
+  nav.primary {
+    margin-top: 1.4rem;
+    display: flex;
+    justify-content: center;
+    gap: 2.4rem;
+    flex-wrap: wrap;
+  }
+  nav.primary a {
+    color: #e8e0d4;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  nav.primary a.active {
+    color: #c9a84c;
+    border-bottom-color: #7a2d3b;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 4.5rem 0 3rem;
+    text-align: center;
+    border-bottom: 1px solid #2a2520;
+  }
+  h1.display {
+    font-family: Georgia, serif;
+    font-weight: 400;
+    font-size: 3.8rem;
+    line-height: 1.15;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #e8e0d4;
+  }
+  h1.display span {
+    color: #c9a84c;
+  }
+  .hero .kicker {
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a8275;
+    margin-bottom: 1.6rem;
+  }
+  .hero .dateline {
+    margin-top: 1.6rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c9a84c;
+  }
+
+  /* Sections */
+  section.course {
+    padding: 3.4rem 0 2.6rem;
+    border-bottom: 1px solid #2a2520;
+  }
+  h2.section {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.65rem;
+    line-height: 1.15;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #e8e0d4;
+    text-align: center;
+    margin-bottom: 0.4rem;
+  }
+  .ornament {
+    text-align: center;
+    color: #7a2d3b;
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    margin-bottom: 1.8rem;
+  }
+  p.intro {
+    max-width: 640px;
+    margin: 0 auto 2rem;
+    text-align: justify;
+  }
+  p.intro::first-letter {
+    font-family: Georgia, serif;
+    font-size: 3.4em;
+    float: left;
+    line-height: 0.85;
+    color: #c9a84c;
+    margin-right: 0.15em;
+    margin-top: 0.05em;
+  }
+
+  /* Dish list */
+  ul.dishes {
+    list-style: none;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  ul.dishes li {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px dotted #3a3530;
+  }
+  ul.dishes li:last-child { border-bottom: none; }
+  .dish-name {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-variant: small-caps;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    color: #e8e0d4;
+    flex: 0 0 auto;
+  }
+  .dish-desc {
+    flex: 1 1 auto;
+    font-size: 0.8rem;
+    color: #8a8275;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .dish-price {
+    color: #c9a84c;
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    flex: 0 0 auto;
+  }
+
+  /* Pull quote */
+  blockquote.pull {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.65rem;
+    line-height: 1.15;
+    color: #c9a84c;
+    border-left: 3px solid #7a2d3b;
+    padding-left: 1.4rem;
+    max-width: 580px;
+    margin: 3.5rem auto;
+  }
+  blockquote.pull cite {
+    display: block;
+    margin-top: 1rem;
+    font-style: normal;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a8275;
+  }
+
+  /* Footer */
+  footer.site {
+    padding: 3rem 0 2.4rem;
+    border-top: 1px solid #2a2520;
+    margin-top: 2rem;
+  }
+  .foot-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: #8a8275;
+  }
+  .foot-grid h4 {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 0.7rem;
+  }
+  .foot-grid p { line-height: 1.6; }
+  .copyline {
+    text-align: center;
+    margin-top: 2.2rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #4a4540;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="site">
+    <div class="brand-row">
+      <div class="brand">Maison <em>Cendrée</em></div>
+      <div class="tagline">Bistro Lyonnais · Montréal</div>
+    </div>
+    <nav class="primary">
+      <a href="#" class="active">Menu</a>
+      <a href="../cellar/index.html">Cellar</a>
+      <a href="../reservations/index.html">Reservations</a>
+      <a href="../our-story/index.html">Our Story</a>
+      <a href="../find-us/index.html">Find Us</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="kicker">Carte du Soir</div>
+    <h1 class="display">La <span>Carte</span></h1>
+    <div class="dateline">Automne · Service from 18 h</div>
+  </section>
+
+  <section class="course">
+    <h2 class="section">Amuse-Bouche</h2>
+    <div class="ornament">· · ·</div>
+    <p class="intro">Offered by the kitchen at the beginning of each service, these one-bite preparations change nightly with the market. Consider them an introduction rather than a course—a quiet handshake before the meal begins.</p>
+    <ul class="dishes">
+      <li>
+        <span class="dish-name">Gougère au Comté</span>
+        <span class="dish-desc">— pâte à choux, aged Comté, cracked pepper</span>
+        <span class="dish-price">6</span>
+      </li>
+      <li>
+        <span class="dish-name">Œuf Mimosa</span>
+        <span class="dish-desc">— smoked trout roe, fines herbes, brown butter</span>
+        <span class="dish-price">8</span>
+      </li>
+      <li>
+        <span class="dish-name">Toast au Beurre Noisette</span>
+        <span class="dish-desc">— sourdough, anchoïade, lemon zest</span>
+        <span class="dish-price">7</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="course">
+    <h2 class="section">Entrées</h2>
+    <div class="ornament">· · ·</div>
+    <p class="intro">Cold and warm beginnings drawn from the Lyonnaise canon, lightened for the table at hand. Most are intended to be shared, though no one will object if you keep the salade lyonnaise to yourself.</p>
+    <ul class="dishes">
+      <li>
+        <span class="dish-name">Salade Lyonnaise</span>
+        <span class="dish-desc">— frisée, lardons, croutons, poached farm egg</span>
+        <span class="dish-price">16</span>
+      </li>
+      <li>
+        <span class="dish-name">Quenelle de Brochet</span>
+        <span class="dish-desc">— pike dumpling, sauce nantua, tarragon</span>
+        <span class="dish-price">22</span>
+      </li>
+      <li>
+        <span class="dish-name">Terrine de Campagne</span>
+        <span class="dish-desc">— pork, chicken liver, cornichons, country bread</span>
+        <span class="dish-price">18</span>
+      </li>
+      <li>
+        <span class="dish-name">Velouté de Topinambour</span>
+        <span class="dish-desc">— sunchoke, hazelnut praline, brown butter</span>
+        <span class="dish-price">15</span>
+      </li>
+    </ul>
+  </section>
+
+  <blockquote class="pull">
+    “We butcher whole animals on Tuesdays; the menu is never quite the same twice.”
+    <cite>— Élise Fournier, Chef</cite>
+  </blockquote>
+
+  <section class="course">
+    <h2 class="section">Plats</h2>
+    <div class="ornament">· · ·</div>
+    <p class="intro">Main courses cooked slowly, plated simply, and meant to be eaten in good company. Substitutions are gracefully declined; the kitchen has reasons for the pairings on the page.</p>
+    <ul class="dishes">
+      <li>
+        <span class="dish-name">Poulet de Bresse Rôti</span>
+        <span class="dish-desc">— for two, sauce au vin jaune, morels, pommes purée</span>
+        <span class="dish-price">86</span>
+      </li>
+      <li>
+        <span class="dish-name">Andouillette à la Ficelle</span>
+        <span class="dish-desc">— Dijon mustard cream, frites maison</span>
+        <span class="dish-price">34</span>
+      </li>
+      <li>
+        <span class="dish-name">Joue de Bœuf Braisée</span>
+        <span class="dish-desc">— red wine, root vegetables, gremolata</span>
+        <span class="dish-price">38</span>
+      </li>
+      <li>
+        <span class="dish-name">Truite au Bleu</span>
+        <span class="dish-desc">— Charlevoix trout, court-bouillon, brown butter</span>
+        <span class="dish-price">32</span>
+      </li>
+      <li>
+        <span class="dish-name">Cardons à la Moelle</span>
+        <span class="dish-desc">— cardoon gratin, bone marrow, parmesan</span>
+        <span class="dish-price">28</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="course">
+    <h2 class="section">Desserts</h2>
+    <div class="ornament">· · ·</div>
+    <p class="intro">Classics finished à la minute, with one cheese option from our affineur in Saint-Hyacinthe. Coffee and digestifs are listed separately on the cellar card—ask your server.</p>
+    <ul class="dishes">
+      <li>
+        <span class="dish-name">Tarte aux Pralines Roses</span>
+        <span class="dish-desc">— Lyonnaise pink praline, crème fraîche</span>
+        <span class="dish-price">12</span>
+      </li>
+      <li>
+        <span class="dish-name">Île Flottante</span>
+        <span class="dish-desc">— meringue, crème anglaise, caramel filé</span>
+        <span class="dish-price">11</span>
+      </li>
+      <li>
+        <span class="dish-name">Poire Pochée au Burgundy</span>
+        <span class="dish-desc">— Anjou pear, mascarpone, black pepper</span>
+        <span class="dish-price">13</span>
+      </li>
+      <li>
+        <span class="dish-name">Plateau de Fromages</span>
+        <span class="dish-desc">— selection of three, walnut bread, honeycomb</span>
+        <span class="dish-price">19</span>
+      </li>
+    </ul>
+  </section>
+
+  <footer class="site">
+    <div class="foot-grid">
+      <div>
+        <h4>Maison Cendrée</h4>
+        <p>4221 rue Saint-Denis<br>Plateau-Mont-Royal<br>Montréal, QC</p>
+      </div>
+      <div>
+        <h4>Service</h4>
+        <p>Mardi – Jeudi · 18 h – 22 h<br>Vendredi – Dimanche · 17 h 30 – 23 h<br>Closed Mondays</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>514 · 555 · 0418<br>bonjour@maisoncendree.ca</p>
+      </div>
+    </div>
+    <div class="copyline">© MMXXIV · Maison Cendrée · Tous droits réservés</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

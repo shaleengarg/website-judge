@@ -29,6 +29,8 @@ import re
 import string
 import sys
 import uuid
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from difflib import SequenceMatcher
 from typing import Any
 
 try:
@@ -44,6 +46,21 @@ _MODEL = "claude-sonnet-4-6"
 _MAX_TOKENS = 4096
 _TEMPERATURE = 0.95
 _MAX_RETRIES = 3
+
+# Dedup thresholds. A candidate is rejected as a duplicate if EITHER:
+#   - its brand slug has SequenceMatcher.ratio() > _NAME_DUP_THRESHOLD vs. some
+#     existing seed's brand slug
+#   - >=2 of its palette_hint hex colors each find a close match (RGB distance
+#     < _COLOR_DUP_THRESHOLD) in some existing seed's palette
+# These are tuned to catch the families we saw in the v2 batches (Ironclad/
+# Ironveil at tier 3 ecommerce, three "Summit" conferences at tier 2). Lower
+# = stricter = more rejections and need for over-sampling.
+_NAME_DUP_THRESHOLD = 0.7
+_COLOR_DUP_THRESHOLD = 0.15
+# Cap the AVOID block at this many seeds so the prompt stays bounded even on
+# very large datasets. Sonnet repeats within-session patterns more than across
+# sessions, so the most-recent priors are the ones worth showing.
+_MAX_AVOID_ENTRIES = 60
 
 
 _SYSTEM_PROMPT = """\
@@ -63,23 +80,163 @@ Output rules:
 """
 
 
-def _example_seeds(tier: int, n: int = 2) -> list[dict[str, Any]]:
-    """Pick up to n hand-written seeds at this tier to use as few-shot examples."""
-    same_tier = [s for s in seeds_mod.SEEDS if s["tier"] == tier]
-    return same_tier[:n]
+# ---------- Dedup: brand slug + palette similarity ----------
+
+def _extract_brand_slug(seed: dict[str, Any]) -> str:
+    """Pull the brand portion out of a synth seed id.
+
+    Synth IDs have the form `synth-t{tier}-{slug}-{hash4}`. The slug is the
+    brand name kebab-cased; the hash4 is 4 hex chars appended by `_safe_id`.
+    Returns the slug, lowercased, with no prefix or suffix.
+    """
+    raw = (seed.get("id") or "").lower()
+    raw = re.sub(r"^synth-t\d+-", "", raw)
+    raw = re.sub(r"-[0-9a-f]{4}$", "", raw)
+    return raw
 
 
-def _build_user_prompt(tier: int, genre: str) -> str:
-    tier_spec = seeds_mod.TIERS[tier]
-    caps = "\n".join(f"  - {c}" for c in tier_spec["css_capabilities"])
-    examples = _example_seeds(tier, n=2)
-    examples_block = "\n\n".join(
-        f"Example {i + 1} (tier {ex['tier']}, {ex['genre']}):\n"
-        + json.dumps(ex, indent=2)
-        for i, ex in enumerate(examples)
+_HEX_RE = re.compile(r"#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b")
+
+
+def _extract_hex_colors(text: str) -> list[str]:
+    """Find #RRGGBB or #RGB tokens in free-form text. Returns 6-char lowercase."""
+    if not isinstance(text, str):
+        return []
+    out: list[str] = []
+    for m in _HEX_RE.finditer(text):
+        h = m.group(1).lower()
+        if len(h) == 3:
+            h = "".join(c * 2 for c in h)
+        out.append(h)
+    return out
+
+
+def _rgb(hex_code: str) -> tuple[int, int, int]:
+    return int(hex_code[0:2], 16), int(hex_code[2:4], 16), int(hex_code[4:6], 16)
+
+
+def _color_distance(hex_a: str, hex_b: str) -> float:
+    """Normalized 0-1 RGB distance between two 6-char hex codes."""
+    r1, g1, b1 = _rgb(hex_a)
+    r2, g2, b2 = _rgb(hex_b)
+    max_dist = (3 * 255 ** 2) ** 0.5  # ~441.673
+    return ((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2) ** 0.5 / max_dist
+
+
+# Saturation threshold below which a color counts as "neutral" — a white, gray,
+# black, or near-grayscale color. These are shared infrastructure across many
+# palettes (cream/paper/parchment all look like off-white; charcoal/ink/midnight
+# all look near-black) and are not what makes palettes distinct. Compare only
+# the saturated colors when checking palette duplication.
+_NEUTRAL_CHROMA_THRESHOLD = 30  # max(R,G,B) - min(R,G,B) in 0-255 space
+
+
+def _is_neutral(hex_code: str) -> bool:
+    """True when the color is near-grayscale (white / gray / black family)."""
+    r, g, b = _rgb(hex_code)
+    return (max(r, g, b) - min(r, g, b)) < _NEUTRAL_CHROMA_THRESHOLD
+
+
+def _saturated_colors(text: str) -> list[str]:
+    """Hex colors in `text` minus the neutrals — the palette's identity colors."""
+    return [c for c in _extract_hex_colors(text) if not _is_neutral(c)]
+
+
+def is_duplicate(
+    candidate: dict[str, Any],
+    existing: list[dict[str, Any]],
+    *,
+    name_threshold: float = _NAME_DUP_THRESHOLD,
+    color_threshold: float = _COLOR_DUP_THRESHOLD,
+) -> tuple[bool, str | None]:
+    """Return (is_dup, reason) for a candidate seed against accepted seeds.
+
+    Two rejection rules, either triggers (whichever fires first):
+      1. **Brand slug**: SequenceMatcher.ratio() on lowercase slugs exceeds
+         `name_threshold`. Catches "Ironclad Summit" vs "Ironclad Futures
+         Summit" — they share substring structure.
+      2. **Palette overlap on saturated colors**: candidate has >=2 *saturated*
+         hex colors (neutrals excluded — see _is_neutral) that each find a
+         close match (RGB distance < `color_threshold`) in some prior seed's
+         saturated palette. Comparing only the identity-bearing colors avoids
+         flagging "cream + black" vs "parchment + ink" as a duplicate just
+         because both share near-white and near-black infrastructure.
+
+    `reason` is human-readable when `is_dup` is True; None otherwise.
+    """
+    cand_slug = _extract_brand_slug(candidate)
+    cand_colors = _saturated_colors(candidate.get("palette_hint", ""))
+
+    for prev in existing:
+        prev_slug = _extract_brand_slug(prev)
+        if cand_slug and prev_slug:
+            ratio = SequenceMatcher(None, cand_slug, prev_slug).ratio()
+            if ratio > name_threshold:
+                return True, (
+                    f"brand slug {cand_slug!r} too similar to {prev['id']!r} "
+                    f"(ratio={ratio:.2f}, threshold={name_threshold:.2f})"
+                )
+
+        prev_colors = _saturated_colors(prev.get("palette_hint", ""))
+        if len(cand_colors) >= 2 and len(prev_colors) >= 2:
+            matches = sum(
+                1 for cc in cand_colors
+                if any(_color_distance(cc, pc) < color_threshold for pc in prev_colors)
+            )
+            if matches >= 2:
+                return True, (
+                    f"saturated palette overlaps {prev['id']!r} "
+                    f"({matches} colors within RGB distance {color_threshold:.2f})"
+                )
+
+    return False, None
+
+
+def _format_avoid_block(existing: list[dict[str, Any]]) -> str:
+    """Format an 'AVOID these' section for the user prompt.
+
+    Capped at _MAX_AVOID_ENTRIES most-recent entries — Sonnet repeats
+    within-session patterns more than across sessions, so recency is the right
+    selection. Empty string if no priors.
+    """
+    if not existing:
+        return ""
+    recent = existing[-_MAX_AVOID_ENTRIES:]
+    lines = []
+    for s in recent:
+        slug = _extract_brand_slug(s)
+        colors = _extract_hex_colors(s.get("palette_hint", ""))
+        color_str = f" — palette: {', '.join('#' + c for c in colors[:3])}" if colors else ""
+        lines.append(f"  - {slug}{color_str}")
+    n_total = len(existing)
+    omitted_note = (
+        f" (showing the {len(recent)} most recent of {n_total})"
+        if n_total > len(recent) else ""
+    )
+    return (
+        "\n\n## AVOID Duplicating These Existing Concepts\n"
+        f"The following brand slugs and palettes have already been used in this "
+        f"dataset{omitted_note}. Your seed MUST differ in BOTH:\n"
+        "  - **Brand**: pick a name whose kebab-case slug is not similar in "
+        "spelling, sound, theme, or shared substrings to any below.\n"
+        "  - **Palette**: pick hex codes that sit visibly far from every "
+        "palette below in RGB space — no near-duplicates.\n"
+        "\n" + "\n".join(lines)
     )
 
-    return f"""\
+
+# ---------- Prompt builders ----------
+
+def _build_user_prompt(
+    tier: int,
+    genre: str,
+    *,
+    existing: list[dict[str, Any]] | None = None,
+) -> str:
+    tier_spec = seeds_mod.TIERS[tier]
+    caps = "\n".join(f"  - {c}" for c in tier_spec["css_capabilities"])
+
+    prompt = f"""\
 Produce a seed JSON for a tier-{tier} website in the **{genre}** genre.
 
 ## Tier {tier} — {tier_spec['name']}
@@ -111,23 +268,23 @@ same names). Pick page names that fit the genre — they do NOT have to be
 
 ## Constraints on your output
 
-- Match the tier's complexity envelope. Don't smuggle tier-4 features (gradients,
-  shadows, decorative pseudo-elements) into a tier-1 spec.
+- Match the tier's complexity envelope. Use the CSS capabilities listed above
+  as your ceiling; do not smuggle in features from higher tiers (e.g. don't
+  add gradients or shadows to a tier-1 spec).
 - Palette and typography must be coherent with the genre.
 - Constraints should be specific enough that two different developers reading
-  them would build visually similar sites.
+  them would build visually similar sites. Include concrete numbers
+  (max-widths, padding values, color hex codes) where it matters.
 - Brand name in `id` should be evocative, not generic ("TechCorp" → bad,
-  "Salt & Silver Bistro" → good).
-
-## Reference examples at this tier
-
-These show the level of detail expected. Do NOT copy them — diverge in brand,
-palette, layout, page names.
-
-{examples_block}
+  "Salt & Silver Bistro" → good). The brand should feel like it could exist.
+- Never use Lorem ipsum or generic placeholder text. Every constraint and
+  page_spec should reference real, specific content.
 
 Now produce the JSON for your tier-{tier} {genre} site.
 """
+
+    prompt += _format_avoid_block(existing or [])
+    return prompt
 
 
 def _strip_fences(text: str) -> str:
@@ -208,10 +365,18 @@ def generate_seed(
     tier: int,
     genre: str,
     *,
+    existing: list[dict[str, Any]] | None = None,
     model: str = _MODEL,
     max_retries: int = _MAX_RETRIES,
 ) -> dict[str, Any]:
-    """Generate a Seed dict for (tier, genre). Raises RuntimeError on giving up."""
+    """Generate a Seed dict for (tier, genre). Raises RuntimeError on giving up.
+
+    `existing` is an optional list of previously-accepted seeds. When non-empty,
+    the user prompt gets an AVOID block listing them (proactive avoidance), and
+    any output that lands too close to one of them by brand-slug or palette
+    triggers a retry with feedback (reactive rejection). Schema failures and
+    duplicate failures share the same retry budget.
+    """
     if tier not in seeds_mod.TIERS:
         raise ValueError(f"unknown tier {tier!r}; known: {sorted(seeds_mod.TIERS)}")
     if genre not in seeds_mod.GENRES.get(tier, []):
@@ -222,15 +387,16 @@ def generate_seed(
             file=sys.stderr,
         )
 
+    existing = list(existing or [])
     system = _SYSTEM_PROMPT
-    base_user = _build_user_prompt(tier, genre)
+    base_user = _build_user_prompt(tier, genre, existing=existing)
     prior_errors: list[str] = []
 
     for attempt in range(1, max_retries + 1):
         user = base_user
         if prior_errors:
             user += (
-                "\n\n## Previous attempt failed validation\n"
+                "\n\n## Previous attempt failed\n"
                 + "\n".join(f"  - {e}" for e in prior_errors)
                 + "\n\nFix every issue above and regenerate the full JSON."
             )
@@ -260,10 +426,22 @@ def generate_seed(
 
         errs = _validate_seed_shape(data, tier, genre)
         if errs:
-            print(f"  [concept_gen] validation failed on attempt {attempt}:")
+            print(f"  [concept_gen] schema failed on attempt {attempt}:")
             for e in errs:
                 print(f"    - {e}")
             prior_errors = errs
+            continue
+
+        # Reactive rejection: check against priors. Distinct retry message so
+        # the model can tell schema failure (fix structure) from duplicate
+        # failure (diverge brand + palette) apart.
+        is_dup, reason = is_duplicate(data, existing)
+        if is_dup:
+            print(f"  [concept_gen] duplicate on attempt {attempt}: {reason}")
+            prior_errors = [
+                f"DUPLICATE: {reason}. Produce a brand and palette that are "
+                "distinctly different from every seed in the AVOID block above."
+            ]
             continue
 
         return data
@@ -272,6 +450,92 @@ def generate_seed(
         f"giving up on tier={tier} genre={genre} after {max_retries} attempts: "
         f"last errors: {prior_errors}"
     )
+
+
+def generate_seeds_batch(
+    client: Anthropic,
+    pairs: list[tuple[int, str]],
+    *,
+    concurrency: int = 8,
+    model: str = _MODEL,
+    max_retries: int = _MAX_RETRIES,
+    existing: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    """Generate seeds for all (tier, genre) pairs with cross-call dedup.
+
+    Runs in **waves** of `concurrency` parallel workers, not all-at-once. Each
+    wave's prompts include an AVOID block listing every seed accepted by prior
+    waves (plus any `existing` priors passed in). Within a wave, workers all
+    see the same snapshot of priors — within-wave collisions are caught by
+    post-hoc dedup after the wave completes.
+
+    Wave-based scheduling is the key bit: without it, all N workers in a fresh
+    `--count N --concurrency N` batch see an empty AVOID block, and proactive
+    avoidance does nothing. Waves give later workers visibility into earlier
+    survivors. Cost: marginally higher wall-clock (waves complete sequentially);
+    benefit: dramatically better within-batch diversity.
+
+    Returns only the newly-accepted seeds (not the `existing` priors). May be
+    shorter than `len(pairs)` if some calls failed or were dropped as duplicates.
+    """
+    accepted: list[dict[str, Any]] = list(existing or [])
+    base_count = len(accepted)
+    n_dropped_dup = 0
+    n_failed = 0
+
+    for wave_start in range(0, len(pairs), concurrency):
+        wave_pairs = pairs[wave_start:wave_start + concurrency]
+        wave_priors = list(accepted)  # frozen snapshot for this wave
+
+        # Run the wave in parallel; collect (input_idx, seed_or_exception).
+        wave_results: list[tuple[int, dict[str, Any] | Exception]] = []
+        with ThreadPoolExecutor(max_workers=len(wave_pairs)) as pool:
+            futures = {
+                pool.submit(
+                    generate_seed, client, tier, genre,
+                    existing=wave_priors, model=model, max_retries=max_retries,
+                ): i
+                for i, (tier, genre) in enumerate(wave_pairs)
+            }
+            for fut in as_completed(futures):
+                idx = futures[fut]
+                try:
+                    wave_results.append((idx, fut.result()))
+                except Exception as e:
+                    wave_results.append((idx, e))
+
+        # Walk in input order so the post-hoc dedup is deterministic given a
+        # fixed --synth-seed, regardless of which future completed first.
+        wave_results.sort(key=lambda x: x[0])
+
+        for idx, result in wave_results:
+            tier, genre = wave_pairs[idx]
+            if isinstance(result, Exception):
+                print(f"  [concept_gen] FAILED tier={tier} genre={genre}: {result}",
+                      file=sys.stderr)
+                n_failed += 1
+                continue
+            # Even with the AVOID block, two workers in the same wave can land
+            # on overlapping outputs (they both saw the same priors). Catch
+            # those here.
+            is_dup, reason = is_duplicate(result, accepted)
+            if is_dup:
+                print(f"  [concept_gen] dropped within-wave duplicate "
+                      f"{result['id']!r}: {reason}")
+                n_dropped_dup += 1
+                continue
+            accepted.append(result)
+            print(f"  [concept_gen] accepted: {result['id']} "
+                  f"(tier {tier}, {genre})")
+
+    new_count = len(accepted) - base_count
+    target = len(pairs)
+    print(
+        f"  [concept_gen] batch complete: {new_count}/{target} accepted "
+        f"(failed={n_failed}, dropped_dup={n_dropped_dup})"
+    )
+
+    return accepted[base_count:]
 
 
 def pick_tier_genre_pairs(

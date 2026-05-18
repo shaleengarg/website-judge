@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Suites — Obsidian Cove Retreat</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1a1a2e;
+    color: #f5f0e8;
+    font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+  /* NAV */
+  header.site {
+    background: radial-gradient(ellipse at top, #1a1a2e, #0d1b2a);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0;
+  }
+  .brand {
+    font-family: Georgia, serif; font-weight: 700;
+    color: #c9a84c; font-size: 20px; letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .brand span { color: #f5f0e8; }
+  .nav ul { display: flex; gap: 32px; list-style: none; }
+  .nav ul a {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 0.22em;
+    color: #f5f0e8; padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  .nav ul a.active { color: #c9a84c; border-bottom-color: #c9a84c; }
+
+  /* HERO BAND */
+  .page-hero {
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(201,168,76,0.12), transparent 60%),
+      radial-gradient(ellipse at center, #1a1a2e, #0d1b2a);
+    padding: 90px 0 70px;
+    text-align: center;
+  }
+  .eyebrow {
+    color: #4e9fa3;
+    font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  h1.page-title {
+    font-family: Georgia, serif; font-weight: 700;
+    color: #c9a84c; font-size: 56px; letter-spacing: 0.02em;
+  }
+  .page-hero p.lede {
+    max-width: 640px; margin: 22px auto 0; color: #f5f0e8;
+    font-size: 15px; opacity: 0.85;
+  }
+
+  /* SECTION HEADING with gold bar ::before */
+  .section-heading {
+    text-align: center;
+    margin: 80px auto 50px;
+    position: relative;
+    padding-top: 26px;
+  }
+  .section-heading::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 48px; height: 2px;
+    background: #c9a84c;
+    margin-bottom: 12px;
+  }
+  .section-heading h2 {
+    font-family: Georgia, serif; font-weight: 700;
+    color: #f5f0e8; font-size: 38px;
+    letter-spacing: 0.03em;
+  }
+  .section-heading p {
+    margin-top: 14px; font-size: 14px;
+    color: #f5f0e8; opacity: 0.7;
+    max-width: 580px; margin-left: auto; margin-right: auto;
+  }
+
+  /* SUITES GRID */
+  .suites-section {
+    background:
+      radial-gradient(ellipse at center, #1a1a2e, #0d1b2a);
+    padding-bottom: 100px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    display: flex; flex-direction: column;
+  }
+  .card:hover {
+    box-shadow: 0 20px 60px rgba(201,168,76,0.25);
+  }
+  .card .imgframe {
+    height: 280px;
+    border-radius: 4px;
+    margin: 14px 14px 0;
+    background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .card .imgframe::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(201,168,76,0.18), transparent 55%),
+      radial-gradient(circle at 80% 70%, rgba(78,159,163,0.18), transparent 55%);
+  }
+  .card .imgframe span {
+    position: absolute; bottom: 14px; left: 18px;
+    font-family: Georgia, serif; font-style: italic;
+    color: rgba(245,240,232,0.45);
+    font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase;
+    z-index: 2;
+  }
+  .card-body { padding: 26px 28px 28px; display:flex; flex-direction:column; flex:1; }
+  .card-body h3 {
+    font-family: Georgia, serif; font-weight: 700;
+    color: #c9a84c; font-size: 26px;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .card-body .meta {
+    color: #4e9fa3; font-size: 11px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .card-body ul {
+    list-style: none; margin-bottom: 22px;
+  }
+  .card-body ul li {
+    padding: 8px 0 8px 22px;
+    position: relative;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(245,240,232,0.06);
+    color: #f5f0e8;
+  }
+  .card-body ul li:last-child { border-bottom: none; }
+  .card-body ul li::before {
+    content: "◆";
+    position: absolute; left: 0; top: 8px;
+    color: #4e9fa3; font-size: 10px;
+  }
+  .rate-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-top: auto; padding-top: 8px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    margin-bottom: 22px;
+  }
+  .rate {
+    color: #c9a84c; font-weight: 700;
+    font-family: Georgia, serif; font-size: 28px;
+  }
+  .rate small {
+    font-family: system-ui, sans-serif;
+    color: #f5f0e8; opacity: 0.6;
+    font-weight: 400; font-size: 11px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    margin-left: 6px;
+  }
+  .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 999px;
+    background: #c9a84c;
+    color: #1a1a2e;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    text-align: center;
+    border: 1px solid #c9a84c;
+  }
+  .btn.ghost {
+    background: transparent;
+    color: #c9a84c;
+  }
+  .btn-full { width: 100%; }
+
+  /* GLASS NOTE */
+  .glass-note {
+    margin-top: 70px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    padding: 36px 44px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 30px;
+  }
+  .glass-note h4 {
+    font-family: Georgia, serif; font-weight: 700;
+    color: #c9a84c; font-size: 22px; margin-bottom: 6px;
+  }
+  .glass-note p {
+    color: #f5f0e8; opacity: 0.8; font-size: 13px;
+  }
+
+  /* FOOTER */
+  footer.site {
+    background: #0d1b2a;
+    border-top: 1px solid rgba(201,168,76,0.18);
+    padding: 50px 0 30px;
+    margin-top: 0;
+    color: #f5f0e8;
+  }
+  .foot-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .foot-grid h5 {
+    font-family: Georgia, serif; color: #c9a84c;
+    font-size: 14px; letter-spacing: 0.2em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .foot-grid p, .foot-grid li {
+    font-size: 13px; opacity: 0.75; line-height: 2;
+    list-style: none;
+  }
+  .foot-brand .brand { font-size: 18px; margin-bottom: 14px; display:block; }
+  .foot-bottom {
+    margin-top: 36px; padding-top: 22px;
+    border-top: 1px solid rgba(245,240,232,0.08);
+    display: flex; justify-content: space-between;
+    font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+    opacity: 0.55;
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container nav">
+    <a class="brand" href="../arrival/index.html">Obsidian <span>Cove</span></a>
+    <ul>
+      <li><a href="../arrival/index.html">Arrival</a></li>
+      <li><a href="#" class="active">Suites</a></li>
+      <li><a href="../sanctuary-spa/index.html">Sanctuary Spa</a></li>
+      <li><a href="../dining/index.html">Dining</a></li>
+      <li><a href="../reserve/index.html">Reserve</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="eyebrow">Accommodations · Volcanic Island</div>
+    <h1 class="page-title">Four Ways to Disappear</h1>
+    <p class="lede">From cliff-edge eyries to bungalows pitched above the tide, each residence at Obsidian Cove is a private theatre carved into the island's basalt heart.</p>
+  </div>
+</section>
+
+<section class="suites-section">
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Your Private Sanctuary</h2>
+      <p>Four signature residences. Each with butler attendance, panoramic ocean theatre, and the silence only a volcano can give.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- 1 -->
+      <article class="card">
+        <div class="imgframe"><span>Obsidian Suite</span></div>
+        <div class="card-body">
+          <h3>Obsidian Suite</h3>
+          <div class="meta">85 m² · King · Ocean View</div>
+          <ul>
+            <li>Heated onyx soaking tub for two</li>
+            <li>Private blackstone plunge terrace</li>
+            <li>Butler service, 24 hours</li>
+          </ul>
+          <div class="rate-row">
+            <div class="rate">$1,840<small>per night</small></div>
+          </div>
+          <a class="btn btn-full" href="../reserve/index.html">Reserve This Suite</a>
+        </div>
+      </article>
+
+      <!-- 2 -->
+      <article class="card">
+        <div class="imgframe"><span>Lava Stone Villa</span></div>
+        <div class="card-body">
+          <h3>Lava Stone Villa</h3>
+          <div class="meta">140 m² · Two Bedrooms · Garden</div>
+          <ul>
+            <li>Private lava-rock outdoor shower</li>
+            <li>Volcanic-stone heated pool</li>
+            <li>In-villa sommelier on request</li>
+          </ul>
+          <div class="rate-row">
+            <div class="rate">$2,620<small>per night</small></div>
+          </div>
+          <a class="btn btn-full" href="../reserve/index.html">Reserve This Suite</a>
+        </div>
+      </article>
+
+      <!-- 3 -->
+      <article class="card">
+        <div class="imgframe"><span>Tide Pool Bungalow</span></div>
+        <div class="card-body">
+          <h3>Tide Pool Bungalow</h3>
+          <div class="meta">95 m² · Overwater · Lagoon</div>
+          <ul>
+            <li>Glass-floor lounge above coral garden</li>
+            <li>Direct ladder to private tide pool</li>
+            <li>Sunrise breakfast on the deck</li>
+          </ul>
+          <div class="rate-row">
+            <div class="rate">$2,180<small>per night</small></div>
+          </div>
+          <a class="btn btn-full" href="../reserve/index.html">Reserve This Suite</a>
+        </div>
+      </article>
+
+      <!-- 4 -->
+      <article class="card">
+        <div class="imgframe"><span>Cliff Edge Penthouse</span></div>
+        <div class="card-body">
+          <h3>Cliff Edge Penthouse</h3>
+          <div class="meta">220 m² · Three Bedrooms · Summit</div>
+          <ul>
+            <li>Cantilevered infinity pool over the cove</li>
+            <li>Open-air stargazing observatory</li>
+            <li>Personal chef and house attendant</li>
+          </ul>
+          <div class="rate-row">
+            <div class="rate">$4,950<small>per night</small></div>
+          </div>
+          <a class="btn btn-full" href="../reserve/index.html">Reserve This Suite</a>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="glass-note">
+      <div>
+        <h4>Every stay is a private affair.</h4>
+        <p>All residences include round-trip helicopter transfer from Kona, daily caldera breakfast, and unrestricted access to the Sanctuary Spa pools.</p>
+      </div>
+      <a class="btn ghost" href="../reserve/index.html">Begin Reservation</a>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="brand">Obsidian <span style="color:#f5f0e8;">Cove</span></span>
+        <p>A secluded volcanic-island retreat hidden along the windward coast. Twenty-four residences. One unrepeatable view of the Pacific.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li>Arrival</li>
+          <li>Suites</li>
+          <li>Sanctuary Spa</li>
+          <li>Dining</li>
+          <li>Reserve</li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <ul>
+          <li>+1 808 555 0144</li>
+          <li>concierge@obsidiancove.co</li>
+          <li>Kalapana Coast, HI</li>
+        </ul>
+      </div>
+      <div>
+        <h5>Hours</h5>
+        <ul>
+          <li>Reception · 24h</li>
+          <li>Helipad · Daylight</li>
+          <li>Spa · 07 – 22</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2025 Obsidian Cove Retreat</span>
+      <span>Privacy · Terms · Press</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

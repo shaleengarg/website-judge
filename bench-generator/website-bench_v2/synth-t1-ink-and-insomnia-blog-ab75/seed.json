@@ -1,0 +1,29 @@
+{
+  "id": "synth-t1-ink-and-insomnia-blog-ab75",
+  "tier": 1,
+  "genre": "personal-blog",
+  "pages": [
+    "journal",
+    "essays",
+    "reading-list",
+    "about",
+    "contact"
+  ],
+  "palette_hint": "Background #F5F0E8 (warm off-white), body text #1C1C1C (near-black), accent #B5451B (burnt sienna) for links and headings, secondary accent #6B7B5E (muted sage) for dividers and metadata.",
+  "type_style": "Headings in Georgia serif at font-weight 700 for gravitas; body text in system-ui sans-serif at font-weight 400, 1.75 line-height for comfortable reading; all caps small labels in 0.75rem tracked letter-spacing.",
+  "description": "Ink & Insomnia is the personal blog of Maren Voss, a night-owl writer and former librarian who publishes late-night journal entries, long-form essays on memory and place, and annotated reading lists.",
+  "constraints": [
+    "All content columns capped at max-width 640px, centered with auto margins and 1.5rem horizontal padding on each side.",
+    "Page background is always #F5F0E8; no background color changes between sections \u2014 separation is achieved only with a 1px solid #6B7B5E horizontal rule and 2.5rem vertical spacing.",
+    "Links and post titles use color #B5451B with no underline by default; underline appears only on hover.",
+    "Post metadata (date, category) displayed as small all-caps text in #6B7B5E at 0.75rem, placed above each post title.",
+    "Buttons (e.g., 'Send Message', 'Read More') are plain rectangular elements: background #1C1C1C, text #F5F0E8, no border-radius, padding 0.6rem 1.4rem, font-size 0.9rem."
+  ],
+  "page_specs": {
+    "journal": "Displays the ten most recent journal entries as a vertical list, each showing the all-caps date and tag above a linked post title in #B5451B, followed by a two-sentence excerpt in body text and a 'Read More' button. Entries are separated by a 1px #6B7B5E rule with 2.5rem spacing. Topics include insomnia-fueled observations, neighborhood walks in Reykjavik, and half-finished crossword puzzles.",
+    "essays": "A curated archive of six long-form essays presented as titled cards in a single vertical stack \u2014 no images, just title, a one-line pull quote in italic, and a publication date. Essays cover subjects like 'The Smell of Libraries After Rain', 'Why I Quit Annotating Books', and 'On Living Alone in a City You Love'. Each essay title links to a static full-text page.",
+    "reading-list": "A plaintext-style page listing books Maren has read in the current year, organized under three bold heading labels: 'Finished', 'Abandoned', and 'Currently Reading'. Each entry shows author last name, title in #B5451B, and a one-sentence personal note in italic. The page opens with a two-sentence preamble explaining her annotation habits.",
+    "about": "A single centered block of five short paragraphs introducing Maren Voss \u2014 former municipal librarian in Akureyri, now freelance writer living in Reykjavik, writing mostly between midnight and 3am. Includes a plaintext list of three things she is always available to discuss: Scandinavian crime fiction, the Dewey Decimal System, and rye bread. Ends with a horizontal rule and a one-line sign-off in italic.",
+    "contact": "A minimal contact form with three labeled fields \u2014 Name, Email, and Message (textarea with 6 rows) \u2014 followed by a 'Send Message' button styled per the site's button spec. Above the form, a short two-sentence note explains that Maren reads every message but may reply slowly and only between midnight and dawn. No social media links; the page closes with a 1px rule and a small italic note reading 'No press inquiries, please.'"
+  }
+}

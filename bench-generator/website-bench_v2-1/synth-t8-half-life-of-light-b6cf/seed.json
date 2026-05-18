@@ -1,0 +1,29 @@
+{
+  "id": "synth-t8-half-life-of-light-b6cf",
+  "tier": 8,
+  "genre": "multimedia-essay",
+  "pages": [
+    "threshold",
+    "exposure",
+    "dark-room",
+    "grain",
+    "afterimage"
+  ],
+  "palette_hint": "Background #F5F0E8 (warm off-white), primary text #1A1612 (near-black), accent #C1440E (burnt sienna) and #4A6741 (muted sage) used for pull-quotes and section markers.",
+  "type_style": "Headings in Georgia serif at heavy weight (700), body in system-ui at 400/16px, monospace labels in Courier New at 12px \u2014 creates archival, editorial tension.",
+  "description": "A multimedia essay exploring how analog photography processes memory, loss, and time through five interconnected chapters that mix typographic essays, data displays, and visual diagrams.",
+  "constraints": [
+    "Each page contains exactly 3 layout regions: a full-bleed header band (min-height 180px), a multi-column editorial body (max-width 1100px, centered, padding 0 48px), and a footer citation strip (border-top 2px solid #1A1612, monospace 12px).",
+    "Section rhythm breaks are marked by a horizontal rule styled as a 1px solid #C1440E line with 64px vertical margin above and 32px below \u2014 never use default <hr> styling.",
+    "Pull-quotes use Georgia italic at 28px, color #C1440E, left-border 4px solid #C1440E, padding-left 24px, max-width 520px, floated right with margin-left 32px on screens above 768px.",
+    "Diagram and data regions use CSS grid with explicit column definitions (e.g. repeat(5,1fr) for timelines, 2fr 1fr for essay+sidebar combos) distinct from the outer flex column page layout.",
+    "All decorative ASCII-style border elements and margin annotations are rendered in Courier New #4A6741 at 11px; no external images \u2014 all visual interest comes from CSS backgrounds using only solid colors and border tricks."
+  ],
+  "page_specs": {
+    "threshold": "The opening chapter page uses a full-bleed header band in #1A1612 with the essay title 'Half-Life of Light' in white Georgia 64px and a sub-deck in #C1440E 18px italic. Below it, a two-column grid (2fr 1fr) presents the introduction text on the left alongside a vertical sidebar listing the five chapters with Courier New labels and sage (#4A6741) numbering. A boxed 'Methodology Note' in the lower sidebar uses a 1px solid #4A6741 border and #F5F0E8 background to distinguish it from the essay body.",
+    "exposure": "This chapter examines the chemistry of silver halide emulsions and the metaphor of latent images. The editorial body opens with a 520px-wide pull-quote floated right: 'The image exists before it is seen \u2014 suspended, waiting for light to become memory.' A five-column CSS grid timeline below plots the invention of photographic processes from 1826 to 1975, each column containing a year label in Courier New, a 60px tall color bar (shades of #1A1612 fading to #4A6741), and a two-line description. A second section uses a 3-column flex row of 'chemical fact cards' with #1A1612 background and #F5F0E8 text.",
+    "dark-room": "A chapter about the physical act of developing film in darkness, structured around a numbered process diagram. The header band is deep #1A1612 with a centered inset box (border 2px solid #C1440E, padding 32px) containing step titles in white Courier New 13px. The body uses a 1fr 1fr CSS grid: left column is dense essay prose in system-ui; right column is a vertical stack of bordered 'process steps' each with a burnt-sienna (#C1440E) step number in Georgia 48px, a sage rule beneath, and two lines of description. Footer citation strip lists chemical compound names and their molecular weights in Courier New.",
+    "grain": "An analytical chapter on photographic grain as both flaw and aesthetic choice, featuring a data comparison section. The editorial body opens with a wide essay section, then breaks into a 5-column grid showing grain size comparisons across five film stocks (Kodak Tri-X, Ilford HP5, Fuji Neopan, Agfa APX, Kodak T-MAX) \u2014 each column has a film name in Courier New, a CSS-drawn 'grain swatch' made from a 60x60px div with border patterns in varying opacities of #1A1612, and ISO/grain metrics below. A second pull-quote in the lower section reads: 'Grain is the body of the photograph \u2014 proof that light was here, that time passed, that something was real.'",
+    "afterimage": "The closing chapter meditates on memory persistence and the photographs we carry mentally. The header band uses a split background: left half #1A1612, right half #C1440E, with the chapter title centered in white Georgia 56px spanning both halves. The body features a three-region layout \u2014 a wide closing essay in system-ui 17px/1.8 line-height, below it a two-column 'reading list' grid with book titles in Georgia bold and annotations in Courier New 12px, and finally a centered closing statement in Georgia italic 24px color #1A1612 with 80px vertical padding above and below. The citation strip includes the essay author name, publication year 2024, and a list of analog photography archives consulted."
+  }
+}

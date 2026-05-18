@@ -51,23 +51,27 @@ The agent under test sees only `instruction.md` + the rendered reference PNGs
 
 ## 2. The pipeline
 
+Fully synthetic. Every seed is invented by the concept LLM on demand — there
+is no hand-written seed list.
+
 ```
-   (--synthesize N)        OR        (hardcoded SEEDS list)
-        │                                     │
-        ▼                                     │
-┌──────────────────────┐                      │
-│ concept_gen.py       │  Stage 1: Sonnet     │
-│  Seed JSON           │  T=0.95, 1 call/seed │
-│  (parallel)          │                      │
-└──────────────────────┘                      │
-        │                                     │
-        └──────────────┬──────────────────────┘
+                  (tier, genre) pairs
+                  picked by shuffle-bag
+                  sampler (per tier)
+                       │
+                       ▼
+            ┌──────────────────────┐
+            │ concept_gen.py       │  Stage 1: Sonnet
+            │  Seed JSON           │  T=0.95, 1 call/seed
+            │  (parallel)          │
+            └──────────────────────┘
+                       │
                        ▼
             ┌──────────────────────┐
             │ generate_dataset.py  │  Stage 2: Opus
-            │  call_llm()          │  validate_html() retry loop
-            │  5 HTML pages        │  (up to --max-retries)
-            │  (parallel)          │
+            │  call_llm_one_page() │  per-page parallel codegen
+            │  5 HTML pages        │  per-page retry loop
+            │  (5 calls per seed)  │  (up to --max-retries)
             └──────────────────────┘
                        │
                        ▼
@@ -101,8 +105,8 @@ exists in the same codebase and is called by `scripts/test_pipeline.sh`.
 Generating both the *concept* (what site, what palette, what pages, what tone)
 and the *code* (the actual HTML/CSS) in one LLM call biases the model toward
 the same handful of safe patterns: SaaS landing pages, generic dashboards,
-portfolios with the same nav layout. The team that built the `small_checks/`
-reference pipeline observed this directly and split the stages for two reasons:
+portfolios with the same nav layout. We observed this directly and split the
+stages for two reasons:
 
 1. **Diversity.** A small high-temperature Sonnet call is cheap and explicitly
    tasked with being surprising in brand, palette, and content. The downstream
@@ -124,10 +128,15 @@ The user prompt to Sonnet contains:
 - The target genre.
 - The required output schema, declared inline so the model produces exactly the
   `Seed` shape.
-- Two hand-written seeds at the same tier as **few-shot examples** — the model
-  sees what level of detail and what kind of constraints look like.
 - An explicit anti-laziness instruction ("NEVER use Lorem ipsum or generic
   filler", "Brand name should be evocative, not descriptive").
+
+Note: there is no hand-written seed library to draw few-shot examples from.
+The prompt relies on the schema + tier description + `css_capabilities` list
++ the genre name to constrain output. If concept quality at a new tier is
+poor, the lever is the tier description and capabilities list (in
+`seeds.py:TIERS`) — make them more prescriptive before reaching for
+prompt-engineering elsewhere.
 
 ### 3.3 Validation and retry
 
@@ -150,8 +159,9 @@ The ID returned by Sonnet is sanitized and **always** prefixed with
 `synth-t{tier}-` plus a 4-hex-char UUID suffix. Example:
 `synth-t2-saas-marketing-3b9f`. Two properties matter:
 
-- The `synth-` prefix makes synthetic tasks visually distinguishable from
-  hand-written ones in the output directory.
+- The `synth-` prefix tags every task as LLM-generated (every task is, today —
+  the prefix is reserved for future hand-curated or imported tasks should we
+  ever add them).
 - The UUID suffix prevents collisions when the model reuses a brand name across
   runs (it does this more than you'd think).
 
@@ -183,8 +193,8 @@ the fact.
 
 The next step up — generating a shared layout (nav + footer + CSS) in a
 single call up front and injecting it verbatim into each per-page prompt —
-is the small_checks pattern. It's the right answer for production but a
-larger refactor; see §9 for the extension path.
+is the right answer for production but a larger refactor; see §9 for the
+extension path.
 
 ### 4.2 Prompt structure
 
@@ -272,12 +282,29 @@ generated dataset to filter or audit it.
 
 Checkpoint 3 — sanity — is deterministic. It renders each page locally with
 Playwright, screenshots it, runs JS instrumentation (`document.body.innerText`,
-`querySelectorAll('nav')`, computed style probing) and asserts a small set of
-thresholds (see constants at the top of `sanity.py`). It also runs cross-page
-checks: nav labels must be identical across all 5 pages, footer text must
-overlap in jaccard ≥ 0.8, background color must be within ΔE 12 in LAB space.
-Tier 1 is exempt from nav/footer checks because tier-1 sites are explicitly
-single-page-feeling.
+`querySelectorAll('nav')`, computed-style probing for gradients/shadows/
+font-sizes/font-weights, `<form>`/`<input>`/`<table>`/`<svg>` counts) and
+asserts a small set of thresholds (see constants at the top of `sanity.py`).
+
+Render-level checks: screenshot not blank, visible text length, page height
+in `[400, 20000]` px.
+
+Tier-conditional structural checks (each tier inherits the lower-tier ones):
+- Tier 1+: ≥1 heading, ≥1 paragraph
+- Tier 2+: `<nav>` and `<footer>` landmarks present
+- Tier 3+: ≥2 flex/grid layout containers
+- Tier 4+: at least one gradient or non-trivial box-shadow
+- Tier 5+: ≥3 distinct font-sizes OR ≥2 distinct font-weights
+- Tier 6+: a `<form>`, a `<table>`, or ≥4 inputs
+- Tier 7+: ≥1 inline `<svg>` with drawable content
+- Tier 8+: ≥3 distinct flex/grid layout containers
+
+Cross-page checks (tier 2+): nav labels identical across all 5 pages,
+footer text overlap ≥ 80% in jaccard, background color within ΔE 12 in LAB
+space.
+
+Tier 1 is exempt from nav/footer and cross-page checks because tier-1
+sites are explicitly single-page-feeling.
 
 Checkpoint 4 — relevance — is LLM-based. Each page screenshot + its seed spec
 go to `claude-sonnet-4-6` with vision. The model returns five 1-5 Likert
@@ -293,39 +320,64 @@ tasks (one per tier) as a smoke test.
 
 ## 7. Tier and genre taxonomy (`seeds.py`)
 
-Tiers are difficulty levels, defined in `TIERS: dict[int, TierSpec]`. Each tier
-has a name, a description, and a `css_capabilities` list naming the CSS
-features the agent is expected to use at that tier. Tiers 1-3 ship today:
+Tiers are difficulty levels, defined in `TIERS: dict[int, TierSpec]`. Each
+tier has a name, a description, and a `css_capabilities` list naming the
+CSS features the agent is expected to use. Tier 9 additionally carries
+`requires_motion: True` to mark that it needs harness extensions beyond
+the static-screenshot path.
 
-- **Tier 1** — Static blocks: vertical stacks, basic typography, solid colors,
-  single-column. Examples: minimal portfolio, simple restaurant menu, personal
-  blog.
-- **Tier 2** — Multi-page identity: 5 pages sharing nav/footer/palette,
-  flexbox basics, simple grids. Examples: SaaS marketing, conference, mobile
-  app landing.
-- **Tier 3** — Real layout: multi-column, sidebars, sticky positioning,
-  tables, dense data. Examples: docs site, ecommerce, admin dashboard.
+| Tier | Name | Defining capability |
+|------|------|---------------------|
+| 1 | Static blocks | Vertical stacks, solid colors, basic typography |
+| 2 | Multi-page identity | Shared nav/footer/palette, flexbox basics, simple grids |
+| 3 | Real layout | Multi-column, sidebars, sticky positioning, tables |
+| 4 | Visual polish | Gradients, box-shadow elevation, decorative pseudo-elements |
+| 5 | Custom typography | Coherent type scale, multiple weights, drop caps |
+| 6 | Forms and data-heavy | Styled inputs, dense tables, multi-column forms |
+| 7 | Inline SVG and shapes | Inline `<svg>`, clip-path, transforms, masking |
+| 8 | Mixed visual systems | Magazine-style assemblies of heterogeneous sections |
+| 9 | Animations | **Gated** — taxonomy in place, codegen needs the motion harness |
 
-The tier definitions are visible to the Stage-1 concept LLM (so it knows what
-to constrain itself to) and the Stage-2 codegen LLM (indirectly, via the
-constraints field in the seed).
+Tier definitions are read by the Stage-1 concept LLM (it sees the description
+and `css_capabilities` and chooses constraints accordingly) and by
+`sanity.py` (which applies tier-conditional structural checks).
 
-Genres are an orthogonal axis defined in `GENRES: dict[int, list[str]]`. Each
-tier has 5 genres. The synth pair-picker (`concept_gen.pick_tier_genre_pairs`)
-cycles through tiers in the requested range; within a tier it samples genres
-with replacement so `--synthesize 50` can generate multiple sites per
-(tier, genre) cell.
+Genres live in `GENRES: dict[int, list[str]]` — 5 genres per tier. The synth
+pair-picker (`concept_gen.pick_tier_genre_pairs`) uses two patterns:
 
-### 7.1 Adding a new tier
+- **Tier selection: round-robin.** `tiers[i % len(tiers)]`. For N picks across
+  K tiers you get `N/K` (rounded) per tier; the lower tiers get the extras
+  when N is not divisible by K.
+- **Genre selection within a tier: shuffle-bag (deck).** A shuffled deck of
+  the tier's genres is dealt one at a time; when empty, it reshuffles. Over
+  K picks at a tier with G genres you get `floor(K/G)` complete cycles plus
+  a partial — no genre repeats until every other genre at that tier has been
+  used at least as many times.
+
+Both are deterministic given `--synth-seed`.
+
+### 7.1 Tier gating
+
+`tier_range()` excludes tiers with `requires_motion=True`. The CLI default
+`--tier-max` therefore stops at the highest static tier. Asking for
+`--tier-max 9` explicitly hits a `sys.exit` with a clear "motion harness not
+yet implemented" message — the gate is at the orchestrator entry point.
+
+### 7.2 Adding a new tier
 
 1. Add an entry to `TIERS` with name, description, and `css_capabilities`.
-2. Add 3-5 genres to `GENRES[<new tier>]`.
-3. (Optional but recommended) Add 2-3 hand-written seeds to `SEEDS` at the new
-   tier so `concept_gen` has same-tier few-shot examples.
-4. Update tier-conditional logic in `sanity.py` if the new tier requires
-   structural elements the current checks don't enforce.
+   If the tier needs harness changes (motion, video, build step), add
+   `requires_motion=True` (or invent a new flag).
+2. Add 5 genres to `GENRES[<new tier>]`.
+3. Add a tier-conditional check to `sanity.py:_check_page_structure` that
+   tests for the new tier's signature feature (e.g. tier 7 requires an
+   inline `<svg>`).
+4. If the new tier is gated (like 9), the existing `is_motion_tier` check
+   in `generate_dataset.py` will pick it up automatically and refuse to
+   generate it. Otherwise no further wiring is needed.
 
-The generator picks up the new tier automatically — no other changes.
+`concept_gen.py` and `prompts.py` read tier info via `TIERS[tier]`, so they
+pick up new tiers without change.
 
 ---
 
@@ -333,8 +385,8 @@ The generator picks up the new tier automatically — no other changes.
 
 The generator runs three `ThreadPoolExecutor` pools at two levels:
 
-- **Synth pool** (only with `--synthesize`): outer pool sized to
-  `--concurrency`, one Sonnet call per worker, each producing one seed.
+- **Synth pool**: outer pool sized to `--concurrency`, one Sonnet call per
+  worker, each producing one seed.
 - **Codegen outer pool**: sized to `--concurrency`, one worker per seed.
   A worker's job is to produce all 5 pages of its seed, write the task dir,
   and return the manifest entry.
@@ -380,32 +432,60 @@ backoff yet.
 ## 9. Extension points
 
 The framework is designed so that adding new generation modes touches the
-codegen layer, not the concept layer.
+codegen and harness layers, not the concept layer.
 
-### 9.1 New tiers (4-8)
-Append to `TIERS` and `GENRES`. No other change.
+### 9.1 New static tiers (beyond 8)
 
-### 9.2 Animations
-Three pieces need updating:
-- `prompts.py SYSTEM_PROMPT` — relax the no-`<script>` and no-CSS-animation rule.
-- `generate_dataset.py validate_html()` — allow `<script>` (or only allow CSS
-  `@keyframes`, depending on scope).
-- `templates/environment/make.py` and `templates/tests/score.py` — capture
-  video instead of (or in addition to) a screenshot. The scoring rubric needs
-  a motion-aware dimension; the simplest path is to hand the recorded video
-  to a VLM judge (mirroring `relevance.py`).
+Append to `TIERS` with name + description + `css_capabilities`. Add 5 genres
+to `GENRES[<new tier>]`. Add a tier-conditional check to
+`sanity.py:_check_page_structure` testing for the new tier's signature
+feature. No other changes — concept_gen reads from `TIERS[tier]`, codegen
+doesn't care about tier numbers, and the relevance judge gets the constraints
+from the seed regardless.
 
-The seed schema gains an `animation_spec` field describing the intended
-motion in plain text; the codegen prompt is told to honor it.
+### 9.2 Tier 9 — Animations
+
+Taxonomy is in place: `TIERS[9]` has `requires_motion=True`, `GENRES[9]`
+lists 5 motion-oriented categories, and the orchestrator refuses to generate
+tier 9 with a clear "not yet implemented" message. To enable generation, the
+following changes are needed:
+
+**Concept layer:**
+- Add `expected_animations: list[AnimationSpec]` to the Seed schema, where
+  `AnimationSpec` has `id`, `target_description`, `kind` (`loop|entrance`),
+  `duration_ms`, `description`. Add `motion_style` to the seed
+  (`none|subtle|playful|dramatic`).
+- Update `concept_gen.py` to emit these fields for tier 9.
+
+**Codegen layer:**
+- Carve `prompts.py:SYSTEM_PROMPT` rule 3 into a constant; tier 9 overrides
+  it to allow `<script>` *only* for driving autonomous animations (no click,
+  hover, or scroll handlers).
+- Add per-`AnimationSpec` hook instructions (`data-anim="{id}"`) so the
+  capture step can find each animated element.
+
+**Harness extensions:**
+- `templates/environment/make.py` and `templates/tests/score.py` gain a
+  `capture_motion()` path that uses Playwright's `page.clock.install()` to
+  virtualize JS time, then samples the page at controlled `fast_forward`
+  offsets to produce a 3×2 stitched frame-grid PNG per animation.
+- New `relevance` dimension (or a separate `motion_judge.py`) feeds the
+  ground-truth + agent frame grids to Opus with Likert criteria for motion
+  presence, target element, visual character, and overall fidelity.
+
+The static path is unchanged because tier 9 lives in its own gated branch.
+Static tiers (1-8) keep using the existing screenshot harness verbatim.
 
 ### 9.3 React + Tailwind
-The agent now produces a buildable project, not a single HTML file. Three
+
+The agent produces a buildable project, not a single HTML file. Three
 pieces need updating:
-- A new codegen prompt that emits JSX + Tailwind classes.
+
+- A new codegen prompt that emits JSX + Tailwind classes instead of inline-CSS HTML.
 - A new template set (`templates/react-tailwind/`) with a Dockerfile that
-  installs Node + Vite + Tailwind, a `make.py` that runs `npm install &&
-  npm run build` before rendering, and an `instruction.md` template that
-  describes the project structure the agent should produce.
+  installs Node + Vite + Tailwind, a `make.py` that runs `npm install && npm
+  run build` before rendering, and an `instruction.md` template describing
+  the project structure the agent should produce.
 - `generate_dataset.py` learns a `--track` flag selecting which codegen +
   template pair to use.
 
@@ -419,10 +499,10 @@ implementation.
 
 | File | Role |
 |------|------|
-| `generate_dataset.py` | Orchestrator; CLI; codegen prompts + retries; packaging |
-| `concept_gen.py`      | Stage-1 LLM seed synthesis; pair-picker; standalone CLI for debugging |
-| `seeds.py`            | `TIERS`, `GENRES`, hardcoded `SEEDS`, schema validators |
-| `prompts.py`          | Codegen system prompt + user prompt builder; viewport constant |
+| `generate_dataset.py` | Orchestrator; CLI; per-page codegen with retries; packaging |
+| `concept_gen.py`      | Stage-1 LLM seed synthesis; shuffle-bag tier/genre pair-picker; standalone CLI for debugging |
+| `seeds.py`            | `TIERS`, `GENRES`, `Seed` TypedDict (schema), `tier_range()`, `is_motion_tier()` |
+| `prompts.py`          | Codegen system prompt + per-page user prompt builder; viewport constant |
 | `sanity.py`           | Deterministic post-generation render + DOM checks |
 | `relevance.py`        | VLM judge scoring each page against its seed |
 | `scripts/test_pipeline.sh` | End-to-end smoke test runner |
