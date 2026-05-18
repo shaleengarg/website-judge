@@ -1,35 +1,45 @@
 """
-Enhanced verifier that scores HTML/CSS fidelity across multiple UI aspects.
+Generalized visual+structural scorer for website-replication tasks.
 
-Aspects scored:
-  1. pixel_ssim          – structural similarity (grayscale)
-  2. color_histogram     – palette match via histogram intersection
-  3. layout_structure    – card count, card positions, heading/subtitle positions
-  4. navigation          – nav existence, link count, link text, position
-  5. typography          – font sizes, weights, price text
-  6. color_scheme        – body bg, heading color, button/border colors
-  7. cards_borders       – border radius, width, badge, card sizing
-  8. buttons             – text, position, bg color, border radius
-  9. checkmarks_icons    – icon/SVG counts per card
- 10. text_content        – heading, subtitle, plan names, feature lists
- 11. spacing_padding     – card padding, inter-card gaps, button offsets
+Design choices that differ from earlier iterations:
 
-reward = weighted sum of all aspects
+1. ADAPTIVE RENORMALIZATION
+   Each aspect can return (score, weight_multiplier). When an aspect has
+   nothing to evaluate on this page (e.g., the page has no repeating groups
+   to compare), it returns weight_multiplier=0 and contributes nothing. The
+   final score divides by the sum of *actual* weights, not the declared
+   total. Non-applicable aspects don't give free 1.0s.
 
-Writes:
-  /logs/verifier/reward.txt              single float in [0, 1]
-  /logs/verifier/score_details.json      per-page breakdown
-  /logs/verifier/comparisons/<page>.png  side-by-side comparison
-  /logs/verifier/renders/<page>.agent.png
-  /logs/verifier/renders/<page>.ref.png
+2. SCHEMA-FREE EXTRACTION
+   Instead of "find the pricing cards / heading / subtitle", we extract a
+   generic representation: every heading, every paragraph, every link,
+   detected repeating groups (any container whose direct children are
+   structurally similar), and color-binned regions. Pricing pages, blog
+   indexes, dashboards, restaurant menus, and portfolios all map to the
+   same primitives.
+
+3. SEQUENCE-AWARE TEXT SIMILARITY
+   difflib.SequenceMatcher instead of word-set Jaccard. Catches order
+   changes a bag-of-words check would miss.
+
+4. PARTIAL COVERAGE FLAG
+   If less than 30% of declared weight applies to a page, the per-page
+   result is flagged `low_coverage` so callers know the score is partial.
+
+Outputs written to /logs/verifier/:
+  reward.txt            single float in [0, 1]
+  score_details.json    per-page breakdown including aspect skips
+  comparisons/<p>.png   side-by-side input vs agent render
+  renders/<p>.{ref,agent}.png
 """
 from __future__ import annotations
 
+import difflib
 import json
 import math
-import re
 import shutil
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -37,6 +47,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from playwright.sync_api import sync_playwright, Page, Browser
 from skimage.metrics import structural_similarity as ssim
+
 
 # ========================== CONFIGURATION ==========================
 
@@ -52,336 +63,362 @@ COMPARISONS_DIR = LOG_DIR / "comparisons"
 
 VIEWPORT = {"width": 1280, "height": 800}
 
-# Aspect weights – must sum to 1.0
-ASPECT_WEIGHTS = {
-    "pixel_ssim":           0.20,
-    "color_histogram":      0.10,
-    "layout_structure":     0.15,
-    "navigation":           0.08,
-    "typography":           0.10,
-    "color_scheme":         0.07,
-    "cards_borders":        0.10,
-    "buttons":              0.07,
-    "checkmarks_icons":     0.03,
-    "text_content":         0.05,
-    "spacing_padding":      0.05,
+# Target weights — sum to 1.0 when every aspect is applicable. Aspects that
+# skip (weight_multiplier=0) cause the rest to renormalize at scoring time.
+ASPECT_TARGET_WEIGHTS: dict[str, float] = {
+    "pixel_ssim":          0.18,
+    "color_histogram":     0.07,
+    "region_color":        0.08,  # color in spatial bins (catches placement)
+    "palette":             0.05,  # top-K dominant colors
+    "headings":            0.10,  # presence, hierarchy, text per role
+    "paragraphs":          0.07,  # paragraph count + length distribution + sample text
+    "navigation":          0.08,  # nav regions + link text
+    "repeating_groups":    0.12,  # cards/grids/lists
+    "interactive":         0.05,  # buttons + form inputs
+    "layout_skeleton":     0.10,  # bounding-box map of major elements by type
+    "text_content":        0.10,  # sequence-aware text similarity, all visible text
 }
-assert abs(sum(ASPECT_WEIGHTS.values()) - 1.0) < 1e-6, "Weights must sum to 1.0"
+assert abs(sum(ASPECT_TARGET_WEIGHTS.values()) - 1.0) < 1e-6
+
+# If less than this fraction of total weight applies to a page, flag it as
+# partial info. The pixel aspects alone account for ~0.38 of total weight, so
+# we set the threshold to 0.50 — anything pixel-only or worse triggers the flag.
+COVERAGE_FLAG_THRESHOLD = 0.50
 
 
-# ========================== RENDERING ==========================
+# ========================== DOM EXTRACTION (GENERIC) ==========================
 
-def render_and_close(html_path: Path, out_png: Path, browser: Browser) -> None:
-    context = browser.new_context(viewport=VIEWPORT)
-    page = context.new_page()
-    page.goto(f"file://{html_path.resolve()}", wait_until="load")
-    page.wait_for_timeout(500)
-    page.screenshot(path=str(out_png), full_page=False)
-    context.close()
-
-
-# ========================== PIXEL-LEVEL SCORING ==========================
-
-def compute_ssim(ref: np.ndarray, agent: np.ndarray) -> float:
-    ref_gray = np.asarray(Image.fromarray(ref).convert("L"))
-    agent_gray = np.asarray(Image.fromarray(agent).convert("L"))
-    val = float(ssim(ref_gray, agent_gray, data_range=255))
-    return max(0.0, val)
-
-
-def color_histogram_intersection(a: np.ndarray, b: np.ndarray) -> float:
-    score = 0.0
-    for c in range(3):
-        ha, _ = np.histogram(a[:, :, c], bins=32, range=(0, 256))
-        hb, _ = np.histogram(b[:, :, c], bins=32, range=(0, 256))
-        ha = ha / (ha.sum() + 1e-9)
-        hb = hb / (hb.sum() + 1e-9)
-        score += float(np.minimum(ha, hb).sum())
-    return score / 3.0
-
-
-# ========================== DOM EXTRACTION ==========================
-
-def extract_dom_info(page: Page) -> dict[str, Any]:
-    """
-    Deterministic DOM extraction. Uses stable selectors and canonical ordering.
-    Every heuristic is designed so that running it twice on the same page
-    produces byte-identical JSON.
-    """
-    return page.evaluate(r"""
-    () => {
-        const result = {};
-
-        function getRect(el) {
-            if (!el) return null;
-            const r = el.getBoundingClientRect();
-            return {
-                x: Math.round(r.x * 100) / 100,
-                y: Math.round(r.y * 100) / 100,
-                width: Math.round(r.width * 100) / 100,
-                height: Math.round(r.height * 100) / 100,
-                bottom: Math.round(r.bottom * 100) / 100,
-                right: Math.round(r.right * 100) / 100
-            };
-        }
-
-        function getStyles(el) {
-            if (!el) return {};
-            const s = window.getComputedStyle(el);
-            // Extract individual sides to avoid shorthand inconsistencies
-            return {
-                fontSize: s.getPropertyValue('font-size'),
-                fontWeight: s.getPropertyValue('font-weight'),
-                color: s.getPropertyValue('color'),
-                backgroundColor: s.getPropertyValue('background-color'),
-                borderTopColor: s.getPropertyValue('border-top-color'),
-                borderTopWidth: s.getPropertyValue('border-top-width'),
-                borderRadius: s.getPropertyValue('border-top-left-radius'),
-                paddingTop: s.getPropertyValue('padding-top'),
-                paddingRight: s.getPropertyValue('padding-right'),
-                paddingBottom: s.getPropertyValue('padding-bottom'),
-                paddingLeft: s.getPropertyValue('padding-left'),
-                textAlign: s.getPropertyValue('text-align'),
-            };
-        }
-
-        // --- Navigation ---
-        const nav = document.querySelector('nav') ||
-                    document.querySelector('header') ||
-                    document.querySelector('[role="navigation"]');
-        const navLinks = [];
-        if (nav) {
-            const seen = new Set();
-            nav.querySelectorAll('a').forEach(el => {
-                const text = el.textContent.trim();
-                if (text && !seen.has(text)) {
-                    seen.add(text);
-                    navLinks.push({
-                        text: text,
-                        rect: getRect(el),
-                        styles: getStyles(el),
-                    });
-                }
-            });
-        }
-        result.navigation = {
-            exists: !!nav,
-            rect: getRect(nav),
-            linkCount: navLinks.length,
-            links: navLinks,
+# Single JS snippet that pulls everything we need in one round-trip.
+EXTRACTION_JS = r"""
+() => {
+    const round = (n) => Math.round(n * 100) / 100;
+    function getRect(el) {
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return {
+            x: round(r.x), y: round(r.y),
+            width: round(r.width), height: round(r.height),
+            bottom: round(r.bottom), right: round(r.right),
+            area: round(r.width * r.height),
         };
-
-        // --- Main heading ---
-        const h1 = document.querySelector('h1');
-        const h2 = document.querySelector('h2');
-        const mainHeadingEl = h1 || h2;
-        result.mainHeading = {
-            text: mainHeadingEl ? mainHeadingEl.textContent.trim() : '',
-            rect: getRect(mainHeadingEl),
-            styles: getStyles(mainHeadingEl),
+    }
+    function getStyles(el) {
+        if (!el) return {};
+        const s = window.getComputedStyle(el);
+        return {
+            fontSize: s.fontSize,
+            fontWeight: s.fontWeight,
+            fontFamily: s.fontFamily,
+            color: s.color,
+            backgroundColor: s.backgroundColor,
+            display: s.display,
+            position: s.position,
+            // All four sides — symmetric reads only would miss border-bottom-only
+            borderTopColor: s.borderTopColor,
+            borderRightColor: s.borderRightColor,
+            borderBottomColor: s.borderBottomColor,
+            borderLeftColor: s.borderLeftColor,
+            borderTopWidth: s.borderTopWidth,
+            borderRightWidth: s.borderRightWidth,
+            borderBottomWidth: s.borderBottomWidth,
+            borderLeftWidth: s.borderLeftWidth,
+            borderTopLeftRadius: s.borderTopLeftRadius,
+            borderTopRightRadius: s.borderTopRightRadius,
+            borderBottomLeftRadius: s.borderBottomLeftRadius,
+            borderBottomRightRadius: s.borderBottomRightRadius,
+            paddingTop: s.paddingTop,
+            paddingRight: s.paddingRight,
+            paddingBottom: s.paddingBottom,
+            paddingLeft: s.paddingLeft,
+            marginTop: s.marginTop,
+            marginRight: s.marginRight,
+            marginBottom: s.marginBottom,
+            marginLeft: s.marginLeft,
+            textAlign: s.textAlign,
+            boxShadow: s.boxShadow,
+            // backgroundImage catches gradients
+            backgroundImage: s.backgroundImage,
         };
+    }
 
-        // --- Subtitle: first <p> sibling/near the heading with reasonable length ---
-        let subtitleEl = null;
-        if (mainHeadingEl) {
-            let sibling = mainHeadingEl.nextElementSibling;
-            for (let i = 0; i < 5 && sibling; i++) {
-                const t = sibling.textContent.trim();
-                if (sibling.tagName === 'P' && t.length > 10 && t.length < 300) {
-                    subtitleEl = sibling;
-                    break;
-                }
-                sibling = sibling.nextElementSibling;
+    const VIEWPORT_W = 1280, VIEWPORT_H = 800;
+    function isVisible(el) {
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) return false;
+        // Discard anything entirely below the viewport fold for scoring.
+        if (r.top >= VIEWPORT_H) return false;
+        if (r.bottom <= 0) return false;
+        const s = window.getComputedStyle(el);
+        if (s.display === 'none' || s.visibility === 'hidden') return false;
+        return true;
+    }
+
+    const out = {};
+
+    // ---- HEADINGS (h1..h6) ----
+    const headings = [];
+    for (const tag of ['h1','h2','h3','h4','h5','h6']) {
+        document.querySelectorAll(tag).forEach(el => {
+            if (!isVisible(el)) return;
+            const text = el.textContent.trim();
+            if (!text) return;
+            headings.push({
+                tag, text,
+                rect: getRect(el),
+                styles: getStyles(el),
+            });
+        });
+    }
+    out.headings = headings;
+
+    // ---- PARAGRAPHS ----
+    const paragraphs = [];
+    document.querySelectorAll('p, blockquote').forEach(el => {
+        if (!isVisible(el)) return;
+        const text = el.textContent.trim();
+        if (!text || text.length < 3) return;
+        paragraphs.push({
+            text, length: text.length,
+            rect: getRect(el),
+            styles: getStyles(el),
+        });
+    });
+    out.paragraphs = paragraphs;
+
+    // ---- LINKS ----
+    const links = [];
+    document.querySelectorAll('a').forEach(el => {
+        if (!isVisible(el)) return;
+        const text = el.textContent.trim();
+        if (!text) return;
+        // Tag whether this link sits inside a nav-ish ancestor.
+        const inNav = !!el.closest('nav, header, [role="navigation"], aside');
+        links.push({
+            text,
+            inNav,
+            rect: getRect(el),
+            styles: getStyles(el),
+        });
+    });
+    out.links = links;
+
+    // ---- BUTTONS + FORM INPUTS ----
+    const interactive = [];
+    document.querySelectorAll('button, input, textarea, select').forEach(el => {
+        if (!isVisible(el)) return;
+        interactive.push({
+            tag: el.tagName.toLowerCase(),
+            type: el.getAttribute('type') || '',
+            text: (el.textContent || el.getAttribute('placeholder') || el.getAttribute('value') || '').trim(),
+            rect: getRect(el),
+            styles: getStyles(el),
+        });
+    });
+    out.interactive = interactive;
+
+    // ---- NAV REGIONS ----
+    // Anything that looks structurally nav-like: <nav>, <aside>, <header>,
+    // role=navigation, plus any element with 4+ direct-child links.
+    const navCandidates = new Set();
+    document.querySelectorAll('nav, header, aside, [role="navigation"]').forEach(el => {
+        if (isVisible(el)) navCandidates.add(el);
+    });
+    document.querySelectorAll('*').forEach(el => {
+        if (navCandidates.has(el) || !isVisible(el)) return;
+        const childLinks = Array.from(el.children).filter(c => c.tagName === 'A');
+        // Also count <li><a> pattern
+        const liLinks = el.querySelectorAll(':scope > li > a, :scope > ul > li > a, :scope > ol > li > a');
+        if (childLinks.length >= 4 || liLinks.length >= 4) {
+            navCandidates.add(el);
+        }
+    });
+    const navRegions = [];
+    navCandidates.forEach(el => {
+        const innerLinks = [];
+        el.querySelectorAll('a').forEach(a => {
+            const t = a.textContent.trim();
+            if (t && isVisible(a)) innerLinks.push({ text: t, rect: getRect(a) });
+        });
+        navRegions.push({
+            tag: el.tagName.toLowerCase(),
+            rect: getRect(el),
+            linkCount: innerLinks.length,
+            links: innerLinks,
+            styles: getStyles(el),
+        });
+    });
+    out.navRegions = navRegions;
+
+    // ---- REPEATING GROUPS ----
+    // For every element with >= 2 direct children, check if the children are
+    // structurally similar (same tag, similar size). If so, treat the
+    // element as a "group" and its children as group items. This generalizes
+    // pricing cards, blog post grids, feature columns, dashboard KPIs.
+    function structuralKey(el) {
+        // tag + rough size bucket
+        const r = el.getBoundingClientRect();
+        const wBucket = Math.round(r.width / 50);
+        const hBucket = Math.round(r.height / 50);
+        return el.tagName + '|' + wBucket + 'x' + hBucket;
+    }
+
+    const groups = [];
+    const seenGroups = new Set();
+    document.querySelectorAll('*').forEach(el => {
+        if (!isVisible(el)) return;
+        const children = Array.from(el.children).filter(c => isVisible(c));
+        if (children.length < 2) return;
+        // Take only "real content" children (not script/style/hidden)
+        const contentChildren = children.filter(c =>
+            !['SCRIPT', 'STYLE', 'NOSCRIPT', 'BR', 'HR'].includes(c.tagName)
+        );
+        if (contentChildren.length < 2) return;
+
+        const keys = contentChildren.map(structuralKey);
+        const keyCounts = {};
+        for (const k of keys) keyCounts[k] = (keyCounts[k] || 0) + 1;
+        const dominant = Object.entries(keyCounts).sort((a,b) => b[1] - a[1])[0];
+        // At least 2 similar children needed to call it a "group"
+        if (dominant[1] < 2) return;
+        // And they must be the majority
+        if (dominant[1] / contentChildren.length < 0.6) return;
+
+        // Skip if this group is nested inside another already-detected group
+        // (we want the smallest meaningful grouping element).
+        let nested = false;
+        for (const existing of groups) {
+            if (existing._el && existing._el.contains(el)) { nested = true; break; }
+            if (existing._el && el.contains(existing._el)) {
+                // Existing is inside this one; remove existing if this is more inclusive
+                // Actually prefer the smaller (innermost) one — so skip this.
+                nested = true; break;
             }
         }
-        if (!subtitleEl) {
-            // Fallback: first <p> on the page with reasonable length
-            document.querySelectorAll('p').forEach(el => {
-                if (!subtitleEl) {
-                    const t = el.textContent.trim();
-                    if (t.length > 10 && t.length < 300) subtitleEl = el;
-                }
-            });
-        }
-        result.subtitle = {
-            text: subtitleEl ? subtitleEl.textContent.trim() : '',
-            rect: getRect(subtitleEl),
-            styles: getStyles(subtitleEl),
-        };
+        if (nested) return;
 
-        // --- Pricing Cards ---
-        // Strategy: collect all elements, find those containing '$' with card-like
-        // dimensions, pick the innermost non-overlapping set, sort left-to-right.
-        const allEls = Array.from(document.querySelectorAll('*'));
-        const candidates = [];
+        const groupRect = getRect(el);
+        if (!groupRect || groupRect.area < 5000) return;  // skip tiny groups
+        // Direction: if children are stacked vertically (similar x), label "vertical"
+        const xs = contentChildren.map(c => c.getBoundingClientRect().x);
+        const ys = contentChildren.map(c => c.getBoundingClientRect().y);
+        const xRange = Math.max(...xs) - Math.min(...xs);
+        const yRange = Math.max(...ys) - Math.min(...ys);
+        const direction = xRange > yRange ? 'horizontal' : 'vertical';
 
-        for (const el of allEls) {
-            // Only consider direct text content that has a '$'
-            const hasPrice = Array.from(el.querySelectorAll('*')).some(child => {
-                return /\$\d+/.test(child.textContent);
-            }) || /\$\d+/.test(el.textContent);
-
-            if (!hasPrice) continue;
-
-            const rect = el.getBoundingClientRect();
-            if (rect.width < 150 || rect.width > 600 || rect.height < 200 || rect.height > 1000) continue;
-            if (rect.width === 0 || rect.height === 0) continue;
-
-            candidates.push({ el, area: rect.width * rect.height });
-        }
-
-        // Sort by area ascending (innermost first)
-        candidates.sort((a, b) => a.area - b.area);
-
-        const pickedEls = [];
-        for (const c of candidates) {
-            // Skip if this element contains or is contained by an already-picked element
-            let dominated = false;
-            for (const picked of pickedEls) {
-                if (picked.contains(c.el) || c.el.contains(picked)) {
-                    dominated = true;
-                    break;
-                }
-            }
-            if (!dominated) {
-                pickedEls.push(c.el);
-            }
-        }
-
-        // Build card info, sorted by x position
-        const cardInfos = pickedEls.map(card => {
-            const cardRect = getRect(card);
-            const cardStyles = getStyles(card);
-
-            // Plan name: first heading inside the card
-            const nameEl = card.querySelector('h1, h2, h3, h4, h5, h6') ||
-                           card.querySelector('strong, b');
-            const planName = nameEl ? nameEl.textContent.trim() : '';
-
-            // Price text: find the element with $XX
-            let priceText = '';
-            const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT);
-            let node;
-            while ((node = walker.nextNode())) {
-                const t = node.textContent.trim();
-                if (/\$\d+/.test(t)) {
-                    // Get the parent element's full text for context
-                    priceText = node.parentElement.textContent.trim();
-                    break;
-                }
-            }
-
-            // Features: list items
-            const features = [];
-            const featureSeen = new Set();
-            card.querySelectorAll('li').forEach(li => {
-                const t = li.textContent.trim();
-                if (t && t.length < 100 && !featureSeen.has(t)) {
-                    featureSeen.add(t);
-                    features.push(t);
-                }
-            });
-
-            // CTA button
-            const btn = card.querySelector('button, a[href]');
-            let btnInfo = null;
-            if (btn) {
-                const btnText = btn.textContent.trim();
-                // Only count it as a button if it looks like a CTA
-                if (btnText.length > 0 && btnText.length < 50) {
-                    btnInfo = {
-                        text: btnText,
-                        rect: getRect(btn),
-                        styles: getStyles(btn),
-                    };
-                }
-            }
-
-            // Badge
-            let badge = null;
-            card.querySelectorAll('span, div, label, p').forEach(el => {
-                const t = el.textContent.trim();
-                if (t.length < 30 && /most|popular|loved|best|recommended/i.test(t)) {
-                    if (!badge) {
-                        badge = { text: t, rect: getRect(el), styles: getStyles(el) };
-                    }
-                }
-            });
-
-            // Checkmarks: count SVG elements inside the card that are likely icons
-            let checkmarkCount = 0;
-            card.querySelectorAll('svg').forEach(svg => {
-                const rect = svg.getBoundingClientRect();
-                // Only count small SVGs (icons), not large decorative ones
-                if (rect.width > 0 && rect.width < 40 && rect.height > 0 && rect.height < 40) {
-                    checkmarkCount++;
-                }
-            });
-
+        const items = contentChildren.map(c => {
+            const text = c.textContent.trim().slice(0, 200);
+            const childImgs = c.querySelectorAll('img, svg');
+            const childButtons = c.querySelectorAll('button, a[href]');
             return {
-                rect: cardRect,
-                styles: cardStyles,
-                planName,
-                priceText,
-                features,
-                button: btnInfo,
-                badge,
-                checkmarkCount,
+                tag: c.tagName.toLowerCase(),
+                text,
+                textLength: c.textContent.trim().length,
+                rect: getRect(c),
+                styles: getStyles(c),
+                imageCount: childImgs.length,
+                interactiveCount: childButtons.length,
             };
         });
 
-        // Sort left to right by x position
-        cardInfos.sort((a, b) => (a.rect ? a.rect.x : 0) - (b.rect ? b.rect.x : 0));
-        result.cards = cardInfos;
+        groups.push({
+            _el: el,  // stripped below
+            tag: el.tagName.toLowerCase(),
+            rect: groupRect,
+            direction,
+            itemCount: items.length,
+            items,
+        });
+    });
+    // Strip the _el references before returning (DOM nodes don't serialize)
+    for (const g of groups) delete g._el;
+    // Sort by area descending so the most prominent group is first
+    groups.sort((a, b) => (b.rect.area || 0) - (a.rect.area || 0));
+    out.repeatingGroups = groups;
 
-        // --- Body styles ---
-        result.bodyStyles = getStyles(document.body);
+    // ---- BODY ----
+    out.bodyStyles = getStyles(document.body);
+    out.htmlRect = getRect(document.documentElement);
 
-        return result;
+    // ---- ALL VISIBLE TEXT (for sequence-aware text similarity) ----
+    // Walk in document order, collect text nodes' text. Joined with single
+    // spaces so order is preserved.
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const allText = [];
+    let tn;
+    while ((tn = textWalker.nextNode())) {
+        const parent = tn.parentElement;
+        if (!parent) continue;
+        if (!isVisible(parent)) continue;
+        if (['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(parent.tagName)) continue;
+        const t = tn.textContent.trim();
+        if (t) allText.push(t);
     }
-    """)
+    out.visibleText = allText.join(' ').slice(0, 20000);
+
+    return out;
+}
+"""
 
 
-# ========================== SCORING HELPERS ==========================
+def extract_dom_info(page: Page) -> dict[str, Any]:
+    return page.evaluate(EXTRACTION_JS)
+
+
+# ========================== PARSING HELPERS ==========================
 
 def _parse_px(val: str | None) -> float:
-    """Parse '16px' -> 16.0. Returns 0.0 on failure."""
     if not val:
         return 0.0
-    m = re.search(r"([\d.]+)", str(val))
+    import re
+    m = re.search(r"([-+]?[\d.]+)", str(val))
     return float(m.group(1)) if m else 0.0
 
 
-def _parse_color_rgb(val: str | None) -> tuple[int, int, int] | None:
-    """Parse 'rgb(r, g, b)' or 'rgba(r, g, b, a)' -> (r, g, b).
-    Also handles multiple values like 'rgb(0,0,0) rgb(0,0,0)' by taking the first."""
+def _parse_color_rgb(val: str | None) -> tuple[int, int, int, float] | None:
+    """Return (r, g, b, alpha). None on unparseable or 'transparent'."""
     if not val:
         return None
-    m = re.search(r"rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)", str(val))
-    if m:
-        return (int(m.group(1)), int(m.group(2)), int(m.group(3)))
-    return None
+    s = str(val).strip()
+    if s in ("transparent", "rgba(0, 0, 0, 0)"):
+        return None
+    import re
+    m = re.match(r"rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)", s)
+    if not m:
+        return None
+    a = float(m.group(4)) if m.group(4) else 1.0
+    if a == 0:
+        return None
+    return (int(m.group(1)), int(m.group(2)), int(m.group(3)), a)
 
 
-def _color_distance(c1: tuple[int, int, int], c2: tuple[int, int, int]) -> float:
-    """Euclidean distance in RGB, normalized to [0, 1]. 0 = identical."""
-    d = math.sqrt(sum((a - b) ** 2 for a, b in zip(c1, c2)))
+def _color_distance(c1, c2) -> float:
+    """RGB euclidean distance ignoring alpha. Normalized to [0, 1]."""
+    d = math.sqrt(sum((a - b) ** 2 for a, b in zip(c1[:3], c2[:3])))
     return d / (255.0 * math.sqrt(3.0))
 
 
 def _color_similarity(c1, c2) -> float:
-    """1.0 = identical, 0.0 = very different. Linear decay, NOT amplified."""
     if c1 is None and c2 is None:
         return 1.0
     if c1 is None or c2 is None:
         return 0.0
-    dist = _color_distance(c1, c2)
-    # Linear from 1.0 (dist=0) to 0.0 (dist>=0.5)
-    return max(0.0, 1.0 - dist * 2.0)
+    return max(0.0, 1.0 - _color_distance(c1, c2) * 2.0)
 
 
-def _rect_iou(r1: dict | None, r2: dict | None) -> float:
-    """Intersection-over-Union of two bounding boxes."""
+def _text_similarity(t1: str | None, t2: str | None) -> float:
+    """Sequence-aware similarity via difflib. Order matters."""
+    s1 = (t1 or "").strip().lower()
+    s2 = (t2 or "").strip().lower()
+    if not s1 and not s2:
+        return 1.0
+    if not s1 or not s2:
+        return 0.0
+    if s1 == s2:
+        return 1.0
+    return difflib.SequenceMatcher(a=s1, b=s2, autojunk=False).ratio()
+
+
+def _rect_iou(r1, r2) -> float:
     if not r1 or not r2:
         return 0.0
     x1 = max(r1["x"], r2["x"])
@@ -389,517 +426,497 @@ def _rect_iou(r1: dict | None, r2: dict | None) -> float:
     x2 = min(r1["x"] + r1["width"], r2["x"] + r2["width"])
     y2 = min(r1["y"] + r1["height"], r2["y"] + r2["height"])
     inter = max(0.0, x2 - x1) * max(0.0, y2 - y1)
-    a1 = r1["width"] * r1["height"]
-    a2 = r2["width"] * r2["height"]
-    union = a1 + a2 - inter
+    union = r1["width"] * r1["height"] + r2["width"] * r2["height"] - inter
     if union < 1e-9:
-        return 1.0  # both zero-area
+        return 1.0
     return inter / union
 
 
-def _rect_position_similarity(r1: dict | None, r2: dict | None) -> float:
-    """Position + size similarity. 1.0 when identical."""
+def _rect_position_similarity(r1, r2) -> float:
     if r1 is None and r2 is None:
         return 1.0
     if r1 is None or r2 is None:
         return 0.0
     dx = abs(r1["x"] - r2["x"]) / max(VIEWPORT["width"], 1)
     dy = abs(r1["y"] - r2["y"]) / max(VIEWPORT["height"], 1)
-    pos_score = max(0.0, 1.0 - (dx + dy) * 2.0)
-
+    pos = max(0.0, 1.0 - (dx + dy) * 2.0)
     w1, w2 = r1["width"], r2["width"]
     h1, h2 = r1["height"], r2["height"]
     sw = min(w1, w2) / max(w1, w2) if max(w1, w2) > 0 else 1.0
     sh = min(h1, h2) / max(h1, h2) if max(h1, h2) > 0 else 1.0
-    size_score = (sw + sh) / 2.0
-
-    return 0.5 * pos_score + 0.5 * size_score
+    return 0.5 * pos + 0.5 * (sw + sh) / 2
 
 
-def _text_similarity(t1: str | None, t2: str | None) -> float:
-    """Normalized text similarity. 1.0 = identical."""
-    if not t1 and not t2:
+def _ratio_similarity(a: float, b: float) -> float:
+    """1.0 if equal, decays smoothly. Symmetric in a and b."""
+    if a == 0 and b == 0:
         return 1.0
-    if not t1 or not t2:
+    if a == 0 or b == 0:
         return 0.0
-    s1 = t1.strip()
-    s2 = t2.strip()
-    if s1 == s2:
-        return 1.0
-    # Case-insensitive exact
-    if s1.lower() == s2.lower():
-        return 1.0
-    # Word-level Jaccard (case-insensitive)
-    w1 = set(s1.lower().split())
-    w2 = set(s2.lower().split())
-    if not w1 and not w2:
-        return 1.0
-    if not w1 or not w2:
-        return 0.0
-    inter = w1 & w2
-    union = w1 | w2
-    return len(inter) / len(union)
+    return min(a, b) / max(a, b)
 
 
-def _font_size_similarity(s1: str | None, s2: str | None) -> float:
-    """Compare two font-size strings like '32px'. Returns 1.0 when identical."""
-    p1 = _parse_px(s1)
-    p2 = _parse_px(s2)
-    if p1 == 0 and p2 == 0:
-        return 1.0
-    if p1 == 0 or p2 == 0:
-        return 0.0
-    return min(p1, p2) / max(p1, p2)
+# ========================== ASPECT RESULT TYPE ==========================
+
+@dataclass
+class AspectResult:
+    """Each aspect returns this. weight_multiplier=0 means 'not applicable; skip'."""
+    score: float
+    weight_multiplier: float  # 0.0 = skip, 1.0 = full weight
+    details: dict[str, Any]
 
 
-# ========================== ASPECT SCORERS ==========================
+# ========================== PIXEL ASPECTS ==========================
 
-def score_layout_structure(ref: dict, agent: dict) -> dict:
-    scores = []
+def score_pixel_ssim(ref_img: np.ndarray, agent_img: np.ndarray) -> AspectResult:
+    ref_gray = np.asarray(Image.fromarray(ref_img).convert("L"))
+    agent_gray = np.asarray(Image.fromarray(agent_img).convert("L"))
+    val = max(0.0, float(ssim(ref_gray, agent_gray, data_range=255)))
+    return AspectResult(score=val, weight_multiplier=1.0, details={"ssim": val})
+
+
+def score_color_histogram(ref_img: np.ndarray, agent_img: np.ndarray) -> AspectResult:
+    total = 0.0
+    per_channel = {}
+    for c, name in enumerate(["r", "g", "b"]):
+        ha, _ = np.histogram(ref_img[:, :, c], bins=32, range=(0, 256))
+        hb, _ = np.histogram(agent_img[:, :, c], bins=32, range=(0, 256))
+        ha = ha / (ha.sum() + 1e-9)
+        hb = hb / (hb.sum() + 1e-9)
+        ch = float(np.minimum(ha, hb).sum())
+        per_channel[name] = ch
+        total += ch
+    return AspectResult(score=total / 3.0, weight_multiplier=1.0, details=per_channel)
+
+
+def score_region_color(ref_img: np.ndarray, agent_img: np.ndarray) -> AspectResult:
+    """Compare mean color in spatial bins. Catches 'right palette, wrong placement'."""
+    H, W = ref_img.shape[:2]
+    rows, cols = 3, 3
+    bin_scores = []
     details = {}
+    for ri in range(rows):
+        for ci in range(cols):
+            y1, y2 = H * ri // rows, H * (ri + 1) // rows
+            x1, x2 = W * ci // cols, W * (ci + 1) // cols
+            ref_mean = ref_img[y1:y2, x1:x2].mean(axis=(0, 1))
+            ag_mean = agent_img[y1:y2, x1:x2].mean(axis=(0, 1))
+            d = math.sqrt(sum((a - b) ** 2 for a, b in zip(ref_mean, ag_mean)))
+            s = max(0.0, 1.0 - d / (255.0 * math.sqrt(3.0)) * 2.0)
+            bin_scores.append(s)
+            details[f"bin_{ri}_{ci}"] = round(s, 4)
+    return AspectResult(score=sum(bin_scores) / len(bin_scores),
+                        weight_multiplier=1.0, details=details)
 
-    ref_cards = ref.get("cards", [])
-    agent_cards = agent.get("cards", [])
-    ref_count = len(ref_cards)
-    agent_count = len(agent_cards)
 
-    # Card count
-    count_score = 1.0 if ref_count == agent_count else max(0.0, 1.0 - abs(ref_count - agent_count) * 0.3)
-    scores.append(count_score)
-    details["card_count"] = {"ref": ref_count, "agent": agent_count, "score": count_score}
+def score_palette(ref_img: np.ndarray, agent_img: np.ndarray) -> AspectResult:
+    """Top-K dominant colors via simple quantization, area-weighted match."""
+    def palette(img, k=8):
+        # Quantize to 6-bit RGB (cheap, deterministic), count buckets
+        q = (img // 32).astype(np.uint8)
+        idx = q[:, :, 0].astype(int) * 64 + q[:, :, 1].astype(int) * 8 + q[:, :, 2].astype(int)
+        counts = np.bincount(idx.ravel(), minlength=512)
+        top = np.argsort(counts)[::-1][:k]
+        total = counts.sum()
+        return [(int(t), float(counts[t]) / float(total)) for t in top if counts[t] > 0]
 
-    # Card positions (pairwise)
-    n = min(ref_count, agent_count)
-    card_pos_scores = []
-    for i in range(n):
-        iou = _rect_iou(ref_cards[i].get("rect"), agent_cards[i].get("rect"))
-        pos_sim = _rect_position_similarity(ref_cards[i].get("rect"), agent_cards[i].get("rect"))
-        card_pos_scores.append(0.5 * iou + 0.5 * pos_sim)
-    if card_pos_scores:
-        avg = sum(card_pos_scores) / len(card_pos_scores)
+    p1 = palette(ref_img)
+    p2 = palette(agent_img)
+    # Each side: dict bucket -> mass. Score = sum of min(mass) across shared.
+    d1 = dict(p1); d2 = dict(p2)
+    common = set(d1) | set(d2)
+    overlap = sum(min(d1.get(b, 0.0), d2.get(b, 0.0)) for b in common)
+    return AspectResult(score=overlap, weight_multiplier=1.0,
+                        details={"top_ref": p1[:5], "top_agent": p2[:5], "overlap": overlap})
+
+
+# ========================== STRUCTURAL ASPECTS ==========================
+
+def score_headings(ref: dict, agent: dict) -> AspectResult:
+    """Compare counts per tag, then sequence-match text for the most prominent ones."""
+    ref_h = ref.get("headings", [])
+    agent_h = agent.get("headings", [])
+    if not ref_h and not agent_h:
+        return AspectResult(score=1.0, weight_multiplier=0.0,
+                            details={"note": "no headings on either side"})
+
+    # Per-tag count similarity
+    def by_tag(hs):
+        d = {}
+        for h in hs:
+            d[h["tag"]] = d.get(h["tag"], 0) + 1
+        return d
+    ref_by = by_tag(ref_h)
+    agent_by = by_tag(agent_h)
+    all_tags = set(ref_by) | set(agent_by)
+    count_scores = [_ratio_similarity(ref_by.get(t, 0), agent_by.get(t, 0)) for t in all_tags]
+
+    # Compare the text of the LARGEST heading (by area) on each side
+    def biggest(hs):
+        return max(hs, key=lambda h: (h.get("rect") or {}).get("area", 0)) if hs else None
+    ref_big = biggest(ref_h)
+    agent_big = biggest(agent_h)
+    text_score = _text_similarity(
+        (ref_big or {}).get("text", ""),
+        (agent_big or {}).get("text", ""),
+    )
+    pos_score = _rect_position_similarity(
+        (ref_big or {}).get("rect"),
+        (agent_big or {}).get("rect"),
+    )
+
+    # Sample-match the next 4 headings by area
+    def top_n(hs, n):
+        return sorted(hs, key=lambda h: -(h.get("rect") or {}).get("area", 0))[:n]
+    ref_top = top_n(ref_h, 5)
+    agent_top = top_n(agent_h, 5)
+    # Greedy match: for each ref top heading, find best agent match by text
+    additional_text_scores = []
+    used = set()
+    for rh in ref_top[1:]:  # skip the biggest (already scored)
+        best_score = 0.0
+        best_idx = -1
+        for i, ah in enumerate(agent_top[1:]):
+            if i in used:
+                continue
+            s = _text_similarity(rh.get("text", ""), ah.get("text", ""))
+            if s > best_score:
+                best_score = s
+                best_idx = i
+        if best_idx >= 0:
+            used.add(best_idx)
+        additional_text_scores.append(best_score)
+
+    parts = count_scores + [text_score, pos_score] + additional_text_scores
+    score = sum(parts) / len(parts)
+    return AspectResult(score=score, weight_multiplier=1.0, details={
+        "ref_count_by_tag": ref_by,
+        "agent_count_by_tag": agent_by,
+        "biggest_text_score": text_score,
+        "biggest_position_score": pos_score,
+        "additional_text_scores": additional_text_scores,
+    })
+
+
+def score_paragraphs(ref: dict, agent: dict) -> AspectResult:
+    ref_p = ref.get("paragraphs", [])
+    agent_p = agent.get("paragraphs", [])
+    if not ref_p and not agent_p:
+        return AspectResult(score=1.0, weight_multiplier=0.0,
+                            details={"note": "no paragraphs"})
+
+    count_score = _ratio_similarity(len(ref_p), len(agent_p))
+
+    # Length distribution: bucket by length (short/medium/long)
+    def length_buckets(ps):
+        buckets = {"short": 0, "medium": 0, "long": 0}
+        for p in ps:
+            n = p.get("length", 0)
+            if n < 50: buckets["short"] += 1
+            elif n < 200: buckets["medium"] += 1
+            else: buckets["long"] += 1
+        return buckets
+    ref_b = length_buckets(ref_p)
+    agent_b = length_buckets(agent_p)
+    bucket_scores = [_ratio_similarity(ref_b[k], agent_b[k]) for k in ref_b]
+
+    score = (count_score + sum(bucket_scores) / len(bucket_scores)) / 2
+    return AspectResult(score=score, weight_multiplier=1.0, details={
+        "ref_count": len(ref_p),
+        "agent_count": len(agent_p),
+        "ref_buckets": ref_b,
+        "agent_buckets": agent_b,
+    })
+
+
+def score_navigation(ref: dict, agent: dict) -> AspectResult:
+    ref_n = ref.get("navRegions", [])
+    agent_n = agent.get("navRegions", [])
+    if not ref_n and not agent_n:
+        return AspectResult(score=1.0, weight_multiplier=0.0,
+                            details={"note": "no nav-like regions"})
+
+    # Match each ref nav region to the best agent one by IoU.
+    def biggest(navs):
+        return max(navs, key=lambda n: (n.get("rect") or {}).get("area", 0)) if navs else None
+    ref_primary = biggest(ref_n)
+    agent_primary = biggest(agent_n)
+
+    pos_score = _rect_position_similarity(
+        (ref_primary or {}).get("rect"),
+        (agent_primary or {}).get("rect"),
+    )
+
+    ref_links = (ref_primary or {}).get("links", [])
+    agent_links = (agent_primary or {}).get("links", [])
+    count_score = _ratio_similarity(len(ref_links), len(agent_links))
+
+    # Text match: for each ref link, find best agent match
+    if ref_links and agent_links:
+        link_scores = []
+        for rl in ref_links:
+            best = max((_text_similarity(rl.get("text", ""), al.get("text", "")) for al in agent_links), default=0.0)
+            link_scores.append(best)
+        text_score = sum(link_scores) / len(link_scores)
+    elif not ref_links and not agent_links:
+        text_score = 1.0
     else:
-        avg = 1.0 if ref_count == 0 and agent_count == 0 else 0.0
-    scores.append(avg)
-    details["card_positions"] = {"per_card": card_pos_scores, "avg": avg}
+        text_score = 0.0
 
-    # Heading position
-    h_score = _rect_position_similarity(
-        ref.get("mainHeading", {}).get("rect"),
-        agent.get("mainHeading", {}).get("rect")
-    )
-    scores.append(h_score)
-    details["heading_position"] = h_score
+    region_count_score = _ratio_similarity(len(ref_n), len(agent_n))
 
-    # Subtitle position
-    s_score = _rect_position_similarity(
-        ref.get("subtitle", {}).get("rect"),
-        agent.get("subtitle", {}).get("rect")
-    )
-    scores.append(s_score)
-    details["subtitle_position"] = s_score
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
+    parts = [pos_score, count_score, text_score, region_count_score]
+    score = sum(parts) / len(parts)
+    return AspectResult(score=score, weight_multiplier=1.0, details={
+        "ref_nav_count": len(ref_n),
+        "agent_nav_count": len(agent_n),
+        "primary_position_score": pos_score,
+        "primary_link_count": {"ref": len(ref_links), "agent": len(agent_links)},
+        "primary_link_text_score": text_score,
+    })
 
 
-def score_navigation(ref: dict, agent: dict) -> dict:
-    scores = []
-    details = {}
+def score_repeating_groups(ref: dict, agent: dict) -> AspectResult:
+    ref_g = ref.get("repeatingGroups", [])
+    agent_g = agent.get("repeatingGroups", [])
 
-    ref_nav = ref.get("navigation", {})
-    agent_nav = agent.get("navigation", {})
+    # If neither side has groups, skip the aspect entirely.
+    if not ref_g and not agent_g:
+        return AspectResult(score=1.0, weight_multiplier=0.0,
+                            details={"note": "no repeating groups on either side"})
 
-    # Existence
-    exists_score = 1.0 if ref_nav.get("exists") == agent_nav.get("exists") else 0.0
-    scores.append(exists_score)
-    details["exists_match"] = exists_score
+    # If only one side has groups, that's a real failure.
+    if not ref_g or not agent_g:
+        return AspectResult(score=0.0, weight_multiplier=1.0, details={
+            "ref_groups": len(ref_g),
+            "agent_groups": len(agent_g),
+            "note": "one side has no groups",
+        })
 
-    # Link count
-    ref_lc = ref_nav.get("linkCount", 0)
-    agent_lc = agent_nav.get("linkCount", 0)
-    lc_score = 1.0 if ref_lc == agent_lc else max(0.0, 1.0 - abs(ref_lc - agent_lc) * 0.2)
-    scores.append(lc_score)
-    details["link_count"] = {"ref": ref_lc, "agent": agent_lc, "score": lc_score}
+    # Match groups by area + position. Greedy: largest ref group to nearest agent group.
+    used = set()
+    per_group_scores = []
+    details = []
+    for rg in ref_g[:5]:  # cap at 5 groups to keep things bounded
+        best_iou = 0.0
+        best_idx = -1
+        for i, ag in enumerate(agent_g):
+            if i in used: continue
+            iou = _rect_iou(rg.get("rect"), ag.get("rect"))
+            if iou > best_iou:
+                best_iou = iou
+                best_idx = i
+        if best_idx == -1:
+            per_group_scores.append(0.0)
+            details.append({"matched": False, "ref_items": rg.get("itemCount", 0)})
+            continue
+        used.add(best_idx)
+        ag = agent_g[best_idx]
+        item_count_score = _ratio_similarity(rg.get("itemCount", 0), ag.get("itemCount", 0))
+        dir_score = 1.0 if rg.get("direction") == ag.get("direction") else 0.5
+        pos_score = _rect_position_similarity(rg.get("rect"), ag.get("rect"))
 
-    # Link text match
-    ref_links = [l.get("text", "").strip() for l in ref_nav.get("links", [])]
-    agent_links = [l.get("text", "").strip() for l in agent_nav.get("links", [])]
-    if ref_links:
-        matched = sum(1 for rl in ref_links if any(_text_similarity(rl, al) > 0.8 for al in agent_links))
-        text_score = matched / len(ref_links)
+        # Per-item: compare text content (sequence-aware)
+        ref_items = rg.get("items", [])
+        agent_items = ag.get("items", [])
+        n = min(len(ref_items), len(agent_items))
+        # Order by x then y so cards left-to-right and rows top-to-bottom align
+        def order(items):
+            return sorted(items, key=lambda it: ((it.get("rect") or {}).get("y", 0),
+                                                 (it.get("rect") or {}).get("x", 0)))
+        ref_items_o = order(ref_items)
+        agent_items_o = order(agent_items)
+        item_text_scores = []
+        item_image_scores = []
+        item_interactive_scores = []
+        for i in range(n):
+            item_text_scores.append(_text_similarity(
+                ref_items_o[i].get("text", ""),
+                agent_items_o[i].get("text", ""),
+            ))
+            item_image_scores.append(_ratio_similarity(
+                ref_items_o[i].get("imageCount", 0),
+                agent_items_o[i].get("imageCount", 0),
+            ))
+            item_interactive_scores.append(_ratio_similarity(
+                ref_items_o[i].get("interactiveCount", 0),
+                agent_items_o[i].get("interactiveCount", 0),
+            ))
+
+        item_text_avg = sum(item_text_scores) / len(item_text_scores) if item_text_scores else 1.0
+        item_image_avg = sum(item_image_scores) / len(item_image_scores) if item_image_scores else 1.0
+        item_inter_avg = sum(item_interactive_scores) / len(item_interactive_scores) if item_interactive_scores else 1.0
+
+        group_score = (
+            0.25 * item_count_score
+            + 0.10 * dir_score
+            + 0.15 * pos_score
+            + 0.30 * item_text_avg
+            + 0.10 * item_image_avg
+            + 0.10 * item_inter_avg
+        )
+        per_group_scores.append(group_score)
+        details.append({
+            "matched": True,
+            "item_count": {"ref": rg.get("itemCount"), "agent": ag.get("itemCount")},
+            "direction_match": dir_score,
+            "position_score": pos_score,
+            "item_text_avg": item_text_avg,
+            "item_image_avg": item_image_avg,
+            "item_interactive_avg": item_inter_avg,
+        })
+
+    # Penalize extra unmatched ref groups (agent missed them)
+    unmatched = len(ref_g[:5]) - len(used)
+    if unmatched > 0:
+        per_group_scores.extend([0.0] * unmatched)
+
+    score = sum(per_group_scores) / len(per_group_scores) if per_group_scores else 0.0
+    return AspectResult(score=score, weight_multiplier=1.0, details={
+        "ref_group_count": len(ref_g),
+        "agent_group_count": len(agent_g),
+        "per_group": details,
+    })
+
+
+def score_interactive(ref: dict, agent: dict) -> AspectResult:
+    ref_i = ref.get("interactive", [])
+    agent_i = agent.get("interactive", [])
+    if not ref_i and not agent_i:
+        return AspectResult(score=1.0, weight_multiplier=0.0,
+                            details={"note": "no interactive elements"})
+
+    count_score = _ratio_similarity(len(ref_i), len(agent_i))
+
+    # Match by tag+type counts
+    def by_kind(items):
+        d = {}
+        for it in items:
+            key = it["tag"] + ":" + (it.get("type") or "")
+            d[key] = d.get(key, 0) + 1
+        return d
+    ref_b = by_kind(ref_i)
+    agent_b = by_kind(agent_i)
+    all_kinds = set(ref_b) | set(agent_b)
+    kind_scores = [_ratio_similarity(ref_b.get(k, 0), agent_b.get(k, 0)) for k in all_kinds]
+    kind_score = sum(kind_scores) / len(kind_scores) if kind_scores else 1.0
+
+    # Text similarity on top-5 buttons by area
+    def top_buttons(items, n=5):
+        bs = [it for it in items if it["tag"] == "button" or it.get("text")]
+        return sorted(bs, key=lambda it: -(it.get("rect") or {}).get("area", 0))[:n]
+    ref_btns = top_buttons(ref_i)
+    agent_btns = top_buttons(agent_i)
+    if ref_btns and agent_btns:
+        btn_text_scores = []
+        for rb in ref_btns:
+            best = max(
+                (_text_similarity(rb.get("text", ""), ab.get("text", "")) for ab in agent_btns),
+                default=0.0,
+            )
+            btn_text_scores.append(best)
+        text_score = sum(btn_text_scores) / len(btn_text_scores)
+    elif not ref_btns and not agent_btns:
+        text_score = 1.0
     else:
-        text_score = 1.0 if not agent_links else 0.0
-    scores.append(text_score)
-    details["link_text_match"] = text_score
+        text_score = 0.0
 
-    # Nav position
-    ref_rect = ref_nav.get("rect")
-    agent_rect = agent_nav.get("rect")
-    pos_score = _rect_position_similarity(ref_rect, agent_rect)
-    scores.append(pos_score)
-    details["position"] = pos_score
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
+    score = (count_score + kind_score + text_score) / 3
+    return AspectResult(score=score, weight_multiplier=1.0, details={
+        "ref_count": len(ref_i),
+        "agent_count": len(agent_i),
+        "ref_kinds": ref_b,
+        "agent_kinds": agent_b,
+        "button_text_score": text_score,
+    })
 
 
-def score_typography(ref: dict, agent: dict) -> dict:
+def score_layout_skeleton(ref: dict, agent: dict) -> AspectResult:
+    """Bounding-box map of major elements grouped by type. Tests overall page shape."""
+    def skeleton(d):
+        out = []
+        # Top heading
+        if d.get("headings"):
+            big = max(d["headings"], key=lambda h: (h.get("rect") or {}).get("area", 0))
+            r = big.get("rect")
+            if r: out.append(("heading", r))
+        # Nav primary
+        if d.get("navRegions"):
+            big = max(d["navRegions"], key=lambda n: (n.get("rect") or {}).get("area", 0))
+            r = big.get("rect")
+            if r: out.append(("nav", r))
+        # Each repeating group
+        for g in d.get("repeatingGroups", [])[:5]:
+            r = g.get("rect")
+            if r: out.append(("group", r))
+        # First few paragraphs by area
+        ps = sorted(d.get("paragraphs", []), key=lambda p: -(p.get("rect") or {}).get("area", 0))[:3]
+        for p in ps:
+            r = p.get("rect")
+            if r: out.append(("paragraph", r))
+        return out
+
+    ref_sk = skeleton(ref)
+    agent_sk = skeleton(agent)
+    if not ref_sk and not agent_sk:
+        return AspectResult(score=1.0, weight_multiplier=0.0,
+                            details={"note": "no skeleton elements"})
+
+    # For each ref element, find the best same-type agent match by IoU
+    used = set()
     scores = []
-    details = {}
+    matches = []
+    for kind, rect in ref_sk:
+        best = 0.0
+        best_idx = -1
+        for i, (a_kind, a_rect) in enumerate(agent_sk):
+            if i in used or a_kind != kind:
+                continue
+            iou = _rect_iou(rect, a_rect)
+            if iou > best:
+                best = iou
+                best_idx = i
+        if best_idx >= 0:
+            used.add(best_idx)
+        scores.append(best)
+        matches.append({"kind": kind, "iou": round(best, 3)})
 
-    # Main heading font size
-    ref_fs = ref.get("mainHeading", {}).get("styles", {}).get("fontSize")
-    agent_fs = agent.get("mainHeading", {}).get("styles", {}).get("fontSize")
-    fs_score = _font_size_similarity(ref_fs, agent_fs)
-    scores.append(fs_score)
-    details["heading_font_size"] = {"ref": ref_fs, "agent": agent_fs, "score": fs_score}
+    # Penalize extra agent elements (clutter)
+    extras = len(agent_sk) - len(used)
+    if extras > 0:
+        # Each extra knocks 0.1 off, capped at -0.5
+        scores.extend([max(0.0, 1.0 - 0.1) for _ in range(min(extras, 5))])
 
-    # Heading font weight
-    ref_fw = str(ref.get("mainHeading", {}).get("styles", {}).get("fontWeight", ""))
-    agent_fw = str(agent.get("mainHeading", {}).get("styles", {}).get("fontWeight", ""))
-    fw_score = 1.0 if ref_fw == agent_fw else 0.5
-    scores.append(fw_score)
-    details["heading_font_weight"] = {"ref": ref_fw, "agent": agent_fw, "score": fw_score}
-
-    # Price text per card
-    ref_cards = ref.get("cards", [])
-    agent_cards = agent.get("cards", [])
-    n = min(len(ref_cards), len(agent_cards))
-    for i in range(n):
-        pt_score = _text_similarity(ref_cards[i].get("priceText", ""), agent_cards[i].get("priceText", ""))
-        scores.append(pt_score)
-        details[f"card_{i}_price_text"] = {
-            "ref": ref_cards[i].get("priceText"),
-            "agent": agent_cards[i].get("priceText"),
-            "score": pt_score,
-        }
-
-    # Subtitle font size
-    ref_sub_fs = ref.get("subtitle", {}).get("styles", {}).get("fontSize")
-    agent_sub_fs = agent.get("subtitle", {}).get("styles", {}).get("fontSize")
-    sub_fs_score = _font_size_similarity(ref_sub_fs, agent_sub_fs)
-    scores.append(sub_fs_score)
-    details["subtitle_font_size"] = {"ref": ref_sub_fs, "agent": agent_sub_fs, "score": sub_fs_score}
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
+    score = sum(scores) / len(scores) if scores else 0.0
+    return AspectResult(score=score, weight_multiplier=1.0, details={
+        "ref_skeleton_size": len(ref_sk),
+        "agent_skeleton_size": len(agent_sk),
+        "matches": matches,
+        "extras_in_agent": max(0, extras),
+    })
 
 
-def score_color_scheme(ref: dict, agent: dict) -> dict:
-    scores = []
-    details = {}
-
-    # Body background
-    ref_bg = _parse_color_rgb(ref.get("bodyStyles", {}).get("backgroundColor"))
-    agent_bg = _parse_color_rgb(agent.get("bodyStyles", {}).get("backgroundColor"))
-    bg_score = _color_similarity(ref_bg, agent_bg)
-    scores.append(bg_score)
-    details["body_background"] = {"ref": str(ref_bg), "agent": str(agent_bg), "score": bg_score}
-
-    # Heading color
-    ref_hc = _parse_color_rgb(ref.get("mainHeading", {}).get("styles", {}).get("color"))
-    agent_hc = _parse_color_rgb(agent.get("mainHeading", {}).get("styles", {}).get("color"))
-    hc_score = _color_similarity(ref_hc, agent_hc)
-    scores.append(hc_score)
-    details["heading_color"] = {"ref": str(ref_hc), "agent": str(agent_hc), "score": hc_score}
-
-    # Button bg colors per card
-    ref_cards = ref.get("cards", [])
-    agent_cards = agent.get("cards", [])
-    n = min(len(ref_cards), len(agent_cards))
-    for i in range(n):
-        ref_btn = ref_cards[i].get("button")
-        agent_btn = agent_cards[i].get("button")
-        if ref_btn and agent_btn:
-            ref_btn_bg = _parse_color_rgb(ref_btn.get("styles", {}).get("backgroundColor"))
-            agent_btn_bg = _parse_color_rgb(agent_btn.get("styles", {}).get("backgroundColor"))
-            btn_score = _color_similarity(ref_btn_bg, agent_btn_bg)
-            scores.append(btn_score)
-            details[f"card_{i}_button_bg"] = {"ref": str(ref_btn_bg), "agent": str(agent_btn_bg), "score": btn_score}
-        elif not ref_btn and not agent_btn:
-            scores.append(1.0)
-            details[f"card_{i}_button_bg"] = {"note": "both missing", "score": 1.0}
-
-    # Card border colors (using borderTopColor which is always a single value)
-    for i in range(n):
-        ref_bc = _parse_color_rgb(ref_cards[i].get("styles", {}).get("borderTopColor"))
-        agent_bc = _parse_color_rgb(agent_cards[i].get("styles", {}).get("borderTopColor"))
-        bc_score = _color_similarity(ref_bc, agent_bc)
-        scores.append(bc_score)
-        details[f"card_{i}_border_color"] = {"ref": str(ref_bc), "agent": str(agent_bc), "score": bc_score}
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
+def score_text_content(ref: dict, agent: dict) -> AspectResult:
+    """Sequence-aware similarity over ALL visible text, normalized."""
+    ref_text = (ref.get("visibleText") or "").lower()
+    agent_text = (agent.get("visibleText") or "").lower()
+    if not ref_text and not agent_text:
+        return AspectResult(score=1.0, weight_multiplier=0.0,
+                            details={"note": "no text"})
+    score = _text_similarity(ref_text, agent_text)
+    return AspectResult(score=score, weight_multiplier=1.0, details={
+        "ref_chars": len(ref_text),
+        "agent_chars": len(agent_text),
+    })
 
 
-def score_cards_borders(ref: dict, agent: dict) -> dict:
-    scores = []
-    details = {}
+# ========================== ORCHESTRATION ==========================
 
-    ref_cards = ref.get("cards", [])
-    agent_cards = agent.get("cards", [])
-    n = min(len(ref_cards), len(agent_cards))
-
-    for i in range(n):
-        rc = ref_cards[i]
-        ac = agent_cards[i]
-
-        # Border radius (using borderRadius = border-top-left-radius, a single value)
-        ref_br = _parse_px(rc.get("styles", {}).get("borderRadius"))
-        agent_br = _parse_px(ac.get("styles", {}).get("borderRadius"))
-        if ref_br > 0 or agent_br > 0:
-            br_score = min(ref_br, agent_br) / max(ref_br, agent_br)
-        else:
-            br_score = 1.0
-        scores.append(br_score)
-        details[f"card_{i}_border_radius"] = {"ref": ref_br, "agent": agent_br, "score": br_score}
-
-        # Border width (using borderTopWidth, a single value)
-        ref_bw = _parse_px(rc.get("styles", {}).get("borderTopWidth"))
-        agent_bw = _parse_px(ac.get("styles", {}).get("borderTopWidth"))
-        bw_match = 1.0 if abs(ref_bw - agent_bw) < 0.5 else (0.5 if abs(ref_bw - agent_bw) < 2 else 0.0)
-        scores.append(bw_match)
-        details[f"card_{i}_border_width"] = {"ref": ref_bw, "agent": agent_bw, "score": bw_match}
-
-        # Badge
-        ref_badge = rc.get("badge")
-        agent_badge = ac.get("badge")
-        if ref_badge is not None:
-            if agent_badge is not None:
-                badge_score = _text_similarity(ref_badge.get("text", ""), agent_badge.get("text", ""))
-            else:
-                badge_score = 0.0
-            scores.append(badge_score)
-            details[f"card_{i}_badge"] = {"ref": True, "agent": agent_badge is not None, "score": badge_score}
-        else:
-            # No badge expected
-            badge_score = 1.0 if agent_badge is None else 0.5
-            scores.append(badge_score)
-            details[f"card_{i}_badge"] = {"ref": False, "agent": agent_badge is not None, "score": badge_score}
-
-        # Card size
-        size_score = _rect_position_similarity(rc.get("rect"), ac.get("rect"))
-        scores.append(size_score)
-        details[f"card_{i}_size"] = size_score
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
-
-
-def score_buttons(ref: dict, agent: dict) -> dict:
-    scores = []
-    details = {}
-
-    ref_cards = ref.get("cards", [])
-    agent_cards = agent.get("cards", [])
-    n = min(len(ref_cards), len(agent_cards))
-
-    for i in range(n):
-        ref_btn = ref_cards[i].get("button")
-        agent_btn = agent_cards[i].get("button")
-
-        if ref_btn is not None and agent_btn is not None:
-            # Text
-            t_score = _text_similarity(ref_btn.get("text", ""), agent_btn.get("text", ""))
-            scores.append(t_score)
-            details[f"card_{i}_btn_text"] = {
-                "ref": ref_btn.get("text"), "agent": agent_btn.get("text"), "score": t_score
-            }
-
-            # Position
-            pos_score = _rect_position_similarity(ref_btn.get("rect"), agent_btn.get("rect"))
-            scores.append(pos_score)
-            details[f"card_{i}_btn_position"] = pos_score
-
-            # Background color
-            ref_bg = _parse_color_rgb(ref_btn.get("styles", {}).get("backgroundColor"))
-            agent_bg = _parse_color_rgb(agent_btn.get("styles", {}).get("backgroundColor"))
-            col_score = _color_similarity(ref_bg, agent_bg)
-            scores.append(col_score)
-            details[f"card_{i}_btn_bg_color"] = {"ref": str(ref_bg), "agent": str(agent_bg), "score": col_score}
-
-            # Border radius
-            ref_br = _parse_px(ref_btn.get("styles", {}).get("borderRadius"))
-            agent_br = _parse_px(agent_btn.get("styles", {}).get("borderRadius"))
-            if ref_br > 0 or agent_br > 0:
-                br_score = min(ref_br, agent_br) / max(ref_br, agent_br)
-            else:
-                br_score = 1.0
-            scores.append(br_score)
-            details[f"card_{i}_btn_border_radius"] = {"ref": ref_br, "agent": agent_br, "score": br_score}
-
-        elif ref_btn is None and agent_btn is None:
-            scores.append(1.0)
-            details[f"card_{i}_btn"] = {"note": "both absent", "score": 1.0}
-        else:
-            scores.append(0.0)
-            details[f"card_{i}_btn_missing"] = {"ref": ref_btn is not None, "agent": agent_btn is not None}
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
-
-
-def score_checkmarks(ref: dict, agent: dict) -> dict:
-    scores = []
-    details = {}
-
-    ref_cards = ref.get("cards", [])
-    agent_cards = agent.get("cards", [])
-    n = min(len(ref_cards), len(agent_cards))
-
-    for i in range(n):
-        ref_cm = ref_cards[i].get("checkmarkCount", 0)
-        agent_cm = agent_cards[i].get("checkmarkCount", 0)
-        if ref_cm == 0 and agent_cm == 0:
-            cm_score = 1.0
-        elif ref_cm == 0 or agent_cm == 0:
-            cm_score = 0.0
-        else:
-            cm_score = min(ref_cm, agent_cm) / max(ref_cm, agent_cm)
-        scores.append(cm_score)
-        details[f"card_{i}_checkmarks"] = {"ref": ref_cm, "agent": agent_cm, "score": cm_score}
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
-
-
-def score_text_content(ref: dict, agent: dict) -> dict:
-    scores = []
-    details = {}
-
-    # Main heading
-    h_score = _text_similarity(
-        ref.get("mainHeading", {}).get("text", ""),
-        agent.get("mainHeading", {}).get("text", ""),
-    )
-    scores.append(h_score)
-    details["heading_text"] = {
-        "ref": ref.get("mainHeading", {}).get("text"),
-        "agent": agent.get("mainHeading", {}).get("text"),
-        "score": h_score,
-    }
-
-    # Subtitle
-    s_score = _text_similarity(
-        ref.get("subtitle", {}).get("text", ""),
-        agent.get("subtitle", {}).get("text", ""),
-    )
-    scores.append(s_score)
-    details["subtitle_text"] = {
-        "ref": ref.get("subtitle", {}).get("text"),
-        "agent": agent.get("subtitle", {}).get("text"),
-        "score": s_score,
-    }
-
-    # Per-card: plan name + features
-    ref_cards = ref.get("cards", [])
-    agent_cards = agent.get("cards", [])
-    n = min(len(ref_cards), len(agent_cards))
-
-    for i in range(n):
-        # Plan name
-        pn_score = _text_similarity(ref_cards[i].get("planName", ""), agent_cards[i].get("planName", ""))
-        scores.append(pn_score)
-        details[f"card_{i}_plan_name"] = {
-            "ref": ref_cards[i].get("planName"),
-            "agent": agent_cards[i].get("planName"),
-            "score": pn_score,
-        }
-
-        # Features
-        ref_features = ref_cards[i].get("features", [])
-        agent_features = agent_cards[i].get("features", [])
-        if not ref_features and not agent_features:
-            feat_score = 1.0
-        elif not ref_features or not agent_features:
-            feat_score = 0.0
-        else:
-            matched = 0
-            for rf in ref_features:
-                best = max((_text_similarity(rf, af) for af in agent_features), default=0.0)
-                if best > 0.6:
-                    matched += 1
-            feat_score = matched / len(ref_features)
-        scores.append(feat_score)
-        details[f"card_{i}_features"] = {
-            "ref_count": len(ref_features),
-            "agent_count": len(agent_features),
-            "score": feat_score,
-        }
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
-
-
-def score_spacing_padding(ref: dict, agent: dict) -> dict:
-    scores = []
-    details = {}
-
-    ref_cards = ref.get("cards", [])
-    agent_cards = agent.get("cards", [])
-    n = min(len(ref_cards), len(agent_cards))
-
-    # Card internal padding (paddingTop as representative single value)
-    for i in range(n):
-        ref_pad = _parse_px(ref_cards[i].get("styles", {}).get("paddingTop"))
-        agent_pad = _parse_px(agent_cards[i].get("styles", {}).get("paddingTop"))
-        if ref_pad > 0 or agent_pad > 0:
-            pad_score = min(ref_pad, agent_pad) / max(ref_pad, agent_pad)
-        else:
-            pad_score = 1.0
-        scores.append(pad_score)
-        details[f"card_{i}_padding_top"] = {"ref": ref_pad, "agent": agent_pad, "score": pad_score}
-
-    # Horizontal gap between adjacent cards
-    if n >= 2:
-        for i in range(n - 1):
-            ref_gap = ((ref_cards[i + 1].get("rect") or {}).get("x", 0) -
-                       (ref_cards[i].get("rect") or {}).get("x", 0) -
-                       (ref_cards[i].get("rect") or {}).get("width", 0))
-            agent_gap = ((agent_cards[i + 1].get("rect") or {}).get("x", 0) -
-                         (agent_cards[i].get("rect") or {}).get("x", 0) -
-                         (agent_cards[i].get("rect") or {}).get("width", 0))
-            max_gap = max(abs(ref_gap), abs(agent_gap), 1.0)
-            gap_score = max(0.0, 1.0 - abs(ref_gap - agent_gap) / max_gap)
-            scores.append(gap_score)
-            details[f"card_gap_{i}_{i+1}"] = {"ref": ref_gap, "agent": agent_gap, "score": gap_score}
-
-    # Vertical: heading bottom to first card top
-    ref_h_bottom = (ref.get("mainHeading", {}).get("rect") or {}).get("bottom", 0)
-    agent_h_bottom = (agent.get("mainHeading", {}).get("rect") or {}).get("bottom", 0)
-    if ref_cards and agent_cards:
-        ref_vgap = (ref_cards[0].get("rect") or {}).get("y", 0) - ref_h_bottom
-        agent_vgap = (agent_cards[0].get("rect") or {}).get("y", 0) - agent_h_bottom
-        max_vgap = max(abs(ref_vgap), abs(agent_vgap), 1.0)
-        vgap_score = max(0.0, 1.0 - abs(ref_vgap - agent_vgap) / max_vgap)
-        scores.append(vgap_score)
-        details["heading_to_cards_gap"] = {"ref": ref_vgap, "agent": agent_vgap, "score": vgap_score}
-
-    # Button bottom offset within each card
-    for i in range(n):
-        ref_btn = ref_cards[i].get("button")
-        agent_btn = agent_cards[i].get("button")
-        ref_rect = ref_cards[i].get("rect")
-        agent_rect = agent_cards[i].get("rect")
-        if ref_btn and agent_btn and ref_rect and agent_rect and ref_btn.get("rect") and agent_btn.get("rect"):
-            ref_offset = (ref_rect["y"] + ref_rect["height"]) - (ref_btn["rect"]["y"] + ref_btn["rect"]["height"])
-            agent_offset = (agent_rect["y"] + agent_rect["height"]) - (agent_btn["rect"]["y"] + agent_btn["rect"]["height"])
-            max_off = max(abs(ref_offset), abs(agent_offset), 1.0)
-            off_score = max(0.0, 1.0 - abs(ref_offset - agent_offset) / max_off)
-            scores.append(off_score)
-            details[f"card_{i}_btn_bottom_offset"] = {"ref": ref_offset, "agent": agent_offset, "score": off_score}
-
-    combined = sum(scores) / len(scores) if scores else 1.0
-    return {"score": combined, "details": details}
-
-
-# ========================== MASTER SCORER ==========================
-
-def score_all_aspects(
+def score_page(
     ref_png: Path, agent_png: Path,
     ref_dom: dict, agent_dom: dict,
 ) -> dict:
-    # --- Pixel-level ---
+    # Pixel aspects need numpy arrays
     ref_img = np.array(Image.open(ref_png).convert("RGB"))
     agent_img = np.array(Image.open(agent_png).convert("RGB"))
     if agent_img.shape != ref_img.shape:
@@ -908,51 +925,52 @@ def score_all_aspects(
         )
         agent_img = np.array(agent_pil)
 
-    pixel_ssim = compute_ssim(ref_img, agent_img)
-    color_hist = color_histogram_intersection(ref_img, agent_img)
-
-    # --- DOM-level ---
-    layout = score_layout_structure(ref_dom, agent_dom)
-    navigation = score_navigation(ref_dom, agent_dom)
-    typography = score_typography(ref_dom, agent_dom)
-    color_scheme = score_color_scheme(ref_dom, agent_dom)
-    cards_borders = score_cards_borders(ref_dom, agent_dom)
-    buttons = score_buttons(ref_dom, agent_dom)
-    checkmarks = score_checkmarks(ref_dom, agent_dom)
-    text_content = score_text_content(ref_dom, agent_dom)
-    spacing = score_spacing_padding(ref_dom, agent_dom)
-
-    aspect_scores = {
-        "pixel_ssim":       pixel_ssim,
-        "color_histogram":  color_hist,
-        "layout_structure": layout["score"],
-        "navigation":       navigation["score"],
-        "typography":       typography["score"],
-        "color_scheme":     color_scheme["score"],
-        "cards_borders":    cards_borders["score"],
-        "buttons":          buttons["score"],
-        "checkmarks_icons": checkmarks["score"],
-        "text_content":     text_content["score"],
-        "spacing_padding":  spacing["score"],
+    aspects: dict[str, AspectResult] = {
+        "pixel_ssim":       score_pixel_ssim(ref_img, agent_img),
+        "color_histogram":  score_color_histogram(ref_img, agent_img),
+        "region_color":     score_region_color(ref_img, agent_img),
+        "palette":          score_palette(ref_img, agent_img),
+        "headings":         score_headings(ref_dom, agent_dom),
+        "paragraphs":       score_paragraphs(ref_dom, agent_dom),
+        "navigation":       score_navigation(ref_dom, agent_dom),
+        "repeating_groups": score_repeating_groups(ref_dom, agent_dom),
+        "interactive":      score_interactive(ref_dom, agent_dom),
+        "layout_skeleton":  score_layout_skeleton(ref_dom, agent_dom),
+        "text_content":     score_text_content(ref_dom, agent_dom),
     }
 
-    final = sum(ASPECT_WEIGHTS[k] * aspect_scores[k] for k in ASPECT_WEIGHTS)
+    # Adaptive renormalization
+    applied_weight = 0.0
+    weighted_sum = 0.0
+    aspect_report = {}
+    for name, result in aspects.items():
+        target = ASPECT_TARGET_WEIGHTS[name]
+        effective = target * result.weight_multiplier
+        applied_weight += effective
+        if effective > 0:
+            weighted_sum += effective * result.score
+        aspect_report[name] = {
+            "score": round(result.score, 4),
+            "target_weight": target,
+            "applied_weight": round(effective, 4),
+            "skipped": result.weight_multiplier == 0,
+            "details": result.details,
+        }
+
+    if applied_weight < 1e-6:
+        final = 0.0
+        coverage = 0.0
+    else:
+        final = weighted_sum / applied_weight
+        coverage = applied_weight  # in [0, 1] since targets sum to 1
+
     final = max(0.0, min(1.0, final))
 
     return {
         "final_score": final,
-        "aspect_scores": aspect_scores,
-        "aspect_details": {
-            "layout_structure": layout["details"],
-            "navigation": navigation["details"],
-            "typography": typography["details"],
-            "color_scheme": color_scheme["details"],
-            "cards_borders": cards_borders["details"],
-            "buttons": buttons["details"],
-            "checkmarks_icons": checkmarks["details"],
-            "text_content": text_content["details"],
-            "spacing_padding": spacing["details"],
-        },
+        "coverage": round(coverage, 4),
+        "low_coverage": coverage < COVERAGE_FLAG_THRESHOLD,
+        "aspects": aspect_report,
     }
 
 
@@ -969,39 +987,30 @@ def _font(size: int) -> ImageFont.ImageFont:
     return ImageFont.load_default()
 
 
-def make_comparison(
-    input_png: Path, agent_png: Path, out_path: Path,
-    page_name: str, score: float,
-) -> None:
+def make_comparison(input_png: Path, agent_png: Path, out_path: Path,
+                    page_name: str, score: float, low_coverage: bool) -> None:
     left = Image.open(input_png).convert("RGB")
     right = Image.open(agent_png).convert("RGB")
-
     h = min(left.height, right.height)
     if left.height != h:
         left = left.resize((int(left.width * h / left.height), h), Image.LANCZOS)
     if right.height != h:
         right = right.resize((int(right.width * h / right.height), h), Image.LANCZOS)
 
-    pad = 16
-    gap = 20
-    header = 70
+    pad, gap, header = 16, 20, 70
     W = left.width + right.width + gap + 2 * pad
     H = h + header + pad
-
     canvas = Image.new("RGB", (W, H), "white")
     canvas.paste(left, (pad, header))
     canvas.paste(right, (pad + left.width + gap, header))
 
     draw = ImageDraw.Draw(canvas)
-    title_font = _font(22)
-    label_font = _font(18)
-
-    draw.text((pad, 12), f"{page_name.upper()}  ·  score = {score:.3f}",
-              fill="#1a2332", font=title_font)
-    draw.text((pad, 44), "INPUT (what the agent saw)", fill="#666666", font=label_font)
-    draw.text((pad + left.width + gap, 44),
-              "AGENT OUTPUT (rendered from HTML)", fill="#666666", font=label_font)
-
+    flag = "  ⚠ low coverage" if low_coverage else ""
+    draw.text((pad, 12), f"{page_name.upper()}  ·  score = {score:.3f}{flag}",
+              fill="#1a2332", font=_font(22))
+    draw.text((pad, 44), "INPUT (what the agent saw)", fill="#666666", font=_font(18))
+    draw.text((pad + left.width + gap, 44), "AGENT OUTPUT (rendered from HTML)",
+              fill="#666666", font=_font(18))
     canvas.save(out_path)
 
 
@@ -1037,83 +1046,75 @@ def main() -> None:
                 comparison_png = COMPARISONS_DIR / f"{page_name}.png"
 
                 if not agent_html.exists():
-                    print(f"[{page_name}] MISSING agent output at {agent_html}")
+                    print(f"[{page_name}] MISSING agent output")
                     per_page[page_name] = {"final_score": 0.0, "note": "missing agent output"}
                     if input_png.exists():
                         shutil.copy(input_png, comparison_png)
                     continue
 
-                # --- Render & extract reference ---
+                # Render + extract reference
                 try:
-                    ref_ctx = browser.new_context(viewport=VIEWPORT)
-                    ref_page = ref_ctx.new_page()
-                    ref_page.goto(f"file://{ref_html.resolve()}", wait_until="load")
-                    ref_page.wait_for_timeout(500)
-                    ref_page.screenshot(path=str(ref_render), full_page=False)
-                    ref_dom = extract_dom_info(ref_page)
-                    ref_ctx.close()
+                    ctx = browser.new_context(viewport=VIEWPORT)
+                    pg = ctx.new_page()
+                    pg.goto(f"file://{ref_html.resolve()}", wait_until="load")
+                    pg.wait_for_timeout(500)
+                    pg.screenshot(path=str(ref_render), full_page=False)
+                    ref_dom = extract_dom_info(pg)
+                    ctx.close()
                 except Exception as e:
-                    print(f"[{page_name}] reference render failed: {e}")
-                    per_page[page_name] = {"final_score": 0.0, "note": f"ref render error: {e}"}
+                    print(f"[{page_name}] reference error: {e}")
+                    per_page[page_name] = {"final_score": 0.0, "note": f"ref error: {e}"}
                     continue
 
-                # --- Render & extract agent ---
+                # Render + extract agent
                 try:
-                    agent_ctx = browser.new_context(viewport=VIEWPORT)
-                    agent_page = agent_ctx.new_page()
-                    agent_page.goto(f"file://{agent_html.resolve()}", wait_until="load")
-                    agent_page.wait_for_timeout(500)
-                    agent_page.screenshot(path=str(agent_render), full_page=False)
-                    agent_dom = extract_dom_info(agent_page)
-                    agent_ctx.close()
+                    ctx = browser.new_context(viewport=VIEWPORT)
+                    pg = ctx.new_page()
+                    pg.goto(f"file://{agent_html.resolve()}", wait_until="load")
+                    pg.wait_for_timeout(500)
+                    pg.screenshot(path=str(agent_render), full_page=False)
+                    agent_dom = extract_dom_info(pg)
+                    ctx.close()
                 except Exception as e:
-                    print(f"[{page_name}] agent render failed: {e}")
-                    per_page[page_name] = {"final_score": 0.0, "note": f"agent render error: {e}"}
+                    print(f"[{page_name}] agent error: {e}")
+                    per_page[page_name] = {"final_score": 0.0, "note": f"agent error: {e}"}
                     continue
 
-                # --- Score ---
-                result = score_all_aspects(ref_render, agent_render, ref_dom, agent_dom)
+                # Score
+                result = score_page(ref_render, agent_render, ref_dom, agent_dom)
                 per_page[page_name] = result
 
-                print(f"\n[{page_name}] Final: {result['final_score']:.4f}")
-                for aspect, val in result["aspect_scores"].items():
-                    w = ASPECT_WEIGHTS.get(aspect, 0)
-                    print(f"  {aspect:25s} = {val:.4f}  (weight {w:.2f}, contribution {w*val:.4f})")
+                print(f"\n[{page_name}] Final: {result['final_score']:.4f}  "
+                      f"(coverage: {result['coverage']:.2f}"
+                      f"{', low' if result['low_coverage'] else ''})")
+                for name, info in result["aspects"].items():
+                    skipped = "skipped" if info["skipped"] else f"applied {info['applied_weight']:.3f}"
+                    print(f"  {name:18s} = {info['score']:.4f}  ({skipped})")
 
-                # --- Comparison image ---
                 comparison_src = input_png if input_png.exists() else ref_render
                 try:
-                    make_comparison(
-                        comparison_src, agent_render, comparison_png,
-                        page_name=page_name, score=result["final_score"],
-                    )
+                    make_comparison(comparison_src, agent_render, comparison_png,
+                                    page_name=page_name, score=result["final_score"],
+                                    low_coverage=result["low_coverage"])
                 except Exception as e:
                     print(f"[{page_name}] comparison build failed: {e}")
-
         finally:
             browser.close()
 
-    # --- Aggregate ---
     final_scores = [s.get("final_score", 0.0) for s in per_page.values()]
     final = float(np.mean(final_scores)) if final_scores else 0.0
     final = max(0.0, min(1.0, final))
 
     REWARD_PATH.write_text(f"{final:.6f}\n")
-    DETAILS_PATH.write_text(
-        json.dumps(
-            {
-                "final_reward": final,
-                "viewport": VIEWPORT,
-                "aspect_weights": ASPECT_WEIGHTS,
-                "per_page": per_page,
-            },
-            indent=2,
-        )
-    )
+    DETAILS_PATH.write_text(json.dumps({
+        "final_reward": final,
+        "viewport": VIEWPORT,
+        "aspect_target_weights": ASPECT_TARGET_WEIGHTS,
+        "coverage_flag_threshold": COVERAGE_FLAG_THRESHOLD,
+        "per_page": per_page,
+    }, indent=2))
     print(f"\nFinal reward: {final:.6f}  (written to {REWARD_PATH})")
-    print(f"Comparisons: {COMPARISONS_DIR}")
 
 
 if __name__ == "__main__":
     main()
-

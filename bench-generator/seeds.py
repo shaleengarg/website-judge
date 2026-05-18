@@ -77,6 +77,17 @@ TIERS: dict[int, TierSpec] = {
 }
 
 
+# ---------- Genre taxonomy ----------
+# Genres available per tier for LLM-driven seed synthesis. concept_gen.py reads
+# this to know which (tier, genre) pairs are valid to ask the LLM to flesh out.
+
+GENRES: dict[int, list[str]] = {
+    1: ["portfolio", "restaurant", "personal-blog", "event-announcement", "recipe-card"],
+    2: ["saas-marketing", "conference", "mobile-app", "editorial", "nonprofit"],
+    3: ["documentation", "ecommerce", "dashboard", "news-magazine", "agency"],
+}
+
+
 # ---------- Seed definitions ----------
 
 class Seed(TypedDict):

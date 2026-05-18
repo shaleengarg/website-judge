@@ -29,6 +29,10 @@ Other flags:
     --max-retries N   How many times to retry generation if validation fails (default: 3)
     --templates-dir   Path to templates/ (default: ./templates relative to script)
     --seeds-module    Python module providing SEEDS list (default: ./seeds.py)
+    --synthesize N    Skip the hardcoded SEEDS list; ask Claude Sonnet to invent N
+                      new seeds across the tier range using concept_gen.py.
+    --synth-seed K    RNG seed for tier/genre selection during --synthesize
+                      (default: random per run).
 
 The generator is deterministic given the same seeds — re-running on the same
 seed produces a new task directory (overwriting), so you can re-run to refresh
@@ -40,6 +44,7 @@ import argparse
 import importlib.util
 import json
 import os
+import random
 import re
 import shutil
 import sys
@@ -59,6 +64,7 @@ except ImportError:
 # generator logic. See the module docstring there for the "if you change X
 # also change Y" invariants.
 import prompts
+import concept_gen
 
 
 # ---------- HTML validation ----------
@@ -283,6 +289,11 @@ def write_task(seed: dict, pages: dict[str, str], templates_dir: Path,
     for script in [task_dir / "solution" / "solve.sh", task_dir / "tests" / "test.sh"]:
         script.chmod(0o755)
 
+    # Drop the originating seed alongside the task. relevance.py reads this so
+    # the VLM judge gets the full palette/typography/constraints — not just
+    # whatever survived into task.toml.
+    (task_dir / "seed.json").write_text(json.dumps(seed, indent=2), encoding="utf-8")
+
     return task_dir
 
 
@@ -361,6 +372,13 @@ def main() -> None:
     parser.add_argument("--concurrency", "-j", type=int, default=8,
                         help="Number of seeds to generate in parallel (default: 8). "
                              "Each one is an independent LLM call.")
+    parser.add_argument("--synthesize", type=int, default=0,
+                        help="Skip the hardcoded SEEDS list and ask Claude Sonnet to "
+                             "invent N new seeds across the tier range. Uses "
+                             "concept_gen.py. Mutually exclusive with --include-id.")
+    parser.add_argument("--synth-seed", type=int, default=None,
+                        help="RNG seed for tier/genre selection during --synthesize. "
+                             "Default: random per run.")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print the plan without calling the LLM.")
     parser.add_argument("--list-tiers", action="store_true",
@@ -397,13 +415,58 @@ def main() -> None:
     if not os.environ.get("ANTHROPIC_API_KEY") and not args.dry_run:
         sys.exit("ERROR: ANTHROPIC_API_KEY not set")
 
-    seeds = seeds_mod.get_seeds(
-        count=None,
-        tier_range=(tier_min, tier_max),
-    )
-    if args.include_id:
-        seeds = [s for s in seeds if s["id"] in args.include_id]
-    seeds = seeds[args.start_index : args.start_index + args.count]
+    if args.synthesize > 0:
+        if args.include_id:
+            sys.exit("ERROR: --synthesize and --include-id are mutually exclusive.")
+        rng = random.Random(args.synth_seed)
+        pairs = concept_gen.pick_tier_genre_pairs(
+            args.synthesize, tier_min, tier_max, rng=rng,
+        )
+        print(f"\nSynthesizing {len(pairs)} seed(s) via concept_gen:")
+        for tier, genre in pairs:
+            print(f"  - tier {tier} / {genre}")
+
+        if args.dry_run:
+            # In dry-run we don't call the LLM; bail before either stage.
+            return
+
+        # Parallelize the synth stage with the same concurrency as codegen.
+        # Anthropic's Python SDK is thread-safe (httpx under the hood), so one
+        # client shared across workers is fine. Each generate_seed call is a
+        # single Sonnet round-trip (plus up to 3 retries on validation fail).
+        synth_client = Anthropic()
+        synth_concurrency = max(1, min(args.concurrency, len(pairs)))
+        print(f"  synth concurrency: {synth_concurrency}")
+
+        seeds = []
+        with ThreadPoolExecutor(max_workers=synth_concurrency) as pool:
+            futures = {
+                pool.submit(concept_gen.generate_seed, synth_client, tier, genre): (tier, genre)
+                for tier, genre in pairs
+            }
+            for future in as_completed(futures):
+                tier, genre = futures[future]
+                try:
+                    seed = future.result()
+                    seeds.append(seed)
+                    print(f"  synthesized: {seed['id']} (tier {tier}, {genre})")
+                except Exception as e:
+                    print(f"  FAILED to synthesize tier={tier} genre={genre}: {e}",
+                          file=sys.stderr)
+
+        if not seeds:
+            sys.exit("All seed synthesis attempts failed.")
+
+        # Sort for stable downstream ordering (as_completed returns in finish order).
+        seeds.sort(key=lambda s: s["id"])
+    else:
+        seeds = seeds_mod.get_seeds(
+            count=None,
+            tier_range=(tier_min, tier_max),
+        )
+        if args.include_id:
+            seeds = [s for s in seeds if s["id"] in args.include_id]
+        seeds = seeds[args.start_index : args.start_index + args.count]
 
     if not seeds:
         sys.exit("No seeds matched the filters.")

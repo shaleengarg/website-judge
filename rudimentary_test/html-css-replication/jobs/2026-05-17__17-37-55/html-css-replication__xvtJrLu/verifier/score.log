@@ -1,9 +1,0 @@
-Scoring 5 page(s): ['about', 'blog', 'contact', 'home', 'pricing']
-[about] ssim=0.831 color=0.967 combined=0.872
-[blog] ssim=0.825 color=0.929 combined=0.856
-[contact] ssim=0.869 color=0.967 combined=0.899
-[home] ssim=0.850 color=0.965 combined=0.885
-[pricing] ssim=0.820 color=0.911 combined=0.847
-
-Final reward: 0.871674  (written to /logs/verifier/reward.txt)
-Comparisons: /logs/verifier/comparisons

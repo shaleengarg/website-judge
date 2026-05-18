@@ -109,3 +109,8 @@ In addition to this, for each tier, we can define a number of genres eg. Marketi
 
 Let me first build the v0 of generate\_dataset.py for tiers 1, 2, and 3 and test it.
 
+---
+Seems like that the scalability part is not really coming through in website generation. I am only able to generate num_tiers x num_genres of websites. This is due to the static
+seeds in my generation process. I should probably have an LLM generate the number of seeds based on the count (of each tier type) and then let another llm generate the website for it.
+
+Another Problem with my scoring logic is that I have defined a single size screenshot (1280 x 800). I should do three sizes - desktop, tablet and mobile.
