@@ -12,7 +12,7 @@ we run the grader against a fixed set of degraded outputs and check tier separat
 | --- | --- | --- |
 | `near_perfect` | ≥ 0.85 | Verbatim copy of reference HTML. Lower bound for "what a perfect agent produces." |
 | `mediocre` | 0.40–0.65 | Wrong palette + system fonts + ~30% lorem text. Semantic tags + `@media` preserved. |
-| `bad` | 0.10–0.30 | Full lorem text, no `@media`, no semantic elements, wrong palette, last page omitted. |
+| `bad` | ≤ 0.15 | Full lorem text, no `@media`, no semantic elements, wrong palette, last page omitted. |
 
 Plus: **zero per-task inversions** (`near_perfect > mediocre > bad` must hold for every task).
 

@@ -58,7 +58,7 @@ def resolve_score_py(version: str) -> Path:
 TIER_TARGETS = {
     "near_perfect": (0.85, 1.01),
     "mediocre": (0.40, 0.65),
-    "bad": (0.10, 0.30),
+    "bad": (0.00, 0.15),
 }
 
 

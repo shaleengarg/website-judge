@@ -142,10 +142,11 @@ the labels programmatically. Pick one reference task, then synthesize three
 deliberately-degraded variants of the agent's output: one that is *known to be
 perfect*, one *known to be mediocre*, one *known to be bad*. Feed each through
 the grader and check that the scores fall into the bands we'd expect from
-those labels. The targets (from `small_checks/docs/GRADING.md`, where the same
-approach was used at larger scale): near_perfect ≥ 0.85, mediocre 0.40–0.65,
-bad 0.10–0.30, with zero per-task inversions (`near_perfect > mediocre > bad`
-must always hold).
+those labels. The targets — adapted from `small_checks/docs/GRADING.md` and
+tightened on the bad band because our degradation rules are aggressive enough
+that bad should land closer to zero than to mediocre: near_perfect ≥ 0.85,
+mediocre 0.40–0.65, bad ≤ 0.15, with zero per-task inversions (`near_perfect
+> mediocre > bad` must always hold).
 
 `bench-generator/scoring_calibration/degrade.py` is the variant generator. It
 takes the reference HTML for a task and rewrites it under three regex-based
@@ -203,7 +204,7 @@ table).
 |--------------|-------|-------------|---------|
 | near_perfect | 1.000 | ≥ 0.85      | HIT     |
 | mediocre     | 0.465 | 0.40–0.65   | HIT     |
-| bad          | 0.482 | 0.10–0.30   | MISS    |
+| bad          | 0.482 | ≤ 0.15      | MISS    |
 | inversions   | 1     | 0           | MISS    |
 
 Per-page breakdown (combined = 0.7·SSIM + 0.3·color_hist):
@@ -313,7 +314,7 @@ V2 results (run: 2026-05-18, same task as V1):
 |--------------|-------|-------------|---------|
 | near_perfect | 0.999 | ≥ 0.85      | HIT     |
 | mediocre     | 0.661 | 0.40–0.65   | MISS    |
-| bad          | 0.393 | 0.10–0.30   | MISS    |
+| bad          | 0.393 | ≤ 0.15      | MISS    |
 | inversions   | 0     | 0           | HIT     |
 
 V1 vs V2 side by side:
