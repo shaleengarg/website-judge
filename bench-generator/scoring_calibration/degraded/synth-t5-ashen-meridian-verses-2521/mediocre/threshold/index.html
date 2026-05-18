@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Threshold — Ashen Meridian</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #6B7280;
+    color: #3B82F6;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- Nav ---------- */
+  header.site {
+    border-bottom: 1px solid rgba(240, 234, 214, 0.08);
+  }
+  .site-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+    text-align: center;
+  }
+  .brand {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+    color: #3B82F6;
+    text-decoration: none;
+  }
+  .brand .dot { color: #10B981; }
+
+  nav.primary {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 22px;
+  }
+  nav.primary a {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #F59E0B;
+    text-decoration: none;
+  }
+  nav.primary a.active {
+    color: #10B981;
+  }
+  nav.primary a:hover { color: #3B82F6; }
+
+  /* ---------- Hero ---------- */
+  section { padding: 48px 0; }
+
+  .hero {
+    text-align: center;
+    padding-top: 96px;
+    padding-bottom: 64px;
+  }
+
+  .label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #F59E0B;
+    margin-bottom: 32px;
+    display: block;
+  }
+
+  h1.display {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 4.2rem;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: #3B82F6;
+  }
+
+  .sub-attr {
+    margin-top: 32px;
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(240, 234, 214, 0.7);
+  }
+  .sub-attr em {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+  }
+
+  .rule {
+    width: 56px;
+    height: 1px;
+    background: #10B981;
+    margin: 56px auto 0;
+    opacity: 0.6;
+  }
+
+  /* ---------- Epigraph (pull quote) ---------- */
+  .epigraph-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 48px 0 56px;
+  }
+  blockquote.pull {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.45;
+    border-left: 3px solid #10B981;
+    padding-left: 24px;
+    color: #3B82F6;
+    max-width: 520px;
+  }
+  blockquote.pull cite {
+    display: block;
+    margin-top: 18px;
+    font-style: normal;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #F59E0B;
+  }
+
+  /* ---------- Poem ---------- */
+  .poem-head {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  h2.section-heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #3B82F6;
+    margin-top: 32px;
+  }
+  h3.sub {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #3B82F6;
+    margin-top: 8px;
+  }
+
+  .poem {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: #3B82F6;
+  }
+  .poem .stanza {
+    margin-bottom: 1.6em;
+  }
+  .poem .stanza p {
+    margin: 0;
+  }
+  .poem .stanza.first::first-letter {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 3.8rem;
+    float: left;
+    color: #10B981;
+    font-weight: 700;
+    margin-right: 0.1em;
+    line-height: 0.95;
+    padding-top: 4px;
+  }
+
+  /* decorative placeholder block (sky over chimneys) */
+  .plate {
+    margin: 40px auto 8px;
+    height: 140px;
+    max-width: 520px;
+    background:
+      linear-gradient(180deg, rgba(28,28,30,0) 0%, rgba(28,28,30,0.85) 100%),
+      linear-gradient(180deg, #6B7280 0%, #3B82F6 60%, #10B981 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .plate::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 56px;
+    background:
+      linear-gradient(90deg,
+        transparent 0%, transparent 18%,
+        #6B7280 18%, #6B7280 24%,
+        transparent 24%, transparent 42%,
+        #6B7280 42%, #6B7280 46%,
+        transparent 46%, transparent 60%,
+        #6B7280 60%, #6B7280 70%,
+        transparent 70%, transparent 84%,
+        #6B7280 84%, #6B7280 88%,
+        transparent 88%);
+  }
+  .plate::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 8px;
+    background: #6B7280;
+  }
+  .plate-cap {
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #F59E0B;
+    font-weight: 700;
+    margin-bottom: 56px;
+  }
+
+  /* ---------- Foot links ---------- */
+  .read-next {
+    text-align: center;
+    padding: 32px 0 48px;
+  }
+  .read-next a {
+    color: #10B981;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    border-bottom: 1px solid rgba(200, 98, 42, 0.4);
+    padding-bottom: 2px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer.site {
+    border-top: 1px solid rgba(240, 234, 214, 0.08);
+    margin-top: 48px;
+  }
+  .footer-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    align-items: center;
+    text-align: center;
+  }
+  .footer-inner .label { margin-bottom: 0; }
+  .colophon {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: rgba(240, 234, 214, 0.65);
+    max-width: 460px;
+    line-height: 1.7;
+  }
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+  }
+  .footer-nav a {
+    color: #3B82F6;
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+  .footer-nav a:hover { color: #10B981; }
+  .imprint {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    color: rgba(240, 234, 214, 0.4);
+    text-transform: uppercase;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 768px) {
+    h1.display { font-size: 3.2rem; }
+    h2.section-heading { font-size: 1.8rem; }
+    blockquote.pull { font-size: 1.4rem; }
+    .hero { padding-top: 64px; padding-bottom: 40px; }
+    section { padding: 36px 0; }
+  }
+  @media (max-width: 480px) {
+    h1.display { font-size: 2.5rem; }
+    h2.section-heading { font-size: 1.55rem; }
+    blockquote.pull { font-size: 1.25rem; padding-left: 18px; }
+    .poem .stanza.first::first-letter { font-size: 3.2rem; }
+    nav.primary { gap: 14px; }
+    nav.primary a { font-size: 0.72rem; letter-spacing: 0.14em; }
+    .hero { padding-top: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="site-inner">
+    <a href="../threshold/index.html" class="brand">Ashen Meridian<span class="dot">.</span></a>
+    <nav class="primary" aria-label="Primary">
+      <a class="active" href="../threshold/index.html">Threshold</a>
+      <a href="../collection/index.html">Collection</a>
+      <a href="../about-the-poet/index.html">About the Poet</a>
+      <a href="../marginalia/index.html">Marginalia</a>
+      <a href="../correspondence/index.html">Correspondence</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="label">A Debut Collection by Solenne Vray</span>
+      <h1 class="display">The Hour That Eats Itself</h1>
+      <p class="sub-attr">Seventeen poems &middot; <em>industrial grief, inherited silence, the geography of eastern France</em></p>
+      <div class="rule" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="epigraph-section">
+    <div class="wrap epigraph-wrap">
+      <blockquote class="pull">
+        &ldquo;Attention is the rarest and purest form of generosity. To pay attention is to suffer.&rdquo;
+        <cite>— Simone Weil</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="poem-section">
+    <div class="wrap">
+
+      <div class="plate" aria-hidden="true"></div>
+      <p class="plate-cap">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+      <div class="poem-head">
+        <span class="label">I.</span>
+        <h2 class="section-heading">Foundry, 1973</h2>
+        <h3 class="sub">after a photograph of my grandfather, third shift</h3>
+      </div>
+
+      <div class="poem">
+
+        <div class="stanza first">
+          <p>
+            The light here is not light.<br>
+            It is the memory of light<br>
+            held inside iron a half-second longer<br>
+            than the body that poured it.<br>
+            My grandfather&rsquo;s hands &mdash;<br>
+            I never saw them clean.<br>
+            Even washed, they kept the metal<br>
+            in the half-moons of the nails,<br>
+            a residue more durable than name.
+          </p>
+        </div>
+
+        <div class="stanza">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+
+        <div class="stanza">
+          <p>
+            Outside, the foundry continued<br>
+            to be a foundry. The hour<br>
+            ate the hour before it,<br>
+            and the men, walking the road<br>
+            in their grey coveralls,<br>
+            looked like nothing so much<br>
+            as the photograph<br>
+            a photograph would later become.
+          </p>
+        </div>
+
+        <div class="stanza">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <section class="read-next">
+    <div class="wrap">
+      <a href="../collection/index.html">Continue to the full collection &rarr;</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="footer-inner">
+    <span class="label">Ashen Meridian</span>
+    <p class="colophon">
+      The digital home of Solenne Vray&rsquo;s <em>The Hour That Eats Itself</em>.
+      Published in a limited first edition, Strasbourg, autumn 2024.
+    </p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="../threshold/index.html">Threshold</a>
+      <a href="../collection/index.html">Collection</a>
+      <a href="../about-the-poet/index.html">About the Poet</a>
+      <a href="../marginalia/index.html">Marginalia</a>
+      <a href="../correspondence/index.html">Correspondence</a>
+    </nav>
+    <p class="imprint">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+</footer>
+
+</body>
+</html>

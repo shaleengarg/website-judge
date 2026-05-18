@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started — FerroFlux Systems</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #0f1117; color: #e2e8f0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 15px; line-height: 1.7; }
+  a { color: #38bdf8; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code, pre { font-family: Consolas, Monaco, "Courier New", monospace; font-size: 14px; }
+
+  /* Header */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 64px;
+    background: #0f1117; border-bottom: 1px solid #30363d;
+    display: flex; align-items: center; padding: 0 24px;
+    z-index: 50;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.02em; }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: linear-gradient(135deg, #38bdf8, #f472b6);
+    display: inline-block;
+  }
+  .brand-name { font-size: 16px; }
+  .brand-version {
+    margin-left: 10px; font-size: 11px; color: #94a3b8;
+    border: 1px solid #30363d; padding: 2px 8px; border-radius: 10px;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+  }
+  .topbar-spacer { flex: 1; }
+  .topbar-links { display: flex; gap: 18px; font-size: 13px; color: #94a3b8; }
+  .topbar-links a { color: #94a3b8; }
+  .topbar-links a:hover { color: #38bdf8; }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; top: 64px; bottom: 0; left: 0; width: 260px;
+    background: #161b22; border-right: 1px solid #30363d;
+    overflow-y: auto; padding: 20px 0;
+  }
+  .nav-section { padding: 8px 20px; }
+  .nav-section-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #64748b; font-weight: 700; margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-section-title::after { content: "▾"; font-size: 10px; color: #64748b; }
+  .nav-list { list-style: none; }
+  .nav-list li a {
+    display: block; padding: 6px 10px; font-size: 13px; color: #cbd5e1;
+    border-radius: 4px; font-family: Consolas, Monaco, "Courier New", monospace;
+  }
+  .nav-list li a:hover { background: #1e2433; color: #38bdf8; text-decoration: none; }
+  .nav-list li a.active { background: #1e2433; color: #38bdf8; border-left: 2px solid #38bdf8; padding-left: 8px; }
+
+  /* Main layout */
+  .layout {
+    margin-left: 260px; margin-top: 64px;
+    display: flex; justify-content: center;
+    min-height: calc(100vh - 64px);
+  }
+  .main-wrap {
+    flex: 1; display: flex; gap: 40px;
+    max-width: 1180px; padding: 40px 32px;
+  }
+  .content { max-width: 860px; flex: 1; min-width: 0; }
+  .toc {
+    width: 220px; flex-shrink: 0;
+    position: sticky; top: 88px; align-self: flex-start;
+    max-height: calc(100vh - 100px); overflow-y: auto;
+  }
+  .toc-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #64748b; font-weight: 700; margin-bottom: 12px;
+  }
+  .toc ul { list-style: none; border-left: 1px solid #30363d; }
+  .toc li a {
+    display: block; padding: 5px 12px; font-size: 13px; color: #94a3b8;
+  }
+  .toc li a:hover { color: #38bdf8; text-decoration: none; }
+  .toc li a.active { color: #38bdf8; border-left: 2px solid #38bdf8; margin-left: -1px; padding-left: 11px; }
+
+  /* Page intro */
+  .breadcrumbs { font-size: 12px; color: #64748b; margin-bottom: 16px; font-family: Consolas, Monaco, "Courier New", monospace; }
+  .breadcrumbs a { color: #64748b; }
+  h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 12px; }
+  h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .lede { color: #94a3b8; font-size: 16px; margin-bottom: 24px; max-width: 680px; }
+
+  .callout {
+    background: #161b22; border: 1px solid #30363d; border-left: 3px solid #38bdf8;
+    padding: 14px 18px; border-radius: 6px; margin: 24px 0 36px;
+    font-size: 14px; color: #cbd5e1;
+  }
+  .callout strong { color: #38bdf8; }
+
+  /* Stepper */
+  .stepper { position: relative; padding-left: 48px; margin-top: 24px; }
+  .stepper::before {
+    content: ""; position: absolute; left: 17px; top: 12px; bottom: 12px;
+    width: 2px; background: #30363d;
+  }
+  .step { position: relative; padding-bottom: 40px; }
+  .step:last-child { padding-bottom: 0; }
+  .step-num {
+    position: absolute; left: -48px; top: 0;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #38bdf8; color: #0f1117;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px;
+    border: 3px solid #0f1117;
+    box-shadow: 0 0 0 1px #38bdf8;
+  }
+  .step-title { margin-bottom: 8px; }
+  .step-desc { color: #cbd5e1; font-size: 15px; margin-bottom: 16px; }
+  .step-desc code {
+    background: #1e2433; border: 1px solid #30363d; border-radius: 4px;
+    padding: 1px 6px; font-size: 13px; color: #f472b6;
+  }
+
+  /* Code block */
+  .code {
+    position: relative; background: #1e2433; border: 1px solid #30363d;
+    border-radius: 6px; padding: 16px; padding-top: 36px;
+    overflow-x: auto; margin-bottom: 8px;
+  }
+  .code-lang {
+    position: absolute; top: 8px; right: 8px;
+    background: #1a2333; color: #38bdf8;
+    font-size: 11px; padding: 2px 8px; border-radius: 4px;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    letter-spacing: 0.04em;
+  }
+  pre { color: #e2e8f0; white-space: pre; font-size: 13.5px; line-height: 1.6; }
+  .kw { color: #f472b6; }
+  .str { color: #86efac; }
+  .fn { color: #38bdf8; }
+  .com { color: #64748b; font-style: italic; }
+  .num { color: #fbbf24; }
+
+  .pill-dep {
+    display: inline-block; font-size: 11px; padding: 2px 6px;
+    border-radius: 10px; background: #2d1a24; color: #f472b6;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    margin-left: 8px; letter-spacing: 0.04em;
+  }
+  .deprecated-row { border-left: 3px solid #f472b6; padding-left: 12px; margin-left: -15px; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #30363d; margin-top: 60px; padding: 24px 0;
+    color: #64748b; font-size: 12px;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  footer a { color: #64748b; }
+  footer a:hover { color: #38bdf8; }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .toc { display: none; }
+    .main-wrap { padding: 32px 28px; }
+  }
+  @media (max-width: 820px) {
+    .sidebar {
+      position: static; width: 100%; height: auto;
+      border-right: none; border-bottom: 1px solid #30363d;
+      padding: 12px 0;
+    }
+    .layout { margin-left: 0; }
+    .main-wrap { padding: 24px 18px; }
+    .topbar-links { display: none; }
+  }
+  @media (max-width: 480px) {
+    h1 { font-size: 28px; }
+    .main-wrap { padding: 18px 14px; }
+    .stepper { padding-left: 40px; }
+    .step-num { left: -40px; width: 30px; height: 30px; font-size: 13px; }
+    .stepper::before { left: 14px; }
+    .code { padding: 14px; padding-top: 34px; font-size: 12.5px; }
+    pre { font-size: 12.5px; }
+    .brand-version { display: none; }
+  }
+</style>
+
+<style>
+  * { font-family: "Comic Sans MS", "Papyrus", cursive !important; letter-spacing: 4px !important; }
+  body { background: #FF00FF !important; color: #00FF00 !important; }
+  h1, h2, h3 { font-size: 96px !important; line-height: 0.85 !important; transform: rotate(2deg) !important; color: #FFFF00 !important; text-shadow: 6px 6px 0 #FF00FF !important; }
+  h4, h5, h6 { font-size: 48px !important; color: #00FFFF !important; }
+  p, li, span { font-size: 9px !important; line-height: 0.8 !important; text-align: center !important; color: #00FF00 !important; }
+  a { color: #FFFF00 !important; text-decoration: underline wavy #FF00FF !important; }
+  button { background: #FFFF00 !important; color: #FF00FF !important; box-shadow: 8px 8px 0 #00FF00 !important; }
+  nav { background: #00FF00 !important; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <span class="brand-name">FerroFlux Systems</span>
+    <span class="brand-version">docs · v2.4</span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <nav class="topbar-links">
+    <a href="#">GitHub</a>
+    <a href="#">Releases</a>
+    <a href="#">Status</a>
+  </nav>
+</header>
+
+<aside class="sidebar">
+  <div class="nav-section">
+    <div class="nav-section-title">Documentation</div>
+    <ul class="nav-list">
+      <li><a href="#" class="active">getting-started</a></li>
+      <li><a href="../api-reference/index.html">api-reference</a></li>
+      <li><a href="../configuration/index.html">configuration</a></li>
+      <li><a href="../changelog/index.html">changelog</a></li>
+      <li><a href="../troubleshooting/index.html">troubleshooting</a></li>
+    </ul>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">On This Page</div>
+    <ul class="nav-list">
+      <li><a href="#step-1">1 · Install</a></li>
+      <li><a href="#step-2">2 · Configure Broker</a></li>
+      <li><a href="#step-3">3 · Register Device</a></li>
+      <li><a href="#step-4">4 · Push First Reading</a></li>
+      <li><a href="#step-5">5 · Verify Dashboard</a></li>
+    </ul>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Resources</div>
+    <ul class="nav-list">
+      <li><a href="#">SDK Source</a></li>
+      <li><a href="#">CLI Reference</a></li>
+      <li><a href="#">Examples</a></li>
+    </ul>
+  </div>
+</aside>
+
+<div class="layout">
+  <div class="main-wrap">
+    <main class="content">
+      <div class="breadcrumbs">docs / getting-started</div>
+      <h1>Getting Started</h1>
+      <p class="lede">A five-step walkthrough to install the FerroFlux SDK v2.4, provision your first MQTT broker profile, register an embedded device, push a sensor reading, and verify it lands in the operator dashboard.</p>
+
+      <div class="callout">
+        <strong>Prerequisites</strong> &nbsp;·&nbsp; Rust toolchain 1.74+, a reachable FerroFlux Gateway (self-hosted or cloud), and a valid <code>FFX_API_TOKEN</code> exported in your shell.
+      </div>
+
+      <div class="stepper">
+
+        <section class="step" id="step-1">
+          <div class="step-num">1</div>
+          <h2 class="step-title">Install the SDK &amp; CLI</h2>
+          <p class="step-desc">Install the <code>ferroflux</code> command-line tool and the Rust SDK from crates.io. The CLI is statically linked and ships with the embedded gateway shim used in steps 3–5.</p>
+          <div class="code">
+            <span class="code-lang">bash</span>
+<pre><span class="com"># install the CLI globally</span>
+<span class="fn">cargo</span> install ferroflux-cli --version <span class="str">"2.4.0"</span>
+
+<span class="com"># add the SDK to your project</span>
+<span class="fn">cargo</span> add ferroflux-sdk@<span class="num">2.4</span> --features <span class="str">"mqtt,tls"</span></pre>
+          </div>
+        </section>
+
+        <section class="step" id="step-2">
+          <div class="step-num">2</div>
+          <h2 class="step-title">Configure a Broker Profile</h2>
+          <p class="step-desc">Profiles are declared in <code>ferroflux.flux</code> and define how the SDK reaches your MQTT broker. The generator scaffolds a sane default for TLS on port 8883.</p>
+          <div class="code">
+            <span class="code-lang">flux</span>
+<pre><span class="com"># ferroflux.flux</span>
+<span class="kw">broker</span> <span class="str">"primary"</span> {
+  host         = <span class="str">"mqtts://broker.ferroflux.io"</span>
+  port         = <span class="num">8883</span>
+  tls          = <span class="kw">true</span>
+  client_id    = <span class="str">"edge-${HOSTNAME}"</span>
+  keepalive_s  = <span class="num">30</span>
+  retention    = <span class="str">"7d"</span>
+}</pre>
+          </div>
+        </section>
+
+        <section class="step" id="step-3">
+          <div class="step-num">3</div>
+          <h2 class="step-title">Register a Device</h2>
+          <p class="step-desc">Each physical sensor is registered against a schema. The CLI returns a device handle (<code>dev_…</code>) and a one-time provisioning secret. Store the secret in your secure enclave or HSM.</p>
+          <div class="code">
+            <span class="code-lang">bash</span>
+<pre><span class="fn">ferroflux</span> devices register \
+  --name      <span class="str">"floor-3-temp-01"</span> \
+  --schema    <span class="str">"thermal/v2"</span> \
+  --broker    <span class="str">"primary"</span> \
+  --tags      <span class="str">"site=oslo,line=A"</span>
+
+<span class="com"># → dev_8f3a21c0  (secret: ffx_sk_••••••••••••)</span></pre>
+          </div>
+        </section>
+
+        <section class="step" id="step-4">
+          <div class="step-num">4</div>
+          <h2 class="step-title">Push Your First Reading</h2>
+          <p class="step-desc">Open a stream from your Rust application and emit a typed sample. The SDK batches and compresses readings transparently; <code>flush().await</code> guarantees durability before continuing.</p>
+          <div class="code">
+            <span class="code-lang">rust</span>
+<pre><span class="kw">use</span> ferroflux_sdk::{Client, Reading, schema::Thermal};
+
+<span class="kw">#[tokio::main]</span>
+<span class="kw">async fn</span> <span class="fn">main</span>() -&gt; anyhow::Result&lt;()&gt; {
+    <span class="kw">let</span> client = Client::<span class="fn">from_env</span>().<span class="fn">await</span>?;
+    <span class="kw">let mut</span> stream = client.<span class="fn">stream</span>(<span class="str">"dev_8f3a21c0"</span>).<span class="fn">await</span>?;
+
+    stream.<span class="fn">push</span>(Reading::&lt;Thermal&gt; {
+        celsius:  <span class="num">21.4</span>,
+        humidity: <span class="num">0.38</span>,
+        ts:       chrono::Utc::<span class="fn">now</span>(),
+    }).<span class="fn">await</span>?;
+
+    stream.<span class="fn">flush</span>().<span class="fn">await</span>?;
+    Ok(())
+}</pre>
+          </div>
+        </section>
+
+        <section class="step" id="step-5">
+          <div class="step-num">5</div>
+          <h2 class="step-title">Verify in the Dashboard</h2>
+          <p class="step-desc">The CLI's <code>tail</code> subcommand streams live readings as they ingress the gateway. If you see your sample echoed within 2 seconds, you're done — the same data is now visible in the operator dashboard under <em>Devices → floor-3-temp-01</em>.</p>
+          <div class="code">
+            <span class="code-lang">bash</span>
+<pre><span class="fn">ferroflux</span> streams tail dev_8f3a21c0 --since <span class="num">1m</span>
+
+<span class="com"># 14:22:08.114  thermal/v2  celsius=21.4  humidity=0.38  ✓ ingested</span></pre>
+          </div>
+          <p class="step-desc deprecated-row" style="margin-top:18px;">
+            <strong style="color:#f472b6;">Note</strong> <span class="pill-dep">DEPRECATED</span><br>
+            The legacy <code>ferroflux verify --device</code> flow used in v1.x has been removed; use <code>streams tail</code> instead.
+          </p>
+        </section>
+
+      </div>
+
+      <footer>
+        <div>© 2025 FerroFlux Systems · docs build a1f3e92</div>
+        <div>
+          <a href="#">License</a> &nbsp;·&nbsp;
+          <a href="#">Privacy</a> &nbsp;·&nbsp;
+          <a href="#">Contact</a>
+        </div>
+      </footer>
+    </main>
+
+    <aside class="toc">
+      <div class="toc-title">On This Page</div>
+      <ul>
+        <li><a href="#step-1" class="active">1 · Install</a></li>
+        <li><a href="#step-2">2 · Configure Broker</a></li>
+        <li><a href="#step-3">3 · Register Device</a></li>
+        <li><a href="#step-4">4 · Push First Reading</a></li>
+        <li><a href="#step-5">5 · Verify Dashboard</a></li>
+      </ul>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>

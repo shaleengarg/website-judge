@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Marginalia — Ashen Meridian</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header / Nav */
+  header.site {
+    border-bottom: 1px solid rgba(240, 234, 214, 0.08);
+    padding: 32px 0 24px;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+    color: #00CED1;
+    margin-bottom: 18px;
+  }
+  .brand .dot { color: #FFD700; }
+  nav.primary ul {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: block;
+    
+    
+  }
+  nav.primary a {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #FF00FF;
+  }
+  nav.primary a.current { color: #FFD700; }
+
+  /* Sections */
+  section { padding: 48px 0; }
+  section + section { border-top: 1px solid rgba(240, 234, 214, 0.06); }
+
+  .label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #FF00FF;
+    margin: 0 0 32px 0;
+  }
+  .label.tight { margin-bottom: 12px; }
+
+  h1.display {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 4.2rem;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin: 0 0 24px 0;
+    color: #00CED1;
+  }
+  h2.section {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px 0;
+    color: #00CED1;
+  }
+  h3.sub {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.3;
+    margin: 0 0 14px 0;
+    color: #00CED1;
+  }
+
+  p { margin: 0 0 1.1em 0; }
+
+  /* Facsimile draft blocks */
+  .draft {
+    font-size: 0.92rem;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #00CED1;
+    background: rgba(240, 234, 214, 0.025);
+    border-left: 1px dashed rgba(200, 98, 42, 0.45);
+    padding: 22px 26px;
+    margin: 0 0 8px 0;
+    font-family: Georgia, serif;
+    white-space: pre-wrap;
+  }
+  .draft .struck {
+    text-decoration: line-through;
+    text-decoration-color: rgba(200, 98, 42, 0.75);
+    text-decoration-thickness: 1.5px;
+    color: rgba(240, 234, 214, 0.55);
+  }
+  .draft .insert {
+    color: #FFD700;
+    font-style: italic;
+  }
+  .draft .caret {
+    color: #FF00FF;
+    font-weight: 700;
+  }
+  .draft .stage-note {
+    display: block;
+    margin-top: 14px;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: rgba(240, 234, 214, 0.55);
+    font-family: system-ui, sans-serif;
+  }
+
+  /* Pull quote */
+  blockquote.pull {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.35;
+    color: #00CED1;
+    border-left: 3px solid #FFD700;
+    padding-left: 24px;
+    margin: 8px 0 8px;
+    max-width: 520px;
+  }
+
+  /* Drop cap helper (none on this page — no finished verse) */
+
+  /* Title-note block */
+  .title-note p {
+    font-weight: 300;
+  }
+  .title-note .meta {
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: rgba(240, 234, 214, 0.6);
+    font-size: 0.95rem;
+  }
+
+  /* Footer */
+  footer.site {
+    border-top: 1px solid rgba(240, 234, 214, 0.08);
+    padding: 40px 0 56px;
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: rgba(240, 234, 214, 0.55);
+  }
+  footer.site .row {
+    display: block;
+    
+    
+    
+  }
+  footer .colophon {
+    font-family: Georgia, serif;
+    font-style: italic;
+  }
+  footer ul {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: block;
+    
+    
+  }
+  footer ul a {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #FF00FF;
+  }
+
+  hr.rule {
+    border: 0;
+    border-top: 1px solid rgba(200, 98, 42, 0.4);
+    margin: 28px 0;
+  }
+
+  
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<div class="header" class="site">
+  <div class="wrap">
+    <div class="brand">Ashen Meridian<span class="dot">Lorem ipsum dolor sit amet consectetur.</span></div>
+    <div class="nav" class="primary" aria-label="Primary">
+      <ul>
+        <li><a href="../threshold/index.html">Link One</a></li>
+        <li><a href="../collection/index.html">Link Two</a></li>
+        <li><a href="../about-the-poet/index.html">Link Three</a></li>
+        <li><a href="#" class="current">Link Four</a></li>
+        <li><a href="../correspondence/index.html">Link Five</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="section">
+    <div class="wrap">
+      <p class="label">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <h1 class="display">Lorem Ipsum Dolor</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <p class="label">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <h2 class="section">Lorem Ipsum Dolor</h2>
+      <h3 class="sub">Lorem Ipsum Dolor</h3>
+      <div class="draft"><span class="caret">Lorem ipsum dolor sit amet consectetur.</span> <span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="caret">Lorem ipsum dolor sit amet consectetur.</span> <span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="caret">Lorem ipsum dolor sit amet consectetur.</span> The men came home with the furnace
+   <span class="insert">Lorem ipsum dolor sit amet consectetur.</span> their faces
+   a second iron, slower to cool.
+
+<span class="caret">Lorem ipsum dolor sit amet consectetur.</span> My grandmother set out four plates.
+<span class="caret">Lorem ipsum dolor sit amet consectetur.</span> She set the plates down <span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+   <span class="insert">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="stage-note">Lorem ipsum dolor sit amet consectetur.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <p class="label">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <h2 class="section">Lorem Ipsum Dolor</h2>
+      <h3 class="sub">Lorem Ipsum Dolor</h3>
+      <div class="draft"><span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+The hill kept what the mill <span class="insert">Lorem ipsum dolor sit amet consectetur.</span>.
+
+We walked the perimeter on Sundays,
+my uncle naming each rusted thing
+in the patois <span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="insert">Lorem ipsum dolor sit amet consectetur.</span>.
+
+<span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="insert">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="stage-note">Lorem ipsum dolor sit amet consectetur.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <blockquote class="pull">the furnace keeps no record of what it consumed</blockquote>
+      <p class="meta" style="font-family:Georgia,serif;font-style:italic;color:rgba(240,234,214,0.6);font-size:0.95rem;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <p class="label">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <h2 class="section">Lorem Ipsum Dolor</h2>
+      <h3 class="sub">Lorem Ipsum Dolor</h3>
+      <div class="draft"><span class="caret">Lorem ipsum dolor sit amet consectetur.</span> <span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+
+<span class="caret">Lorem ipsum dolor sit amet consectetur.</span> <span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+
+<span class="caret">Lorem ipsum dolor sit amet consectetur.</span> The water held the bridge
+   the way <span class="insert">Lorem ipsum dolor sit amet consectetur.</span> holds a hand:
+   without grip, without refusal.
+<span class="stage-note">Lorem ipsum dolor sit amet consectetur.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <p class="label">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <h2 class="section">Lorem Ipsum Dolor</h2>
+      <h3 class="sub">Lorem Ipsum Dolor</h3>
+      <div class="draft"><span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+She planted <span class="insert">Lorem ipsum dolor sit amet consectetur.</span>
+that does not require an audience.
+
+<span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="struck">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="insert">Lorem ipsum dolor sit amet consectetur.</span>
+<span class="stage-note">Lorem ipsum dolor sit amet consectetur.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap title-note">
+      <p class="label">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <h2 class="section">Lorem Ipsum Dolor</h2>
+      <hr class="rule">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <blockquote class="pull">l'heure qui se mange elle-même</blockquote>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p class="meta">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer" class="site">
+  <div class="wrap">
+    <div class="row">
+      <div class="colophon">Ashen Meridian — the digital home of Solenne Vray's <em>The Hour That Eats Itself</em>.</div>
+      <ul>
+        <li><a href="../threshold/index.html">Link One</a></li>
+        <li><a href="../collection/index.html">Link Two</a></li>
+        <li><a href="../about-the-poet/index.html">Link Three</a></li>
+        <li><a href="#">Link Four</a></li>
+        <li><a href="../correspondence/index.html">Link Five</a></li>
+      </ul>
+    </div>
+    <p style="margin-top:22px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Getting Started — FerroFlux Systems</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #FF6B6B; color: #00CED1; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 15px; line-height: 1.7; }
+  a { color: #FFD700; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code, pre { font-family: Consolas, Monaco, "Courier New", monospace; font-size: 14px; }
+
+  /* Header */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 64px;
+    background: #FF6B6B; border-bottom: 1px solid #FF00FF;
+    display: block;  padding: 0 24px;
+    z-index: 50;
+  }
+  .brand { display: block;   font-weight: 700; letter-spacing: -0.02em; }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: linear-gradient(135deg, #FFD700, #FF6B6B);
+    display: inline-block;
+  }
+  .brand-name { font-size: 16px; }
+  .brand-version {
+    margin-left: 10px; font-size: 11px; color: #00CED1;
+    border: 1px solid #FF00FF; padding: 2px 8px; border-radius: 10px;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+  }
+  .topbar-spacer { flex: 1; }
+  .topbar-links { display: block;  font-size: 13px; color: #00CED1; }
+  .topbar-links a { color: #00CED1; }
+  .topbar-links a:hover { color: #FFD700; }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; top: 64px; bottom: 0; left: 0; width: 260px;
+    background: #FFD700; border-right: 1px solid #FF00FF;
+    overflow-y: auto; padding: 20px 0;
+  }
+  .nav-section { padding: 8px 20px; }
+  .nav-section-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #FF00FF; font-weight: 700; margin-bottom: 8px;
+    display: block;  
+  }
+  .nav-section-title::after { content: "▾"; font-size: 10px; color: #FF00FF; }
+  .nav-list { list-style: none; }
+  .nav-list li a {
+    display: block; padding: 6px 10px; font-size: 13px; color: #FF6B6B;
+    border-radius: 4px; font-family: Consolas, Monaco, "Courier New", monospace;
+  }
+  .nav-list li a:hover { background: #00CED1; color: #FFD700; text-decoration: none; }
+  .nav-list li a.active { background: #00CED1; color: #FFD700; border-left: 2px solid #FFD700; padding-left: 8px; }
+
+  /* Main layout */
+  .layout {
+    margin-left: 260px; margin-top: 64px;
+    display: block; 
+    min-height: calc(100vh - 64px);
+  }
+  .main-wrap {
+    flex: 1; display: block; 
+    max-width: 1180px; padding: 40px 32px;
+  }
+  .content { max-width: 860px; flex: 1; min-width: 0; }
+  .toc {
+    width: 220px; flex-shrink: 0;
+    position: sticky; top: 88px; align-self: flex-start;
+    max-height: calc(100vh - 100px); overflow-y: auto;
+  }
+  .toc-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #FF00FF; font-weight: 700; margin-bottom: 12px;
+  }
+  .toc ul { list-style: none; border-left: 1px solid #FF00FF; }
+  .toc li a {
+    display: block; padding: 5px 12px; font-size: 13px; color: #00CED1;
+  }
+  .toc li a:hover { color: #FFD700; text-decoration: none; }
+  .toc li a.active { color: #FFD700; border-left: 2px solid #FFD700; margin-left: -1px; padding-left: 11px; }
+
+  /* Page intro */
+  .breadcrumbs { font-size: 12px; color: #FF00FF; margin-bottom: 16px; font-family: Consolas, Monaco, "Courier New", monospace; }
+  .breadcrumbs a { color: #FF00FF; }
+  h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 12px; }
+  h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .lede { color: #00CED1; font-size: 16px; margin-bottom: 24px; max-width: 680px; }
+
+  .callout {
+    background: #FFD700; border: 1px solid #FF00FF; border-left: 3px solid #FFD700;
+    padding: 14px 18px; border-radius: 6px; margin: 24px 0 36px;
+    font-size: 14px; color: #FF6B6B;
+  }
+  .callout strong { color: #FFD700; }
+
+  /* Stepper */
+  .stepper { position: relative; padding-left: 48px; margin-top: 24px; }
+  .stepper::before {
+    content: ""; position: absolute; left: 17px; top: 12px; bottom: 12px;
+    width: 2px; background: #FF00FF;
+  }
+  .step { position: relative; padding-bottom: 40px; }
+  .step:last-child { padding-bottom: 0; }
+  .step-num {
+    position: absolute; left: -48px; top: 0;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #FFD700; color: #FF6B6B;
+    display: block;  
+    font-weight: 700; font-size: 15px;
+    border: 3px solid #FF6B6B;
+    box-shadow: 0 0 0 1px #FFD700;
+  }
+  .step-title { margin-bottom: 8px; }
+  .step-desc { color: #FF6B6B; font-size: 15px; margin-bottom: 16px; }
+  .step-desc code {
+    background: #00CED1; border: 1px solid #FF00FF; border-radius: 4px;
+    padding: 1px 6px; font-size: 13px; color: #FF6B6B;
+  }
+
+  /* Code block */
+  .code {
+    position: relative; background: #00CED1; border: 1px solid #FF00FF;
+    border-radius: 6px; padding: 16px; padding-top: 36px;
+    overflow-x: auto; margin-bottom: 8px;
+  }
+  .code-lang {
+    position: absolute; top: 8px; right: 8px;
+    background: #FFD700; color: #FFD700;
+    font-size: 11px; padding: 2px 8px; border-radius: 4px;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    letter-spacing: 0.04em;
+  }
+  pre { color: #00CED1; white-space: pre; font-size: 13.5px; line-height: 1.6; }
+  .kw { color: #FF6B6B; }
+  .str { color: #FF00FF; }
+  .fn { color: #FFD700; }
+  .com { color: #FF00FF; font-style: italic; }
+  .num { color: #FF6B6B; }
+
+  .pill-dep {
+    display: inline-block; font-size: 11px; padding: 2px 6px;
+    border-radius: 10px; background: #00CED1; color: #FF6B6B;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    margin-left: 8px; letter-spacing: 0.04em;
+  }
+  .deprecated-row { border-left: 3px solid #FF6B6B; padding-left: 12px; margin-left: -15px; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #FF00FF; margin-top: 60px; padding: 24px 0;
+    color: #FF00FF; font-size: 12px;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    display: block;   
+  }
+  footer a { color: #FF00FF; }
+  footer a:hover { color: #FFD700; }
+
+  /* Responsive */
+  
+  
+  
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<div class="header" class="topbar">
+  <div class="brand">
+    <span class="brand-mark">Lorem ipsum dolor sit amet consectetur.</span>
+    <span class="brand-name">Lorem ipsum dolor sit amet consectetur.</span>
+    <span class="brand-version">Lorem ipsum dolor sit amet consectetur.</span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="nav" class="topbar-links">
+    <a href="#">Link One</a>
+    <a href="#">Link Two</a>
+    <a href="#">Link Three</a>
+  </div>
+</div>
+
+<div class="aside" class="sidebar">Link Four</a></li>
+      <li><a href="../api-reference/index.html">Link Five</a></li>
+      <li><a href="../configuration/index.html">Link One</a></li>
+      <li><a href="../changelog/index.html">Link Two</a></li>
+      <li><a href="../troubleshooting/index.html">Link Three</a></li>
+    </ul>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">On This Page</div>
+    <ul class="nav-list">
+      <li><a href="#step-1">Link Four</a></li>
+      <li><a href="#step-2">Link Five</a></li>
+      <li><a href="#step-3">Link One</a></li>
+      <li><a href="#step-4">Link Two</a></li>
+      <li><a href="#step-5">Link Three</a></li>
+    </ul>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Resources</div>
+    <ul class="nav-list">
+      <li><a href="#">Link Four</a></li>
+      <li><a href="#">Link Five</a></li>
+      <li><a href="#">Link One</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="main-wrap">
+    <div class="main" class="content">
+      <div class="breadcrumbs">docs / getting-started</div>
+      <h1>Lorem Ipsum Dolor</h1>
+      <p class="lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+      <div class="callout">
+        <strong>Prerequisites</strong> &nbsp;·&nbsp; Rust toolchain 1.74+, a reachable FerroFlux Gateway (self-hosted or cloud), and a valid <code>FFX_API_TOKEN</code> exported in your shell.
+      </div>
+
+      <div class="stepper">
+
+        <div class="section" class="step" id="step-1">
+          <div class="step-num">1</div>
+          <h2 class="step-title">Lorem Ipsum Dolor</h2>
+          <p class="step-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <div class="code">
+            <span class="code-lang">Lorem ipsum dolor sit amet consectetur.</span>
+<pre>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <div class="code">
+            <span class="code-lang">Lorem ipsum dolor sit amet consectetur.</span>
+<pre>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <div class="code">
+            <span class="code-lang">Lorem ipsum dolor sit amet consectetur.</span>
+<pre>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <div class="code">
+            <span class="code-lang">Lorem ipsum dolor sit amet consectetur.</span>
+<pre>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <div class="code">
+            <span class="code-lang">Lorem ipsum dolor sit amet consectetur.</span>
+<pre>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <div>© 2025 FerroFlux Systems · docs build a1f3e92</div>
+        <div>
+          <a href="#">Link Two</a> &nbsp;·&nbsp;
+          <a href="#">Link Three</a> &nbsp;·&nbsp;
+          <a href="#">Link Four</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="aside" class="toc">Link Five</a></li>
+        <li><a href="#step-2">Link One</a></li>
+        <li><a href="#step-3">Link Two</a></li>
+        <li><a href="#step-4">Link Three</a></li>
+        <li><a href="#step-5">Link Four</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

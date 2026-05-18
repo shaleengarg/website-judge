@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Reference — FerroFlux Systems</title>
+
+</head>
+<body>
+
+<header class="header">
+  <div class="brand"><span class="brand-mark"></span>FerroFlux Systems</div>
+  <span class="version-pill">SDK v2.4</span>
+  <div class="header-meta">
+    <span class="hide-sm">Gateway API</span>
+    <span class="hide-sm">·</span>
+    <span>docs.ferroflux.io</span>
+  </div>
+</header>
+
+<aside class="sidebar">
+  <div class="nav-section">Documentation</div>
+  <ul class="nav-list">
+    <li><a href="../getting-started/index.html">Getting Started</a></li>
+    <li><a href="#" class="active">API Reference</a></li>
+    <li><a href="../configuration/index.html">Configuration</a></li>
+    <li><a href="../changelog/index.html">Changelog</a></li>
+    <li><a href="../troubleshooting/index.html">Troubleshooting</a></li>
+  </ul>
+
+  <div class="nav-section">API Reference</div>
+  <ul class="nav-list">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#auth-header">Authentication</a></li>
+    <li><a href="#devices">/devices</a>
+      <ul class="nav-sub">
+        <li><a href="#dev-list">List devices</a></li>
+        <li><a href="#dev-get">Get device</a></li>
+        <li><a href="#dev-create">Register device</a></li>
+        <li><a href="#dev-patch">Update device</a></li>
+        <li><a href="#dev-delete">Delete device</a></li>
+        <li><a href="#dev-ping">Ping device</a></li>
+      </ul>
+    </li>
+    <li><a href="#streams">/streams</a>
+      <ul class="nav-sub">
+        <li><a href="#str-list">List streams</a></li>
+        <li><a href="#str-create">Open stream</a></li>
+        <li><a href="#str-push">Push readings</a></li>
+        <li><a href="#str-tail">Tail v1</a></li>
+        <li><a href="#str-close">Close stream</a></li>
+      </ul>
+    </li>
+    <li><a href="#alerts">/alerts</a>
+      <ul class="nav-sub">
+        <li><a href="#alt-list">List alerts</a></li>
+        <li><a href="#alt-ack">Acknowledge</a></li>
+        <li><a href="#alt-rules">Rules</a></li>
+        <li><a href="#alt-snooze">Snooze (legacy)</a></li>
+      </ul>
+    </li>
+    <li><a href="#auth">/auth</a>
+      <ul class="nav-sub">
+        <li><a href="#au-token">Token exchange</a></li>
+        <li><a href="#au-revoke">Revoke</a></li>
+        <li><a href="#au-keys">Rotate keys</a></li>
+      </ul>
+    </li>
+  </ul>
+</aside>
+
+<main class="layout">
+
+<section class="content">
+  <h1 id="overview">Gateway API Reference</h1>
+  <p class="lede">The FerroFlux Gateway API exposes 18 REST endpoints across four resource groups: <code>/devices</code>, <code>/streams</code>, <code>/alerts</code>, and <code>/auth</code>. All requests are JSON over HTTPS. Base URL: <code>https://gw.ferroflux.io/v2</code>.</p>
+
+  <div class="callout">
+    <strong>Stability:</strong> Endpoints marked <span class="pill-deprecated">DEPRECATED</span> will be removed in v3.0. Migration paths are documented inline.
+  </div>
+
+  <h2 id="auth-header">Authentication</h2>
+  <p>All requests except <code>/auth/token</code> require a bearer token in the <code>Authorization</code> header. Tokens are issued via OAuth 2.0 client-credentials flow and scoped to a tenant.</p>
+
+  <div class="code-block">
+    <span class="lang-badge">HTTP</span>
+<pre>Authorization: Bearer <span class="tk-str">eyJhbGciOiJSUzI1NiIsInR5cCI6...</span>
+X-FerroFlux-Tenant: <span class="tk-str">acme-prod</span>
+Content-Type: application/json</pre>
+  </div>
+
+  <!-- DEVICES -->
+  <h2 id="devices" class="resource-group">/devices · Device registry</h2>
+  <p>Manage the lifecycle of embedded sensor nodes registered with the gateway. Devices hold credentials, firmware metadata, and a current heartbeat state.</p>
+
+  <article class="endpoint" id="dev-list">
+    <div class="endpoint-head">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/devices</span>
+    </div>
+    <p>List registered devices for the calling tenant. Supports cursor pagination via <code>?cursor=</code> and filtering by <code>status</code>, <code>fleet</code>, and <code>firmware</code>.</p>
+    <div class="code-block">
+      <span class="lang-badge">cURL</span>
+<pre><span class="tk-com"># List 50 online devices in the 'arctic-fleet'</span>
+curl -H <span class="tk-str">"Authorization: Bearer $TOKEN"</span> \
+     <span class="tk-str">"https://gw.ferroflux.io/v2/devices?status=online&fleet=arctic-fleet&limit=50"</span></pre>
+    </div>
+  </article>
+
+  <article class="endpoint" id="dev-get">
+    <div class="endpoint-head">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/devices/{deviceId}</span>
+    </div>
+    <p>Retrieve a single device's full record, including current heartbeat, firmware version, and assigned schemas.</p>
+  </article>
+
+  <article class="endpoint" id="dev-create">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/devices</span>
+    </div>
+    <p>Register a new device. The gateway returns a provisioning bundle containing a one-time enrollment key and the canonical broker URL.</p>
+    <div class="code-block">
+      <span class="lang-badge">JSON</span>
+<pre>{
+  <span class="tk-key">"hardware_id"</span>: <span class="tk-str">"FF-RTU-9A7E2"</span>,
+  <span class="tk-key">"fleet"</span>: <span class="tk-str">"arctic-fleet"</span>,
+  <span class="tk-key">"schema"</span>: <span class="tk-str">"thermo.v3"</span>,
+  <span class="tk-key">"firmware"</span>: <span class="tk-str">"2.4.1"</span>
+}</pre>
+    </div>
+  </article>
+
+  <article class="endpoint" id="dev-patch">
+    <div class="endpoint-head">
+      <span class="method PATCH">PATCH</span>
+      <span class="endpoint-path">/devices/{deviceId}</span>
+    </div>
+    <p>Partially update mutable fields: <code>fleet</code>, <code>schema</code>, <code>labels</code>, and <code>retention_policy</code>.</p>
+  </article>
+
+  <article class="endpoint" id="dev-delete">
+    <div class="endpoint-head">
+      <span class="method DELETE">DELETE</span>
+      <span class="endpoint-path">/devices/{deviceId}</span>
+    </div>
+    <p>De-provision a device. Streams owned by the device are flushed and closed; historical readings are retained per the active retention policy.</p>
+  </article>
+
+  <article class="endpoint deprecated" id="dev-ping">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/devices/{deviceId}/ping</span>
+      <span class="pill-deprecated">DEPRECATED</span>
+    </div>
+    <p>Sends a synchronous health probe to the device. <strong>Removed in v3.0</strong> — heartbeat data is now pushed via the bidirectional <code>/streams/{id}/control</code> channel. Migrate by subscribing to <code>device.heartbeat</code> events.</p>
+  </article>
+
+  <!-- STREAMS -->
+  <h2 id="streams" class="resource-group">/streams · Telemetry streams</h2>
+  <p>Streams are append-only sequences of typed sensor readings. Each device may own one or more streams keyed by schema. Streams support batched ingestion and server-side aggregation windows.</p>
+
+  <article class="endpoint" id="str-list">
+    <div class="endpoint-head">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/streams</span>
+    </div>
+    <p>List streams visible to the caller. Filter by <code>device_id</code>, <code>schema</code>, or <code>state=open|closed</code>.</p>
+  </article>
+
+  <article class="endpoint" id="str-create">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/streams</span>
+    </div>
+    <p>Open a new stream bound to a device and a registered schema. Returns a <code>stream_id</code> and a write-token valid for 24 hours.</p>
+  </article>
+
+  <article class="endpoint" id="str-push">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/streams/{id}/readings</span>
+    </div>
+    <p>Append a batch of readings. Payloads are validated against the stream's schema; rows that fail validation are rejected individually and reported in the response.</p>
+    <div class="code-block">
+      <span class="lang-badge">Rust</span>
+<pre><span class="tk-key">let</span> batch = vec![
+    Reading::new(<span class="tk-str">"core_temp"</span>, <span class="tk-num">42.7</span>),
+    Reading::new(<span class="tk-str">"core_temp"</span>, <span class="tk-num">42.9</span>),
+];
+client.streams().push(<span class="tk-str">"str_8f2a"</span>, &batch).<span class="tk-key">await</span>?;</pre>
+    </div>
+  </article>
+
+  <article class="endpoint deprecated" id="str-tail">
+    <div class="endpoint-head">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/streams/{id}/tail</span>
+      <span class="pill-deprecated">DEPRECATED</span>
+    </div>
+    <p>Long-poll the tail of a stream. <strong>Removed in v3.0</strong> — replaced by the WebSocket subscription endpoint at <code>wss://gw.ferroflux.io/v2/streams/{id}/subscribe</code>.</p>
+  </article>
+
+  <article class="endpoint" id="str-close">
+    <div class="endpoint-head">
+      <span class="method DELETE">DELETE</span>
+      <span class="endpoint-path">/streams/{id}</span>
+    </div>
+    <p>Close a stream and seal its log segment. Closed streams remain queryable but reject further writes.</p>
+  </article>
+
+  <!-- ALERTS -->
+  <h2 id="alerts" class="resource-group">/alerts · Alerts &amp; rules</h2>
+  <p>Server-side rule engine that produces alerts from stream data. Rules are declared in <code>.flux</code> configuration and evaluated against sliding windows.</p>
+
+  <article class="endpoint" id="alt-list">
+    <div class="endpoint-head">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/alerts</span>
+    </div>
+    <p>List open alerts. Filter by <code>severity</code>, <code>rule_id</code>, or <code>device_id</code>.</p>
+  </article>
+
+  <article class="endpoint" id="alt-ack">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/alerts/{id}/acknowledge</span>
+    </div>
+    <p>Acknowledge an alert, recording the operator identity and an optional note. Acknowledged alerts remain visible but are excluded from the on-call paging queue.</p>
+  </article>
+
+  <article class="endpoint" id="alt-rules">
+    <div class="endpoint-head">
+      <span class="method GET">GET</span>
+      <span class="endpoint-path">/alerts/rules</span>
+    </div>
+    <p>Enumerate active alerting rules with their evaluation status and last-fired timestamp.</p>
+  </article>
+
+  <article class="endpoint deprecated" id="alt-snooze">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/alerts/{id}/snooze</span>
+      <span class="pill-deprecated">DEPRECATED</span>
+    </div>
+    <p>Temporarily suppress an alert. <strong>Removed in v3.0</strong> — use rule-level inhibitions configured in <code>retention.flux</code>. The legacy endpoint silently no-ops for snoozes longer than 1 hour.</p>
+  </article>
+
+  <!-- AUTH -->
+  <h2 id="auth" class="resource-group">/auth · Authentication</h2>
+  <p>Token issuance, rotation, and revocation. Auth endpoints are not tenant-scoped and accept client credentials directly.</p>
+
+  <article class="endpoint" id="au-token">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/auth/token</span>
+    </div>
+    <p>Exchange a client ID and secret for a short-lived bearer token (default TTL: 3600s).</p>
+    <div class="code-block">
+      <span class="lang-badge">JSON</span>
+<pre>{
+  <span class="tk-key">"grant_type"</span>: <span class="tk-str">"client_credentials"</span>,
+  <span class="tk-key">"client_id"</span>: <span class="tk-str">"ff_cl_a91f..."</span>,
+  <span class="tk-key">"client_secret"</span>: <span class="tk-str">"***"</span>,
+  <span class="tk-key">"scope"</span>: <span class="tk-str">"streams:write devices:read"</span>
+}</pre>
+    </div>
+  </article>
+
+  <article class="endpoint" id="au-revoke">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/auth/revoke</span>
+    </div>
+    <p>Revoke a token immediately. Useful when a device is suspected of compromise; pair with <code>DELETE /devices/{id}</code> to fully de-provision.</p>
+  </article>
+
+  <article class="endpoint" id="au-keys">
+    <div class="endpoint-head">
+      <span class="method POST">POST</span>
+      <span class="endpoint-path">/auth/keys/rotate</span>
+    </div>
+    <p>Rotate the tenant's signing keys. New tokens are signed with the fresh key immediately; the prior key remains valid for verification for 24 hours to allow rolling restarts.</p>
+    <div class="callout warn">
+      <strong>Warning:</strong> Rotation invalidates all cached JWKS at downstream services. Schedule during a low-traffic maintenance window.
+    </div>
+  </article>
+
+</section>
+
+<aside class="right-panel">
+  <h4>On This Page</h4>
+  <table class="param-table">
+    <tr><td><a href="#overview">Overview</a></td><td></td><td></td></tr>
+    <tr><td><a href="#auth-header">Auth header</a></td><td></td><td></td></tr>
+    <tr><td><a href="#devices">/devices</a></td><td></td><td>6 endpoints</td></tr>
+    <tr><td><a href="#streams">/streams</a></td><td></td><td>5 endpoints</td></tr>
+    <tr><td><a href="#alerts">/alerts</a></td><td></td><td>4 endpoints</td></tr>
+    <tr><td><a href="#auth">/auth</a></td><td></td><td>3 endpoints</td></tr>
+  </table>
+
+  <h4>Common Parameters</h4>
+  <table class="param-table">
+    <tr><td>tenant</td><td>string</td><td>Required. Tenant slug.</td></tr>
+    <tr><td>cursor</td><td>string</td><td>Pagination cursor.</td></tr>
+    <tr><td>limit</td><td>int</td><td>1–500, default 100.</td></tr>
+    <tr><td>fields</td><td>csv</td><td>Sparse fieldset.</td></tr>
+    <tr><td>since</td><td>iso8601</td><td>Lower bound.</td></tr>
+    <tr><td>until</td><td>iso8601</td><td>Upper bound.</td></tr>
+  </table>
+
+  <h4>Response Codes</h4>
+  <table class="status-table">
+    <tr><td>200</td><td>OK</td></tr>
+    <tr><td>201</td><td>Created</td></tr>
+    <tr><td>204</td><td>No Content</td></tr>
+    <tr class="s-warn"><td>400</td><td>Bad Request</td></tr>
+    <tr class="s-err"><td>401</td><td>Unauthorized</td></tr>
+    <tr class="s-err"><td>403</td><td>Forbidden</td></tr>
+    <tr class="s-err"><td>404</td><td>Not Found</td></tr>
+    <tr class="s-warn"><td>409</td><td>Conflict</td></tr>
+    <tr class="s-warn"><td>429</td><td>Too Many Reqs</td></tr>
+    <tr class="s-err"><td>503</td><td>Unavailable</td></tr>
+  </table>
+
+  <h4>Rate Limits</h4>
+  <table class="param-table">
+    <tr><td>burst</td><td>req/s</td><td>200</td></tr>
+    <tr><td>sustained</td><td>req/min</td><td>6,000</td></tr>
+    <tr><td>ingest</td><td>rows/s</td><td>50,000</td></tr>
+  </table>
+
+  <div class="group-toc">
+    <h4>Endpoint Index</h4>
+    <ul>
+      <li><span class="m GET">GET</span>/devices</li>
+      <li><span class="m GET">GET</span>/devices/{id}</li>
+      <li><span class="m POST">POST</span>/devices</li>
+      <li><span class="m PATCH">PATCH</span>/devices/{id}</li>
+      <li><span class="m DELETE">DEL</span>/devices/{id}</li>
+      <li><span class="m POST">POST</span>/devices/ping <span class="pill-deprecated">DEP</span></li>
+      <li><span class="m GET">GET</span>/streams</li>
+      <li><span class="m POST">POST</span>/streams</li>
+      <li><span class="m POST">POST</span>/readings</li>
+      <li><span class="m GET">GET</span>/tail <span class="pill-deprecated">DEP</span></li>
+      <li><span class="m DELETE">DEL</span>/streams/{id}</li>
+      <li><span class="m GET">GET</span>/alerts</li>
+      <li><span class="m POST">POST</span>/ack</li>
+      <li><span class="m GET">GET</span>/rules</li>
+      <li><span class="m POST">POST</span>/snooze <span class="pill-deprecated">DEP</span></li>
+      <li><span class="m POST">POST</span>/auth/token</li>
+      <li><span class="m POST">POST</span>/auth/revoke</li>
+      <li><span class="m POST">POST</span>/keys/rotate</li>
+    </ul>
+  </div>
+</aside>
+
+</main>
+
+<footer class="footer">
+  <div>© 2024 FerroFlux Systems · Industrial IoT Middleware</div>
+  <div class="footer-links">
+    <a href="../getting-started/index.html">Getting Started</a>
+    <a href="#">API Reference</a>
+    <a href="../configuration/index.html">Configuration</a>
+    <a href="../changelog/index.html">Changelog</a>
+    <a href="../troubleshooting/index.html">Troubleshooting</a>
+  </div>
+</footer>
+
+</body>
+</html>

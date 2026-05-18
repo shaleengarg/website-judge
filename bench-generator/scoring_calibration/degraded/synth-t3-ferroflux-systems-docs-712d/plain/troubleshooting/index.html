@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troubleshooting — FerroFlux Systems Docs</title>
+
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">Ferro<span class="accent">Flux</span> <span>/ docs</span></div>
+  <div class="header-meta">SDK <span class="ver">v2.4.1</span> · stable</div>
+</header>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-title">Documentation</div>
+      <ul class="sb-list">
+        <li><a href="../getting-started/index.html">Getting Started</a></li>
+        <li><a href="../api-reference/index.html">API Reference</a></li>
+        <li><a href="../configuration/index.html">Configuration DSL</a></li>
+        <li><a href="../changelog/index.html">Changelog</a></li>
+        <li><a href="#" class="active">Troubleshooting</a></li>
+      </ul>
+    </div>
+    <div class="sb-section">
+      <div class="sb-title">On This Page</div>
+      <ul class="sb-list">
+        <li><a href="#connection" class="sub">Connection Failures</a></li>
+        <li><a href="#schema" class="sub">Schema Validation</a></li>
+        <li><a href="#latency" class="sub">High Latency</a></li>
+        <li><a href="#auth" class="sub">Auth Rejections</a></li>
+        <li><a href="#logs" class="sub">Diagnostic Logs</a></li>
+      </ul>
+    </div>
+    <div class="sb-section">
+      <div class="sb-title">Resources</div>
+      <ul class="sb-list">
+        <li><a href="#">Rust SDK Docs</a></li>
+        <li><a href="#">DSL Grammar</a></li>
+        <li><a href="#">Status Page</a></li>
+        <li><a href="#">Support Portal</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <main class="main">
+      <div class="breadcrumb">docs / <span>troubleshooting</span></div>
+      <h1>Troubleshooting</h1>
+      <p class="lede">Diagnostic workflows for the four most commonly reported failure modes when operating FerroFlux gateways and embedded sensor fleets. Each section opens with a symptom table, followed by ordered resolution steps and the exact commands required to verify a fix.</p>
+
+      <div class="callout">
+        <strong>Before you begin.</strong> Confirm your gateway is running SDK <code>v2.3.0</code> or later. Many of the diagnostic commands below depend on the <code>fluxctl diag</code> subcommand introduced in 2.3.
+      </div>
+
+      <!-- Connection Failures -->
+      <h2 id="connection">1. Connection Failures</h2>
+      <p>Connection failures manifest when a registered device cannot establish or maintain a session with the gateway broker. The middleware will surface these in the <code>device.session</code> stream with non-zero exit codes.</p>
+
+      <table class="sym-table">
+        <thead>
+          <tr><th>Symptom</th><th>Likely Cause</th><th>Severity</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym">ECONNREFUSED on port 8443</td>
+            <td>Broker process not listening or firewall dropping inbound TLS.</td>
+            <td class="sev"><span class="sev-pill sev-critical">CRITICAL</span></td>
+          </tr>
+          <tr>
+            <td class="sym">handshake_timeout (30s)</td>
+            <td>Mismatched TLS cipher suites or expired client certificate.</td>
+            <td class="sev"><span class="sev-pill sev-high">HIGH</span></td>
+          </tr>
+          <tr>
+            <td class="sym">flapping reconnects &gt; 5/min</td>
+            <td>Keepalive interval shorter than network MTU round-trip.</td>
+            <td class="sev"><span class="sev-pill sev-medium">MEDIUM</span></td>
+          </tr>
+          <tr>
+            <td class="sym">SESSION_REJECTED_FULL</td>
+            <td>Broker session pool exhausted; raise <code>max_sessions</code>.</td>
+            <td class="sev"><span class="sev-pill sev-low">LOW</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Resolution Steps</h3>
+      <ol class="steps">
+        <li>
+          <span class="step-title">Verify the broker is reachable.</span>
+          <p>Probe the broker's TLS listener from the device subnet. A healthy broker returns the server certificate chain within 2s.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="tok-c"># From the device-side network namespace</span>
+<span class="tok-f">openssl</span> s_client -connect broker.flux.local:<span class="tok-n">8443</span> \
+  -servername broker.flux.local -showcerts &lt; /dev/null</pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Inspect the session log.</span>
+          <p>Use <code>fluxctl diag sessions</code> to enumerate the last 50 session transitions for a device. Look for a repeated <code>HANDSHAKE_FAIL</code> reason.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="tok-f">fluxctl</span> diag sessions --device <span class="tok-s">"edge-007"</span> --tail <span class="tok-n">50</span></pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Rotate the device certificate.</span>
+          <p>If the certificate is within 14 days of expiry, rotate using the SDK's renewal helper. The device will reconnect automatically once the new cert lands in its keystore.</p>
+          <div class="code">
+            <span class="lang">rust</span>
+<pre><span class="tok-k">use</span> ferroflux::auth::CertRenewal;
+
+<span class="tok-k">let</span> renewal = CertRenewal::<span class="tok-f">new</span>(&amp;ctx)
+    .<span class="tok-f">with_csr_path</span>(<span class="tok-s">"/etc/flux/csr.pem"</span>)
+    .<span class="tok-f">execute</span>()
+    .<span class="tok-f">await</span>?;
+
+<span class="tok-f">println!</span>(<span class="tok-s">"renewed: {}"</span>, renewal.fingerprint);</pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Tune keepalive.</span>
+          <p>Set <code>keepalive_secs</code> in the device profile to at least 2× the observed network RTT. Default is 30; raise to 60–90 for cellular fleets.</p>
+        </li>
+      </ol>
+
+      <!-- Schema Validation -->
+      <h2 id="schema">2. Schema Validation Errors</h2>
+      <p>Every reading pushed into FerroFlux is validated against the device's declared schema. Mismatches are rejected at ingest and never reach downstream streams.</p>
+
+      <table class="sym-table">
+        <thead>
+          <tr><th>Symptom</th><th>Likely Cause</th><th>Severity</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym">SCHEMA_FIELD_MISSING</td>
+            <td>Required field absent from payload; check schema version pinning.</td>
+            <td class="sev"><span class="sev-pill sev-high">HIGH</span></td>
+          </tr>
+          <tr>
+            <td class="sym">SCHEMA_TYPE_MISMATCH</td>
+            <td>Floating-point sent where integer expected (or inverse).</td>
+            <td class="sev"><span class="sev-pill sev-medium">MEDIUM</span></td>
+          </tr>
+          <tr class="deprecated-row">
+            <td class="sym">SCHEMA_LEGACY_V1 <span class="dep-badge">DEPRECATED</span></td>
+            <td>Device still emitting v1 envelopes. Migrate before SDK 3.0.</td>
+            <td class="sev"><span class="sev-pill sev-medium">MEDIUM</span></td>
+          </tr>
+          <tr>
+            <td class="sym">SCHEMA_RANGE_VIOLATION</td>
+            <td>Numeric reading outside <code>min/max</code> declared range.</td>
+            <td class="sev"><span class="sev-pill sev-low">LOW</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Resolution Steps</h3>
+      <ol class="steps">
+        <li>
+          <span class="step-title">Print the active schema.</span>
+          <p>Confirm which schema revision the gateway is enforcing for this device.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="tok-f">fluxctl</span> schema show --device <span class="tok-s">"edge-007"</span> --format json</pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Dry-run a payload locally.</span>
+          <p>Validate a sample reading against the schema without sending it.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="tok-f">fluxctl</span> schema validate \
+  --schema sensors/temp_v3.flux \
+  --payload <span class="tok-s">'{"ts":1719283200,"c":21.4}'</span></pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Migrate from v1 envelopes.</span>
+          <p>Wrap legacy readings using the compatibility shim until firmware can be reflashed.</p>
+          <div class="code">
+            <span class="lang">rust</span>
+<pre><span class="tok-k">use</span> ferroflux::compat::v1_envelope;
+
+<span class="tok-k">let</span> reading = v1_envelope::<span class="tok-f">lift</span>(legacy_bytes)?;
+client.<span class="tok-f">push</span>(<span class="tok-s">"streams/temp"</span>, &amp;reading).<span class="tok-f">await</span>?;</pre>
+          </div>
+        </li>
+      </ol>
+
+      <!-- High Latency -->
+      <h2 id="latency">3. High Latency Readings</h2>
+      <p>End-to-end latency is measured from <code>device.ts</code> to <code>ingest.ts</code>. The platform SLO is &lt;800ms at the 95th percentile.</p>
+
+      <table class="sym-table">
+        <thead>
+          <tr><th>Symptom</th><th>Likely Cause</th><th>Severity</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym">p95 latency &gt; 2s sustained</td>
+            <td>Batch buffer too large; reduce <code>flush_threshold</code>.</td>
+            <td class="sev"><span class="sev-pill sev-high">HIGH</span></td>
+          </tr>
+          <tr>
+            <td class="sym">clock_skew &gt; 5s</td>
+            <td>Device NTP drift; falls back to broker timestamp.</td>
+            <td class="sev"><span class="sev-pill sev-medium">MEDIUM</span></td>
+          </tr>
+          <tr>
+            <td class="sym">backpressure_dropped</td>
+            <td>Ingest queue saturated; horizontally scale broker shards.</td>
+            <td class="sev"><span class="sev-pill sev-critical">CRITICAL</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Resolution Steps</h3>
+      <ol class="steps">
+        <li>
+          <span class="step-title">Inspect ingest latency histogram.</span>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="tok-f">fluxctl</span> diag latency --window 15m --bucket p50,p95,p99</pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Lower the device flush threshold.</span>
+          <p>In the device's <code>.flux</code> profile, drop <code>flush_threshold</code> from <code>256</code> to <code>32</code> readings to trade throughput for freshness.</p>
+          <div class="code">
+            <span class="lang">flux</span>
+<pre><span class="tok-k">profile</span> <span class="tok-s">"edge-fast"</span> {
+  flush_threshold = <span class="tok-n">32</span>
+  flush_interval  = <span class="tok-s">"500ms"</span>
+  compression     = <span class="tok-s">"zstd"</span>
+}</pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Resync NTP.</span>
+          <p>Force a chrony resync and verify drift is under 200ms.</p>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="tok-f">chronyc</span> -a makestep
+<span class="tok-f">chronyc</span> tracking | grep <span class="tok-s">"System time"</span></pre>
+          </div>
+        </li>
+      </ol>
+
+      <!-- Auth Rejections -->
+      <h2 id="auth">4. Authentication Rejections</h2>
+      <p>FerroFlux authenticates devices via mutual TLS and operators via short-lived JWTs issued by <code>/auth/token</code>.</p>
+
+      <table class="sym-table">
+        <thead>
+          <tr><th>Symptom</th><th>Likely Cause</th><th>Severity</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym">401 invalid_signature</td>
+            <td>Operator JWT signed with rotated key.</td>
+            <td class="sev"><span class="sev-pill sev-high">HIGH</span></td>
+          </tr>
+          <tr>
+            <td class="sym">403 device_revoked</td>
+            <td>Device fingerprint present in revocation list.</td>
+            <td class="sev"><span class="sev-pill sev-critical">CRITICAL</span></td>
+          </tr>
+          <tr class="deprecated-row">
+            <td class="sym">AUTH_BASIC_HEADER <span class="dep-badge">DEPRECATED</span></td>
+            <td>Basic auth removed in v2.2. Migrate to bearer tokens.</td>
+            <td class="sev"><span class="sev-pill sev-high">HIGH</span></td>
+          </tr>
+          <tr>
+            <td class="sym">429 too_many_logins</td>
+            <td>Login rate-limit; back off for 60s.</td>
+            <td class="sev"><span class="sev-pill sev-low">LOW</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <strong>Deprecation notice.</strong> Basic authentication headers will return <code>401</code> in SDK <strong>v3.0</strong>. Issue bearer tokens via <code>POST /auth/token</code> and pass them in <code>Authorization: Bearer …</code>.
+      </div>
+
+      <h3>Resolution Steps</h3>
+      <ol class="steps">
+        <li>
+          <span class="step-title">Rotate the operator signing key.</span>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="tok-f">fluxctl</span> auth rotate-key --kid <span class="tok-s">"ops-2024-q3"</span></pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Verify the device fingerprint.</span>
+          <div class="code">
+            <span class="lang">bash</span>
+<pre><span class="tok-f">fluxctl</span> devices show <span class="tok-s">"edge-007"</span> | grep fingerprint
+<span class="tok-c"># Compare to expected SHA-256 in your CMDB</span></pre>
+          </div>
+        </li>
+        <li>
+          <span class="step-title">Re-enroll if revoked in error.</span>
+          <p>Remove the entry from the revocation list and re-issue a certificate. The device must reboot to clear cached rejection state.</p>
+        </li>
+      </ol>
+
+      <!-- Diagnostic logs -->
+      <h2 id="logs">Collecting Diagnostic Logs</h2>
+      <p>When opening a support ticket, include a full <code>fluxctl diag bundle</code> archive. The bundle contains 24h of broker logs, device session traces, schema cache state, and the active configuration — all redacted of secrets.</p>
+
+      <div class="code">
+        <span class="lang">bash</span>
+<pre><span class="tok-c"># Generate a redacted diagnostic bundle</span>
+<span class="tok-f">fluxctl</span> diag bundle \
+  --since <span class="tok-s">"24h"</span> \
+  --include sessions,schema,config,metrics \
+  --redact secrets,pii \
+  --output <span class="tok-s">"/tmp/flux-diag-$(date +%s).tgz"</span></pre>
+      </div>
+
+      <p>Attach the resulting tarball to your ticket along with the affected device IDs and the approximate UTC timestamp of the first observed failure. Support response targets are 4 business hours for <span class="sev-pill sev-critical">CRITICAL</span> and 1 business day for everything else.</p>
+
+      <div class="callout">
+        <strong>Tip.</strong> You can stream live diagnostic events to your terminal with <code>fluxctl diag tail --level=warn</code>. Useful while reproducing intermittent issues.
+      </div>
+
+      <footer class="footer">
+        <div>© 2024 FerroFlux Systems · Docs build <span class="mono">7c4e1f9</span></div>
+        <div class="links">
+          <a href="#">Edit this page</a>
+          <a href="#">Report an issue</a>
+          <a href="#">Status</a>
+        </div>
+      </footer>
+    </main>
+
+    <!-- On This Page (right) -->
+    <nav class="otp" aria-label="On this page">
+      <h4>On This Page</h4>
+      <ul>
+        <li><a href="#connection" class="cur">Connection Failures</a></li>
+        <li><a href="#schema">Schema Validation Errors</a></li>
+        <li><a href="#latency">High Latency Readings</a></li>
+        <li><a href="#auth">Authentication Rejections</a></li>
+        <li><a href="#logs">Collecting Diagnostic Logs</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+</body>
+</html>

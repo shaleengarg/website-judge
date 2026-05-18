@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Configuration DSL — FerroFlux Systems Docs</title>
+
+</head>
+<body>
+
+<header class="top-header">
+  <div class="logo">
+    <div class="logo-mark"></div>
+    <span class="full">FerroFlux</span>
+    <span class="version-pill">SDK v2.4</span>
+  </div>
+  <div class="search-box">⌕ &nbsp; Search documentation…</div>
+  <nav class="header-links">
+    <a href="#">GitHub</a>
+    <a href="#">Status</a>
+    <a href="#">Support</a>
+  </nav>
+</header>
+
+<aside class="sidebar">
+  <div class="nav-section">
+    <div class="nav-title">Documentation</div>
+    <ul class="nav-list">
+      <li><a href="../getting-started/index.html">Getting Started</a></li>
+      <li><a href="../api-reference/index.html">API Reference</a></li>
+      <li><a href="#" class="active">Configuration</a></li>
+      <li><a href="../changelog/index.html">Changelog</a></li>
+      <li><a href="../troubleshooting/index.html">Troubleshooting</a></li>
+    </ul>
+  </div>
+  <div class="nav-section">
+    <div class="nav-title">Configuration</div>
+    <ul class="nav-list">
+      <li><a href="#overview" class="sub">Overview</a></li>
+      <li><a href="#global" class="sub active">Global Settings</a></li>
+      <li><a href="#broker" class="sub">Broker Profiles</a></li>
+      <li><a href="#schemas" class="sub">Device Schemas</a></li>
+      <li><a href="#retention" class="sub">Retention Policies</a></li>
+      <li><a href="#reference" class="sub">Key Reference</a></li>
+    </ul>
+  </div>
+  <div class="nav-section">
+    <div class="nav-title">Resources</div>
+    <ul class="nav-list">
+      <li><a href="#" class="sub">CLI Manual</a></li>
+      <li><a href="#" class="sub">Rust crate docs</a></li>
+      <li><a href="#" class="sub">Schema Registry</a></li>
+    </ul>
+  </div>
+</aside>
+
+<div class="layout">
+  <main class="main">
+    <div class="breadcrumb">Docs › SDK v2.4 › Configuration</div>
+    <h1>Configuration DSL</h1>
+    <p class="lede">
+      FerroFlux nodes are configured through <code>.flux</code> files — a strict,
+      strongly-typed configuration DSL that compiles to an immutable runtime
+      manifest at boot. This page documents the four top-level blocks, shows
+      annotated examples, and provides a searchable reference of all 47
+      configuration keys.
+    </p>
+
+    <div class="callout">
+      <div class="callout-title">File location</div>
+      The daemon loads <code>/etc/ferroflux/node.flux</code> by default, then
+      merges any files matching <code>/etc/ferroflux/conf.d/*.flux</code> in
+      lexical order. Use <code>ferroflux config check</code> to validate before deploying.
+    </div>
+
+    <h2 id="global">1. Global Settings</h2>
+    <p class="prose">
+      The <code>global</code> block defines node identity, logging behavior, and
+      runtime limits. Exactly one <code>global</code> block is required per
+      configuration tree; subsequent definitions raise <code>E_DUP_GLOBAL</code> at parse time.
+    </p>
+    <p class="prose">
+      Identity fields (<code>node_id</code>, <code>region</code>) become immutable
+      once the node has registered with a broker — changing them requires a full
+      re-pairing. Most other keys hot-reload on <code>SIGHUP</code>.
+    </p>
+
+    <div class="code-block">
+      <span class="lang-badge">flux</span>
+<pre><span class="tok-c"># /etc/ferroflux/node.flux — global section</span>
+<span class="tok-k">global</span> {
+  <span class="tok-id">node_id</span>      = <span class="tok-s">"edge-pdx-014"</span>      <span class="tok-c"># unique within tenant</span>
+  <span class="tok-id">region</span>       = <span class="tok-s">"us-west-2"</span>
+  <span class="tok-id">log_level</span>    = <span class="tok-k">info</span>                 <span class="tok-c"># trace|debug|info|warn|error</span>
+  <span class="tok-id">log_format</span>   = <span class="tok-k">json</span>
+  <span class="tok-id">metrics_port</span> = <span class="tok-n">9100</span>
+  <span class="tok-id">workers</span>      = <span class="tok-n">8</span>                    <span class="tok-c"># tokio runtime threads</span>
+  <span class="tok-id">queue_depth</span>  = <span class="tok-n">4096</span>
+  <span class="tok-id">tls_min</span>      = <span class="tok-s">"1.3"</span>
+}</pre>
+    </div>
+
+    <h2 id="broker">2. Broker Profiles</h2>
+    <p class="prose">
+      A <code>broker</code> block declares a connection to an upstream FerroFlux
+      Gateway (or compatible MQTT 5 / AMQP 1.0 endpoint). You may declare
+      multiple profiles; the runtime fails over in declaration order when the
+      primary becomes unreachable for more than <code>failover_grace</code> seconds.
+    </p>
+    <p class="prose">
+      Credentials are referenced indirectly via the <code>secret_ref</code> field;
+      the literal <code>secret</code> field <span class="deprecated-pill">DEPRECATED</span>
+      since v2.2 and emits a parse warning. It will be removed in v3.0.
+    </p>
+
+    <div class="code-block">
+      <span class="lang-badge">flux</span>
+<pre><span class="tok-k">broker</span> <span class="tok-s">"primary"</span> {
+  <span class="tok-id">endpoint</span>        = <span class="tok-s">"tls://gateway.ferroflux.io:8883"</span>
+  <span class="tok-id">protocol</span>        = <span class="tok-k">mqtt5</span>
+  <span class="tok-id">tenant</span>          = <span class="tok-s">"acme-industrial"</span>
+  <span class="tok-id">secret_ref</span>      = <span class="tok-s">"vault:kv/ferroflux/primary"</span>
+  <span class="tok-id">keepalive_secs</span>  = <span class="tok-n">30</span>
+  <span class="tok-id">qos</span>             = <span class="tok-n">1</span>
+  <span class="tok-id">failover_grace</span>  = <span class="tok-n">12</span>
+}
+
+<span class="tok-k">broker</span> <span class="tok-s">"fallback"</span> {
+  <span class="tok-id">endpoint</span>        = <span class="tok-s">"tls://gateway-eu.ferroflux.io:8883"</span>
+  <span class="tok-id">protocol</span>        = <span class="tok-k">mqtt5</span>
+  <span class="tok-id">tenant</span>          = <span class="tok-s">"acme-industrial"</span>
+  <span class="tok-id">secret_ref</span>      = <span class="tok-s">"vault:kv/ferroflux/fallback"</span>
+}</pre>
+    </div>
+
+    <h2 id="schemas">3. Device Schemas</h2>
+    <p class="prose">
+      Device schemas describe the shape of telemetry payloads that a sensor
+      class is expected to publish. The compiler turns each <code>schema</code>
+      block into a zero-copy validator backed by <code>serde</code> + <code>prost</code>;
+      payloads that fail validation are dropped and surface as
+      <code>schema_violations_total</code> in the metrics endpoint.
+    </p>
+    <p class="prose">
+      Field types: <code>f32</code>, <code>f64</code>, <code>i32</code>, <code>i64</code>,
+      <code>u32</code>, <code>u64</code>, <code>bool</code>, <code>string(N)</code>,
+      <code>enum(...)</code>, and the composite <code>vec3</code> for accelerometer triples.
+    </p>
+
+    <div class="code-block">
+      <span class="lang-badge">flux</span>
+<pre><span class="tok-k">schema</span> <span class="tok-s">"thermal_sensor_v3"</span> {
+  <span class="tok-id">version</span>     = <span class="tok-n">3</span>
+  <span class="tok-id">encoding</span>    = <span class="tok-k">protobuf</span>            <span class="tok-c"># protobuf|cbor|json</span>
+
+  <span class="tok-k">field</span> <span class="tok-id">temp_c</span>      : <span class="tok-k">f32</span>    { <span class="tok-id">min</span>=<span class="tok-n">-40.0</span>, <span class="tok-id">max</span>=<span class="tok-n">150.0</span>, <span class="tok-id">required</span>=<span class="tok-k">true</span> }
+  <span class="tok-k">field</span> <span class="tok-id">humidity</span>    : <span class="tok-k">f32</span>    { <span class="tok-id">min</span>=<span class="tok-n">0.0</span>,   <span class="tok-id">max</span>=<span class="tok-n">100.0</span> }
+  <span class="tok-k">field</span> <span class="tok-id">battery_pct</span> : <span class="tok-k">u32</span>    { <span class="tok-id">max</span>=<span class="tok-n">100</span> }
+  <span class="tok-k">field</span> <span class="tok-id">mode</span>        : <span class="tok-k">enum</span>(<span class="tok-s">"idle"</span>, <span class="tok-s">"active"</span>, <span class="tok-s">"calibrate"</span>)
+  <span class="tok-k">field</span> <span class="tok-id">ts</span>          : <span class="tok-k">i64</span>    { <span class="tok-id">required</span>=<span class="tok-k">true</span>, <span class="tok-id">monotonic</span>=<span class="tok-k">true</span> }
+}</pre>
+    </div>
+
+    <h2 id="retention">4. Retention Policies</h2>
+    <p class="prose">
+      Retention policies bind to streams (matched by glob) and control how long
+      raw and downsampled data remain on disk before being rolled up or evicted.
+      A node may define any number of policies; the first matching glob wins.
+    </p>
+
+    <div class="callout warn">
+      <div class="callout-title">Caution</div>
+      Shrinking a retention window does <em>not</em> retroactively delete data;
+      use <code>ferroflux retention compact --since &lt;ts&gt;</code> to force a sweep.
+    </div>
+
+    <div class="code-block">
+      <span class="lang-badge">flux</span>
+<pre><span class="tok-k">retention</span> <span class="tok-s">"hot-thermal"</span> {
+  <span class="tok-id">match</span>           = <span class="tok-s">"streams/thermal/*"</span>
+  <span class="tok-id">raw_window</span>      = <span class="tok-s">"7d"</span>
+  <span class="tok-id">rollup_window</span>   = <span class="tok-s">"90d"</span>
+  <span class="tok-id">rollup_interval</span> = <span class="tok-s">"5m"</span>
+  <span class="tok-id">aggregations</span>    = [<span class="tok-k">min</span>, <span class="tok-k">max</span>, <span class="tok-k">avg</span>, <span class="tok-k">p95</span>]
+  <span class="tok-id">storage_tier</span>    = <span class="tok-k">ssd</span>
+}
+
+<span class="tok-k">retention</span> <span class="tok-s">"cold-vibration"</span> {
+  <span class="tok-id">match</span>           = <span class="tok-s">"streams/vibration/*"</span>
+  <span class="tok-id">raw_window</span>      = <span class="tok-s">"24h"</span>
+  <span class="tok-id">rollup_window</span>   = <span class="tok-s">"365d"</span>
+  <span class="tok-id">rollup_interval</span> = <span class="tok-s">"1h"</span>
+  <span class="tok-id">storage_tier</span>    = <span class="tok-k">archive</span>
+}</pre>
+    </div>
+
+    <h2 id="reference">Key Reference</h2>
+    <p class="prose">
+      The table below enumerates all 47 configuration keys recognized by the
+      v2.4 parser. Use the filters to narrow by block or required-status.
+      Deprecated keys are flagged and will emit a warning at parse time.
+    </p>
+
+    <div class="filter-bar">
+      <div class="filter-input">⌕ &nbsp; Filter keys…</div>
+      <div class="chip on">All</div>
+      <div class="chip">global</div>
+      <div class="chip">broker</div>
+      <div class="chip">schema</div>
+      <div class="chip">retention</div>
+      <div class="chip">required only</div>
+    </div>
+
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Required</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="key">global.node_id</td><td class="type">string</td><td>—</td><td class="req-yes">yes</td><td class="desc">Unique node identifier within the tenant.</td></tr>
+        <tr><td class="key">global.region</td><td class="type">string</td><td>—</td><td class="req-yes">yes</td><td class="desc">Geographic region tag, e.g. <code>us-west-2</code>.</td></tr>
+        <tr><td class="key">global.log_level</td><td class="type">enum</td><td>info</td><td class="req-no">no</td><td class="desc">Logging verbosity: trace, debug, info, warn, error.</td></tr>
+        <tr><td class="key">global.log_format</td><td class="type">enum</td><td>text</td><td class="req-no">no</td><td class="desc">Either <code>text</code> or <code>json</code>.</td></tr>
+        <tr><td class="key">global.metrics_port</td><td class="type">u16</td><td>9100</td><td class="req-no">no</td><td class="desc">Port for the Prometheus exporter.</td></tr>
+        <tr><td class="key">global.workers</td><td class="type">u8</td><td>cpus</td><td class="req-no">no</td><td class="desc">Tokio runtime worker thread count.</td></tr>
+        <tr><td class="key">global.queue_depth</td><td class="type">u32</td><td>2048</td><td class="req-no">no</td><td class="desc">Per-stream in-memory buffer depth.</td></tr>
+        <tr><td class="key">global.tls_min</td><td class="type">string</td><td>"1.2"</td><td class="req-no">no</td><td class="desc">Minimum negotiated TLS version.</td></tr>
+        <tr class="deprecated-row"><td class="key">global.allow_plaintext <span class="deprecated-pill">DEPRECATED</span></td><td class="type">bool</td><td>false</td><td class="req-no">no</td><td class="desc">Allowed unencrypted broker links; removed in v3.0.</td></tr>
+        <tr><td class="key">global.shutdown_grace</td><td class="type">duration</td><td>"15s"</td><td class="req-no">no</td><td class="desc">Time given to drain queues at shutdown.</td></tr>
+        <tr><td class="key">global.heartbeat</td><td class="type">duration</td><td>"30s"</td><td class="req-no">no</td><td class="desc">Interval for self-health publication.</td></tr>
+
+        <tr><td class="key">broker.endpoint</td><td class="type">url</td><td>—</td><td class="req-yes">yes</td><td class="desc">Broker URL with scheme and port.</td></tr>
+        <tr><td class="key">broker.protocol</td><td class="type">enum</td><td>mqtt5</td><td class="req-no">no</td><td class="desc">mqtt5, mqtt311, or amqp10.</td></tr>
+        <tr><td class="key">broker.tenant</td><td class="type">string</td><td>—</td><td class="req-yes">yes</td><td class="desc">Tenant slug provisioned on the gateway.</td></tr>
+        <tr><td class="key">broker.secret_ref</td><td class="type">uri</td><td>—</td><td class="req-yes">yes</td><td class="desc">Vault / file reference to broker credentials.</td></tr>
+        <tr class="deprecated-row"><td class="key">broker.secret <span class="deprecated-pill">DEPRECATED</span></td><td class="type">string</td><td>—</td><td class="req-no">no</td><td class="desc">Inline secret; use <code>secret_ref</code> instead.</td></tr>
+        <tr><td class="key">broker.keepalive_secs</td><td class="type">u32</td><td>60</td><td class="req-no">no</td><td class="desc">MQTT keepalive interval.</td></tr>
+        <tr><td class="key">broker.qos</td><td class="type">u8</td><td>1</td><td class="req-no">no</td><td class="desc">Publish QoS level (0–2).</td></tr>
+        <tr><td class="key">broker.failover_grace</td><td class="type">u32</td><td>20</td><td class="req-no">no</td><td class="desc">Seconds before falling over to next profile.</td></tr>
+        <tr><td class="key">broker.client_id</td><td class="type">string</td><td>node_id</td><td class="req-no">no</td><td class="desc">Override client identifier sent to broker.</td></tr>
+        <tr><td class="key">broker.persistent_session</td><td class="type">bool</td><td>true</td><td class="req-no">no</td><td class="desc">Use clean_start=false on reconnect.</td></tr>
+        <tr><td class="key">broker.max_inflight</td><td class="type">u32</td><td>128</td><td class="req-no">no</td><td class="desc">Unacked publishes allowed in flight.</td></tr>
+        <tr><td class="key">broker.compression</td><td class="type">enum</td><td>zstd</td><td class="req-no">no</td><td class="desc">none, gzip, or zstd.</td></tr>
+
+        <tr><td class="key">schema.version</td><td class="type">u32</td><td>—</td><td class="req-yes">yes</td><td class="desc">Schema generation; must monotonically increase.</td></tr>
+        <tr><td class="key">schema.encoding</td><td class="type">enum</td><td>protobuf</td><td class="req-no">no</td><td class="desc">Wire format: protobuf, cbor, json.</td></tr>
+        <tr><td class="key">schema.strict</td><td class="type">bool</td><td>true</td><td class="req-no">no</td><td class="desc">Reject payloads containing unknown fields.</td></tr>
+        <tr><td class="key">schema.field.&lt;name&gt;.type</td><td class="type">type</td><td>—</td><td class="req-yes">yes</td><td class="desc">Primitive or composite type for a field.</td></tr>
+        <tr><td class="key">schema.field.&lt;name&gt;.required</td><td class="type">bool</td><td>false</td><td class="req-no">no</td><td class="desc">Whether the field must be present.</td></tr>
+        <tr><td class="key">schema.field.&lt;name&gt;.min</td><td class="type">number</td><td>—</td><td class="req-no">no</td><td class="desc">Inclusive lower bound for numeric types.</td></tr>
+        <tr><td class="key">schema.field.&lt;name&gt;.max</td><td class="type">number</td><td>—</td><td class="req-no">no</td><td class="desc">Inclusive upper bound for numeric types.</td></tr>
+        <tr><td class="key">schema.field.&lt;name&gt;.monotonic</td><td class="type">bool</td><td>false</td><td class="req-no">no</td><td class="desc">Each new value must exceed the previous.</td></tr>
+        <tr><td class="key">schema.field.&lt;name&gt;.unit</td><td class="type">string</td><td>—</td><td class="req-no">no</td><td class="desc">UCUM unit string for downstream display.</td></tr>
+        <tr class="deprecated-row"><td class="key">schema.legacy_json_compat <span class="deprecated-pill">DEPRECATED</span></td><td class="type">bool</td><td>false</td><td class="req-no">no</td><td class="desc">Forces v1 JSON envelope; will be removed.</td></tr>
+        <tr><td class="key">schema.compat_mode</td><td class="type">enum</td><td>backward</td><td class="req-no">no</td><td class="desc">none, backward, forward, or full.</td></tr>
+
+        <tr><td class="key">retention.match</td><td class="type">glob</td><td>—</td><td class="req-yes">yes</td><td class="desc">Stream selector glob, e.g. <code>streams/*/raw</code>.</td></tr>
+        <tr><td class="key">retention.raw_window</td><td class="type">duration</td><td>"24h"</td><td class="req-no">no</td><td class="desc">How long raw points are kept before rollup.</td></tr>
+        <tr><td class="key">retention.rollup_window</td><td class="type">duration</td><td>"30d"</td><td class="req-no">no</td><td class="desc">Lifetime of aggregated rollups.</td></tr>
+        <tr><td class="key">retention.rollup_interval</td><td class="type">duration</td><td>"1m"</td><td class="req-no">no</td><td class="desc">Aggregation bucket width.</td></tr>
+        <tr><td class="key">retention.aggregations</td><td class="type">list</td><td>[avg]</td><td class="req-no">no</td><td class="desc">Aggregations to compute: min, max, avg, sum, p50, p95, p99.</td></tr>
+        <tr><td class="key">retention.storage_tier</td><td class="type">enum</td><td>ssd</td><td class="req-no">no</td><td class="desc">ssd, hdd, or archive (S3-compatible).</td></tr>
+        <tr><td class="key">retention.compression</td><td class="type">enum</td><td>zstd</td><td class="req-no">no</td><td class="desc">On-disk codec for rollup chunks.</td></tr>
+        <tr><td class="key">retention.encrypt_at_rest</td><td class="type">bool</td><td>true</td><td class="req-no">no</td><td class="desc">Enable AES-256-GCM file encryption.</td></tr>
+        <tr><td class="key">retention.checksum</td><td class="type">enum</td><td>crc32c</td><td class="req-no">no</td><td class="desc">Per-chunk integrity algorithm.</td></tr>
+        <tr><td class="key">retention.priority</td><td class="type">u8</td><td>50</td><td class="req-no">no</td><td class="desc">Tie-breaker when multiple globs match.</td></tr>
+        <tr><td class="key">retention.evict_on_pressure</td><td class="type">bool</td><td>false</td><td class="req-no">no</td><td class="desc">Allow early eviction under disk pressure.</td></tr>
+        <tr><td class="key">retention.export_target</td><td class="type">uri</td><td>—</td><td class="req-no">no</td><td class="desc">Optional S3/GCS sink for expired rollups.</td></tr>
+        <tr><td class="key">retention.export_schedule</td><td class="type">cron</td><td>"@daily"</td><td class="req-no">no</td><td class="desc">When to flush to the export target.</td></tr>
+      </tbody>
+    </table>
+
+    <footer class="footer">
+      <div>© 2025 FerroFlux Systems · Docs build <code>2.4.118-a91f</code></div>
+      <div>
+        <a href="#">Edit on GitHub</a> · <a href="#">Report an issue</a> · <a href="#">RSS</a>
+      </div>
+    </footer>
+  </main>
+
+  <aside class="on-this-page">
+    <h4>On this page</h4>
+    <ul>
+      <li><a href="#global" class="active">1. Global Settings</a></li>
+      <li><a href="#broker">2. Broker Profiles</a></li>
+      <li><a href="#schemas">3. Device Schemas</a></li>
+      <li><a href="#retention">4. Retention Policies</a></li>
+      <li><a href="#reference">Key Reference</a></li>
+    </ul>
+    <h4>See also</h4>
+    <ul>
+      <li><a href="../getting-started/index.html">Getting Started</a></li>
+      <li><a href="../troubleshooting/index.html">Troubleshooting</a></li>
+      <li><a href="../changelog/index.html">v2.4 Changelog</a></li>
+    </ul>
+  </aside>
+</div>
+
+</body>
+</html>

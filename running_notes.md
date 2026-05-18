@@ -1203,12 +1203,13 @@ What V3.2 still doesn't cover (future work)
   judge would benefit from page-specific criteria (e.g., "is the
   preserved-lemon recipe headline still in terracotta?"). That's a
   separate infrastructure piece — a Claude Sonnet call at task-creation
-  time that reads seed.json and emits a TOML checklist per page.
-- **Oracle ceiling check.** Feeding the reference HTML in *as the agent
-  output* and verifying the grader scores ≥ 0.95. We already see this
-  implicitly via the near_perfect tier (verbatim copy → 1.000), but a
-  dedicated oracle test on multiple tasks would document the ceiling
-  claim formally.
+  time that reads seed.json and emits a per-page checklist as
+  structured JSON.
+- **Reference-as-agent sanity check.** Feeding the reference HTML in
+  *as the agent output* and verifying the grader scores ≥ 0.95. We
+  already see this implicitly via the near_perfect tier (verbatim copy
+  → 1.000), but a dedicated multi-task version of this check would
+  document the upper bound formally.
 
 The grader has graduated from "single inversion, no idea what's
 broken" (V1) to "produces a clean five-step continuous reward signal on

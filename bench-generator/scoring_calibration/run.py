@@ -153,14 +153,19 @@ def discover_tasks(filter_ids: list[str] | None) -> list[tuple[str, Path]]:
 
 
 def find_reference_pages(task_id: str) -> Path | None:
-    """Locate the original reference-pages dir for a task across dataset versions."""
-    for dataset in (
-        "website-bench_v2-1",
-        "website-bench_v2",
-        "website-bench_v1",
-        "website-bench_v0",
-    ):
-        candidate = REPO / "bench-generator" / dataset / task_id / "environment" / "reference-pages"
+    """Locate the original reference-pages dir for a task across dataset versions.
+
+    Search order: live v4 dataset first, then archived datasets under old_bench/.
+    """
+    candidates = [
+        REPO / "bench-generator" / "website-bench_v4" / task_id / "environment" / "reference-pages",
+        REPO / "bench-generator" / "old_bench" / "website-bench_v2-1" / task_id / "environment" / "reference-pages",
+        REPO / "bench-generator" / "old_bench" / "website-bench_v2" / task_id / "environment" / "reference-pages",
+        REPO / "bench-generator" / "old_bench" / "website-bench_v1" / task_id / "environment" / "reference-pages",
+        REPO / "bench-generator" / "old_bench" / "website-bench_v0" / task_id / "environment" / "reference-pages",
+        REPO / "bench-generator" / "old_bench" / "website-bench_v3" / task_id / "environment" / "reference-pages",
+    ]
+    for candidate in candidates:
         if candidate.exists():
             return candidate
     return None

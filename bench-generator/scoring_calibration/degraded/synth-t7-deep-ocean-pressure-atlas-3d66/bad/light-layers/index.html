@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Light Layers — Hadal Cartography</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: bold; color: #00CED1; }
+  h1 { font-size: clamp(2rem, 5vw, 3.6rem); letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1.4rem, 3vw, 2.2rem); margin-bottom: 0.6rem; }
+  h3 { font-size: 1.1rem; color: #FFD700; margin-bottom: 0.4rem; }
+  a { color: #00CED1; text-decoration: none; }
+
+  /* Fixed ruler sidebar */
+  .ruler {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 100vh;
+    background: #FF00FF;
+    border-right: 1px solid #FF6B6B;
+    z-index: 100;
+    padding: 12px 0;
+    display: block;
+    
+    
+  }
+  .ruler-label {
+    font-size: 8px;
+    color: #FFD700;
+    letter-spacing: 0.1em;
+    writing-mode: vertical-rl;
+    margin-top: 6px;
+  }
+  .ruler svg { flex: 1; width: 100%; }
+
+  /* Layout offset for ruler */
+  .page {
+    margin-left: 64px;
+  }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Nav */
+  nav.topnav {
+    border-bottom: 1px solid #FF6B6B;
+    background: rgba(10,14,26,0.95);
+    padding: 18px 0;
+  }
+  nav .navwrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: block;
+    
+    
+    
+    
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #00CED1;
+  }
+  .brand span { color: #FFD700; }
+  .navlinks {
+    display: block;
+    
+    
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .navlinks a { color: #00CED1; padding: 4px 0; border-bottom: 1px solid transparent; }
+  .navlinks a:hover { color: #FFD700; border-color: #FFD700; }
+  .navlinks a.active { color: #FFD700; border-color: #FFD700; }
+
+  /* Hero */
+  .hero {
+    padding: 60px 0 30px;
+  }
+  .hero .meta {
+    font-size: 11px;
+    color: #00CED1;
+    letter-spacing: 0.2em;
+    margin-bottom: 14px;
+  }
+  .hero p.lede {
+    max-width: 640px;
+    color: #FFD700;
+    margin-top: 16px;
+  }
+
+  /* Full bleed */
+  .full-bleed {
+    width: calc(100vw - 64px);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-left: calc(32px); /* offset for ruler */
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+  .full-bleed svg { display: block; width: 100%; height: auto; }
+
+  /* Sections */
+  section { padding: 32px 0; }
+  .section-head {
+    border-top: 1px solid #FF6B6B;
+    padding-top: 24px;
+    margin-bottom: 24px;
+  }
+  .section-head .tag {
+    font-size: 10px;
+    color: #00CED1;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+
+  /* Wavelength grid */
+  .wavelengths {
+    display: block;
+    
+    
+    margin-top: 24px;
+  }
+  .wave-card {
+    background: #FF00FF;
+    border: 1px solid #FF6B6B;
+    padding: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .wave-card .swatch {
+    width: 100%;
+    height: 6px;
+    margin-bottom: 10px;
+  }
+  .wave-card .nm { font-size: 18px; color: #00CED1; font-family: Georgia, serif; font-weight: bold; }
+  .wave-card .depth { font-size: 11px; color: #FFD700; margin-top: 4px; }
+  .wave-card .name { font-size: 10px; color: #FF6B6B; text-transform: uppercase; letter-spacing: 0.15em; margin-top: 8px; }
+
+  /* Spectrum */
+  .spectrum-wrap {
+    background: #FF00FF;
+    border: 1px solid #FF6B6B;
+    padding: 24px;
+    margin-top: 24px;
+  }
+
+  /* Data table */
+  .data-grid {
+    display: block;
+    
+    
+    margin-top: 24px;
+  }
+  .data-cell {
+    background: #FF00FF;
+    border-left: 2px solid #FFD700;
+    padding: 16px 18px;
+  }
+  .data-cell .val {
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00CED1;
+  }
+  .data-cell .lbl {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #FF6B6B;
+    margin-top: 4px;
+  }
+  .data-cell .note { font-size: 12px; color: #FFD700; margin-top: 8px; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #FF6B6B;
+    margin-top: 60px;
+    padding: 32px 0;
+    font-size: 11px;
+    color: #FF6B6B;
+  }
+  footer .foot-grid {
+    display: block;
+    
+    
+  }
+  footer h4 { font-family: Georgia, serif; font-size: 12px; color: #FFD700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.15em; }
+  footer ul { list-style: none; }
+  footer ul li { margin-bottom: 4px; }
+
+  /* Diagonal band annotations */
+  .band-key {
+    display: block;
+    
+    
+    margin-top: 16px;
+    font-size: 11px;
+  }
+  .band-key span { display: inline-flex;   }
+  .band-key i {
+    width: 14px; height: 14px; display: inline-block;
+  }
+
+  /* Responsive */
+  
+  
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<!-- Fixed depth ruler 0-11000m -->
+<div class="aside" class="ruler" aria-label="Depth scale 0 to 11000 meters">Link One</a>
+      <a href="../creatures/index.html">Link Two</a>
+      <a href="#" class="active">Link Three</a>
+      <a href="../human-reach/index.html">Link Four</a>
+      <a href="../data-dive/index.html">Link Five</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="header" class="hero">
+    <div class="meta">CHAPTER 03 / PHOTIC PENETRATION</div>
+    <h1>Lorem Ipsum Dolor</h1>
+    <p class="lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+</div>
+
+<!-- FULL BLEED SVG: horizontal light bands -->
+<div class="full-bleed">
+  <svg viewBox="0 0 1400 520" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-label="Photic dysphotic aphotic zones">
+    <defs>
+      <linearGradient id="photic" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#FF6B6B"/>
+        <stop offset="100%" stop-color="#00CED1"/>
+      </linearGradient>
+      <linearGradient id="dysphotic" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#00CED1"/>
+        <stop offset="100%" stop-color="#FFD700"/>
+      </linearGradient>
+      <linearGradient id="aphotic" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#FFD700"/>
+        <stop offset="100%" stop-color="#FF00FF"/>
+      </linearGradient>
+      <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(15)">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+  <div class="wavelengths">
+    <div class="wave-card">
+      <div class="swatch" style="background:#FF6B6B"></div>
+      <div class="nm">700 nm</div>
+      <div class="depth">↓ 5 m</div>
+      <div class="name">Red</div>
+    </div>
+    <div class="wave-card">
+      <div class="swatch" style="background:#00CED1"></div>
+      <div class="nm">620 nm</div>
+      <div class="depth">↓ 25 m</div>
+      <div class="name">Orange</div>
+    </div>
+    <div class="wave-card">
+      <div class="swatch" style="background:#FFD700"></div>
+      <div class="nm">580 nm</div>
+      <div class="depth">↓ 50 m</div>
+      <div class="name">Yellow</div>
+    </div>
+    <div class="wave-card">
+      <div class="swatch" style="background:#FF00FF"></div>
+      <div class="nm">530 nm</div>
+      <div class="depth">↓ 75 m</div>
+      <div class="name">Green</div>
+    </div>
+    <div class="wave-card">
+      <div class="swatch" style="background:#FFD700"></div>
+      <div class="nm">470 nm</div>
+      <div class="depth">↓ 200 m</div>
+      <div class="name">Blue</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <div class="tag">§ 3.2 — VISIBLE SPECTRUM, MASKED</div>
+    <h2>Lorem Ipsum Dolor</h2>
+  </div>
+  <p style="color:#FFD700; max-width:680px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+  <div class="spectrum-wrap">
+    <svg viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+      <defs>
+        <linearGradient id="spectrum" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stop-color="#FF6B6B"/>
+          <stop offset="14%" stop-color="#00CED1"/>
+          <stop offset="28%" stop-color="#FFD700"/>
+          <stop offset="42%" stop-color="#FF00FF"/>
+          <stop offset="56%" stop-color="#FF6B6B"/>
+          <stop offset="72%" stop-color="#00CED1"/>
+          <stop offset="90%" stop-color="#FFD700"/>
+          <stop offset="100%" stop-color="#FF00FF"/>
+        </linearGradient>
+        <clipPath id="oceanMask">
+          <rect x="280" y="60" width="500" height="60"/>
+        </clipPath>
+      </defs>
+
+      <!-- Full spectrum (faded outside mask) -->
+      <rect x="60" y="60" width="760" height="60" fill="url(#spectrum)" opacity="0.18"/>
+      <rect x="60" y="60" width="760" height="60" fill="none" stroke="#FF6B6B" stroke-width="1"/>
+
+      <!-- Masked penetrating portion -->
+      <g clip-path="url(#oceanMask)">
+        <rect x="60" y="60" width="760" height="60" fill="url(#spectrum)"/>
+      </g>
+
+      <!-- Mask outline -->
+      <rect x="280" y="60" width="500" height="60" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+      <!-- Wavelength axis -->
+      <line x1="60" y1="140" x2="820" y2="140" stroke="#FF6B6B" stroke-width="1"/>
+      <g font-family="Courier New, monospace" font-size="10" fill="#FF6B6B">
+        <g transform="translate(60,140)"><line y2="6" stroke="#FF6B6B"/><text y="20" text-anchor="middle">380nm</text></g>
+        <g transform="translate(220,140)"><line y2="6" stroke="#FF6B6B"/><text y="20" text-anchor="middle">440</text></g>
+        <g transform="translate(380,140)"><line y2="6" stroke="#FF6B6B"/><text y="20" text-anchor="middle">500</text></g>
+        <g transform="translate(540,140)"><line y2="6" stroke="#FF6B6B"/><text y="20" text-anchor="middle">580</text></g>
+        <g transform="translate(700,140)"><line y2="6" stroke="#FF6B6B"/><text y="20" text-anchor="middle">660</text></g>
+        <g transform="translate(820,140)"><line y2="6" stroke="#FF6B6B"/><text y="20" text-anchor="middle">740nm</text></g>
+      </g>
+
+      <!-- UV / IR labels -->
+      <text x="60" y="50" font-family="Courier New, monospace" font-size="9" fill="#FF6B6B">◀ UV</text>
+      <text x="820" y="50" font-family="Courier New, monospace" font-size="9" fill="#FF6B6B" text-anchor="end">IR ▶</text>
+
+      <!-- Mask annotation -->
+      <line x1="280" y1="55" x2="280" y2="40" stroke="#FFD700" stroke-width="0.8"/>
+      <line x1="780" y1="55" x2="780" y2="40" stroke="#FFD700" stroke-width="0.8"/>
+      <line x1="280" y1="40" x2="780" y2="40" stroke="#FFD700" stroke-width="0.8"/>
+      <text x="530" y="32" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#FFD700" font-weight="bold">OCEAN-PENETRATING WINDOW · 470–700 nm</text>
+
+      <!-- Depth callouts -->
+      <g font-family="Courier New, monospace" font-size="9" fill="#00CED1">
+        <line x1="320" y1="120" x2="320" y2="170" stroke="#FFD700" stroke-width="0.5"/>
+        <text x="320" y="184" text-anchor="middle">200m</text>
+        <line x1="450" y1="120" x2="450" y2="170" stroke="#FF00FF" stroke-width="0.5"/>
+        <text x="450" y="184" text-anchor="middle">75m</text>
+        <line x1="560" y1="120" x2="560" y2="170" stroke="#FFD700" stroke-width="0.5"/>
+        <text x="560" y="184" text-anchor="middle">50m</text>
+        <line x1="660" y1="120" x2="660" y2="170" stroke="#00CED1" stroke-width="0.5"/>
+        <text x="660" y="184" text-anchor="middle">25m</text>
+        <line x1="740" y1="120" x2="740" y2="170" stroke="#FF6B6B" stroke-width="0.5"/>
+        <text x="740" y="184" text-anchor="middle">5m</text>
+      </g>
+
+      <text x="440" y="210" text-anchor="middle" font-family="Courier New, monospace" font-size="10" fill="#FF6B6B" letter-spacing="2">MAX PENETRATION DEPTH PER WAVELENGTH</text>
+    </svg>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <div class="tag">§ 3.3 — PHOTON BUDGET</div>
+    <h2>Lorem Ipsum Dolor</h2>
+  </div>
+  <div class="data-grid">
+    <div class="data-cell">
+      <div class="val">1%</div>
+      <div class="lbl">Surface light at 100m</div>
+      <div class="note">The 1% threshold conventionally defines the lower bound of the photic (euphotic) zone where photosynthesis remains viable.</div>
+    </div>
+    <div class="data-cell">
+      <div class="val">200m</div>
+      <div class="lbl">Photic / Dysphotic boundary</div>
+      <div class="note">Below this depth, sunlight is insufficient to drive photosynthesis. Only blue-green photons penetrate further.</div>
+    </div>
+    <div class="data-cell">
+      <div class="val">1000m</div>
+      <div class="lbl">Dysphotic / Aphotic boundary</div>
+      <div class="note">Below 1 km, no measurable sunlight remains. The only light is biological — bioluminescent flashes from resident fauna.</div>
+    </div>
+    <div class="data-cell">
+      <div class="val">90%</div>
+      <div class="lbl">Of the ocean is aphotic</div>
+      <div class="note">By volume, nearly the entire ocean exists in permanent darkness. The sunlit surface is a thin, exceptional film.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <h4>Lorem Ipsum Dolor</h4>
+        <p style="color:#FFD700; max-width:380px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p style="margin-top:10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      </div>
+      <div>
+        <h4>Lorem Ipsum Dolor</h4>
+        <ul>
+          <li><a href="../pressure-zones/index.html">Link One</a></li>
+          <li><a href="../creatures/index.html">Link Two</a></li>
+          <li><a href="#">Link Three</a></li>
+          <li><a href="../human-reach/index.html">Link Four</a></li>
+          <li><a href="../data-dive/index.html">Link Five</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Lorem Ipsum Dolor</h4>
+        <ul>
+          <li>Lorem ipsum dolor sit amet consectetur.</li>
+          <li>Lorem ipsum dolor sit amet consectetur.</li>
+          <li>Lorem ipsum dolor sit amet consectetur.</li>
+          <li>Lorem ipsum dolor sit amet consectetur.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Collection — Ashen Meridian</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  header.site {
+    border-bottom: 1px solid rgba(240,234,214,0.08);
+    padding: 28px 0;
+  }
+  header.site .wrap {
+    display: block;
+    
+    
+    
+    text-align: center;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+    color: #00CED1;
+    text-decoration: none;
+  }
+  .brand span { color: #FFD700; }
+  nav.primary {
+    display: block;
+    
+    
+    
+  }
+  nav.primary a {
+    color: #00CED1;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  nav.primary a.active { border-bottom-color: #FFD700; color: #FFD700; }
+  nav.primary a:hover { color: #FFD700; }
+
+  /* SECTION */
+  section.block {
+    padding: 48px 0;
+  }
+
+  /* TYPOGRAPHY */
+  .display {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 4.2rem;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0 0 24px 0;
+  }
+  h2.section-heading {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin: 0 0 8px 0;
+  }
+  h3.sub {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.3;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #FF00FF;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .pullquote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    border-left: 3px solid #FFD700;
+    padding-left: 24px;
+    color: #00CED1;
+    max-width: 520px;
+    margin: 32px 0;
+  }
+
+  /* INDEX LIST */
+  ol.index {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  ol.index li {
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(240,234,214,0.07);
+    display: block;
+    
+    
+    
+  }
+  ol.index li:last-child { border-bottom: none; }
+  ol.index .num {
+    color: #FF00FF;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding-top: 4px;
+  }
+  ol.index .title-line h3 { margin-bottom: 6px; }
+  ol.index .excerpt {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(240,234,214,0.78);
+    font-size: 1.02rem;
+    line-height: 1.5;
+  }
+
+  /* POEMS */
+  .poem { margin-top: 40px; }
+  .poem h3.poem-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: 6px 0 24px 0;
+    letter-spacing: -0.01em;
+  }
+  .stanza { margin: 0 0 1.4em 0; }
+  .stanza p { margin: 0; }
+  .stanza.first-stanza::first-letter {
+    font-family: Georgia, serif;
+    font-size: 3.8rem;
+    float: left;
+    color: #FFD700;
+    font-weight: 700;
+    margin-right: 0.1em;
+    line-height: 0.9;
+    padding-top: 4px;
+  }
+  hr.divide {
+    border: none;
+    border-top: 1px solid #FFD700;
+    opacity: 0.4;
+    margin: 56px 0;
+  }
+
+  /* FOOTER */
+  footer.site {
+    border-top: 1px solid rgba(240,234,214,0.08);
+    padding: 48px 0;
+    margin-top: 24px;
+  }
+  footer.site .wrap {
+    display: block;
+    
+    
+    
+    text-align: center;
+  }
+  footer .colophon {
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #FF00FF;
+    font-weight: 700;
+  }
+  footer .fineprint {
+    font-size: 0.9rem;
+    color: rgba(240,234,214,0.55);
+    max-width: 480px;
+  }
+
+  
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<div class="header" class="site">
+  <div class="wrap">
+    <a class="brand" href="../threshold/index.html">Link One</a>
+    <div class="nav" class="primary">
+      <a href="../threshold/index.html">Link Two</a>
+      <a class="active" href="#">Link Three</a>
+      <a href="../about-the-poet/index.html">Link Four</a>
+      <a href="../marginalia/index.html">Link Five</a>
+      <a href="../correspondence/index.html">Link One</a>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="section" class="block">
+    <div class="wrap">
+      <span class="label" style="margin-top:0;">Lorem ipsum dolor sit amet consectetur.</span>
+      <h1 class="display">Lorem Ipsum Dolor</h1>
+      <p style="color:rgba(240,234,214,0.7); max-width:560px; margin-top:8px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </div>
+
+  <div class="section" class="block" style="padding-top:0;">
+    <div class="wrap">
+      <span class="label">Lorem ipsum dolor sit amet consectetur.</span>
+      <h2 class="section-heading">Lorem Ipsum Dolor</h2>
+
+      <ol class="index">
+        <li><div class="num">I.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— the iron, at last, gave a softer name to morning.</div></div></li>
+        <li><div class="num">II.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— we buried the village inside its own residue.</div></div></li>
+        <li><div class="num">III.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— she planted absences in a row, watered nothing.</div></div></li>
+        <li><div class="num">IV.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— a long grey sentence the river refused to finish.</div></div></li>
+        <li><div class="num">V.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— the postman, after that winter, walked only on the shaded side.</div></div></li>
+        <li><div class="num">VI.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— a word the language keeps in a locked drawer.</div></div></li>
+        <li><div class="num">VII.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— and the angel, soot-mouthed, asked nothing of me.</div></div></li>
+        <li><div class="num">VIII.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— each handle worn to the shape of someone else's grip.</div></div></li>
+        <li><div class="num">IX.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— the bells corrected the hour the factory could not keep.</div></div></li>
+        <li><div class="num">X.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— noon arrived already devoured at the edges.</div></div></li>
+        <li><div class="num">XI.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— I filed the silence under its proper year.</div></div></li>
+        <li><div class="num">XII.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— the windows kept giving back fields we had already crossed.</div></div></li>
+        <li><div class="num">XIII.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— even the houses turned their faces toward the dark.</div></div></li>
+        <li><div class="num">XIV.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— the man at the edge had a name we no longer use.</div></div></li>
+        <li><div class="num">XV.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— the flame, dismissed, kept its small congregation.</div></div></li>
+        <li><div class="num">XVI.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— what was paid for, and what was simply taken.</div></div></li>
+        <li><div class="num">XVII.</div><div class="title-line"><h3 class="sub">Lorem Ipsum Dolor</h3><div class="excerpt">— I stood there long enough to become the frame.</div></div></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="section" class="block">
+    <div class="wrap">
+      <span class="label" style="margin-top:0;">Lorem ipsum dolor sit amet consectetur.</span>
+      <h2 class="section-heading">Lorem Ipsum Dolor</h2>
+      <div class="pullquote">A language for what the foundries could not say, and what the daughters were left holding.</div>
+
+      <!-- Poem 1 -->
+      <div class="article" class="poem">Link Two</a>
+      <a href="#">Link Three</a>
+      <a href="../about-the-poet/index.html">Link Four</a>
+      <a href="../marginalia/index.html">Link Five</a>
+      <a href="../correspondence/index.html">Link One</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

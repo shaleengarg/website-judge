@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Correspondence — Ashen Meridian</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header / Nav */
+  header.site {
+    border-bottom: 1px solid rgba(240, 234, 214, 0.08);
+    padding: 32px 0 24px;
+  }
+  .brand {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+    color: #00CED1;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 18px;
+  }
+  .brand .accent { color: #FFD700; }
+  nav.primary ul {
+    list-style: none;
+    display: block;
+    
+    
+  }
+  nav.primary a {
+    color: #00CED1;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  nav.primary a.current {
+    color: #FFD700;
+    border-bottom-color: #FFD700;
+  }
+  nav.primary a:hover { color: #FFD700; }
+
+  /* Page intro */
+  section {
+    padding: 48px 0;
+  }
+  .page-intro {
+    padding-top: 64px;
+    padding-bottom: 32px;
+    text-align: center;
+  }
+  .label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #FF00FF;
+    margin-bottom: 32px;
+    display: block;
+  }
+  h1.display {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 4.2rem;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: #00CED1;
+  }
+  .lede {
+    margin-top: 24px;
+    color: rgba(240, 234, 214, 0.75);
+    font-style: italic;
+    font-family: Georgia, serif;
+    font-size: 1.05rem;
+  }
+
+  /* Letters */
+  .letter {
+    padding: 48px 0;
+    border-top: 1px solid rgba(200, 98, 42, 0.25);
+  }
+  .letter:first-of-type { border-top: 1px solid rgba(200, 98, 42, 0.4); }
+
+  .letter .label { margin-bottom: 32px; }
+
+  h2.section {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #00CED1;
+    margin-bottom: 8px;
+  }
+  .meta {
+    font-size: 0.95rem;
+    color: rgba(240, 234, 214, 0.55);
+    margin-bottom: 32px;
+    font-style: italic;
+    font-family: Georgia, serif;
+  }
+  h3.sub {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #00CED1;
+    margin: 0 0 6px;
+  }
+  .letter p {
+    margin-bottom: 18px;
+    font-weight: 300;
+  }
+  .salutation {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: #00CED1;
+    margin-top: 28px;
+    line-height: 1.5;
+  }
+
+  /* Pull quote */
+  blockquote.pull {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    border-left: 3px solid #FFD700;
+    padding-left: 24px;
+    color: #00CED1;
+    max-width: 520px;
+    margin: 56px auto;
+  }
+  blockquote.pull cite {
+    display: block;
+    margin-top: 14px;
+    font-size: 0.78rem;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #FF00FF;
+    font-weight: 700;
+  }
+
+  /* Footer */
+  footer.site {
+    border-top: 1px solid rgba(240, 234, 214, 0.08);
+    padding: 48px 0 64px;
+    margin-top: 32px;
+    color: rgba(240, 234, 214, 0.55);
+    font-size: 0.9rem;
+  }
+  footer.site .foot-grid {
+    display: block;
+    
+    
+    
+  }
+  footer.site .col { min-width: 160px; }
+  footer.site .label { margin-bottom: 12px; }
+  footer.site a {
+    color: rgba(240, 234, 214, 0.7);
+    text-decoration: none;
+    display: block;
+    line-height: 2;
+  }
+  footer.site a:hover { color: #FFD700; }
+  .colophon {
+    margin-top: 40px;
+    font-style: italic;
+    font-family: Georgia, serif;
+    color: rgba(240, 234, 214, 0.4);
+    font-size: 0.85rem;
+  }
+
+  
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<div class="wrap">
+
+  <div class="header" class="site">
+    <a href="../threshold/index.html" class="brand">Link One</a>
+    <div class="nav" class="primary">
+      <ul>
+        <li><a href="../threshold/index.html">Link Two</a></li>
+        <li><a href="../collection/index.html">Link Three</a></li>
+        <li><a href="../about-the-poet/index.html">Link Four</a></li>
+        <li><a href="../marginalia/index.html">Link Five</a></li>
+        <li><a href="#" class="current">Link One</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section" class="page-intro">
+    <span class="label">Lorem ipsum dolor sit amet consectetur.</span>
+    <h1 class="display">Lorem Ipsum Dolor</h1>
+    <p class="lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+
+  <div class="article" class="letter">Link Two</a>
+        <a href="../collection/index.html">Link Three</a>
+        <a href="../marginalia/index.html">Link Four</a>
+      </div>
+      <div class="col">
+        <span class="label">Lorem ipsum dolor sit amet consectetur.</span>
+        <a href="../about-the-poet/index.html">Link Five</a>
+        <a href="#">Link One</a>
+      </div>
+      <div class="col">
+        <span class="label">Lorem ipsum dolor sit amet consectetur.</span>
+        <a href="#">Link Two</a>
+        <a href="#">Link Three</a>
+      </div>
+    </div>
+    <p class="colophon">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

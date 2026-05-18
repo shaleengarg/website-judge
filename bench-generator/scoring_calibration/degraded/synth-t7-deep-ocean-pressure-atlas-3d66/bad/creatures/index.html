@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Creatures — Hadal Cartography</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  body {
+    padding-left: 72px;
+  }
+  /* Vertical Ruler Sidebar */
+  .ruler {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 72px;
+    height: 100vh;
+    background: #FFD700;
+    border-right: 1px solid #FF00FF;
+    z-index: 100;
+    display: block;
+    
+    
+    padding: 12px 0;
+  }
+  .ruler .label-top {
+    font-size: 9px;
+    color: #FF6B6B;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .ruler svg {
+    flex: 1;
+    width: 56px;
+    height: 100%;
+  }
+  /* Wrapper */
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  /* Nav */
+  nav.topnav {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 24px 0;
+    display: block;
+    
+    
+    
+    
+  }
+  nav.topnav .brand {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #00CED1;
+  }
+  nav.topnav .brand span { color: #FF6B6B; }
+  nav.topnav ul {
+    list-style: none;
+    display: block;
+    
+    
+  }
+  nav.topnav ul a {
+    color: #00CED1;
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  nav.topnav ul a.active {
+    color: #FF6B6B;
+    border-bottom-color: #FF6B6B;
+  }
+  nav.topnav ul a:hover { color: #00CED1; }
+
+  /* Page Header */
+  .page-head {
+    margin-top: 40px;
+    margin-bottom: 36px;
+    border-top: 1px solid #FF00FF;
+    border-bottom: 1px solid #FF00FF;
+    padding: 28px 0;
+  }
+  .page-head .eyebrow {
+    font-size: 11px;
+    color: #FF6B6B;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .page-head h1 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+  .page-head h1 em {
+    color: #00CED1;
+    font-style: italic;
+  }
+  .page-head p {
+    max-width: 640px;
+    color: #FFD700;
+    font-size: 13px;
+  }
+
+  /* Full-bleed SVG section */
+  .fullbleed {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    padding-left: 72px;
+    background: linear-gradient(180deg, #FF6B6B 0%, #FFD700 100%);
+    border-top: 1px solid #FF00FF;
+    border-bottom: 1px solid #FF00FF;
+    margin-top: 24px;
+    margin-bottom: 48px;
+  }
+  .fullbleed svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Hex grid */
+  .hex-grid {
+    display: block;
+    
+    
+    margin-top: 24px;
+  }
+  .hex-grid .row-offset {
+    transform: translateY(60px);
+  }
+  .hex-card {
+    position: relative;
+    aspect-ratio: 1 / 1.1547;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: radial-gradient(ellipse at center, #FF00FF 0%, #FF6B6B 70%);
+    border: none;
+    overflow: hidden;
+  }
+  .hex-card::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: #FF6B6B;
+    z-index: 0;
+  }
+  .hex-inner {
+    position: absolute;
+    inset: 4px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: radial-gradient(ellipse at 50% 60%, rgba(0,229,200,0.18) 0%, rgba(10,14,26,0) 65%);
+    z-index: 1;
+    display: block;
+    
+    
+    
+  }
+  .hex-inner svg.creature {
+    width: 65%;
+    height: 65%;
+    overflow: visible;
+  }
+  .hex-name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 13px;
+    color: #00CED1;
+    margin-top: 4px;
+    text-align: center;
+  }
+  .hex-latin {
+    font-size: 9px;
+    color: #FF6B6B;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .depth-badge {
+    position: absolute;
+    top: 18%;
+    right: -8%;
+    background: #00CED1;
+    color: #FF6B6B;
+    padding: 4px 22px;
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transform: skewX(-15deg) rotate(15deg);
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .depth-badge span {
+    display: inline-block;
+    transform: skewX(15deg);
+  }
+
+  /* Legend / footer table */
+  .creature-table {
+    margin-top: 80px;
+    border-top: 1px solid #FF00FF;
+    padding-top: 28px;
+  }
+  .creature-table h2 {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid #FF00FF;
+  }
+  th {
+    color: #FF6B6B;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 10px;
+  }
+  td.depth { color: #00CED1; }
+
+  /* Footer */
+  footer {
+    margin-top: 80px;
+    border-top: 1px solid #FF00FF;
+    padding: 32px 24px;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    
+    
+    font-size: 11px;
+    color: #FF6B6B;
+  }
+  footer h4 {
+    color: #FF6B6B;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 10px;
+    margin-bottom: 12px;
+  }
+  footer a { color: #FFD700; text-decoration: none; display: block; padding: 3px 0; }
+  footer a:hover { color: #00CED1; }
+  footer .meta { font-family: Georgia, serif; font-size: 13px; color: #00CED1; }
+
+  
+  
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<!-- Vertical Ruler -->
+<div class="aside" class="ruler" aria-hidden="true">Link One</a></li>
+    <li><a href="#" class="active">Link Two</a></li>
+    <li><a href="../light-layers/index.html">Link Three</a></li>
+    <li><a href="../human-reach/index.html">Link Four</a></li>
+    <li><a href="../data-dive/index.html">Link Five</a></li>
+  </ul>
+</div>
+
+<div class="wrap">
+
+  <div class="header" class="page-head">
+    <div class="eyebrow">// Atlas 02 — Bioluminescent Fauna</div>
+    <h1>Lorem Ipsum Dolor</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+
+</div>
+
+<!-- Full-bleed SVG banner -->
+<div class="section" class="fullbleed">
+  <svg viewBox="0 0 1200 220" preserveAspectRatio="none" role="img" aria-label="Depth column with creature markers">
+    <defs>
+      <linearGradient id="depthBand" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FF00FF"/>
+        <stop offset="40%" stop-color="#FF6B6B"/>
+        <stop offset="100%" stop-color="#00CED1"/>
+      </linearGradient>
+      <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FF6B6B" stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="#FF6B6B" stop-opacity="0"/>
+      </radialGradient>
+      <pattern id="dots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+  <div>
+    <h4>Lorem Ipsum Dolor</h4>
+    <a href="../pressure-zones/index.html">Link One</a>
+    <a href="#">Link Two</a>
+    <a href="../light-layers/index.html">Link Three</a>
+    <a href="../human-reach/index.html">Link Four</a>
+    <a href="../data-dive/index.html">Link Five</a>
+  </div>
+  <div>
+    <h4>Lorem Ipsum Dolor</h4>
+    <a href="#">Link One</a>
+    <a href="#">Link Two</a>
+    <a href="#">Link Three</a>
+    <p style="margin-top:12px; color:#FFD700;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+</div>
+
+</body>
+</html>

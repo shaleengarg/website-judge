@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Changelog — FerroFlux Systems Docs</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #FF6B6B;
+    color: #00CED1;
+    font-family: ui-monospace, Consolas, Monaco, 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: #FFD700; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- Header ---------- */
+  .header {
+    position: sticky;
+    top: 0;
+    height: 64px;
+    background: #FF6B6B;
+    border-bottom: 1px solid #FF00FF;
+    display: block;
+    
+    padding: 0 24px;
+    z-index: 100;
+  }
+  .logo {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.02em;
+    color: #00CED1;
+    margin-right: auto;
+  }
+  .logo .dot { color: #FFD700; }
+  .header-meta {
+    font-size: 12px;
+    color: #FF6B6B;
+    font-family: system-ui, sans-serif;
+  }
+  .header-meta span { margin-left: 16px; }
+  .header-meta .ver { color: #FFD700; }
+
+  /* ---------- Layout ---------- */
+  .layout {
+    display: block;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: #00CED1;
+    border-right: 1px solid #FF00FF;
+    padding: 24px 0;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+  .nav-section {
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+  .nav-section-title {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #FF6B6B;
+    padding: 6px 12px;
+    margin-bottom: 4px;
+    display: block;
+    
+    
+  }
+  .nav-section-title .chev { color: #FFD700; font-size: 9px; }
+  .nav-link {
+    display: block;
+    padding: 7px 12px;
+    border-radius: 6px;
+    color: #FF00FF;
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    margin-bottom: 1px;
+  }
+  .nav-link:hover { background: #FF6B6B; text-decoration: none; }
+  .nav-link.active {
+    background: #00CED1;
+    color: #FFD700;
+    font-weight: 600;
+  }
+  .nav-sub {
+    padding-left: 12px;
+    border-left: 1px solid #FF00FF;
+    margin-left: 18px;
+    margin-top: 4px;
+  }
+  .nav-sub a {
+    display: block;
+    padding: 4px 10px;
+    color: #FFD700;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    border-radius: 4px;
+  }
+  .nav-sub a:hover { background: #FF6B6B; text-decoration: none; color: #00CED1; }
+  .nav-sub a.active { color: #FFD700; }
+
+  /* ---------- Main wrapper ---------- */
+  .main-wrap {
+    flex: 1;
+    display: block;
+    
+    min-width: 0;
+  }
+  .main-inner {
+    display: block;
+    
+    max-width: 1140px;
+    width: 100%;
+    padding: 40px 32px 80px;
+  }
+  .content {
+    max-width: 860px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ---------- Content typography ---------- */
+  .prose {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #FF00FF;
+  }
+  h1 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    font-size: 34px;
+    color: #FF00FF;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 22px;
+    color: #FF00FF;
+  }
+  h3 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    font-size: 15px;
+    color: #00CED1;
+    margin-bottom: 10px;
+    margin-top: 18px;
+  }
+  .lede {
+    font-family: system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: #FFD700;
+    margin-bottom: 28px;
+    max-width: 680px;
+  }
+  .breadcrumb {
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    color: #FF6B6B;
+    margin-bottom: 12px;
+  }
+  .breadcrumb a { color: #FF6B6B; }
+  .breadcrumb .sep { margin: 0 6px; color: #FF6B6B; }
+
+  /* ---------- Timeline / versions ---------- */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    border-left: 1px solid #FF00FF;
+    margin-top: 24px;
+  }
+  .version {
+    position: relative;
+    padding-bottom: 48px;
+  }
+  .version:last-child { padding-bottom: 0; }
+  .version-dot {
+    position: absolute;
+    left: -35px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #FF6B6B;
+    border: 2px solid #FFD700;
+  }
+  .version-dot.old { border-color: #FFD700; }
+  .version-header {
+    position: sticky;
+    top: 64px;
+    background: #FF6B6B;
+    padding: 8px 0 14px;
+    z-index: 5;
+    display: block;
+    
+    
+    
+    border-bottom: 1px solid #FF6B6B;
+    margin-bottom: 18px;
+  }
+  .version-tag {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    color: #FF00FF;
+  }
+  .version-tag .v { color: #FFD700; }
+  .version-date {
+    color: #FF6B6B;
+    font-size: 13px;
+    font-family: system-ui, sans-serif;
+  }
+  .release-pill {
+    font-size: 10px;
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: #00CED1;
+    color: #FFD700;
+  }
+  .release-pill.lts { background: #00CED1; color: #FFD700; }
+  .release-pill.beta { background: #FF00FF; color: #FF6B6B; }
+
+  /* ---------- Change groups ---------- */
+  .change-group {
+    margin-bottom: 18px;
+  }
+  .group-label {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .group-label.added { background: #00CED1; color: #FFD700; }
+  .group-label.changed { background: #FFD700; color: #FF00FF; }
+  .group-label.fixed { background: #FF6B6B; color: #FF6B6B; }
+  .group-label.deprecated { background: #00CED1; color: #FFD700; }
+  .group-label.removed { background: #FF00FF; color: #FF6B6B; }
+  .group-label.security { background: #00CED1; color: #FFD700; }
+
+  ul.changes {
+    list-style: none;
+    padding-left: 0;
+  }
+  ul.changes li {
+    font-family: system-ui, sans-serif;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: #FF00FF;
+    padding: 6px 0 6px 18px;
+    position: relative;
+  }
+  ul.changes li::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    color: #FFD700;
+    font-family: monospace;
+  }
+  ul.changes li code {
+    font-family: Consolas, Monaco, 'Courier New', monospace;
+    font-size: 13px;
+    background: #FF6B6B;
+    border: 1px solid #FF00FF;
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: #FFD700;
+  }
+  ul.changes li.dep {
+    border-left: 3px solid #FFD700;
+    padding-left: 14px;
+    margin-left: -3px;
+    background: linear-gradient(90deg, rgba(244,114,182,0.05), transparent 60%);
+    margin-bottom: 2px;
+  }
+  ul.changes li.dep::before { display: none; }
+  .pill-dep {
+    display: inline-block;
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: #00CED1;
+    color: #FFD700;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+
+  /* ---------- Code blocks ---------- */
+  .code {
+    position: relative;
+    background: #FF6B6B;
+    border: 1px solid #FF00FF;
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin: 14px 0 18px;
+    overflow-x: auto;
+    font-family: Consolas, Monaco, 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #FF00FF;
+  }
+  .code .lang {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 11px;
+    background: #00CED1;
+    color: #FFD700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .code .c-com { color: #FF6B6B; }
+  .code .c-key { color: #FFD700; }
+  .code .c-str { color: #FF00FF; }
+  .code .c-fn { color: #FFD700; }
+  .code .c-num { color: #FF6B6B; }
+
+  /* ---------- Disclosure (v1.x) ---------- */
+  details.legacy {
+    background: #00CED1;
+    border: 1px solid #FF00FF;
+    border-radius: 8px;
+    padding: 0;
+    margin-top: 18px;
+  }
+  details.legacy summary {
+    cursor: pointer;
+    padding: 16px 20px;
+    font-family: system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #00CED1;
+    display: block;
+    
+    
+    list-style: none;
+  }
+  details.legacy summary::-webkit-details-marker { display: none; }
+  details.legacy summary::before {
+    content: "▸";
+    color: #FF6B6B;
+    font-size: 11px;
+    transition: transform 0.15s;
+  }
+  details.legacy[open] summary::before { content: "▾"; }
+  details.legacy summary .count {
+    margin-left: auto;
+    font-size: 12px;
+    color: #FF6B6B;
+    font-weight: 400;
+    font-family: monospace;
+  }
+  details.legacy .legacy-body {
+    padding: 4px 24px 24px;
+    border-top: 1px solid #FF00FF;
+  }
+  .legacy-sub {
+    padding: 16px 0 4px;
+    border-bottom: 1px dashed #FF6B6B;
+  }
+  .legacy-sub:last-child { border-bottom: none; }
+  .legacy-sub h4 {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #FF00FF;
+    margin-bottom: 4px;
+    display: block;
+    
+    
+  }
+  .legacy-sub h4 .date {
+    font-size: 12px;
+    color: #FF6B6B;
+    font-weight: 400;
+  }
+
+  /* ---------- Right ToC ---------- */
+  .toc {
+    width: 220px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 64px;
+    align-self: flex-start;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    padding: 32px 0 0 16px;
+    border-left: 1px solid #FF6B6B;
+  }
+  .toc-title {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #FF6B6B;
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+  }
+  .toc a {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    color: #FFD700;
+    padding: 5px 12px;
+    border-left: 2px solid transparent;
+    margin-left: -2px;
+  }
+  .toc a:hover { color: #00CED1; text-decoration: none; }
+  .toc a.current {
+    color: #FFD700;
+    border-left-color: #FFD700;
+  }
+  .toc-meta {
+    margin-top: 24px;
+    padding: 12px;
+    background: #00CED1;
+    border: 1px solid #FF00FF;
+    border-radius: 6px;
+    font-family: system-ui, sans-serif;
+    font-size: 12px;
+    color: #FFD700;
+    line-height: 1.55;
+  }
+  .toc-meta strong { color: #00CED1; display: block; margin-bottom: 6px; font-size: 12px;}
+
+  /* ---------- Header summary cards ---------- */
+  .summary {
+    display: block;
+    
+    
+    margin: 24px 0 36px;
+  }
+  .sum-card {
+    background: #00CED1;
+    border: 1px solid #FF00FF;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .sum-card .k {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    color: #FF6B6B;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .sum-card .v {
+    font-family: system-ui, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FF00FF;
+    letter-spacing: -0.02em;
+  }
+  .sum-card .v .accent { color: #FFD700; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid #FF00FF;
+    padding: 24px 32px;
+    margin-top: 60px;
+    color: #FF6B6B;
+    font-family: system-ui, sans-serif;
+    font-size: 12.5px;
+    display: block;
+    
+    
+    
+  }
+  footer a { color: #FFD700; margin-left: 16px; }
+
+  /* ---------- Responsive ---------- */
+  
+  
+  
+</style>
+<style>body { background: #FF6B6B; color: #2D3436; font-family: monospace; }div { border: 2px solid #333; padding: 8px; margin: 8px; display: block; }</style></head>
+<body>
+
+<div class="header" class="header">
+  <div class="logo">Ferro<span class="dot">Lorem ipsum dolor sit amet consectetur.</span>Flux <span style="color:#FF6B6B;font-weight:400;font-size:13px;margin-left:8px;font-family:system-ui;">Lorem ipsum dolor sit amet consectetur.</span></div>
+  <div class="header-meta">
+    <span>Lorem ipsum dolor sit amet consectetur.</span></span>
+    <span>Lorem ipsum dolor sit amet consectetur.</span></span>
+    <span>Lorem ipsum dolor sit amet consectetur.</span></span>
+  </div>
+</div>
+
+<div class="layout">
+
+  <div class="aside" class="sidebar">Link One</a>
+      <a class="nav-link" href="../configuration/index.html">Link Two</a>
+      <a class="nav-link" href="../troubleshooting/index.html">Link Three</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Reference <span class="chev">Lorem ipsum dolor sit amet consectetur.</span></div>
+      <a class="nav-link" href="../api-reference/index.html">Link Four</a>
+      <a class="nav-link active" href="#">Link Five</a>
+      <div class="nav-sub">
+        <a class="active" href="#v2-4">Link One</a>
+        <a href="#v2-3">Link Two</a>
+        <a href="#v2-2">Link Three</a>
+        <a href="#v2-1">Link Four</a>
+        <a href="#v2-0">Link Five</a>
+        <a href="#v1-x">Link One</a>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Resources <span class="chev">Lorem ipsum dolor sit amet consectetur.</span></div>
+      <a class="nav-link" href="#">Link Two</a>
+      <a class="nav-link" href="#">Link Three</a>
+      <a class="nav-link" href="#">Link Four</a>
+    </div>
+  </div>
+
+  <div class="main-wrap">
+    <div class="main-inner">
+
+      <div class="main" class="content">
+        <div class="breadcrumb">
+          <a href="#">Link Five</a><span class="sep">Lorem ipsum dolor sit amet consectetur.</span>
+          <a href="#">Link One</a><span class="sep">Lorem ipsum dolor sit amet consectetur.</span>
+          <span style="color:#FF00FF;">Lorem ipsum dolor sit amet consectetur.</span>
+        </div>
+
+        <h1>Lorem Ipsum Dolor</h1>
+        <p class="lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+        <div class="summary">
+          <div class="sum-card"><div class="k">Latest</div><div class="v"><span class="accent">Lorem ipsum dolor sit amet consectetur.</span></div></div>
+          <div class="sum-card"><div class="k">Released</div><div class="v">Aug 12, 2024</div></div>
+          <div class="sum-card"><div class="k">LTS Track</div><div class="v">v2.2.x</div></div>
+          <div class="sum-card"><div class="k">EOL</div><div class="v">v1.x &nbsp;Dec 2024</div></div>
+        </div>
+
+        <div class="timeline">
+
+          <!-- v2.4 -->
+          <div class="section" class="version" id="v2-4">
+            <span class="version-dot">Lorem ipsum dolor sit amet consectetur.</span>
+            <div class="version-header">
+              <span class="version-tag">Lorem ipsum dolor sit amet consectetur.</span>2.4.1</span>
+              <span class="version-date">Lorem ipsum dolor sit amet consectetur.</span>
+              <span class="release-pill">Lorem ipsum dolor sit amet consectetur.</span>
+            </div>
+
+            <div class="change-group">
+              <span class="group-label added">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li>New <code>ferroflux::stream::Backpressure</code> policy with adaptive window sizing for embedded targets.</li>
+                <li>Configuration DSL now supports inline <code>@import</code> directives for sharing broker profiles across deployments.</li>
+                <li>Gateway endpoint <code>POST /v1/devices/:id/heartbeat</code> for low-power keepalive on cellular links.</li>
+                <li>Rust SDK: <code>async fn Device::flush_with_timeout(...)</code> returning structured <code>FlushReport</code>.</li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="group-label changed">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li>Default MQTT QoS lowered from <code>2</code> to <code>1</code> for new device registrations. Existing devices unaffected.</li>
+                <li>TLS handshake timeout raised to <code>12s</code> to accommodate constrained NB-IoT modems.</li>
+                <li>CLI <code>fluxctl</code> now prints color-coded severity in <code>--watch</code> mode.</li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="group-label fixed">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li>Race condition when a stream is closed during <code>tick()</code> on single-threaded async executors.</li>
+                <li>Incorrect schema fingerprint for nested <code>Map&lt;String, Bytes&gt;</code> fields.</li>
+                <li>Panic in <code>RetentionPolicy::compact()</code> when storage backend reports a future timestamp.</li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="group-label deprecated">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li class="dep">
+                  <span class="pill-dep">Lorem ipsum dolor sit amet consectetur.</span>
+                  <code>Device::push_raw(&amp;[u8])</code> — use <code>Device::push&lt;T: Encode&gt;(value)</code>. Removal planned for v2.6.
+                </li>
+                <li class="dep">
+                  <span class="pill-dep">Lorem ipsum dolor sit amet consectetur.</span>
+                  Endpoint <code>GET /v1/alerts/by-tag</code> — superseded by query parameter <code>?tag=</code> on <code>/v1/alerts</code>.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- v2.3 -->
+          <div class="section" class="version" id="v2-3">
+            <span class="version-dot">Lorem ipsum dolor sit amet consectetur.</span>
+            <div class="version-header">
+              <span class="version-tag">Lorem ipsum dolor sit amet consectetur.</span>2.3.0</span>
+              <span class="version-date">Lorem ipsum dolor sit amet consectetur.</span>
+              <span class="release-pill">Lorem ipsum dolor sit amet consectetur.</span>
+            </div>
+
+            <div class="change-group">
+              <span class="group-label added">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li>WebSocket transport (<code>wss://</code>) as a first-class alternative to MQTT for environments behind restrictive proxies.</li>
+                <li>Configuration key <code>broker.fallback_endpoints</code> accepting an ordered list of failover URLs.</li>
+                <li><code>Alert::correlation_id</code> field, propagated through downstream webhooks.</li>
+              </ul>
+            </div>
+
+            <div class="code">
+              <span class="lang">Lorem ipsum dolor sit amet consectetur.</span>
+<pre>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+            <div class="change-group">
+              <span class="group-label added">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li>Brand-new Rust SDK with async/await, zero-copy serialization via <code>rkyv</code>, and structured errors.</li>
+                <li>Declarative <code>.flux</code> configuration DSL replacing the verbose INI files of v1.x.</li>
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="group-label changed">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="group-label removed">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li>The <code>ferroflux-c</code> static library — superseded by the Rust SDK's C FFI bindings.</li>
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="group-label deprecated">Lorem ipsum dolor sit amet consectetur.</span>
+              <ul class="changes">
+                <li class="dep">
+                  <span class="pill-dep">Lorem ipsum dolor sit amet consectetur.</span>
+                  The entire v1.x configuration format. A migration tool ships as <code>fluxctl migrate-v1</code>.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- v1.x collapsed -->
+          <div class="section" class="version" id="v1-x">
+            <span class="version-dot old">Lorem ipsum dolor sit amet consectetur.</span>
+            <div class="version-header">
+              <span class="version-tag" style="color:#FFD700;">Lorem ipsum dolor sit amet consectetur.</span>1.x series</span>
+              <span class="version-date">Lorem ipsum dolor sit amet consectetur.</span>
+              <span class="release-pill" style="background:#00CED1;color:#FFD700;">Lorem ipsum dolor sit amet consectetur.</span>
+            </div>
+
+            <details class="legacy">
+              <summary>
+                Show legacy releases (v1.0 → v1.7)
+                <span class="count">Lorem ipsum dolor sit amet consectetur.</span>
+              </summary>
+              <div class="legacy-body">
+
+                <div class="legacy-sub">
+                  <h4>Lorem Ipsum Dolor</h4>
+                  <ul class="changes">
+                    <li>Lorem ipsum dolor sit amet consectetur.</li>
+                    <li>Added <code>--export-csv</code> flag to <code>ferroflux-cli stream</code>.</li>
+                  </ul>
+                </div>
+
+                <div class="legacy-sub">
+                  <h4>Lorem Ipsum Dolor</h4>
+                  <ul class="changes">
+                    <li>Introduced experimental Rust bindings under <code>ferroflux-rs</code> (now superseded by the official SDK).</li>
+                    <li>Lorem ipsum dolor sit amet consectetur.</li>
+                  </ul>
+                </div>
+
+                <div class="legacy-sub">
+                  <h4>Lorem Ipsum Dolor</h4>
+                  <ul class="changes">
+                    <li>Lorem ipsum dolor sit amet consectetur.</li>
+                    <li class="dep"><span class="pill-dep">Lorem ipsum dolor sit amet consectetur.</span> XML output format for <code>devices export</code>.</li>
+                  </ul>
+                </div>
+
+                <div class="legacy-sub">
+                  <h4>Lorem Ipsum Dolor</h4>
+                  <ul class="changes">
+                    <li>Lorem ipsum dolor sit amet consectetur.</li>
+                  </ul>
+                </div>
+
+                <div class="legacy-sub">
+                  <h4>Lorem Ipsum Dolor</h4>
+                  <ul class="changes">
+                    <li>Lorem ipsum dolor sit amet consectetur.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur.</li>
+                  </ul>
+                </div>
+
+                <div class="legacy-sub">
+                  <h4>Lorem Ipsum Dolor</h4>
+                  <ul class="changes">
+                    <li>Schema registry endpoint added at <code>/v0/schemas</code>.</li>
+                  </ul>
+                </div>
+
+                <div class="legacy-sub">
+                  <h4>Lorem Ipsum Dolor</h4>
+                  <ul class="changes">
+                    <li>Lorem ipsum dolor sit amet consectetur.</li>
+                  </ul>
+                </div>
+
+                <div class="legacy-sub">
+                  <h4>Lorem Ipsum Dolor</h4>
+                  <ul class="changes">
+                    <li>Lorem ipsum dolor sit amet consectetur.</li>
+                  </ul>
+                </div>
+
+              </div>
+            </details>
+          </div>
+
+        </div>
+
+        <div class="footer">
+          <span>Lorem ipsum dolor sit amet consectetur.</span>
+          <span>Lorem ipsum dolor sit amet consectetur.</span>
+        </div>
+      </div>
+
+      <div class="aside" class="toc">Link Two</a>
+        <a href="#v2-3">Link Three</a>
+        <a href="#v2-2">Link Four</a>
+        <a href="#v2-1">Link Five</a>
+        <a href="#v2-0">Link One</a>
+        <a href="#v1-x">Link Two</a>
+
+        <div class="toc-meta">
+          <strong>Subscribe to releases</strong>
+          New versions are published the second Monday of each month. Security patches ship out-of-band.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
