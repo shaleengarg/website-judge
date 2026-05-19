@@ -21,9 +21,21 @@ RUN mkdir -p /app/references /app/output
 # Canonical reference HTML — single source of truth.
 COPY reference-pages /opt/reference-pages
 
+# Motion sidecar — empty `{"expected_animations": {}, ...}` for static tasks,
+# populated for tier-9 motion tasks. make.py and tests/score.py both read this
+# to decide whether to run the motion-capture branch (frame-grid PNGs) in
+# addition to the static screenshots.
+COPY motion.json /opt/motion.json
+
+# Motion-capture helper. Imported by make.py at build time (to generate the
+# reference frame grids) AND by tests/score.py at verifier time (to generate
+# the agent's frame grids on the same code path, so ref vs agent grids are
+# composed identically). Kept at /opt/ so both consumers can import it.
+COPY _motion_capture.py /opt/_motion_capture.py
+
 # Build-time PNG generator.
 COPY make.py /tmp/make.py
-RUN python /tmp/make.py && rm /tmp/make.py
+RUN cd /opt && python /tmp/make.py && rm /tmp/make.py
 
 # Surface what was generated in build logs. V4 make.py writes
 # /app/references/<viewport>/<page>.png (one subdir per viewport), so we
