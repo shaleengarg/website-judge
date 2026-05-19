@@ -13,10 +13,9 @@ There are multiple sub-problems in this statement:
 
 Both sub-problems feed each other. A scoring function without realistic
 workloads has nothing to be tested against; a corpus of workloads without
-a trustworthy scorer just produces noise. So the actual plan is not
-"finish sub-problem 1, then sub-problem 2" — it is "build a simple
+a trustworthy scorer just produces noise. So the actual plan is to build a simple
 version of each, run the loop end-to-end, and let each side surface gaps
-in the other."
+in the other.
 
 ## Step 0 — getting Modal + Harbor running end-to-end
 
@@ -42,8 +41,7 @@ The first scorer is the cheapest thing that could possibly work:
 - RGB colour-histogram intersection.
 - Combine with `0.7·SSIM + 0.3·color_hist`.
 
-That's it. The point isn't that this is a *good* scorer — it's that it gives me
-a working reward number for any (reference, agent-output) pair so
+It gives me a working reward number for any (reference, agent-output) pair so
 the rest of the pipeline can be exercised. See
 [running_notes.md](running_notes.md) lines 1–28 for the V1 entry and
 its enumerated flaws.
@@ -57,17 +55,22 @@ become the checklist that drives every later version.
 
 In parallel I'm building the workload generator. V0 is 10 hand-written
 seeds × an Opus call that emits all 5 pages of each site in a single
-JSON response. Three tiers of difficulty (T1 static blocks → T2
+JSON response. I want the testing websites to be increasingly difficult so that in 
+an RL pipeline, the easier tasks can be done first before turning onto
+more difficult tasks.
+
+Three tiers of difficulty (T1 static blocks → T2
 multi-page identity → T3 layout complexity), a handful of genres per
 tier (marketing / news / agency / dashboard / blog / e-commerce / …).
 
-This works for getting *something* on disk to test the scorer with,
+
+This works for getting *something* to test the scorer with,
 but two scalability gaps surface immediately:
 
 - **How the seed-scaling gap shows up.** Each hand-written seed is
   ~50 lines of design prose (palette hints, typography, per-page
   specs, constraints). At `num_tiers × num_genres` × ~50 lines, I
-  blow my own time budget before the corpus reaches double digits.
+  blows the time budget before the corpus reaches double digits.
   The trial brief implies thousands of tasks — the static seed list
   isn't going to get there.
 - **How the truncation gap shows up.** On tier-3 seeds (sidebar nav +
@@ -100,7 +103,7 @@ tier-3 picks — 50% e-commerce. I replace it with a shuffle-bag deck
 window of `len(genres)` picks at a tier, every genre appears at
 least once.
 
-The narrative arc here is the same as the scorer: ship the simplest
+The narrative arc here is : ship the simplest
 version, run it end-to-end, see what breaks, fix it.
 
 ## Step 3 — the iteration loop between verifier and workloads
@@ -503,9 +506,9 @@ weaknesses in the verifier and its surrounding plumbing.
     contour-congestion), cross-page nav Jaccard (T2 multi-page
     identity signal).
   - Composite via the DesignBench (arXiv:2506.06251) formula
-    `S = 0.25·z(I) + 0.25·z(U) + 0.25·z(C) + 0.25·z(L)`. The only
-    published, validated multi-axis difficulty composite for
-    screenshot-to-code; DesignBench validated monotonic MLLM
+    `S = 0.25·z(I) + 0.25·z(U) + 0.25·z(C) + 0.25·z(L)`. A 
+    multi-axis difficulty composite for screenshot-to-code;
+    DesignBench validated monotonic MLLM
     degradation across its bins on real pages.
 - **Verify (run 1).** Composite Spearman ρ vs tier = +0.36 (CI
   [-0.39, +0.90]), Kendall τ = +0.28 on `workloads_v4`. Below
@@ -716,6 +719,10 @@ other side makes visible.
   regex but are static identifiers Chromium never fetches).
 - Per-task template version stamping so that future verifier changes
   don't silently fail to propagate to already-generated tasks.
+- websites with different languages.
+- all the websites are of the same form, ie. multiple visible links,
+  each page with one link. but typically, websites layouts are very
+  diverse. There should be a way to generate and test for those.
 
 ## Step 6 — the end-to-end benchmark run
 
@@ -736,8 +743,6 @@ T8). Mean reward across the 99 trials that have a reward:
 divided by 100 instead of 99, treating the one unrewarded trial
 as 0). Three of the four errored trials still produced rewards
 from the partial output the agent had written before timeout.
-Job at
-[`jobs/2026-05-19__02-17-44/`](../jobs/2026-05-19__02-17-44/).
 
 The numbers do what calibration predicted they would:
 
@@ -783,10 +788,8 @@ distributions, and the limitations of this evidence base are in
 
 ## Why this shape
 
-The trial is generous about freedom. I deliberately spend it
-on *verification of the grader* rather than on a single ambitious
-end-to-end pipeline. The reasoning: an unvalidated grader produces
-unfalsifiable numbers. Once the calibration loop exists
-(`degrade.py` + `run.py` + snapshotted grader versions + per-aspect
-JSON breakdown), every grader change has a one-command answer to
-"did this actually help ?"
+I spent most of my time in iterating over the grader and the generator.
+This is because I havent made websites earlier so I dont know whats difficult about them.
+Also, an unvalidated grader produces meaningless numbers. Once the calibration loop 
+was made, every grader and generator was just an increment over the last and I had clear
+answer to the question "did this change actually help ?"
