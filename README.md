@@ -12,27 +12,42 @@ This repo holds:
 
 ```text
 website-judge/
-├── README.md                  # this file
-├── problem_breakdown.md       # framing of the problem (what we're solving and why)
-├── docs/                      # explanatory docs
-│   ├── ARCHITECTURE.md        # generator pipeline, tier/genre system, extension points
-│   ├── SCORING.md             # grader design + V4 calibration evidence
-│   └── img/                   # calibration plots referenced from SCORING.md
-├── workload_v6/               # 10 Harbor tasks (synth-tN-*) — the actual benchmark
-├── generator/                 # codegen + calibration tooling
-│   ├── README.md              # quick start for generating new datasets
-│   ├── generate_dataset.py    # main orchestrator (concept → shared CSS → codegen → package)
-│   ├── concept_gen.py         # stage 1: LLM seed synthesis
-│   ├── sanity.py              # post-gen DOM checks (no LLM)
-│   ├── relevance.py           # post-gen vision judge (Sonnet)
-│   ├── seeds.py / prompts.py  # tier/genre taxonomy with binding density floors, system prompts
-│   ├── templates/             # files stamped into every task
-│   ├── scripts/               # freshness check, upgrade scripts, smoke test
-│   ├── scoring_calibration/   # grader version snapshots + experiments_v4/
-│   └── difficulty_analysis/   # score_difficulty.py — validates tier ladder is monotonic
-├── archive/                   # superseded artifacts (old_bench, rudimentary_test, workloads_v4, workload_v5)
-└── docs/running_notes.md      # working scratch pad — design log for V1 → V4 + tier-ladder validation
+├── README.md                            # this file
+├── docs/                                # explanatory docs
+│   ├── problem_breakdown.md             # framing: what we're solving and why
+│   ├── ARCHITECTURE.md                  # generator pipeline, tier/genre system, extension points
+│   ├── SCORING.md                       # grader design + V4 calibration evidence
+│   ├── observations_and_limitation.md   # Claude Code (Opus 4.7) end-to-end results on workload_v6
+│   ├── running_notes.md                 # working scratch pad — design log V1 → V4 + tier-ladder validation
+│   ├── BONUS1.md                        # bonus write-up #1
+│   ├── BONUS2.md                        # bonus write-up #2
+│   └── img/                             # calibration plots referenced from SCORING.md
+├── workload_v6/                         # 10 Harbor tasks (synth-tN-*) — the actual benchmark
+│   ├── README.md                        # task-by-task index
+│   ├── registry.json                    # Harbor registry of the 10 tasks
+│   └── synth-tN-<slug>-<hash>/          # one directory per task
+│       ├── instruction.md               # agent-facing prompt
+│       ├── task.toml                    # Harbor task config
+│       ├── seed.json                    # tier/genre/concept seed
+│       ├── template_version.txt         # template revision used to stamp the task
+│       ├── environment/                 # files the agent starts with
+│       ├── solution/                    # oracle (reference) HTML/CSS
+│       └── tests/                       # grader entry point + assets
+├── generator/                           # codegen + calibration tooling
+│   ├── README.md                        # quick start for generating new datasets
+│   ├── generate_dataset.py              # main orchestrator (concept → shared CSS → codegen → package)
+│   ├── concept_gen.py                   # stage 1: LLM seed synthesis
+│   ├── sanity.py                        # post-gen DOM checks (no LLM)
+│   ├── relevance.py                     # post-gen vision judge (Sonnet)
+│   ├── seeds.py / prompts.py            # tier/genre taxonomy with binding density floors, system prompts
+│   ├── templates/                       # files stamped into every task (instruction/task.toml + environment/solution/tests)
+│   ├── scripts/                         # check_freshness.py, upgrade_tasks.py, upgrade_to_v4.py, test_pipeline.sh
+│   ├── scoring_calibration/             # grader version snapshots, degrade.py, run.py, experiments_v4/, results/
+│   └── difficulty_analysis/             # score_difficulty.py — validates tier ladder is monotonic (caches + outdirs alongside)
+└── archive/                             # superseded artifacts (old_bench, rudimentary_test, workloads_v4, workload_v5)
 ```
+
+`jobs/` is created locally by Harbor for run artifacts and is gitignored — not part of the tracked tree.
 
 ## Install
 
