@@ -74,9 +74,11 @@ Output rules:
 - All text must be specific and concrete. NEVER use "Lorem ipsum" or generic
   filler like "Welcome to our website".
 - Brand names, palettes, and page content must be distinctive. Surprise me.
-- The spec must be implementable using HTML + inline <style> CSS only — no JS,
-  no external fonts, no remote images. The codegen model is bound by those
-  rules; do not ask it for things it cannot do.
+- The spec must be implementable using HTML + CSS only — no JavaScript, no
+  external fonts, no remote images. This holds for ALL tiers, including
+  tier 9 (animations are driven by CSS `@keyframes` and `animation-*`
+  properties, never by JS). The codegen model is bound by those rules; do
+  not ask it for things it cannot do.
 """
 
 
@@ -235,6 +237,61 @@ def _build_user_prompt(
 ) -> str:
     tier_spec = seeds_mod.TIERS[tier]
     caps = "\n".join(f"  - {c}" for c in tier_spec["css_capabilities"])
+    is_motion = bool(tier_spec.get("requires_motion", False))
+
+    # Tier-9 seeds carry two extra top-level keys (`motion_style`,
+    # `expected_animations`) that drive the motion-capture harness. Splice the
+    # extra schema fragment and constraints into the base prompt rather than
+    # forking the template.
+    motion_schema_fragment = ""
+    motion_constraints_fragment = ""
+    if is_motion:
+        motion_schema_fragment = (
+            ',\n'
+            '  "motion_style": "<one of: subtle | playful | dramatic>",\n'
+            '  "expected_animations": {\n'
+            '    "<page-name>": [\n'
+            '      {\n'
+            '        "id": "<kebab-case animation id, unique within the page>",\n'
+            '        "target_description": "<the element it animates, e.g. \'main headline\' or \'cta button\'>",\n'
+            '        "kind": "<entrance | loop>",\n'
+            '        "duration_ms": <int, 200..15000>,\n'
+            '        "description": "<one sentence: what moves and how>"\n'
+            '      }\n'
+            '    ]\n'
+            '  }'
+        )
+        motion_constraints_fragment = """
+
+## Tier-9 motion constraints (binding)
+
+- `motion_style` controls the overall feel: subtle = small fades and slow
+  drifts; playful = springy translates, slight rotation; dramatic = larger
+  transforms, longer staggers, bigger opacity swings.
+- `expected_animations` MUST be keyed by EVERY page name in `pages`. Each
+  page MUST list 1-3 animations.
+- Each page MUST include at least one `entrance` (on-load reveal that settles)
+  AND at least one `loop` (continuous motion). A single-animation page is
+  insufficient — entrance gives you a settled final frame, loop gives the
+  motion harness something to sample across time.
+- `duration_ms` is the animation's natural cycle (loop) or settle time
+  (entrance). **Hard cap: 200ms-5000ms.** Every animation — including slow
+  ambient loops like marquees or background drifts — MUST complete one full
+  cycle or full settle within 5000ms. The frame-grid capture samples 6
+  EQUIDISTANT frames across max(durations) + padding, so a 28s marquee would
+  leave all entrance motion squashed into the first tile. Speed loops up
+  (e.g. a marquee at 4s, an orb drift at 3s) and they remain visually slow
+  to the human eye while becoming legible across the grid.
+- All motion must be driven by CSS only: `@keyframes`, `animation-*`
+  properties, `transform`, `opacity`, `filter`, `background-position`. NO
+  JavaScript, NO `:hover` / `:focus` / `:active` / `:checked` triggers, NO
+  scroll-linked motion.
+- Every animated element must carry a `data-anim="<id>"` attribute where
+  `<id>` matches the animation id you list here. The codegen LLM reads this
+  spec, so the ids you choose become contracts.
+- Include `@media (prefers-reduced-motion: reduce)` rules that collapse every
+  animation to its settled final state — the harness uses this to capture a
+  static baseline alongside the motion grid."""
 
     prompt = f"""\
 Produce a seed JSON for a tier-{tier} website in the **{genre}** genre.
@@ -258,13 +315,13 @@ CSS capabilities expected at this tier:
   "type_style": "<one sentence: heading/body fonts (system only), weight, feel>",
   "description": "<one sentence describing the site>",
   "constraints": ["<concrete layout/visual constraint>", ...],   // 3-5 items
-  "page_specs": {{"<page-name>": "<2-3 sentence description of that page>", ...}}
+  "page_specs": {{"<page-name>": "<2-3 sentence description of that page>", ...}}{motion_schema_fragment}
 }}
 ```
 
 The keys of `page_specs` MUST exactly match the entries of `pages` (same order,
 same names). Pick page names that fit the genre — they do NOT have to be
-"home/about/contact"; a restaurant might be "menu/reservations/hours/about/find-us".
+"home/about/contact"; a restaurant might be "menu/reservations/hours/about/find-us".{motion_constraints_fragment}
 
 ## Constraints on your output
 
@@ -299,6 +356,10 @@ def _generate_id(tier: int, genre: str) -> str:
     """Synth seed ID: synth-t{tier}-{genre}-{hash4}. Filesystem-safe."""
     suffix = uuid.uuid4().hex[:4]
     return f"synth-t{tier}-{genre}-{suffix}"
+
+
+_MOTION_STYLES = {"subtle", "playful", "dramatic"}
+_ANIMATION_KINDS = {"entrance", "loop"}
 
 
 def _validate_seed_shape(data: Any, tier: int, genre: str) -> list[str]:
@@ -340,6 +401,97 @@ def _validate_seed_shape(data: Any, tier: int, genre: str) -> list[str]:
     for k in ("palette_hint", "type_style", "description"):
         if not isinstance(data.get(k), str) or not data.get(k):
             errors.append(f"{k} must be a non-empty string")
+
+    if seeds_mod.is_motion_tier(tier):
+        errors.extend(_validate_motion_fields(data, pages if isinstance(pages, list) else []))
+
+    return errors
+
+
+def _validate_motion_fields(data: dict[str, Any], pages: list[str]) -> list[str]:
+    """Validate the tier-9-only motion_style + expected_animations fields."""
+    errors: list[str] = []
+
+    style = data.get("motion_style")
+    if style not in _MOTION_STYLES:
+        errors.append(
+            f"motion_style must be one of {sorted(_MOTION_STYLES)}; got {style!r}"
+        )
+
+    anims = data.get("expected_animations")
+    if not isinstance(anims, dict):
+        errors.append(
+            f"expected_animations must be a dict keyed by page name; got "
+            f"{type(anims).__name__}"
+        )
+        return errors
+
+    if pages and set(anims.keys()) != set(pages):
+        errors.append(
+            f"expected_animations keys {sorted(anims.keys())!r} must match "
+            f"pages {pages!r} exactly"
+        )
+
+    seen_ids_per_page: dict[str, set[str]] = {}
+    for page, page_anims in anims.items():
+        if not isinstance(page_anims, list) or not (1 <= len(page_anims) <= 3):
+            errors.append(
+                f"expected_animations[{page!r}] must be a list of 1-3 items; "
+                f"got {page_anims!r}"
+            )
+            continue
+
+        kinds_present: set[str] = set()
+        seen_ids: set[str] = set()
+        for i, anim in enumerate(page_anims):
+            label = f"expected_animations[{page!r}][{i}]"
+            if not isinstance(anim, dict):
+                errors.append(f"{label} must be a dict; got {type(anim).__name__}")
+                continue
+            for k in ("id", "target_description", "kind", "duration_ms", "description"):
+                if k not in anim:
+                    errors.append(f"{label} missing key {k!r}")
+            anim_id = anim.get("id")
+            if not isinstance(anim_id, str) or not anim_id:
+                errors.append(f"{label}.id must be a non-empty string")
+            elif anim_id in seen_ids:
+                errors.append(f"{label}.id={anim_id!r} duplicated within page")
+            else:
+                seen_ids.add(anim_id)
+            kind = anim.get("kind")
+            if kind not in _ANIMATION_KINDS:
+                errors.append(
+                    f"{label}.kind must be one of {sorted(_ANIMATION_KINDS)}; got {kind!r}"
+                )
+            else:
+                kinds_present.add(kind)
+            duration = anim.get("duration_ms")
+            # Hard cap at 5000ms. The motion harness captures 6 equidistant
+            # frames across max(duration) + padding. If a single animation
+            # took 28s to complete a cycle (e.g. a slow marquee), the
+            # capture window would stretch to ~28s and the entrance
+            # animations on the same page would all live inside the first
+            # frame — undersampled. Bounding every animation to one full
+            # cycle (loop) or full settle (entrance) within 5s keeps the
+            # window tight enough for all motions on the page to be
+            # legible across six frames.
+            if not isinstance(duration, int) or not (200 <= duration <= 5000):
+                errors.append(
+                    f"{label}.duration_ms must be an int in [200, 5000]; got {duration!r} "
+                    f"(every animation must complete one full cycle or settle within 5000ms)"
+                )
+            for k in ("target_description", "description"):
+                v = anim.get(k)
+                if not isinstance(v, str) or not v:
+                    errors.append(f"{label}.{k} must be a non-empty string")
+        seen_ids_per_page[page] = seen_ids
+
+        if kinds_present != _ANIMATION_KINDS and len(page_anims) >= 1:
+            missing = _ANIMATION_KINDS - kinds_present
+            errors.append(
+                f"expected_animations[{page!r}] must include at least one "
+                f"entrance AND one loop; missing kind(s): {sorted(missing)}"
+            )
 
     return errors
 

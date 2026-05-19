@@ -16,7 +16,7 @@ picks tiers and genres up automatically.
 """
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 
 class TierSpec(TypedDict, total=False):
@@ -27,6 +27,26 @@ class TierSpec(TypedDict, total=False):
     # path (e.g. clock virtualization, frame-grid capture, motion judge). The
     # generator gates these tiers and the CLI's default tier_max excludes them.
     requires_motion: bool
+
+
+class AnimationSpec(TypedDict):
+    """One named animation a tier-9 page must implement.
+
+    `id` is a kebab-case identifier the rendered HTML pins to the animated
+    element via `data-anim="{id}"` so the capture step and judge can refer
+    to specific motions instead of "something on the page moves."
+
+    `kind` is `entrance` (on-load reveal that settles to a final frame, like
+    a staggered headline) or `loop` (continuous, like a marquee or pulse).
+    `duration_ms` is the full cycle length for loops, or the time to settle
+    for entrances; the motion harness samples 6 frames across max(durations)
+    + 200ms padding.
+    """
+    id: str
+    target_description: str
+    kind: Literal["loop", "entrance"]
+    duration_ms: int
+    description: str
 
 
 # ---------- Tier definitions ----------
@@ -230,19 +250,24 @@ TIERS: dict[int, TierSpec] = {
     9: {
         "name": "Animations",
         "description": (
-            "Autonomous animations only — continuous loops and on-load "
-            "entrance effects. No interaction-driven motion (no hover, "
-            "click, scroll triggers). JavaScript permitted, but ONLY to "
-            "drive animations. Requires the motion harness (Playwright "
-            "page.clock virtualization, frame-grid capture, motion judge) "
-            "which is not yet wired up in the generator."
+            "Autonomous CSS animations only — continuous loops and on-load "
+            "entrance effects. No JavaScript (the script ban from tiers 1-8 "
+            "still holds), no interaction-driven motion (no hover, focus, "
+            "active, checked, scroll triggers). The motion harness samples "
+            "the rendered page at fixed offsets via Playwright clock "
+            "virtualization, stitches the frames into a labeled grid PNG, "
+            "and grades the agent's grid against the reference grid."
         ),
         "css_capabilities": [
             "@keyframes definitions and animation properties",
             "transform-based motion (translate, scale, rotate)",
             "opacity transitions for entrance effects",
             "animation-delay sequencing for staggered reveals",
-            "prefers-reduced-motion media query for politeness",
+            "background-position sweeps and marquee-style translates",
+            "prefers-reduced-motion media query (required: must collapse all "
+            "animations to their final settled state)",
+            "data-anim=\"<id>\" attribute on every animated element so the "
+            "capture and judge can refer to specific motions",
         ],
         "requires_motion": True,
     },
@@ -271,7 +296,7 @@ GENRES: dict[int, list[str]] = {
 # of Seed live in this module — the LLM generates every one. The TypedDict
 # is kept so downstream code has a single place to look up the schema.
 
-class Seed(TypedDict):
+class Seed(TypedDict, total=False):
     id: str
     tier: int
     genre: str
@@ -281,6 +306,11 @@ class Seed(TypedDict):
     description: str
     constraints: list[str]
     page_specs: dict[str, str]  # short description per page
+    # Tier-9 only. The codegen LLM is asked to wire `data-anim="<id>"` on each
+    # animated element and to honor the kind/duration semantics so the motion
+    # harness can sample frames across a meaningful time window.
+    motion_style: Literal["subtle", "playful", "dramatic"]
+    expected_animations: dict[str, list[AnimationSpec]]  # keyed by page name
 
 
 # ---------- Tier helpers ----------
@@ -288,9 +318,10 @@ class Seed(TypedDict):
 def tier_range() -> tuple[int, int]:
     """Inclusive (min, max) of currently generatable tiers.
 
-    Excludes tiers that require harness extensions (e.g. tier 9 motion) so the
-    CLI defaults pick up only tiers the pipeline can actually emit today. To
-    target a gated tier, pass --tier-max explicitly.
+    Motion-required tiers (e.g. tier 9) are excluded from the CLI default
+    range — they're more expensive (motion harness runs frame capture +
+    grid composition on every page+viewport) and the codegen rules differ,
+    so opt-in is the safer default. Pass --tier-max 9 to include them.
     """
     static_tiers = [
         t for t, spec in TIERS.items()
@@ -302,6 +333,6 @@ def tier_range() -> tuple[int, int]:
 
 
 def is_motion_tier(tier: int) -> bool:
-    """True if this tier requires the motion harness (not yet implemented)."""
+    """True if this tier uses the motion-capture branch of the harness."""
     spec = TIERS.get(tier)
     return bool(spec and spec.get("requires_motion", False))

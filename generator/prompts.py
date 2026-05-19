@@ -119,6 +119,59 @@ Output the complete CSS document. NO markdown fences, NO commentary, NO preamble
 """
 
 
+def _motion_brief_for_shared_css(seed: dict) -> str:
+    """Tier-9 motion summary for the shared CSS prompt.
+
+    The shared stylesheet is the natural home for `@keyframes` rules and the
+    `prefers-reduced-motion` overrides, so the LLM gets the full list of
+    animations up-front and is told to define their keyframes here. Per-page
+    HTML then references them by name (`animation: word-rise ...`) and pins
+    `data-anim` attributes to the right elements.
+    """
+    anims = seed.get("expected_animations") or {}
+    if not anims:
+        return ""
+
+    lines: list[str] = []
+    for page_name in seed.get("pages", []):
+        page_anims = anims.get(page_name, [])
+        if not page_anims:
+            continue
+        lines.append(f"  - **{page_name}**:")
+        for a in page_anims:
+            lines.append(
+                f"      · `data-anim=\"{a['id']}\"` on the {a['target_description']} "
+                f"— {a['kind']}, ~{a['duration_ms']}ms — {a['description']}"
+            )
+
+    motion_style = seed.get("motion_style", "subtle")
+    return f"""
+
+**Tier-9 motion contract (binding — driven by CSS only, NO JavaScript):**
+
+Motion style: **{motion_style}**.
+
+The animations the codegen must implement, page by page:
+{chr(10).join(lines)}
+
+In this shared stylesheet you MUST:
+  - Define every `@keyframes` rule used by any animation above. Name them
+    in kebab-case (e.g. `@keyframes word-rise`, `@keyframes orb-float`).
+    Per-page HTML will reference these names via the `animation` property.
+  - Use only `transform`, `opacity`, `filter`, `background-position`, `color`,
+    `background-color`, `border-radius`, `box-shadow`, and `clip-path` as
+    animated properties (these are GPU-friendly and judge-grade-able).
+  - Include a `@media (prefers-reduced-motion: reduce)` block that disables
+    every animation (`animation: none !important`) and forces animated
+    elements to their settled final state (`opacity: 1; transform: none`).
+    The motion harness uses this state to capture a static baseline.
+
+Do NOT add any `<script>` directives, JS hooks, or interactive triggers
+(`:hover`, `:focus`, `:active`, `:checked`, `@scroll-timeline`). All motion
+must be autonomous, driven by `animation` shorthand with `animation-delay`,
+`animation-iteration-count`, `animation-fill-mode`, etc."""
+
+
 def build_shared_css_prompt(seed: dict) -> str:
     """Format the prompt for generating the site's shared stylesheet."""
     constraints = "\n".join(f"  - {c}" for c in seed["constraints"])
@@ -139,6 +192,7 @@ def build_shared_css_prompt(seed: dict) -> str:
 
 **The site's 5 pages (each will <link rel="stylesheet" href="../_shared.css">):**
 {page_spec_lines}
+{_motion_brief_for_shared_css(seed)}
 
 The pages share nav, footer, palette, and typography — encode those here.
 Define enough component/utility classes that each page can build its layout
@@ -150,6 +204,53 @@ Output the complete CSS document. NO markdown fences, NO commentary.
 
 
 # ---------- User prompt builder ----------
+
+def _motion_brief_for_page(seed: dict, page_name: str) -> str:
+    """Tier-9 motion contract for a single page's codegen call.
+
+    Lists the animations this page MUST implement (matching what the shared
+    CSS prompt told the model to define `@keyframes` for) plus rules on how
+    to pin `data-anim` attributes and what NOT to do.
+    """
+    all_anims = seed.get("expected_animations") or {}
+    page_anims = all_anims.get(page_name) or []
+    if not page_anims:
+        return ""
+
+    lines: list[str] = []
+    for a in page_anims:
+        lines.append(
+            f"  - **`data-anim=\"{a['id']}\"`** on the {a['target_description']} "
+            f"({a['kind']}, ~{a['duration_ms']}ms) — {a['description']}"
+        )
+    motion_style = seed.get("motion_style", "subtle")
+
+    return f"""
+
+**Tier-9 motion contract for this page (binding):**
+
+Motion style: **{motion_style}**. The shared stylesheet already defines the
+`@keyframes` rules; in THIS page you must:
+
+  - Pin a `data-anim="<id>"` attribute on the exact element each animation
+    targets. The harness uses these attributes to locate animated elements.
+  - Apply the `animation` shorthand on each animated element via inline
+    `style="..."` or a small inline `<style>` block. Use kebab-case keyframe
+    names that match what you defined in the shared stylesheet.
+
+Animations this page MUST implement (one element per id, no duplicates):
+{chr(10).join(lines)}
+
+Hard rules — violating these breaks the grader:
+  - NO `<script>` tag. NO JavaScript. All motion is CSS-driven.
+  - NO `:hover`, `:focus`, `:active`, `:checked`, or scroll-linked triggers.
+    Animations must start on load and run autonomously (loops continue
+    indefinitely; entrances settle to a final state with `animation-fill-mode:
+    forwards`).
+  - The page must still render usefully under `@media
+    (prefers-reduced-motion: reduce)` — collapse motion to the settled final
+    state. The shared stylesheet should handle this; do not override it."""
+
 
 def build_page_prompt(
     seed: dict,
@@ -206,6 +307,7 @@ site's full surface area and can keep the nav/footer consistent):
 {shared_css_block}
 **THE PAGE YOU ARE GENERATING NOW:**
 - **{page_name}**: {seed["page_specs"][page_name]}
+{_motion_brief_for_page(seed, page_name)}
 
 Reference the shared stylesheet as the FIRST element in <head>:
 <link rel="stylesheet" href="../_shared.css">

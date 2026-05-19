@@ -90,12 +90,23 @@ from PIL import Image, ImageDraw, ImageFont
 from playwright.sync_api import Page, sync_playwright
 from skimage.metrics import structural_similarity as ssim
 
+# Motion-capture helper. Lives at /opt/_motion_capture.py (copied by the
+# Dockerfile) and is imported by both make.py (build-time references) and
+# this verifier-time grader (agent-side frame grids). Splice /opt/ onto
+# sys.path so the import resolves regardless of cwd.
+sys.path.insert(0, "/opt")
+try:
+    import _motion_capture  # type: ignore[import-not-found]
+except ImportError:
+    _motion_capture = None  # type: ignore[assignment]
+
 
 # === CONFIGURATION ===
 
 REFERENCE_HTML_DIR = Path("/opt/reference-pages")
 INPUT_PNG_DIR = Path("/app/references")
 AGENT_DIR = Path("/app/output")
+MOTION_SIDECAR = Path("/opt/motion.json")
 
 LOG_DIR = Path("/logs/verifier")
 REWARD_PATH = LOG_DIR / "reward.txt"
@@ -937,6 +948,225 @@ def score_text_content(ref: dict, agent: dict) -> AspectResult:
 # specific screenshot so the same wording works once we feed multiple
 # viewports per page.
 
+# === MOTION JUDGE (tier-9 only) ===
+#
+# Tier-9 tasks send the judge a single frame-grid PNG per (page, viewport)
+# instead of a single static screenshot. The grid is a 2x3 composite of six
+# frames sampled across the page's animation window via Playwright clock
+# virtualization (see _motion_capture.py). The criteria below replace the
+# static JUDGE_CRITERIA when motion.json declares animations — the static
+# criteria assume single-frame visuals and would penalize legitimate motion
+# (e.g. layout_fidelity tanks if frame-1 mid-transform doesn't match frame-6
+# settled).
+#
+# For motion tasks the V2.1 deterministic block is also bypassed: single-
+# frame pixel SSIM and palette histograms across animated frames are noise.
+# Reward = mean of motion-judge medians across pages.
+
+MOTION_JUDGE_CRITERIA: list[dict[str, Any]] = [
+    {
+        "id": "motion_presence",
+        "scoring": "likert_5",
+        "question": (
+            "How much visible motion is there in the AGENT's grid across "
+            "the six frames? Compare tiles 1-6: do elements shift, scale, "
+            "fade, rotate, or translate? Partial credit is fine for "
+            "subtle/localized motion. 5 = clear, multi-element motion "
+            "across the grid; 3 = subtle or single-area motion that's "
+            "still visible; 1 = grid is essentially static."
+        ),
+    },
+    {
+        "id": "target_element",
+        "scoring": "likert_5",
+        "question": (
+            "Does the motion in the agent's grid affect the SAME elements "
+            "as the reference grid (e.g. headline staggers in both, marquee "
+            "in both, background orb in both)? 5 = same elements move; "
+            "1 = different elements move, or no motion at all."
+        ),
+    },
+    {
+        "id": "motion_character",
+        "scoring": "likert_5",
+        "question": (
+            "Does the STYLE of motion match the reference — direction, "
+            "easing, scale of transform, opacity range, rotation, drift? "
+            "5 = same character (subtle drift vs subtle drift, dramatic "
+            "stagger vs dramatic stagger); 1 = wildly different feel."
+        ),
+    },
+    {
+        "id": "timing_fidelity",
+        "scoring": "likert_5",
+        "question": (
+            "Does the PACE of motion across frames 1-6 match the reference? "
+            "Are entrance animations finished by the same frame, are loop "
+            "animations at similar phases? 5 = synchronized progression; "
+            "1 = agent finishes way faster or way slower, or skips beats."
+        ),
+    },
+    {
+        "id": "settled_state",
+        "scoring": "likert_5",
+        "question": (
+            "Compare ONLY the last tile (frame 6) of each grid. Does the "
+            "agent's settled state match the reference's settled state — "
+            "same layout, same elements present, same final positions? "
+            "5 = indistinguishable; 1 = unmistakably different."
+        ),
+    },
+    {
+        "id": "overall_motion_fidelity",
+        "scoring": "likert_5",
+        "question": (
+            "Overall: if both grids were shown side-by-side to a motion "
+            "designer, would they accept the agent's animation as a faithful "
+            "replication of the reference's? 5 = essentially indistinguishable; "
+            "1 = unmistakably broken."
+        ),
+    },
+]
+
+
+def _load_motion_spec() -> dict[str, dict]:
+    """Return per-page motion specs from /opt/motion.json, or empty dict.
+
+    Shape: `{page_name: {"animations": [...], "frame_window_ms": int}}`.
+    Empty means the task is static — no motion branch needed.
+    """
+    if not MOTION_SIDECAR.is_file():
+        return {}
+    try:
+        blob = json.loads(MOTION_SIDECAR.read_text())
+    except json.JSONDecodeError:
+        return {}
+    return blob.get("expected_animations") or {}
+
+
+# Pixel-diff threshold for "the agent's grid clearly has motion."
+#
+# Calibrated from the v2 oracle run (synth-t9-solaris-drift-observatory): a
+# rotating-ring page sits at 0.7% changed pixels and reads as perfect motion
+# to the judge; a slide-up-and-settle page sits at 1.8% but reads as static
+# (motion happens early then frames 3-6 are identical). The pixel ratio
+# doesn't predict judge perception — it just bounds the easy positive cases.
+#
+# We use it ONLY to lift motion_presence when the judge missed visible
+# motion (auto-credit). We do NOT use it to drop motion_presence — the judge
+# can correctly identify motion in 0.4%-pixel-change grids where pixel
+# tally alone would say "static." Trusting the judge downward, correcting
+# it upward.
+MOTION_PIXEL_CHANGE_CREDIT_THRESHOLD = 0.005
+
+
+def _split_grid_into_tiles(grid_path: Path) -> list[Any]:
+    """Crop a 2x3 motion grid back into its six frame tiles for pixel diffing.
+
+    Tile geometry mirrors `_compose_grid` in /opt/_motion_capture.py: 28px
+    label band on top of each tile, 6px gap between tiles, 3 cols × 2 rows.
+    Returns RGB numpy arrays in reading order (frame 1 .. frame 6).
+    """
+    img = Image.open(grid_path)
+    W, H = img.size
+    label_h, gap, cols, rows = 28, 6, 3, 2
+    tile_w = (W - (cols - 1) * gap) // cols
+    tile_h = (H - rows * label_h - (rows - 1) * gap) // rows
+    tiles: list[Any] = []
+    for r in range(rows):
+        for c in range(cols):
+            x = c * (tile_w + gap)
+            y = r * (tile_h + label_h + gap) + label_h
+            tiles.append(np.array(img.crop((x, y, x + tile_w, y + tile_h)).convert("RGB"), dtype=np.int16))
+    return tiles
+
+
+def measure_grid_motion(grid_path: Path) -> dict[str, float]:
+    """Pre-flight pixel-level motion measurement on a frame-grid PNG.
+
+    Returns `{"max_changed_fraction": float, "mean_diff": float}` — the
+    fraction of pixels in the most-different tile relative to tile 0
+    (RGB delta > 30/255), and the mean absolute RGB delta across all
+    tile-vs-tile-0 comparisons.
+
+    Used by `score.py` to short-circuit two cases before calling the judge:
+      - Agent grid is essentially static → motion_presence floored at 0
+      - Agent grid shows clear motion    → motion_presence floored at 0.5
+    """
+    if not grid_path.is_file():
+        return {"max_changed_fraction": 0.0, "mean_diff": 0.0}
+    tiles = _split_grid_into_tiles(grid_path)
+    base = tiles[0]
+    max_changed = 0.0
+    mean_diff_sum = 0.0
+    for t in tiles[1:]:
+        delta = np.abs(t - base)
+        per_pixel = delta.sum(axis=2)
+        changed = float((per_pixel > 30).mean())
+        max_changed = max(max_changed, changed)
+        mean_diff_sum += float(delta.mean())
+    n = max(1, len(tiles) - 1)
+    return {
+        "max_changed_fraction": max_changed,
+        "mean_diff": mean_diff_sum / n,
+    }
+
+
+# Patterns we expect to see in a motion-task agent's HTML+CSS sources.
+# Absence is a strong signal the agent didn't try to animate at all —
+# cheaper and more diagnostic than letting VLM consensus catch it.
+_MOTION_PRIMITIVE_PATTERNS = (
+    r"@keyframes\b",
+    r"\banimation\s*:",
+    r"\banimation-name\s*:",
+)
+
+
+def scan_agent_motion_primitives(
+    agent_dir: Path,
+    page_name: str,
+    expected_anim_ids: list[str],
+) -> dict[str, Any]:
+    """Check the agent's HTML + shared CSS for animation primitives + data-anim ids.
+
+    Returns:
+      {
+        "has_keyframes_or_animation": bool,
+        "expected_anim_ids_present": list[str],   # subset of expected_anim_ids
+        "expected_anim_ids_missing": list[str],
+        "primitive_coverage": float,  # 0..1, fraction of expected ids wired
+      }
+
+    Used as a deterministic sub-signal alongside the motion judge: an agent
+    that omitted every `@keyframes` rule and every `data-anim` attribute
+    can't legitimately animate anything, regardless of what the VLM says.
+    """
+    html_path = agent_dir / page_name / "index.html"
+    css_path = agent_dir / "_shared.css"
+    sources = []
+    if html_path.is_file():
+        sources.append(html_path.read_text(errors="replace"))
+    if css_path.is_file():
+        sources.append(css_path.read_text(errors="replace"))
+    combined = "\n".join(sources)
+
+    has_primitives = any(
+        re.search(p, combined, re.IGNORECASE) for p in _MOTION_PRIMITIVE_PATTERNS
+    )
+    present = [
+        aid for aid in expected_anim_ids
+        if re.search(rf'data-anim\s*=\s*"{re.escape(aid)}"', combined)
+    ]
+    missing = [aid for aid in expected_anim_ids if aid not in present]
+    coverage = len(present) / len(expected_anim_ids) if expected_anim_ids else 1.0
+    return {
+        "has_keyframes_or_animation": has_primitives,
+        "expected_anim_ids_present": present,
+        "expected_anim_ids_missing": missing,
+        "primitive_coverage": coverage,
+    }
+
+
 JUDGE_CRITERIA: list[dict[str, Any]] = [
     {
         "id": "visual_hierarchy",
@@ -1014,20 +1244,35 @@ def _encode_png_for_judge(path: Path, max_dim: int = JUDGE_IMAGE_MAX_DIM) -> str
 def _build_judge_messages(
     ref_images: list[tuple[str, str]],
     agent_images: list[tuple[str, str]],
+    *,
+    criteria: list[dict[str, Any]] | None = None,
+    motion: bool = False,
 ) -> tuple[str, list[dict[str, Any]]]:
     """Build (system_prompt, user content blocks) for one judge call.
 
     `ref_images` and `agent_images` are each a list of (viewport_label, base64_png).
-    For V3's single-viewport setup each list has one entry (e.g. ("desktop", b64)).
-    When tablet/phone renders are added later, populate the lists with more
-    entries and the same prompt format works — the model sees them as labeled
-    groups under the same REFERENCE / AGENT headers.
+    For static tasks each tuple's image is one full-page screenshot per viewport.
+    For motion tasks each image is a 2x3 frame-grid composite — `motion=True`
+    swaps in a system-prompt sentence telling the model how to read the grid.
+    `criteria` defaults to JUDGE_CRITERIA (static) but can be overridden with
+    MOTION_JUDGE_CRITERIA for tier-9 grading.
     """
+    crits = criteria if criteria is not None else JUDGE_CRITERIA
+
+    motion_preamble = (
+        " Each image is a 2x3 grid of frames sampled at fixed timestamps "
+        "burned into each tile's header; read left-to-right, top-to-bottom "
+        "(frame 1 at t=0ms up to frame 6 at the animation window end). "
+        "When judging motion you are comparing two grids of six frames each, "
+        "not two single screenshots."
+        if motion else ""
+    )
     system = (
         "You are an expert visual design judge. You will be shown the "
         "REFERENCE design and the AGENT's rendering of the same web page, "
-        "possibly across multiple viewports. Score each criterion strictly "
-        "but fairly based ONLY on what you can see; do not infer intent.\n\n"
+        f"possibly across multiple viewports.{motion_preamble} Score each "
+        "criterion strictly but fairly based ONLY on what you can see; do "
+        "not infer intent.\n\n"
         "Scoring scales:\n"
         "  - binary: 1 (yes / present / correct), 0 (no / absent / incorrect)\n"
         "  - likert_5: 1 (very poor) to 5 (excellent match)\n"
@@ -1052,7 +1297,7 @@ def _build_judge_messages(
         })
 
     criteria_text = "Score these criteria for the agent's rendering vs. the reference:\n\n"
-    for c in JUDGE_CRITERIA:
+    for c in crits:
         scale = "0/1" if c["scoring"] == "binary" else "1-5"
         criteria_text += f"  - **{c['id']}** ({c['scoring']}, {scale}): {c['question']}\n"
     criteria_text += (
@@ -1091,9 +1336,14 @@ async def _judge_call_once(
     client: Any,
     ref_images: list[tuple[str, str]],
     agent_images: list[tuple[str, str]],
+    *,
+    criteria: list[dict[str, Any]] | None = None,
+    motion: bool = False,
 ) -> dict[str, int]:
     """Make one judge API call. Returns {criterion_id: int score}; empty on failure."""
-    system, content = _build_judge_messages(ref_images, agent_images)
+    system, content = _build_judge_messages(
+        ref_images, agent_images, criteria=criteria, motion=motion,
+    )
     response = await client.messages.create(
         model=JUDGE_MODEL,
         max_tokens=JUDGE_MAX_TOKENS,
@@ -1115,6 +1365,8 @@ async def _judge_call_once(
 
 def _aggregate_judge_answers(
     answers: list[dict[str, int]],
+    *,
+    criteria: list[dict[str, Any]] | None = None,
 ) -> tuple[float, dict[str, Any]]:
     """Combine ensemble answers into one page-level score [0,1] + breakdown."""
     import statistics
@@ -1122,9 +1374,10 @@ def _aggregate_judge_answers(
     if not valid:
         return 0.0, {"error": "all judge calls failed"}
 
+    crits = criteria if criteria is not None else JUDGE_CRITERIA
     per_criterion: dict[str, dict[str, Any]] = {}
     normalized: list[float] = []
-    for spec in JUDGE_CRITERIA:
+    for spec in crits:
         cid = spec["id"]
         raw = [a[cid] for a in valid if cid in a]
         if not raw:
@@ -1146,13 +1399,16 @@ async def judge_page(
     client: Any,
     ref_images: list[tuple[str, str]],
     agent_images: list[tuple[str, str]],
+    *,
+    criteria: list[dict[str, Any]] | None = None,
+    motion: bool = False,
 ) -> dict[str, Any]:
     """Run the ensemble for one page, return {score, per_criterion, ...}."""
     import asyncio
     if not ref_images or not agent_images:
         return {"score": 0.0, "error": "missing renders"}
     tasks = [
-        _judge_call_once(client, ref_images, agent_images)
+        _judge_call_once(client, ref_images, agent_images, criteria=criteria, motion=motion)
         for _ in range(JUDGE_ENSEMBLE_SIZE)
     ]
     results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -1163,7 +1419,7 @@ async def judge_page(
             errors.append(f"{type(r).__name__}: {r}")
         else:
             answers.append(r)
-    score, breakdown = _aggregate_judge_answers(answers)
+    score, breakdown = _aggregate_judge_answers(answers, criteria=criteria)
     if errors:
         breakdown["errors"] = errors
     return {"score": score, **breakdown}
@@ -1171,12 +1427,16 @@ async def judge_page(
 
 async def run_judge_for_pages(
     page_renders: dict[str, dict[str, list[tuple[str, Path]]]],
+    *,
+    criteria: list[dict[str, Any]] | None = None,
+    motion: bool = False,
 ) -> dict[str, dict[str, Any]]:
     """Run the judge concurrently across all pages.
 
     `page_renders[page_name]` is `{"ref": [(label, path), ...], "agent": [...]}`.
-    For V3 today each list has one entry (label "desktop"); the multi-viewport
-    extension just populates the lists with more entries — no other change.
+    For static tasks the paths point at full-page screenshots; for tier-9
+    motion tasks they point at frame-grid PNGs and `motion=True` swaps the
+    judge prompt and criteria accordingly.
     """
     import asyncio
     import anthropic
@@ -1198,7 +1458,10 @@ async def run_judge_for_pages(
     async with anthropic.AsyncAnthropic() as client:
         names = list(encoded.keys())
         tasks = [
-            judge_page(client, encoded[n]["ref"], encoded[n]["agent"])
+            judge_page(
+                client, encoded[n]["ref"], encoded[n]["agent"],
+                criteria=criteria, motion=motion,
+            )
             for n in names
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -1444,16 +1707,39 @@ def main() -> None:
         REWARD_PATH.write_text("0.0\n")
         return
 
-    print(f"Scoring {len(pages)} page(s): {pages}")
+    motion_spec = _load_motion_spec()
+    is_motion_task = bool(motion_spec)
+    if is_motion_task:
+        if _motion_capture is None:
+            raise RuntimeError(
+                "tier-9 task declared expected_animations but the motion-"
+                "capture helper at /opt/_motion_capture.py is missing or "
+                "failed to import. Check the Dockerfile."
+            )
+        print(
+            f"Scoring {len(pages)} page(s) with MOTION branch: {pages}  "
+            f"(animations on {len(motion_spec)} page(s))"
+        )
+    else:
+        print(f"Scoring {len(pages)} page(s): {pages}")
+
     per_page: dict[str, dict] = {}
     # Pages that rendered successfully — eligible for the judge dimension.
-    # The label "desktop" is the single viewport today; populating this list
-    # with additional (viewport_label, path) pairs is how multi-viewport ships.
+    # For static tasks each tuple is one full-page screenshot per viewport;
+    # for motion tasks it's a frame-grid PNG per viewport.
     judge_inputs: dict[str, dict[str, list[tuple[str, Path]]]] = {}
 
     def _render_one(browser, html_path: Path, out_png: Path, viewport: dict[str, int]):
-        """Open html_path at the given viewport, screenshot full_page, return DOM dict."""
-        ctx = browser.new_context(viewport=viewport)
+        """Open html_path at the given viewport, screenshot full_page, return DOM dict.
+
+        For motion tasks we capture under prefers-reduced-motion so the DOM
+        snapshot and full-page screenshot reflect the settled state, matching
+        the make.py-baked reference baseline (which also uses reduced-motion).
+        """
+        ctx = browser.new_context(
+            viewport=viewport,
+            reduced_motion="reduce" if is_motion_task else "no-preference",
+        )
         pg = ctx.new_page()
         try:
             pg.goto(f"file://{html_path.resolve()}", wait_until="load")
@@ -1463,6 +1749,22 @@ def main() -> None:
         finally:
             ctx.close()
         return dom
+
+    def _render_motion(browser, html_path: Path, viewport: dict[str, int],
+                       viewport_label: str, page_name: str, role: str) -> Path:
+        """Capture a motion frame grid for the agent or reference side.
+
+        `role` is "ref" or "agent" — used only to disambiguate output paths.
+        Frame window comes from the seed-side motion sidecar so ref and agent
+        get sampled at the same offsets.
+        """
+        page_motion = motion_spec.get(page_name) or {}
+        window_ms = int(page_motion.get("frame_window_ms", 1200))
+        out_path = RENDERS_DIR / f"{page_name}.{viewport_label}.{role}.motion.png"
+        _motion_capture.capture_motion_grid(  # type: ignore[union-attr]
+            browser, html_path, viewport, frame_window_ms=window_ms, out_path=out_path,
+        )
+        return out_path
 
     with sync_playwright() as p:
         browser = p.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
@@ -1514,40 +1816,97 @@ def main() -> None:
                         break
 
                     viewport_renders.append((label, ref_render, agent_render, ref_dom, agent_dom))
-                    judge_ref_paths.append((label, ref_render))
-                    judge_agent_paths.append((label, agent_render))
+
+                    if is_motion_task and page_name in motion_spec:
+                        # Tier-9: ref grid was baked into /app/references at
+                        # build time; render the agent grid here so both grids
+                        # were composed by the same code path with the same
+                        # power-curve schedule. The grids — not the static
+                        # screenshots — go to the judge.
+                        ref_grid = INPUT_PNG_DIR / label / f"{page_name}.motion.png"
+                        try:
+                            agent_grid = _render_motion(
+                                browser, agent_html, viewport, label, page_name, "agent",
+                            )
+                        except Exception as e:
+                            print(f"[{page_name}/{label}] agent motion-capture error: {e}")
+                            per_page[page_name] = {
+                                "final_score": 0.0,
+                                "note": f"agent motion capture error ({label}): {e}",
+                            }
+                            render_failed = True
+                            break
+                        if not ref_grid.is_file():
+                            print(f"[{page_name}/{label}] missing reference motion grid at {ref_grid}")
+                            per_page[page_name] = {
+                                "final_score": 0.0,
+                                "note": f"missing ref motion grid ({label})",
+                            }
+                            render_failed = True
+                            break
+                        judge_ref_paths.append((label, ref_grid))
+                        judge_agent_paths.append((label, agent_grid))
+                    else:
+                        judge_ref_paths.append((label, ref_render))
+                        judge_agent_paths.append((label, agent_render))
 
                 if render_failed:
                     continue
 
-                result = score_page_multi(viewport_renders)
-                per_page[page_name] = result
+                if is_motion_task:
+                    # V2.1 deterministic aspects (pixel SSIM, palette histogram,
+                    # DOM extraction on a single frame) all degrade to noise on
+                    # animated pages — the reduced-motion settled frame can
+                    # match perfectly while the actual animation is broken, or
+                    # vice versa. Skip the deterministic block entirely and let
+                    # the motion judge carry the per-page score.
+                    per_page[page_name] = {
+                        "final_score": 0.0,  # filled in after the judge runs
+                        "deterministic_skipped": True,
+                    }
+                else:
+                    result = score_page_multi(viewport_renders)
+                    per_page[page_name] = result
+
                 judge_inputs[page_name] = {
                     "ref": judge_ref_paths,
                     "agent": judge_agent_paths,
                 }
 
-                print(f"\n[{page_name}] V2.1 deterministic (avg across {len(VIEWPORTS)} viewports): "
-                      f"{result['final_score']:.4f}  (coverage: {result['coverage']:.2f}"
-                      f"{', low' if result['low_coverage'] else ''})")
-                for aname, info in result["aspects"].items():
-                    skipped = (
-                        "skipped" if info["skipped"]
-                        else f"applied {info['applied_weight']:.3f}"
-                    )
-                    print(f"  {aname:18s} = {info['score']:.4f}  ({skipped})")
+                if is_motion_task:
+                    print(f"\n[{page_name}] motion-capture grids ready for judge "
+                          f"(deterministic V2.1 skipped — see motion_judge below).")
+                else:
+                    print(f"\n[{page_name}] V2.1 deterministic (avg across {len(VIEWPORTS)} viewports): "
+                          f"{result['final_score']:.4f}  (coverage: {result['coverage']:.2f}"
+                          f"{', low' if result['low_coverage'] else ''})")
+                    for aname, info in result["aspects"].items():
+                        skipped = (
+                            "skipped" if info["skipped"]
+                            else f"applied {info['applied_weight']:.3f}"
+                        )
+                        print(f"  {aname:18s} = {info['score']:.4f}  ({skipped})")
 
                 # Comparison artifact: one PNG per viewport. Source side uses
                 # the rendered reference (we no longer always have a pre-built
-                # input PNG at the same viewport).
+                # input PNG at the same viewport). For motion tasks the side-
+                # by-side comparison stitches the reduced-motion baselines so
+                # the operator still gets a quick visual diff; the motion
+                # grids live separately at <renders>/<page>.<vp>.{ref,agent}.motion.png.
+                comparison_score = (
+                    0.0 if is_motion_task else result["final_score"]
+                )
+                comparison_low_coverage = (
+                    False if is_motion_task else result["low_coverage"]
+                )
                 for label, ref_render, agent_render, _rd, _ad in viewport_renders:
                     comparison_png = COMPARISONS_DIR / f"{page_name}.{label}.png"
                     try:
                         make_comparison(
                             ref_render, agent_render, comparison_png,
                             page_name=f"{page_name} · {label}",
-                            score=result["final_score"],
-                            low_coverage=result["low_coverage"],
+                            score=comparison_score,
+                            low_coverage=comparison_low_coverage,
                         )
                     except Exception as e:
                         print(f"[{page_name}/{label}] comparison build failed: {e}")
@@ -1572,9 +1931,15 @@ def main() -> None:
             "Playwright errors above."
         )
 
-    print(f"\nRunning judge ({JUDGE_MODEL}, ensemble={JUDGE_ENSEMBLE_SIZE}) "
-          f"across {len(judge_inputs)} page(s)...")
-    judge_results = asyncio.run(run_judge_for_pages(judge_inputs))
+    judge_mode = "MOTION" if is_motion_task else "static"
+    judge_criteria = MOTION_JUDGE_CRITERIA if is_motion_task else JUDGE_CRITERIA
+    print(f"\nRunning {judge_mode} judge ({JUDGE_MODEL}, "
+          f"ensemble={JUDGE_ENSEMBLE_SIZE}) across {len(judge_inputs)} page(s)...")
+    judge_results = asyncio.run(
+        run_judge_for_pages(
+            judge_inputs, criteria=judge_criteria, motion=is_motion_task,
+        )
+    )
     for name, info in judge_results.items():
         print(f"  [{name}] judge={info.get('score', 0.0):.4f}"
               + (f"  err: {info['error']}" if "error" in info else ""))
@@ -1596,12 +1961,89 @@ def main() -> None:
         page = per_page.get(page_name)
         if page is None:
             continue
-        det_score = page.get("final_score", 0.0)
         judge_info = judge_results.get(page_name)
         if judge_info is None:
             # Page never rendered — keep its zero / missing-output state.
             continue
         judge_score = float(judge_info.get("score", 0.0))
+        if is_motion_task:
+            # Motion-task scoring layers:
+            #   1. Pre-flight pixel-diff on the agent's frame grid. If the
+            #      grid is essentially static, the agent did not animate at
+            #      all — short-circuit motion_presence to 0 regardless of
+            #      what the judge said. If the grid shows clear motion, the
+            #      judge cannot legitimately rate motion_presence below
+            #      "subtle but visible" (likert 3) — apply a floor.
+            #   2. Agent-source motion-primitive scan. An agent missing all
+            #      `@keyframes`/`animation:` declarations or all expected
+            #      `data-anim` ids cannot legitimately animate the right
+            #      elements — apply a multiplicative penalty.
+            # The judge's other criteria (target_element, motion_character,
+            # settled_state, etc.) are passed through; only motion_presence
+            # gets clamped by pre-flight evidence.
+            page_motion = motion_spec.get(page_name) or {}
+            expected_ids = [a["id"] for a in page_motion.get("animations", [])]
+            scan = scan_agent_motion_primitives(AGENT_DIR, page_name, expected_ids)
+
+            # Average pre-flight motion across viewports so a single noisy
+            # viewport doesn't flip the floor.
+            preflights = [
+                measure_grid_motion(p)
+                for _label, p in judge_inputs[page_name]["agent"]
+            ]
+            avg_changed = (
+                sum(pf["max_changed_fraction"] for pf in preflights) / len(preflights)
+                if preflights else 0.0
+            )
+
+            adjusted_judge = judge_score
+            breakdown = {k: v for k, v in judge_info.items() if k != "score"}
+            per_crit = breakdown.get("per_criterion", {}) if isinstance(breakdown, dict) else {}
+
+            # Auto-credit motion_presence when pixel evidence disagrees with
+            # the judge. Never auto-fail: if the judge says motion is present,
+            # trust it even when pixel change is small (a tight rotating
+            # ring legitimately scores ~0.7% pixel change).
+            mp = per_crit.get("motion_presence")
+            if mp is not None and "aggregated" in mp:
+                original = mp["aggregated"]
+                if original < 0.5 and avg_changed > MOTION_PIXEL_CHANGE_CREDIT_THRESHOLD:
+                    mp["aggregated"] = 0.5
+                    mp["clamped_by_preflight"] = (
+                        f"pixel_diff_{avg_changed:.4f}_lifts_motion_presence_to_0.5"
+                    )
+                    # Recompute the page's mean across criteria.
+                    normalized = [
+                        v["aggregated"] for v in per_crit.values() if "aggregated" in v
+                    ]
+                    if normalized:
+                        adjusted_judge = sum(normalized) / len(normalized)
+
+            # Apply the agent-source coverage penalty multiplicatively. An
+            # agent that wired 0/3 data-anim ids and has no @keyframes can't
+            # score above 30% of the judge's reading, regardless of grids.
+            coverage = scan["primitive_coverage"]
+            has_prims = scan["has_keyframes_or_animation"]
+            if not has_prims:
+                source_factor = 0.3
+            elif coverage < 1.0:
+                source_factor = 0.5 + 0.5 * coverage
+            else:
+                source_factor = 1.0
+            final = max(0.0, min(1.0, adjusted_judge * source_factor))
+
+            page["judge_score"] = round(judge_score, 4)
+            page["motion_judge_score_adjusted"] = round(adjusted_judge, 4)
+            page["motion_preflight"] = {
+                "avg_changed_fraction": round(avg_changed, 4),
+                "per_viewport": preflights,
+            }
+            page["motion_source_scan"] = scan
+            page["motion_source_factor"] = round(source_factor, 4)
+            page["judge_breakdown"] = breakdown
+            page["final_score"] = final
+            continue
+        det_score = page.get("final_score", 0.0)
         combined = V3_DETERMINISTIC_WEIGHT * det_score + V3_JUDGE_WEIGHT * judge_score
         page["deterministic_score"] = round(det_score, 4)
         page["judge_score"] = round(judge_score, 4)

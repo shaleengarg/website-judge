@@ -14,6 +14,7 @@ Reference screenshots are grouped by viewport:
 Recreate each page as static, **responsive** HTML/CSS so that when rendered at
 each of the three viewports with headless Chromium, it visually matches the
 matching-viewport reference as closely as possible.
+{{MOTION_SECTION}}
 
 ## Visual fidelity only — functionality does not matter
 

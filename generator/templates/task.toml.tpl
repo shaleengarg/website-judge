@@ -18,7 +18,10 @@ genre = "{{GENRE}}"
 # backoff storms from the Anthropic API can stretch a single trial's
 # verifier past 1000s. 420s timed out 2/12 trials in the v3 dataset; 1200s
 # leaves enough headroom for retry backoffs to land.
-timeout_sec = 1200.0
+# Tier-9 (motion) tasks bump this because the verifier additionally captures
+# 6 motion frames × 3 viewports × 5 pages for the agent side (~90 extra
+# screenshots, each preceded by a clock fast-forward).
+timeout_sec = {{VERIFIER_TIMEOUT_SEC}}
 
 [agent]
 # V4-aware sites must be responsive across desktop/tablet/phone, ~3× the

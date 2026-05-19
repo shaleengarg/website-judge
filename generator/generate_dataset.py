@@ -81,6 +81,10 @@ class _HTMLValidator(HTMLParser):
         self._in_style = False
         self._style_buf: list[str] = []
         self.style_imports: list[str] = []
+        # Tier-9: every animated element MUST carry a data-anim="<id>" attr;
+        # collected so codegen validation can confirm the page wired the ids
+        # the seed asked for.
+        self.data_anim_ids: list[str] = []
 
     def error(self, message: str) -> None:  # type: ignore[override]
         self.ok = False
@@ -107,6 +111,8 @@ class _HTMLValidator(HTMLParser):
             # look like URLs but the browser never fetches them.
             if name == "xmlns" or (name and name.startswith("xmlns:")):
                 continue
+            if name == "data-anim" and isinstance(value, str) and value:
+                self.data_anim_ids.append(value)
             if value and isinstance(value, str) and re.match(r"https?://", value):
                 self.external_urls.append(value)
 
@@ -127,7 +133,11 @@ class ValidationResult:
     errors: list[str]
 
 
-def validate_html(html: str) -> ValidationResult:
+def validate_html(
+    html: str,
+    *,
+    expected_anim_ids: list[str] | None = None,
+) -> ValidationResult:
     errors: list[str] = []
     p = _HTMLValidator()
     try:
@@ -161,10 +171,28 @@ def validate_html(html: str) -> ValidationResult:
         )
     if len(html) < 200:
         errors.append(f"suspiciously short HTML ({len(html)} bytes)")
+
+    # Tier-9 motion contract: every expected animation id must appear at least
+    # once as a data-anim="<id>" attribute. Missing ids mean the motion harness
+    # can't locate the element and the judge has nothing to grade.
+    if expected_anim_ids:
+        present = set(p.data_anim_ids)
+        missing = [aid for aid in expected_anim_ids if aid not in present]
+        if missing:
+            errors.append(
+                f"missing data-anim attributes for expected animations: "
+                f"{missing}"
+            )
+
     return ValidationResult(ok=not errors, errors=errors)
 
 
-def validate_shared_css(css: str) -> ValidationResult:
+def validate_shared_css(
+    css: str,
+    *,
+    require_keyframes: bool = False,
+    require_prefers_reduced_motion: bool = False,
+) -> ValidationResult:
     """Sanity check the shared stylesheet — at-most-one CSS file means the
     shared CSS itself cannot @import another stylesheet."""
     errors: list[str] = []
@@ -189,6 +217,19 @@ def validate_shared_css(css: str) -> ValidationResult:
     real = [u for u in found if not any(u.startswith(p) for p in _XML_NAMESPACE_PREFIXES)]
     if real:
         errors.append(f"external network URLs present in shared CSS: {real[:3]}")
+
+    if require_keyframes and not re.search(r"@keyframes\b", css, re.IGNORECASE):
+        errors.append(
+            "tier-9 shared CSS must define @keyframes rules but none were found"
+        )
+    if require_prefers_reduced_motion and not re.search(
+        r"prefers-reduced-motion", css, re.IGNORECASE,
+    ):
+        errors.append(
+            "tier-9 shared CSS must include a `prefers-reduced-motion: reduce` "
+            "media query to collapse animations to their settled state"
+        )
+
     return ValidationResult(ok=not errors, errors=errors)
 
 
@@ -301,6 +342,9 @@ def _generate_one_page_with_retries(
 ) -> str:
     """Generate + validate one page with retries on validation failure."""
     prior_errors: list[str] = []
+    page_anims = (seed.get("expected_animations") or {}).get(page_name) or []
+    expected_anim_ids = [a["id"] for a in page_anims] if page_anims else None
+
     for attempt in range(1, max_retries + 1):
         try:
             html = call_llm_one_page(
@@ -314,7 +358,7 @@ def _generate_one_page_with_retries(
             prior_errors = [str(e)]
             continue
 
-        result = validate_html(html)
+        result = validate_html(html, expected_anim_ids=expected_anim_ids)
         if result.ok:
             return html
 
@@ -354,8 +398,13 @@ def generate_pages_for_seed(
     # Stage 1: shared CSS — sequential, before any per-page work. The
     # benchmark allows at most one CSS file per website, so the shared
     # stylesheet itself must be self-contained (no @import, no external URLs).
+    is_motion = bool(seed.get("expected_animations"))
     shared_css = call_llm_shared_css(client, model, seed)
-    css_check = validate_shared_css(shared_css)
+    css_check = validate_shared_css(
+        shared_css,
+        require_keyframes=is_motion,
+        require_prefers_reduced_motion=is_motion,
+    )
     if not css_check.ok:
         raise RuntimeError(
             f"shared CSS for {seed['id']} failed validation: {css_check.errors}"
@@ -457,7 +506,7 @@ def apply_templates_to_task(
 
     env_dir = task_dir / "environment"
     env_dir.mkdir(exist_ok=True)
-    for fname in ("Dockerfile", "make.py"):
+    for fname in ("Dockerfile", "make.py", "_motion_capture.py"):
         shutil.copy(templates_dir / "environment" / fname, env_dir / fname)
 
     # Render task.toml + instruction.md from .tpl files using seed data.
@@ -481,6 +530,13 @@ def apply_templates_to_task(
         f"Tier {seed['tier']} ({seed['genre']}): {seed['description']}"
     ).replace('"', '\\"')
 
+    # Tier-9 verifier captures ~90 extra screenshots per task (6 frames × 3
+    # viewports × 5 pages on the agent side), each preceded by a clock
+    # fast-forward. Headroom past the static 1200s budget keeps a slow run
+    # from falling off the cliff on the very first concurrent 429 backoff.
+    is_motion = bool(seed.get("expected_animations"))
+    verifier_timeout = "1800.0" if is_motion else "1200.0"
+
     task_toml = render_template(
         (templates_dir / "task.toml.tpl").read_text(),
         {
@@ -489,16 +545,19 @@ def apply_templates_to_task(
             "DIFFICULTY_EXPLANATION": difficulty,
             "GENRE": seed["genre"],
             "TIER": str(seed["tier"]),
+            "VERIFIER_TIMEOUT_SEC": verifier_timeout,
         },
     )
     (task_dir / "task.toml").write_text(task_toml)
 
+    motion_section = _build_motion_instruction_section(seed) if is_motion else ""
     instruction = render_template(
         (templates_dir / "instruction.md.tpl").read_text(),
         {
             "N_PAGES": str(n_pages),
             "INPUT_LIST": input_list,
             "OUTPUT_LIST": output_list,
+            "MOTION_SECTION": motion_section,
         },
     )
     (task_dir / "instruction.md").write_text(instruction)
@@ -541,10 +600,132 @@ def write_task(seed: dict, pages: dict[str, str], shared_css: str,
     # just whatever survived into task.toml.
     (task_dir / "seed.json").write_text(json.dumps(seed, indent=2), encoding="utf-8")
 
+    # Tier-9 motion sidecar: write the per-page animation specs into the
+    # Docker build context so the in-image make.py and verifier-time score.py
+    # can branch on motion vs static without needing the full seed.json. Files
+    # outside `environment/` are not visible to the build, so it lives here.
+    motion_blob = build_motion_sidecar(seed)
+    (task_dir / "environment" / "motion.json").write_text(
+        json.dumps(motion_blob, indent=2), encoding="utf-8",
+    )
+
     # Copy templates, render .tpl files, stamp template_version.txt.
     apply_templates_to_task(seed, list(pages.keys()), templates_dir, task_dir)
 
     return task_dir
+
+
+def _approximate_duration(ms: int) -> str:
+    """Render a duration as approximate prose so the agent doesn't aim for exact ms.
+
+    The grader judges visual fidelity, not exact timing — a 1200ms entrance
+    that comes back as 1500ms is fine if the motion reads similarly. Showing
+    exact millis in the instruction implies a precision the grader doesn't
+    enforce and biases agents toward over-specifying durations.
+    """
+    if ms < 500:
+        return "very fast (under half a second)"
+    if ms < 1000:
+        return "fast (under a second)"
+    if ms < 1800:
+        return "around 1-2 seconds"
+    if ms < 3000:
+        return "around 2-3 seconds"
+    if ms < 4500:
+        return "around 3-4 seconds"
+    return "slow (around 4-5 seconds)"
+
+
+def _build_motion_instruction_section(seed: dict) -> str:
+    """Tier-9 instruction.md insert: explains the motion artifacts and rules."""
+    anims = seed.get("expected_animations") or {}
+    per_page_lines: list[str] = []
+    for page_name in seed.get("pages", []):
+        page_anims = anims.get(page_name) or []
+        if not page_anims:
+            continue
+        per_page_lines.append(f"- **{page_name}**:")
+        for a in page_anims:
+            per_page_lines.append(
+                f"  - `data-anim=\"{a['id']}\"` on the {a['target_description']} "
+                f"({a['kind']}, {_approximate_duration(int(a['duration_ms']))}) "
+                f"— {a['description']}"
+            )
+
+    per_page = "\n".join(per_page_lines)
+    return f"""
+## This is an animated site
+
+In addition to the static screenshots above, each page also has a **motion
+frame grid** at `/app/references/<viewport>/<page>.motion.png` — a 2x3
+composite of six equidistant frames sampled across the page's animation
+window. Your output is graded against these grids by a motion-aware judge.
+
+The static `.png` reference uses `prefers-reduced-motion: reduce` and shows
+the **settled final state** (loops paused, entrances complete) — useful as a
+layout reference.
+
+### Animation contract
+
+You must implement these animations using **CSS only** (`@keyframes`,
+`animation-*`, `transform`, `opacity`, `filter`, `background-position`).
+Every animated element must carry a `data-anim="<id>"` attribute matching the
+id below.
+
+The grader judges visual fidelity, not exact millisecond timing. Hit the
+right *kind* of motion (translate vs fade vs scale vs rotate vs ambient)
+on the right element, and approximate the listed pacing — close enough is
+good enough.
+
+{per_page}
+
+### Hard rules
+
+- **No JavaScript** of any kind — including for animations. Use CSS keyframes.
+- **No interaction triggers**: `:hover`, `:focus`, `:active`, `:checked`, and
+  scroll-linked motion are all disallowed. Animations must start on load and
+  run autonomously.
+- **Every animation must complete one full cycle (loop) or full settle
+  (entrance) within about 5 seconds.** The judge samples 6 equidistant frames
+  across the page's animation window — a 30-second marquee would leave all
+  the entrance motion squashed into the first tile.
+- **Include `@media (prefers-reduced-motion: reduce)`** in your shared
+  stylesheet to disable every animation and force settled final states — the
+  grader uses this to capture the static baseline.
+"""
+
+
+def build_motion_sidecar(seed: dict) -> dict:
+    """Build the small motion.json blob baked into each task's Docker image.
+
+    For non-motion seeds returns `{"expected_animations": {}}` so the harness
+    can always read the file and just check whether the dict is empty. For
+    tier-9 seeds returns the per-page animation specs plus the page-level
+    `max_duration_ms` value the capture step uses to size its frame window.
+    """
+    expected = seed.get("expected_animations") or {}
+    if not expected:
+        return {"expected_animations": {}, "motion_style": None}
+
+    # Compute per-page frame window. concept_gen.py caps every animation at
+    # 5000ms total cycle (loop) or full settle (entrance), so window = the
+    # longest declared duration plus a small padding to ensure entrance
+    # animations show their settled state in the final frame.
+    _WINDOW_MIN_MS = 1500
+    _WINDOW_MAX_MS = 5500
+    _WINDOW_PAD_MS = 300
+    sized: dict[str, dict] = {}
+    for page_name, anims in expected.items():
+        max_dur = max((int(a.get("duration_ms", 0)) for a in anims), default=0)
+        window = max(_WINDOW_MIN_MS, min(_WINDOW_MAX_MS, max_dur + _WINDOW_PAD_MS))
+        sized[page_name] = {
+            "animations": anims,
+            "frame_window_ms": window,
+        }
+    return {
+        "expected_animations": sized,
+        "motion_style": seed.get("motion_style"),
+    }
 
 
 # ---------- Dataset registry ----------
@@ -670,25 +851,20 @@ def main() -> None:
     if args.output is None:
         sys.exit("ERROR: --output is required (use --list-tiers to inspect tiers).")
 
-    # Default tier range excludes motion-required tiers.
+    # Default tier range excludes motion-required tiers (opt-in via --tier-max).
     tier_min_default, tier_max_default = seeds_mod.tier_range()
     tier_min = args.tier_min if args.tier_min is not None else tier_min_default
     tier_max = args.tier_max if args.tier_max is not None else tier_max_default
 
-    # Gate motion tiers. If the requested range hits a motion-required tier,
-    # bail with a clear error — the codegen path for motion (clock virtualization,
-    # frame grids, motion judge) isn't built yet.
     motion_hits = [
         t for t in range(tier_min, tier_max + 1)
         if t in seeds_mod.TIERS and seeds_mod.is_motion_tier(t)
     ]
     if motion_hits:
-        sys.exit(
-            f"ERROR: tier(s) {motion_hits} require the motion harness which "
-            f"is not yet implemented (clock virtualization, frame-grid capture, "
-            f"motion judge). The tier and its genres are defined for forward "
-            f"compatibility, but generation is gated. Restrict --tier-max to "
-            f"{tier_max_default} (or lower) to proceed."
+        print(
+            f"  Note: tier(s) {motion_hits} use the motion-capture branch "
+            f"(frame-grid PNGs + motion judge). Each tier-9 task takes ~6× "
+            f"longer to verify than a static task."
         )
 
     if args.count <= 0:
