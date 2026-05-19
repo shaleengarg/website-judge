@@ -1,5 +1,14 @@
 # Bonus 1 — Animations
 
+> **Where the code lives.** The implementation described in this document
+> lives on the **`bonus1`** branch, not on `main`. `main` keeps the
+> static-only pipeline untouched so the existing tiers 1–8 dataset stays
+> reproducible. To see the full iteration history — schema extensions in
+> `seeds.py`, motion-capture harness under `templates/environment/`,
+> motion-judge path in `templates/tests/score.py`, etc. — check out
+> `bonus1` (`git checkout bonus1`). The oracle calibration runs
+> (v1 → v2 → v3) referenced in §8 below were all executed off that branch.
+
 How `generator/` was extended to produce, capture, and grade animated
 websites (tier 9). This document describes the as-built pipeline, the
 design decisions behind it, and the empirical results from the oracle
